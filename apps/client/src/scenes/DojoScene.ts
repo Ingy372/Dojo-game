@@ -19,6 +19,7 @@ import {
   placeItem,
   returnToDojo,
   rewardMoments,
+  creditBlessing,
   snapshot,
   stepWorld,
   storeItem,
@@ -372,7 +373,10 @@ export class DojoScene extends Phaser.Scene {
         ], 'Thank you!', next),
       );
     }
-    const moments = rewardMoments(this.profile.seen, this.training);
+    // OV-B5: new classes add Blessing runs once, in whichever screen sees them first.
+    const blessingAdded = creditBlessing(this.profile.blessing, t.classCheckIns);
+    writeSave(this.profile);
+    const moments = rewardMoments(this.profile.seen, this.training, undefined, blessingAdded);
     if (moments.length > 0) {
       steps.push(() =>
         new Celebrations(this, moments, this.training, () => {

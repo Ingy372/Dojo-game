@@ -1,10 +1,10 @@
 // The training link (framework section 3, core-design section 9): turns a student's
 // DojoForge progress into what the game shows and uses: belt tier, level cap, unlocked
-// abilities, Virtues, the Gate, the Path card and the Dojo Blessing.
+// abilities, Virtues, the Gate, the Path card and class check-ins.
 // Pure: "now" is passed in, never read from a clock.
 
 import type { AbilityContent, StanceDef, PerkDef, VirtueDef } from './abilities';
-import { BLESSING, byTier, POWER, PROGRESSION, TRAINING_POINTS, TRAINING_POINTS_PER_BELT, TRAINING_STATS } from './config';
+import { byTier, POWER, PROGRESSION, TRAINING_POINTS, TRAINING_POINTS_PER_BELT, TRAINING_STATS } from './config';
 import { DAY_NAMES, type FeedBelt, type FeedStripe, type RequirementType, type StudentFeed } from './feed';
 
 /** The moment the game is looking at the feed: a timestamp (ms) and today's weekday (0 = Sunday, local time). */
@@ -125,10 +125,6 @@ export interface TrainingState {
   stripesByBelt: Record<string, number>;
   gate: GateState;
   path: PathCard;
-  blessed: boolean;
-  /** When the Blessing ends (ms), or null. */
-  blessingEndsMs: number | null;
-  lastClass: string | null;
   /** Class check-ins so far (feed recentClasses up to now): each new one counts toward class pieces. */
   classCheckIns: string[];
   /** Lifetime classes from the feed, or null if the feed doesn't send it. */
@@ -254,12 +250,6 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
 
   const nextStep = locks.find((r) => !r.signedOff) ?? requirements.find((r) => r.catchUp && !r.signedOff) ?? null;
 
-  // The Dojo Blessing: a class in the last 48 hours.
-  const classes = feed.attendance.recentClasses.map((d) => Date.parse(d)).filter((t) => t <= now.ms);
-  const last = classes.length > 0 ? Math.max(...classes) : null;
-  const endsMs = last === null ? null : last + BLESSING.hours * 3600 * 1000;
-  const blessed = endsMs !== null && now.ms < endsMs;
-
   const stripesThisBelt = Math.min(POWER.stripesPerBelt, feed.stripes.filter((s) => s.belt === belt.id).length);
 
   return {
@@ -284,9 +274,6 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     stripesByBelt: migrateStripesByBelt(belts, feed.stripes, feed.stripes.length, idx),
     gate,
     path: { next: nextStep, nextClassDay: nextClassDay(feed.attendance.classDays, now.weekday), testDate: gate.testDate },
-    blessed,
-    blessingEndsMs: blessed ? endsMs : null,
-    lastClass: last === null ? null : feed.attendance.recentClasses.find((d) => Date.parse(d) === last) ?? null,
     classCheckIns: feed.attendance.recentClasses.filter((d) => Date.parse(d) <= now.ms),
     classesTotal: feed.attendance.classesTotal,
     ...(feed.testStats ? { pinnedStats: { ...feed.testStats } } : {}),

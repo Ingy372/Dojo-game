@@ -6,6 +6,7 @@ import Phaser from 'phaser';
 import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
 import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsMixed, signOffsRow, signOffsTitle, stripeGain } from '@dojo/sim';
 import GAINS from '../../../../content/settings/training-gains.json';
+import BLESS from '../../../../content/settings/blessing.json';
 import STYLE from '../../../../content/abilities/fighting-style.json';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
@@ -182,7 +183,7 @@ export class Celebrations {
     for (const e of extras) {
       if (e.kind === 'stripe' || e.kind === 'signOff' || e.kind === 'signOffs') continue;
       else if (e.kind === 'testApproved') earned.push({ line: `Sensei's Seal is lit${e.testDate ? `: test day ${shortDate(e.testDate)}` : ''}`, color: '#ffd166' });
-      else if (e.kind === 'blessing') earned.push({ line: 'Dojo Blessing for 48 hours', color: '#9ad1ff' });
+      else if (e.kind === 'blessing') earned.push({ line: e.full ? BLESS.full : BLESS.celebration, color: '#9ad1ff' });
     }
     // Right: the new belt's techniques, in the school's own words.
     const colW = Math.min(360, width / 2 - 28);
@@ -326,8 +327,9 @@ export class Celebrations {
       case 'blessing': {
         sfx.blessing();
         this.card(cx, height * 0.45, Math.min(460, width - 40), 130);
-        this.text(cx, height * 0.45 - 30, 'Dojo Blessing!', 22, '#9ad1ff', true).setOrigin(0.5);
-        this.text(cx, height * 0.45 + 10, 'You trained today: extra experience and\nbetter loot for 48 hours.', 15, '#f2e9d8').setOrigin(0.5).setAlign('center');
+        this.text(cx, height * 0.45 - 30, BLESS.title, 22, '#9ad1ff', true).setOrigin(0.5);
+        // OV-L1: a class adds nothing when the Blessing is full, so that line says so instead.
+        this.text(cx, height * 0.45 + 10, m.full ? BLESS.full : BLESS.afterClass, 15, '#f2e9d8').setOrigin(0.5).setAlign('center');
         break;
       }
     }

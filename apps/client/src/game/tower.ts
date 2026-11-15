@@ -1,6 +1,6 @@
 // Starting a Tower run (from the dojo's door or the training board).
 
-import { firstFloorOfTier, getsTutorialFloor, noteRunDay, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
+import { firstFloorOfTier, getsTutorialFloor, noteRunDay, runDifficulty, ownedDecorations, startRun, useBlessing, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
 import { ensureDifficulty } from './difficulty';
 import { homeDojo, setBowDue } from './dojo';
@@ -40,7 +40,10 @@ export function startTowerRun(profile: Profile, training: TrainingState, opts: {
   const runsStarted = profile.runsStarted;
   // A brand-new profile's first floor is the tutorial floor (M7-P2); ?tutorial=1 shows it again for testing.
   const tutorial = !firstRoomId && !forcedTwist && !forcedElite && !forcedNamed && (opts.replayTutorial === true || params.get('tutorial') === '1' || getsTutorialFloor(profile));
+  // OV-B5: a counted run uses one Blessing run; test-link runs and the tutorial floor use none.
+  let blessed = profile.blessing.runs > 0;
   if (!firstRoomId && !forcedTwist && !forcedElite && !forcedNamed) {
+    if (!tutorial) blessed = useBlessing(profile.blessing);
     profile.runsStarted++;
     // A session is a calendar day with at least one run (M7-P5, Manager call).
     noteRunDay(profile.lessons, localDay());
@@ -55,7 +58,7 @@ export function startTowerRun(profile: Profile, training: TrainingState, opts: {
     dryRuns: profile.dryRuns,
     firstRoomId,
     forcedTwist,
-    blessed: training.blessed,
+    blessed,
     calmMind,
     ownedDecorations: ownedDecorations(dojo),
     tier,

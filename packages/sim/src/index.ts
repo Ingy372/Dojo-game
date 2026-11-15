@@ -35,6 +35,7 @@ export * from './streetSmarts';
 export * from './named';
 export * from './playTime';
 export * from './earning';
+export * from './blessing';
 export * from './unlocks';
 export * from './audio';
 export * from './bossTag';
