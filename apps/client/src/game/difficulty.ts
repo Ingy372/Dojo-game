@@ -1,11 +1,12 @@
-// M7-P1: everyone starts on Standard ("Steady"); Guided is kindly offered after losses on one
-// floor, and can be picked any time in Settings. Rules and text: content/settings/difficulty.json.
+// M7-P1: everyone starts on Standard ("Steady"), ages 6-9 on Guided (OV-B3); Guided is kindly offered
+// after losses on one floor, and any difficulty can be picked any time in Settings. Rules and text: content/settings/difficulty.json.
 
-import { settleDifficulty, type Difficulty, type Profile } from '@dojo/sim';
+import { settleDifficulty, startingDifficulty, type Difficulty, type Profile } from '@dojo/sim';
 import settings from '../../../../content/settings/difficulty.json';
 
 export const DIFFICULTY_TEXT = settings as {
   offerAfterLosses: number;
+  guidedStartAgeBands: string[];
   button: string;
   title: string;
   footer: string;
@@ -24,9 +25,9 @@ export function showGrades(difficulty: Difficulty | null | undefined): boolean {
   return difficulty === 'challenge';
 }
 
-/** Gives a new profile its starting difficulty (once). Returns true if it set one. */
-export function ensureDifficulty(profile: Profile): boolean {
-  return settleDifficulty(profile);
+/** Gives a new profile its starting difficulty (once), by the student's age band. Returns true if it set one. */
+export function ensureDifficulty(profile: Profile, ageBand: string): boolean {
+  return settleDifficulty(profile, startingDifficulty(ageBand, DIFFICULTY_TEXT.guidedStartAgeBands));
 }
 
 /** Today's local date as YYYY-MM-DD (the Guided offer is at most once a day). */

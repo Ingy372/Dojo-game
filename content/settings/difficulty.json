@@ -1,6 +1,9 @@
 {
-  "_note": "M7-P1. Everyone starts on Standard (kids see 'Steady'). After offerAfterLosses lost runs in a row on the same floor, Guided is kindly offered (at most once a day, never mentions losing, never switches by itself). homeLine shows once. Guided can also be picked any time in Settings. Wording: C9 (PR #115); the offer wording is from the Learning Designer review (PR #114). Challenge unlocks at the 4th belt (R-CHALLENGE P6, see locked). Only fight-button names (COUNTER, STRIKE, DASH) are in caps; menu buttons use normal case.",
+  "_note": "M7-P1. Everyone starts on Standard (kids see 'Steady'), except students in guidedStartAgeBands, who start on Guided (OV-B3, Jay Nov 14); Steady is one pick away in Settings. Only a new profile gets a start; a difficulty already set is never changed. After offerAfterLosses lost runs in a row on the same floor, Guided is kindly offered (at most once a day, never mentions losing, never switches by itself). homeLine shows once. Guided can also be picked any time in Settings. Wording: C9 (PR #115); the offer wording is from the Learning Designer review (PR #114). Challenge unlocks at the 4th belt (R-CHALLENGE P6, see locked). Only fight-button names (COUNTER, STRIKE, DASH) are in caps; menu buttons use normal case.",
   "offerAfterLosses": 2,
+  "guidedStartAgeBands": [
+    "6-9"
+  ],
   "button": "Settings",
   "title": "How do you like to train?",
   "footer": "You can change this any time in Settings.",

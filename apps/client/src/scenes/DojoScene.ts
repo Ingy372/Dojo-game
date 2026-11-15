@@ -193,7 +193,7 @@ export class DojoScene extends Phaser.Scene {
     this.dojo = homeDojo(this.profile);
     this.training = currentTraining();
     const hoursAway = returnToDojo(this.dojo, CONTENT.dojo, Date.now());
-    ensureDifficulty(this.profile);
+    ensureDifficulty(this.profile, this.training.ageBand);
     writeSave(this.profile);
 
     this.mode = 'play';
