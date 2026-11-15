@@ -38,5 +38,6 @@
     "ready-stance": "Not yet! Learn Open Leg Stance at the dojo, and your teacher will sign it off."
   },
   "welcomeStance": "Welcome! You start in Beginner's Stance, just like everyone. Learn stances at the dojo to grow stronger!",
-  "lineFallback": "A move from your training."
+  "lineFallback": "A move from your training.",
+  "senseiPick": { "title": "Sensei's Pick", "on": "Sensei's Pick: On", "off": "Sensei's Pick: Off", "added": "Sensei added {move} to your moves!", "swapped": "{move} is in. {old} is resting.", "ready": "{move} is ready. Add it anytime!" }
 }

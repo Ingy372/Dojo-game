@@ -20,6 +20,8 @@ type Step =
   | { kind: 'sensei'; lines: string[] }
   /** Q-PREM-BOSSWIN: the first real Floor Keeper clear (once per save). A game-only moment, so it stays smaller than a promotion: one screen. */
   | { kind: 'keeper'; title: string }
+  /** OV-B1: Sensei's Pick lines (and its lesson the first time), after the sign-offs. */
+  | { kind: 'picks'; lesson: string[]; lines: string[] }
   | { kind: 'moment'; moment: Exclude<RewardMoment, { kind: 'promotion' }> }
   | { kind: 'bow'; from: BeltInfo; to: BeltInfo }
   | { kind: 'gate'; to: BeltInfo }
@@ -45,6 +47,7 @@ export class Celebrations {
     private readonly onDone: () => void,
     sensei: string[] = [],
     keeperTitle?: string,
+    picks?: { lesson: string[]; lines: string[] },
   ) {
     if (keeperTitle) this.steps.push({ kind: 'keeper', title: keeperTitle });
     if (sensei.length) this.steps.push({ kind: 'sensei', lines: sensei });
@@ -61,6 +64,7 @@ export class Celebrations {
         this.steps.push({ kind: 'summary', to: m.to, levelCap: m.levelCap, preview: m.preview, extras });
       } else if (m.kind === 'welcome' || !promotion) this.steps.push({ kind: 'moment', moment: m });
     }
+    if (picks?.lines.length) this.steps.push({ kind: 'picks', ...picks });
     const { width, height } = view(scene);
     const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.9).setOrigin(0).setInteractive();
     shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.next());
@@ -100,6 +104,9 @@ export class Celebrations {
         break;
       case 'keeper':
         wait = this.keeper(step.title);
+        break;
+      case 'picks':
+        this.picks(step.lesson, step.lines);
         break;
     }
     this.readyAt = this.scene.time.now + wait;
@@ -358,6 +365,19 @@ export class Celebrations {
     this.card(cx, height * 0.45, w, 70 + lines.length * 34);
     this.text(cx, height * 0.45 - 12 - lines.length * 17, 'Sensei', 22, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
     lines.forEach((l, i) => this.text(cx, height * 0.45 + 18 - (lines.length - 1) * 17 + i * 34, l, 17, '#f2e9d8', false, FONT, w - 40).setOrigin(0.5).setAlign('center'));
+  }
+
+  /** OV-B1: "Sensei's Pick", the lesson lines the first time, then one line per new move. */
+  private picks(lesson: string[], lines: string[]): void {
+    const { width, height } = this.size();
+    const cx = width / 2;
+    const w = Math.min(520, width - 40);
+    sfx.place(true);
+    this.text(cx, height * 0.12, STYLE.senseiPick.title, 24, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
+    let y = height * 0.12 + 30;
+    for (const l of lesson) y += this.text(cx, y, l, 17, '#f2e9d8', true, FONT, w).setOrigin(0.5, 0).setAlign('center').height + 6;
+    if (lesson.length) y += 8;
+    for (const l of lines) y += this.text(cx, y, l, 17, '#5cd65c', true, FONT, w).setOrigin(0.5, 0).setAlign('center').height + 6;
   }
 
   // ---------------------------------------------------------------- helpers

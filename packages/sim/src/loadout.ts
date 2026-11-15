@@ -137,6 +137,62 @@ export function seedStrikeSlot(profile: Profile, abilities: AbilityContent, earn
   return true;
 }
 
+/**
+ * OV-B1: one Sensei's Pick line. 'added' went into an empty slot, 'swapped' sent `out` to rest,
+ * 'ready' is earned but not moved (Sensei's Pick off, or more new Seals than slots).
+ */
+export interface PickLine {
+  kind: 'added' | 'swapped' | 'ready';
+  slot: 'strike' | 'seal';
+  move: string;
+  out?: string;
+}
+
+/**
+ * OV-B1 (review 6.3): after a sign-off, the newest Kick goes in the Strike slot and the newest
+ * Defense families go in Seal slots; when the slots are full the oldest Seal rests. With Sensei's
+ * Pick off nothing moves. Each move is handled once (`picksKnown`); the first check only records
+ * what is already earned. Returns one line per new move, in the order earned.
+ */
+export function senseiPick(profile: Profile, earned: LoadoutEarned, tier: number): PickLine[] {
+  if (profile.picksKnown === null) {
+    profile.picksKnown = [...earned.strikes, ...earned.families];
+    return [];
+  }
+  const known = new Set(profile.picksKnown);
+  const strikes = earned.strikes.filter((id) => !known.has(id));
+  const families = earned.families.filter((id) => !known.has(id));
+  if (strikes.length === 0 && families.length === 0) return [];
+  profile.picksKnown = [...profile.picksKnown, ...strikes, ...families];
+  const ready = (slot: PickLine['slot']) => (move: string): PickLine => ({ kind: 'ready', slot, move });
+  if (!profile.senseiPick) return [...strikes.map(ready('strike')), ...families.map(ready('seal'))];
+
+  const lines: PickLine[] = strikes.slice(0, -1).map(ready('strike'));
+  const base = profile.loadout ?? emptyLoadout();
+  const kept = normalizeSlots(base, earned, sealSlots(tier));
+  let strike = kept.strike;
+  const newest = strikes[strikes.length - 1];
+  if (newest !== undefined) {
+    lines.push(strike === null ? { kind: 'added', slot: 'strike', move: newest } : { kind: 'swapped', slot: 'strike', move: newest, out: strike });
+    strike = newest;
+  }
+  const slots = sealSlots(tier);
+  const fit = families.length > slots ? families.length - slots : 0;
+  lines.push(...families.slice(0, fit).map(ready('seal')));
+  let seals = kept.seals;
+  for (const f of families.slice(fit)) {
+    if (seals.length < slots) {
+      lines.push({ kind: 'added', slot: 'seal', move: f });
+      seals = [...seals, f];
+    } else {
+      lines.push({ kind: 'swapped', slot: 'seal', move: f, out: seals[0] });
+      seals = [...seals.slice(1), f];
+    }
+  }
+  profile.loadout = { ...base, strike, seals };
+  return lines;
+}
+
 /** The student tapped the one-time note away. */
 export function dismissSlotNote(profile: Profile): void {
   profile.showSlotNote = false;

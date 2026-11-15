@@ -193,6 +193,20 @@
       "earliestSession": 7,
       "ignoresSessionLimit": true,
       "fadingFollowUp": false
+    },
+    {
+      "id": "lesson-sensei-pick",
+      "triggerKey": "firstSenseiPick",
+      "order": 14,
+      "trigger": "OV-B1: the first time a sign-off puts a move in a slot by itself (Sensei's Pick on). Words from drafts/learning/OV-L1-review.md section 4; the try-it fight is left out (Manager call, Nov 14 2026). Like line-welcome-home it rides inside a celebration, so it doesn't count as a new lesson and isn't on the Scroll (no practice line to replay).",
+      "screens": [
+        "Sensei picks your newest moves for you.",
+        "You earned this move in class."
+      ],
+      "earliestSession": 1,
+      "ignoresSessionLimit": true,
+      "fadingFollowUp": true,
+      "scroll": false
     }
   ],
   "maxNewLessonsPerRoom": 1,
