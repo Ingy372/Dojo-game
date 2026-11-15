@@ -1879,3 +1879,11 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **What it refines:** J5 (Oct 23, "cosmetics ... are never bought") and the character customization line ("Extra looks are earned, never bought"). Both still stand for real money. "Bought" now means only with coins earned in play.
 - **Looks only:** shop items change how the character looks. They never give power. Real training stays the main source of power, and the belt layer is never for sale.
 - **What still earns looks:** gear, in-game achievements and dojo achievements still give looks, as J5 says. The shop is one more way to get them.
+
+## LP-B4b — how shop effects and wall paint are made (2026-11-15)
+- **Drawn in code, from data:** each effect is a recipe in `content/shop/catalog.json` (one of 16 shapes, colours, count, lifetime, size, spread, motion). The sim checks every recipe against hard caps (24 pieces; trails 0.8 s, puffs and hits 0.4 s, wins 3 s), so a bad recipe fails the tests, not the phone. One renderer (`apps/client/src/fx/shopFx.ts`) plays all of them.
+- **Never part of the fight:** effects live only in the client and are drawn under the danger marks, so they never hide a warning. The sim only stores what is worn.
+- **Reduced motion:** a single still picture under 0.5 s, and no walk trail at all.
+- **Wall paint:** a see-through MULTIPLY tint over the Home Dojo back wall, so the dark beams stay dark and only the paper panels take the colour.
+- **Shop tabs:** with 7 groups the shelves no longer fit a 375 px tall phone, so groups sit under 4 tabs.
+- **Placeholders:** effect colours and recipes are the Programmer's picks for the Manager's art gate (contact sheet in `docs/shots/lp-b4b/`).
