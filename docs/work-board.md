@@ -2,6 +2,8 @@
 
 Last updated: 2026-11-14 1:55 PM EST by Dojo-ascent Manager (overhaul task lists from the Fable review, section 000).
 
+**PAUSED (Jay, Nov 17, 10:44 AM ET: "ok, pause all work once a good point is reach. usage is at 75%."). Start nothing until the Manager relays a resume.**
+
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
 **How it stays current:** Jay marks items done or changes them here. Decisions go into `docs/decisions.md`. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
@@ -107,7 +109,7 @@ Team resumed Nov 8. Jay approved in principle: kata powers are passives, a simpl
 | L11-C2 | Dojo-Ascent Content Designer | Guardian tells and banners for the 7 Guardians (8 words or fewer, no body targets); "freed" lines checked against the bestiary plan. | Check script passes. | **Now** |
 | L11-A1 | Dojo-ascent Artist | 7 Guardians from `incoming-art/guardian-concepts/` (Stone Giant, Green, first): idle, walk, 3 tells, hit and freed pose. Replaces G2B-39 for launch. | Each passes the Manager art gate at game size. | Jay's OK of the Guardian concept sheets (G2B-39) |
 | L11-B1 | Dojo-Ascent Programmer | 7 Guardian enemy files per L11-SPEC section 3, each in the R-BAL-12 bands list at its own belt. | Bands test passes at belts 4-10; each Guardian only in its tier's Guardian room; Tester PASS. | Done #545 (03bcf932) |
-| L11-B2a | Dojo-Ascent Programmer | Split from L11-B2 (Manager, Nov 17): build the floor-set switch per L11-SPEC with every tier still off, so a tier turns on by flipping one setting when its Guardian art is OK. No rooms move yet, and the game is unchanged. | The L11-SPEC section 5 B2 tests, run with tiers off and with one tier on in test content; play unchanged (hashes match); Tester PASS. | **Now** |
+| L11-B2a | Dojo-Ascent Programmer | Split from L11-B2 (Manager, Nov 17): build the floor-set switch per L11-SPEC with every tier still off, so a tier turns on by flipping one setting when its Guardian art is OK. No rooms move yet, and the game is unchanged. | The L11-SPEC section 5 B2 tests, run with tiers off and with one tier on in test content; play unchanged (hashes match); Tester PASS. | Done #547 |
 | L11-B2 | Dojo-Ascent Programmer | Turn floor sets on, one tier at a time as its Guardian art lands. Move that tier's 8 files from drafts/content/rooms/L11/ into content/rooms/ when its Guardian lands. | Tests per L11-SPEC section 5; Tester PASS. | L11-B2a; L11-A1 for that tier |
 | L11-Q1 | Dojo-Ascent Game Logic/systems Tester | Rerun the whole-run balance bot on tiers 4-10, all difficulties, with built floors. | R-BAL-12 bands and Insight-budget gates pass; fails go to the Manager. | L11-B2 |
 | L3-S | Dojo-Ascent Researcher & Planner | L3 spec: five chapters per tier opened by Gate lights. | DONE #532 (5b6886a3). Manager OK: belts 6-10 accept 5-10.5 weeks between class-only lights (sign-offs make it sooner). **Placeholder:** the Guardian stays open every chapter until Jay says otherwise (DECIDE 1). | — |
