@@ -1289,3 +1289,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## L8-B1 — Lock becomes two groups (2026-11-17)
 - Lock is now Lock (arm) and Lock (wrist), both "Coming later" on the Style screen until L8-B2. Names are placeholders until Jay picks them. Unlit FAITH DOES letters and unselected wood tabs are easier to read.
 - Proof: `l8-b1-lock-groups.test.ts`; shots in `docs/shots/l8-b1/` at 844x390 and 667x375.
+
+## L8-B2 — the Lock hold (2026-11-17)
+- Lock (arm) and Lock (wrist) are live: their first rank makes a Perfect Counter hold the enemy for the length of its stagger. Held enemies can't shield; Guardians, bosses and elites are never held; a throw wins. A placeholder bronze ring shows the hold. The Board opens on Last climb after the Book.
+- Proof: `l8-b2-hold.test.ts`, `l10b-book.test.ts`; `docs/shots/l8-b2/hold.mjs` 30/0 at 844x390 and 667x375, Reduced motion on and off.

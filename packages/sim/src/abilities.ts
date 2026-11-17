@@ -270,7 +270,8 @@ export function loadSealFamilies(data: unknown): SealFamilyDef[] {
       seenTechniques.add(technique);
       if (!Array.isArray(r.effects)) fail(`${rw}.effects must be a list`);
       const effects = (r.effects as unknown[]).map((e) => loadEffect(e, (problem) => fail(`${rw}: ${problem}`)));
-      if (f.live && effects.length === 0) fail(`${rw}: a live family's ranks each need an effect`);
+      // L8-B2: later ranks may be a look or a cue only (an evolution, or a technique Jay hasn't described).
+      if (f.live && j === 0 && effects.length === 0) fail(`${rw}: a live family's first rank needs an effect`);
       return { technique, name: str(r.name, `${rw}.name`), effects, text: noDigits(str(r.text, `${rw}.text`), `${rw}.text`) };
     });
     if (f.live && ranks.length === 0) fail(`${w} is live but has no ranks`);

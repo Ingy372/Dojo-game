@@ -1970,3 +1970,10 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - Names and lines are the L8-C1 draft. "Lock (arm)" and "Lock (wrist)" are placeholders (`namePlaceholder: true`) until Jay names the groups (L8-J); the ids never change. Both use the existing lock picture.
 - An old save with `lock` in a Seal slot loads with that slot empty and nothing else changed (Manager, Nov 17). `l8-b1-lock-groups.test.ts` checks it, plus: no Lock rank carries a capped number, #31–40 rank in at least 2 families, and the caps stay 24 ticks and +20%.
 - Contrast (Tester, #541): unlit FAITH DOES and Faith-tab letters are `#b0a088` (5.0:1 on the banner, 6.2:1 on the tab cells); a dimmed wood tab is lighter (tint `0xc0a888`) with darker ink `#24140a` (about 5:1).
+
+## L8-B2 — the Lock hold (2026-11-17)
+- L8-SPEC section 2: a new switch effect `counterLock` on #17 (Lock arm) and #32 (Lock wrist); both groups are now `live: true`. With either equipped, a Perfect Counter's stagger is also a hold (`held` on the enemy, a `held` event). The hold is the stagger: same length (20 ticks, up to 24 with Counter #6, capped by `holdCapTicks`), and it ends when the stagger ends or a High Block Strike re-staggers.
+- A held enemy can't use its shield: hits land even if the shield is up, and a broken shield doesn't grow back while held. Guardians, bosses and elites are never held (`canHold`). A throw wins: with Throw equipped, a throwable enemy is thrown, not held.
+- The loader now only needs an effect on a live family's first rank; later ranks can be a look or a cue only (the evolve and cue ranks).
+- Client: a held enemy wears a bronze `#c07a2c` ring with a dark outline, a PLACEHOLDER until Jay OKs the Artist's ring (never the ! yellow `#ffd166`). It breathes gently and holds still with Reduced motion on. The hold plays the guard swish.
+- Board fix (Tester, #541): opening the Board from a Book tab lands on Last climb (`boardTab` in `ui/book.ts`).

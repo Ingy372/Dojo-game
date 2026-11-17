@@ -64,7 +64,7 @@ import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
 import { drawBanner, drawFaithPage } from '../ui/faith';
-import { BOOK_TABS, BOOK_WORDS, bookCubbies, tabCubbies, type BookTab } from '../ui/book';
+import { BOOK_TABS, BOOK_WORDS, boardTab, bookCubbies, tabCubbies, type BookTab } from '../ui/book';
 import { drawMonsterJournal } from '../ui/MonsterJournal';
 import { isOpen } from '../game/unlocks';
 import { NAMED_PACK } from '../game/named';
@@ -444,6 +444,7 @@ export class HomeScene extends Phaser.Scene {
   private setView(v: 'path' | 'board' | 'book'): void {
     if (this.celebrating) return;
     this.view = v;
+    if (v === 'board') this.tab = boardTab(this.tab);
     this.bagOpen = false;
     this.selected = null;
     this.render();

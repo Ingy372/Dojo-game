@@ -71,21 +71,23 @@ describe('PB-02 family ranks', () => {
     expect(more.length).toBeGreaterThan(a.length);
   });
 
-  it('a technique outside the map (Green #16 and #17 here) changes nothing', () => {
+  it('a technique outside the map (Green #16 here) changes nothing', () => {
     const t = training(green);
     expect([...signedOffTechniques(t)]).toContain(16);
-    const all = fams.flatMap((f) => familyEffects(f, new Set([...signedOffTechniques(t)].filter((n) => n <= 15))));
+    const all = fams.flatMap((f) => familyEffects(f, new Set([...signedOffTechniques(t)].filter((n) => n !== 16))));
     expect(fams.flatMap((f) => familyEffects(f, signedOffTechniques(t)))).toEqual(all);
   });
 
-  it('both Lock groups stay off until L8-B2; Throw is live since R-G2B-04', () => {
-    for (const id of ['lock-arm', 'lock-wrist']) expect(fam(id).live).toBe(false);
+  it('both Lock groups are live since L8-B2; Throw is live since R-G2B-04', () => {
+    for (const id of ['lock-arm', 'lock-wrist']) expect(fam(id).live).toBe(true);
     expect(fam('throw').live).toBe(true);
     const everything = new Set(Array.from({ length: 40 }, (_, i) => i + 1));
     expect(familyEffects(fam('throw'), everything)).toEqual([{ type: 'counterThrow', amount: 30 }, { type: 'downBonus', amount: 0.25 }]);
-    for (const id of ['lock-arm', 'lock-wrist']) expect(familyEffects(fam(id), everything)).toEqual([]);
+    expect(familyEffects(fam('lock-arm'), everything)).toEqual([{ type: 'counterLock', amount: 0 }, { type: 'dashOnBlock', amount: 0 }]);
+    expect(familyEffects(fam('lock-wrist'), everything)).toEqual([{ type: 'counterLock', amount: 0 }, { type: 'healOnPerfect', amount: 2 }]);
     expect(unlockedFamilies(training(green), fams)).toContain('throw');
-    expect(unlockedFamilies(training(green), fams)).not.toContain('lock-arm');
+    expect(unlockedFamilies(training(green), fams)).toContain('lock-arm');
+    expect(unlockedFamilies(training(green), fams)).not.toContain('lock-wrist');
   });
 
   it('only the equipped families give effects: a White profile with two equipped has just those', () => {
@@ -141,7 +143,7 @@ describe('PB-02 loading the family file', () => {
     expect(() => loadSealFamilies(digits)).toThrow(/no numbers/);
     const empty = clone();
     empty.families[0].ranks[0].effects = [];
-    expect(() => loadSealFamilies(empty)).toThrow(/need an effect/);
+    expect(() => loadSealFamilies(empty)).toThrow(/first rank needs an effect/);
   });
 
   it('counterHits needs a hits count', () => {

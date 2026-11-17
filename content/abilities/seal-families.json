@@ -250,13 +250,17 @@
       "namePlaceholder": true,
       "text": "Hold attackers still after a Great Counter.",
       "icon": "placeholder",
-      "live": false,
+      "live": true,
       "ranks": [
         {
           "technique": 17,
           "name": "Arm Bar",
           "text": "A Great Counter holds the attacker still.",
-          "effects": []
+          "effects": [
+            {
+              "type": "counterLock"
+            }
+          ]
         },
         {
           "technique": 28,
@@ -288,13 +292,17 @@
       "namePlaceholder": true,
       "text": "Set a steady hold after a Great Counter.",
       "icon": "placeholder",
-      "live": false,
+      "live": true,
       "ranks": [
         {
           "technique": 32,
           "name": "Slide to the Wrist",
           "text": "A Great Counter holds the attacker still.",
-          "effects": []
+          "effects": [
+            {
+              "type": "counterLock"
+            }
+          ]
         },
         {
           "technique": 33,

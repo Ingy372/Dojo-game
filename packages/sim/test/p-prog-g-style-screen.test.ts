@@ -58,8 +58,9 @@ describe('PB-05 Fighting Style screen', () => {
       if (name === 'orange') expect(seals.every((c) => c.locked === null)).toBe(true);
       else expect(seals.filter((c) => c.locked !== null).map((c) => c.locked)).toEqual([nextSealBelt(t.tier, t.belts)]);
       for (const id of ['lock-arm', 'lock-wrist']) {
-        expect(m.trays.seal.find((p) => p.id === id)?.line).toBe('Coming later');
-        expect(m.trays.seal.find((p) => p.id === id)?.comingLater).toBe(true);
+        // L8-B2: Lock is live, so under Green it waits at the dojo like any family not yet earned.
+        expect(m.trays.seal.find((p) => p.id === id)?.comingLater).toBe(false);
+        expect(m.trays.seal.find((p) => p.id === id)?.earned).toBe(false);
       }
       expect(m.cards.some((c) => c.slot === 'kata')).toBe(true);
     }

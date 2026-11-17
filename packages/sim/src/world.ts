@@ -149,6 +149,8 @@ export interface EnemyState {
   shieldUp: boolean;
   /** Ticks until a broken shield grows back. */
   shieldRegrow: number;
+  /** L8-B2: this stagger is a Lock hold (see `isHeld`). */
+  held?: boolean;
   /** True for enemies called in by a boss (they never come back once beaten). */
   summoned: boolean;
   /** True once a boss has called in its helpers. */
@@ -205,6 +207,8 @@ export type CombatEvent =
   | { kind: 'enemySwing'; enemyId: EnemyId }
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
   | { kind: 'thrown'; playerId: PlayerId; enemyId: EnemyId }
+  /** L8-B2: a Perfect Counter's stagger is also a Lock hold. */
+  | { kind: 'held'; playerId: PlayerId; enemyId: EnemyId }
   /** B-MASHER-2: this room's Perfect Counters reached COMBAT.counter.mashGuardPerfects, so Mash guard is off until the next room. */
   | { kind: 'mashGuardOff'; playerId: PlayerId }
   /** L-PREMIUM-b: the player let Counter windows pass with no answer, so the client shows the Counter tip (at most once per room). */
@@ -1008,8 +1012,10 @@ function landHit(
   strength: number,
   focusGain: number,
 ): void {
-  const brokeShield = e.shieldUp && p.mods.shieldBreaker;
-  if (e.shieldUp) {
+  // L8-B2: a held enemy can't use its shield, so hits land as on any staggered enemy.
+  const shielded = e.shieldUp && !isHeld(e);
+  const brokeShield = shielded && p.mods.shieldBreaker;
+  if (shielded) {
     if ((move === 'basic' || move === 'ripple') && !p.mods.shieldBreaker) {
       // Basic attacks bounce off the shield: no damage, but shield sparks give a little Focus (B-MASHER-a).
       p.facing = directionTo(p.pos, e.pos);
@@ -1207,7 +1213,7 @@ function separateFromEnemies(world: WorldState, p: PlayerState, room: Room): voi
 
 function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
   if (e.mode !== 'defeated') {
-    if (!e.shieldUp && e.def.shield && --e.shieldRegrow <= 0) {
+    if (!e.shieldUp && e.def.shield && !isHeld(e) && --e.shieldRegrow <= 0) {
       e.shieldUp = true;
       world.events.push({ kind: 'shieldRegrow', enemyId: e.id });
     }
@@ -1428,6 +1434,9 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
         e.mode = 'stagger';
         // G2B-04 Lock cap: the hold (stagger + Counter #6 + any Lock rank) never passes holdCapTicks.
         e.modeTicks = Math.min(COMBAT.counter.holdCapTicks, COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks);
+        // L8-B2 Lock: the same stagger also holds the attacker (never a Guardian, boss or elite).
+        e.held = p.mods.counterLock && canHold(e);
+        if (e.held) world.events.push({ kind: 'held', playerId: p.id, enemyId: e.id });
         // Disarm: this attacker's next attack is weaker.
         if (p.mods.disarm > 0) {
           e.disarmed = Math.max(e.disarmed, p.mods.disarm);
@@ -1471,6 +1480,7 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
         if (p.mods.reflectStaggerTicks > 0 && e.mode !== 'defeated' && e.mode !== 'thrown') {
           e.mode = 'stagger';
           e.modeTicks = Math.max(e.modeTicks, p.mods.reflectStaggerTicks);
+          e.held = false;
         }
       }
     } else if (e.def.push) {
@@ -1903,6 +1913,16 @@ export function skipDown(world: WorldState, playerId: PlayerId): boolean {
 
 export function mashGuardOn(p: PlayerState): boolean {
   return p.perfects < COMBAT.counter.mashGuardPerfects;
+}
+
+/** L8-B2: a Perfect Counter can hold this enemy (any but a Guardian, boss or elite). */
+export function canHold(e: EnemyState): boolean {
+  return !e.def.boss && e.elite === null;
+}
+
+/** L8-B2: held right now: a Lock hold lasts exactly as long as its stagger. */
+export function isHeld(e: EnemyState): boolean {
+  return e.held === true && e.mode === 'stagger';
 }
 
 /** G2B-04: a Perfect Counter throws this enemy (Outside Reap equipped, a throwable brute or swarmer, never a Guardian or an elite). */
