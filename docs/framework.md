@@ -65,19 +65,19 @@ The loop always closes back at the dojo. When a player gets stuck, the answer is
 
 ### The power budget
 
-As a design target, about **two-thirds of a character's strength at any belt tier comes from real training**, and about one-third from play (levels, gear, mastery). A student who trains hard but plays little is still strong. A student who plays a lot but rarely trains hits a ceiling quickly and sees exactly what would raise it.
+As a design target, about **60% of a character's strength at any belt tier comes from real training**, and about 40% from play (levels, gear) (Jay, Nov 14, review Q10 A; it replaces the old two-thirds). A student who trains hard but plays little is still strong. A student who plays a lot but rarely trains hits a ceiling quickly and sees exactly what would raise it.
 
 ### What each piece of real training does in the game
 
 | Real-world progress (from DojoForge) | What happens in the game |
 | --- | --- |
 | **Belt promotion** | The next belt tier's gate opens, the level cap rises, and the character's belt changes color. Triggers a full promotion ceremony (section 6). |
-| **Kata signed off** | Unlocks a new **Form**: a stance that changes how the character fights (section 5). |
+| **Kata signed off** | Unlocks that kata's own **kata power** (one kata power slot per run). Stances are separate sign-offs (Jay, Nov 14, review Q1 B). |
 | **Kick combo signed off** | Unlocks or upgrades a **Strike** combo, the character's main damage. |
 | **Self-defense technique signed off** | Unlocks a **Technique Seal**, an upgrade to the character's Counter and defensive skills. Five per belt, matching the five real techniques. |
 | **Catch-up items** | Appear as locked seals with a clear label ("Sign off Self-Defense #4 to unlock"). Finishing catch-up items in class instantly unlocks them. |
 | **Character stripe earned** | Grants the matching **Virtue**, a special power named after the word (e.g. Respect, Great Effort). Up to two per belt, like the real stripes. Earning the same word again at a later belt ranks the Virtue up. |
-| **Attending class** | Grants the **Dojo Blessing**: bonus XP and better loot for the next 48 hours. Playing after class feels great; nothing is taken away when you miss. |
+| **Attending class** | Grants the **Dojo Blessing**: bonus XP and better loot for the next 5 runs after a class, holding at most 10 (OV-B5; the 48-hour window is gone). Playing after class feels great; nothing is taken away when you miss. |
 | **Weekly training streak** | A cosmetic aura that grows with the streak, plus a small XP bonus. When Jay restores a streak, the aura comes back too. |
 | **Home practice hours (parent-approved)** | Earns **Training Points**, spent to upgrade unlocked abilities. The more a student practices at home, the further they can sharpen what they've learned. |
 | **Milestones and anniversaries** | Titles, gi colors, banners, and trophies for the Home Dojo. |
@@ -117,6 +117,8 @@ Every enemy **telegraphs** its attacks: it glows, winds up, or shows a marker on
 This mirrors self-defense directly. Players learn to watch, wait, and respond instead of mashing buttons, and the Technique Seals from real self-defense sign-offs make counters stronger and add new counter effects (throws, disarms, sweeps).
 
 ### Forms give depth
+
+> **Updated (L20-D):** kata no longer unlock Forms. Each kata gives its own kata power, and stances have their own sign-offs (Jay, Nov 14, review Q1 B). This section is kept as history.
 
 Forms, unlocked by real kata, are stances that change how the character fights. Examples:
 
@@ -162,7 +164,7 @@ Every belt in the real curriculum has the same structure: 1 kata, 5 self-defense
 
 | Real requirement | Game ability | Count per belt |
 | --- | --- | --- |
-| Kata | 1 new **Form** (stance) | 1 |
+| Kata | 1 **kata power** (Jay, Nov 14, review Q1 B) | 1 |
 | Kick combo | 1 new **Strike** combo | 1 |
 | Self-defense techniques | **Technique Seals** that upgrade the Counter | 5 |
 | Character stripes (optional) | **Virtues** (special powers) | Up to 2 |
@@ -336,7 +338,7 @@ Research on teaching children safety skills shows that knowing the right answer 
 
 ### Rewards
 
-Street Smarts stars and badges are displayed in the Home Dojo, and completing a set of scenarios earns special decorations and titles. Each cleared scenario also adds a little power, and completing every scenario at a location (such as the Bus Stop) earns more power plus a location perk tied to that place's lesson. The full system, including how Street Smarts fits the power budget, is in the Core Game Design doc, section 12. Scenarios can be replayed for more stars, and older ones come back on a spaced schedule so the lessons stay fresh.
+Street Smarts stars and badges are displayed in the Home Dojo, and completing a set of scenarios earns special decorations and titles. Street Smarts give no fight power (Jay, Nov 14, review Q6 A): clearing scenarios and location sets earns stars, badges and a brighter town instead. Scenarios can be replayed for more stars, and older ones come back on a spaced schedule so the lessons stay fresh.
 
 ## 9. Quests: manners, culture, and life lessons
 
@@ -622,7 +624,7 @@ My best guess is that the $100 credit covers milestones 0–4. The Home Dojo and
 | --- | --- | --- | --- |
 | 9 | **Real DojoForge connection** (with Nic) | The real progress feed, student login, saving game progress on the server, Missions, and the staff "Ready for review" queue | A real Action Zone student logs in, sees their real belt and sign-offs, and a completed mission shows up in Jay's queue |
 | 10 | **Every belt tier and finishing Sensei's Lessons** | Tower tiers for every rank using remixed rooms and enemy traits, a Guardian per tier, the finished gradual unlock schedule, a Sensei's Lesson for every launch system (the Lessons system itself is built in milestone 7), Welcome Week | A white belt and a brown belt can each play their full rank and learn every system they've unlocked |
-| 11 | **Street Smarts and quests** | Illustrated scene scenarios for 2–3 locations (ages 6–9 and 10–13), location perks, a starter set of manners quests and 2 life-lesson stories | Jay has approved every scenario and quest, and students complete them without help |
+| 11 | **Street Smarts and quests** | Illustrated scene scenarios for 2–3 locations (ages 6–9 and 10–13), location badges (no power, Q6 A), a starter set of manners quests and 2 life-lesson stories | Jay has approved every scenario and quest, and students complete them without help |
 | 12 | **Launch** | Visiting classmates' dojos, certified trophies, the Hall of Masters, parent controls, final polish, App Store and Google Play release | The game is live for Action Zone families on both stores |
 
 ### Six-month roadmap (October 2026 – March 2027)
@@ -701,5 +703,5 @@ None of these block milestones 0–3. They should be settled before milestone 4 
 - [ ] **Virtues for each stripe word:** confirm or change the proposed Virtues (Respect, Great Effort, Self-Discipline) and add any other stripe words.
 - [ ] **Rank history before DojoForge:** how far back DojoForge has each student's belt dates and start date, so the legacy grant and anniversaries are accurate.
 - [ ] **Featured Dojo of the Week:** who picks it, and how often.
-- [ ] **Street Smarts locations and perks:** confirm the locations (Park, School, Bus Stop, Store, Neighborhood, Online for ages 10+) and the perk for each.
+- [ ] **Street Smarts locations:** confirm the locations (Park, School, Bus Stop, Store, Neighborhood, Online for ages 10+). No perks: Street Smarts give no power (Q6 A).
 - [ ] **Path Perks:** approve the list of permanent perks offered at each promotion.

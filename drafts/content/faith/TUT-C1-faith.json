@@ -1,0 +1,13 @@
+{
+  "item": "TUT-C1",
+  "layer": "Action Zone faith layer (swappable)",
+  "notes": "Optional swap for tutorial opening card 2. Comes from chapter-1 screen 2, shortened. No verse quoted, so no reference is needed.",
+  "swaps": [
+    {
+      "file": "drafts/content/tutorial/TUT-C1.json",
+      "card": 2,
+      "base": "It kept the whole town warm and safe.",
+      "faith": "God gave it. It kept the town safe."
+    }
+  ]
+}

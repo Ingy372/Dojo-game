@@ -8,7 +8,7 @@ No game code or work board was changed. No purchases, ads, chat or pressure.
 ## What changed (Jay, Oct 25)
 
 - **Due by Dec 15:** a good chunk of the game, on the phones of **5–10 beta testers**. That means Action Zone families.
-- **The full store launch date is now open.** Pick it after the beta (see D-B4).
+- ~~**The full store launch date is now open.** Pick it after the beta (see D-B4).~~ **Settled (Jay, Nov 14, review Q4):** the store launch is still early April 2027.
 - **Jay said "your picks are fine" to D1–D8.** They're recorded in section 2.
 
 ---
