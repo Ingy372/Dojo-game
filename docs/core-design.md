@@ -281,7 +281,7 @@ Across the game industry, a large share of players who quit a game do so during 
 | --- | --- | --- |
 | **0:00** | Character creation pulls in the student's real name and belt: *"Welcome, Ava. Sensei says you're a Yellow Belt."* Choose a look in under a minute. | Instant personal connection; the real belt appears from the first second |
 | **0:01** | Bow into the tutorial floor and move around. | The ritual starts immediately |
-| **0:02** | A slow brute telegraphs a big attack. A prompt shows when to press Counter. First Perfect Counter, with a huge flash and sound. | Mastery in the first two minutes |
+| **0:02** | A slow brute telegraphs a big attack. A prompt shows when to press Counter. First Perfect Counter, with a huge flash and sound. | Mastery in the first five minutes (TUT-P1 moves the Brute after moving, auto-attack and Strike) |
 | **0:04** | First Insight choice from three options. | Autonomy and a taste of build variety |
 | **0:06** | A guaranteed Uncommon drop, with its color, sound, and effect. | The first anticipation hit |
 | **0:08** | Tutorial boss. Easy to beat, but it looks and sounds big. | An early win that feels earned |
@@ -292,7 +292,7 @@ Across the game industry, a large share of players who quit a game do so during 
 
 ### Rules for the first session
 
-- **Under one minute to the first action,** under two minutes to the first Perfect Counter.
+- **Under one minute to the first action,** under five minutes to the first Perfect Counter. *(Changed Nov 16, 2026, from two minutes: Jay asked for a slower, story-led tutorial, TUT-P1. Manager call.)*
 - **No screen with more than one sentence of instructions.** Teach through play and short prompts.
 - **No failure in the tutorial.** It should be impossible to lose the first fight.
 - **End on anticipation,** never on a menu.

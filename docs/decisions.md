@@ -1888,3 +1888,9 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Shop tabs:** with 7 groups the shelves no longer fit a 375 px tall phone, so groups sit under 4 tabs.
 - **Placeholders:** effect colours and recipes are the Programmer's picks for the Manager's art gate (contact sheet in `docs/shots/lp-b4b/`).
 - **Art gate fix (Manager, Nov 15):** pale effects were hard to see. Every particle now has a 1.5 px darker edge (its own colour at 45%) and stays at full strength for the first 40% of its life before fading. Pale puffs, hit pops, two trails and the firework spokes are bigger or thicker; the dust cloud is darker. Before/after in `docs/shots/lp-b4b/before-after.png`.
+
+## TUT-P1b: slower tutorial rules (2026-11-16)
+
+- **Manager call (Jay asked for a slower tutorial):** core-design section 7's "under two minutes to the first Perfect Counter" is now **under five minutes**. "Under one minute to the first action" stays.
+- **Tutorial text:** every kid line is 8 words or fewer (TUT-L1, #519).
+- **Falling stones** follow the 5 TUT-L1 rules (#519), written into `drafts/planning/TUT-P1.md`: melon-size cartoon stones with a soft thump, framed as practice, the circle always fills first, slower help after 2 misses and done after 3, and a kind stumble line.
