@@ -570,10 +570,11 @@ export function currentTwist(content: Content, run: RunState): TwistDef | null {
  * B-T3: the rooms a floor at this belt tier is built from. A tier with its own room set (floorSet,
  * e.g. Ember Kitchens at Orange = tier 3) uses only that set, Guardian room included. Every other
  * tier keeps the shared rooms exactly as before (Green and up too, until their own sets arrive).
+ * L11-B2a: a set only counts when content/settings/floor-sets.json has it on.
  */
 export function floorRooms(content: Content, tier: number): Room[] {
   const open = content.rooms.filter((r) => !r.tutorial && r.minBeltTier <= tier);
-  const own = open.filter((r) => r.floorSet !== null && r.minBeltTier === tier);
+  const own = open.filter((r) => r.floorSet !== null && content.floorSets[r.floorSet] && r.minBeltTier === tier);
   return own.length > 0 ? own : open.filter((r) => r.floorSet === null);
 }
 

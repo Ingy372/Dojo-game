@@ -25,6 +25,8 @@ export interface Content {
   named: NamedContent;
   /** GUARD-SCALE-01: Guardian size and the boss zoom-out. */
   guardianScale: GuardianScaleContent;
+  /** L11-B2a: floorSet name -> live (content/settings/floor-sets.json). */
+  floorSets: Record<string, boolean>;
 }
 
 export interface RawContent {
@@ -47,6 +49,8 @@ export interface RawContent {
   named: unknown;
   /** GUARD-SCALE-01: content/settings/guardian-scale.json (missing = no scaling). */
   guardianScale?: unknown;
+  /** L11-B2a: content/settings/floor-sets.json (missing = every set off). */
+  floorSets?: unknown;
 }
 
 export function loadContent(raw: RawContent): Content {
@@ -72,6 +76,7 @@ export function loadContent(raw: RawContent): Content {
       if (enemies[s.enemy].passive && !r.tutorial) throw new Error(`Room "${r.id}" uses practice dummy "${s.enemy}", but only tutorial rooms can`);
     }
   }
+  const floorSets = loadFloorSets(raw.floorSets);
   for (const kind of ['battle', 'challenge', 'treasure', 'rest', 'boss'] as RoomKind[]) {
     if (!rooms.some((r) => r.kind === kind && !r.tutorial)) throw new Error(`There is no ${kind} room`);
   }
@@ -110,5 +115,13 @@ export function loadContent(raw: RawContent): Content {
     elites,
     named,
     guardianScale,
+    floorSets,
   };
+}
+
+/** L11-B2a: only a set the file marks true is live; a missing file, a missing set or any other value is off (shared rooms). */
+function loadFloorSets(raw: unknown): Record<string, boolean> {
+  const sets = (raw as { sets?: unknown } | null | undefined)?.sets;
+  if (typeof sets !== 'object' || sets === null) return {};
+  return Object.fromEntries(Object.entries(sets).map(([k, v]) => [k, v === true]));
 }
