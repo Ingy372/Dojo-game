@@ -10,7 +10,7 @@ The current plan gives each technique a unique power: 7 kick combos, 40 self-def
 
 When every power stacks, each new one has to be either too small to notice or big enough to break the tower. Players then skip weak moves or coast on strong ones. Limited slots remove that trap: a new move only has to be different, not stronger.
 
-**What stays as built:** sign-off stats, levels and XP, Training Point Health, stripes and Virtues, stances, gear, Insight cards, and the Power Rating weights (real training stays about two-thirds of strength).
+**What stays as built:** sign-off stats, levels and XP, Training Point Health, stripes and Virtues, stances, gear, Insight cards, and the Power Rating weights (real training stays about two-thirds of strength). *Updated: about 60% (Jay, Nov 14, review Q10 A).*
 
 ## Design rules
 

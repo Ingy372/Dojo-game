@@ -394,7 +394,7 @@ Each real belt is one tier of the Tower. A promotion:
 
 - opens the next tier (5 floors and a Guardian);
 - raises the level cap by 10;
-- makes room for that belt's ability package: 1 Form (kata), 1 Strike (kick combo), and 5 Technique Seals (self-defense);
+- makes room for that belt's ability package: 1 kata power (kata; Jay, Nov 14, review Q1 B, stances are their own sign-offs), 1 Strike (kick combo), and 5 Technique Seals (self-defense);
 - adds a room or area to the Home Dojo;
 - unlocks the next story chapter and returns a fragment of the Tower's light;
 - plays the promotion ceremony, the biggest moment in the game.
@@ -441,9 +441,9 @@ Every real character stripe grants a **Virtue**: a special power used with a ful
 - **Crafting** upgrades from materials and recipes.
 - **Decoration set bonuses** and **Calm Mind** from a clean dojo.
 - **Honor** from manners and good choices, which unlocks quests and items.
-- **Street Smarts power and location perks** (section 12), plus **Sensei's Scrolls and the Bestiary,** which give titles and small bonuses.
+- **Street Smarts badges** (no power: Jay, Nov 14, review Q6 A), plus **Sensei's Scrolls and the Bestiary,** which give titles and small bonuses.
 
-Real training still provides about two-thirds of a character's strength at every tier.
+Real training provides **about 60%** of a character's strength at every tier (Jay, Nov 14, review Q10 A; it replaces the old two-thirds).
 
 ### End game
 
@@ -535,19 +535,21 @@ Every player at a rank shares the same cap, but how close they get varies. At an
 
 | Source | Share of tier max | What fills it |
 | --- | --- | --- |
-| Technique sign-offs | 40% | Forms, Strikes, Technique Seals, including catch-up items |
-| Training Points | 17% | Parent-approved home practice; each ability upgrades to level 5, then it's maxed |
+| Technique sign-offs | 40% | Kata powers, Strikes, Technique Seals, including catch-up items |
 | Virtues | 10% | Character stripes (up to 2 per belt) and Virtue ranks |
-| **Real training total** | **67%** | |
-| Experience level | 18% | Playing; 10 levels per belt |
-| Gear | 8% | Loot and crafting; capped by belt tier |
-| Street Smarts | 5% | Real-world scenarios cleared and location sets completed (below) |
-| Ability Mastery | 2% | Using abilities in combat |
-| **Play and learning total** | **33%** | |
+| Home practice (Training Points) | 10% | Parent-approved home practice; **28 Training Points per belt** is the one ceiling |
+| **Real training total** | **about 60%** | |
+| Experience level | 25% | Playing; 10 levels per belt |
+| Gear | 15% | Loot; capped by belt tier |
+| **Play total** | **about 40%** | |
+
+> **Updated (L20-D, Nov 2026):** the 60% total is Jay's (Jay, Nov 14, review Q10 A). The five rows are the review's starting split (5.5), built in the staff report by L16. Street Smarts and Ability Mastery are no longer Power Rating rows: Street Smarts give no power (Jay, Nov 14, review Q6 A), and code had both fixed at 0, so 93% was the real top. The old 17% Training Points share counted 4 per requirement (24 on belts with no kick combo); the one number is now 28 per belt, as the stats use.
 
 Every source has its own ceiling, including home practice, so no one can grind past the cap. A black belt with every stripe, regular home practice, and lots of play sits near 10,000; one who skipped stripes and home practice might sit around 7,500, still strong, and able to see exactly what's missing.
 
 ### Street Smarts power
+
+> **Superseded (Nov 14, 2026; Jay, Nov 14, review Q6 A):** Street Smarts give badges and a brighter town, not fight power. The power numbers and location perks below are kept only as history.
 
 Real-world scenarios add real power, so the lessons that matter most in life also matter in the game.
 
@@ -652,12 +654,12 @@ A new player never faces every system at once. Each system appears when it first
 
 | When | What unlocks |
 | --- | --- |
-| **First session (any rank)** | Moving, Counter and Perfect Counter, Strike, Focus, loot and equipping gear, the Home Dojo (placing, cleaning, the bow), the Gate and Path card, reward moments |
+| **First session (any rank)** | Moving, Counter and Perfect Counter, Strike, Focus, Insights (the tutorial gives one; the live game has had them from day one, L20-D), loot and equipping gear, the Home Dojo (placing, cleaning, the bow), the Gate and Path card, reward moments |
 | **The first time it's earned (any rank)** | Form switching (first Form), Virtues (first stripe), Training Points (first approved home practice), Missions (first mission) |
-| **2nd belt** | Insights, Street Smarts |
+| **2nd belt** | Street Smarts |
 | **3rd belt** | Life-lesson quest stories and Honor |
 | **4th belt** | Challenge mode and elite enemies |
-| **5th belt and up** | Later systems as they ship: Path Perks, crafting, Sensei's Scrolls, the Bestiary |
+| **5th belt and up** | Later systems as they ship: Path Perks, Sensei's Scrolls, more Bestiary (the Monster Journal is the launch Bestiary) |
 | **Black belt** | Endless Ascent and Mentor play (after launch) |
 
 **Sensei's Lessons** are how each system is taught:
