@@ -1,0 +1,14 @@
+{
+  "notes": "L11-B2a: which own-room floor sets are live. A tier whose rooms have a floorSet uses only those rooms when the set is true here; when it is false the tier keeps the shared rooms. Every room's floorSet must be listed. Turn a tier 4-10 set on only after its 8 rooms are in content/rooms/ and its Guardian art is OK'd (L11-B2).",
+  "sets": {
+    "white-dojo": true,
+    "ember-kitchens": true,
+    "giants-steps": false,
+    "quiet-river": false,
+    "forge-of-courage": false,
+    "hall-of-echoes": false,
+    "root-library": false,
+    "storm-stair": false,
+    "summit": false
+  }
+}

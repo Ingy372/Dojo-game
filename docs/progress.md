@@ -1301,3 +1301,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## L11-B1 — the seven belt Guardians (2026-11-17)
 - Enemy files for the Stone Giant, River Watcher, Ember Knight, Echo Mask, Root Keeper, Storm Herald and Lost Lightbearer (base 495/17/30, two counter circles, one dash-only lane, two helpers at two-thirds health). No room uses them yet, so play is unchanged until L11-B2. Fight text is a marked placeholder until L11-C2.
 - Proof: `r-bal-12-bands.test.ts` (each at its own belt), `l11-b1-guardians.test.ts`, `guard-scale-01.test.ts`.
+
+## L11-B2a — the floor-set switch (2026-11-17)
+- New `content/settings/floor-sets.json` turns each own-room floor set on or off. White Dojo and Ember Kitchens are on; the seven tier 4-10 sets are off, so play is unchanged. No rooms moved.
+- Proof: `l11-b2a-floor-switch.test.ts` adds the 56 L11-C1 draft rooms in test content only: with every tier off no floor changes; turning one set on gives that tier only its 8 rooms and its Guardian and leaves every other tier alone. The golden run tests are unchanged.

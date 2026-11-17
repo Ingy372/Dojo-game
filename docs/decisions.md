@@ -1993,3 +1993,8 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - Names, colours, intro, "freed" and lore come from `drafts/content/bosses/` and the bestiary plan. The draft text about unbuilt moves (puddles, copying, gusts) was left out. Tells, sensei lines, tips and descriptions are PLACEHOLDER (said in each file's notes) until L11-C2.
 - Ember Knight keeps the draft colour #d9532b; the Artist's concept sheet asks whether to use #e8772e instead. It only shows before art lands.
 - A test makes sure each Guardian is used only in a boss room with `minBeltTier` equal to its belt. No room uses them yet.
+
+## L11-B2a — the floor-set switch (2026-11-17)
+- One true/false per floorSet name in `content/settings/floor-sets.json`, read by `floorRooms`. A tier turns on in L11-B2 by moving its 8 rooms into `content/rooms/` and setting its set to true.
+- The loader refuses a room whose floorSet isn't listed, so a moved room can't go live by accident. A content bundle with no floor-sets file treats every set as on (old behaviour, for tests that build their own bundle).
+- The L11-C1 draft rooms stay in `drafts/content/rooms/L11/`; only the test loads them (Manager).

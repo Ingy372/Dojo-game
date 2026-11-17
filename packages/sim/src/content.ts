@@ -25,6 +25,8 @@ export interface Content {
   named: NamedContent;
   /** GUARD-SCALE-01: Guardian size and the boss zoom-out. */
   guardianScale: GuardianScaleContent;
+  /** L11-B2a: floorSet name -> live (content/settings/floor-sets.json). */
+  floorSets: Record<string, boolean>;
 }
 
 export interface RawContent {
@@ -47,6 +49,8 @@ export interface RawContent {
   named: unknown;
   /** GUARD-SCALE-01: content/settings/guardian-scale.json (missing = no scaling). */
   guardianScale?: unknown;
+  /** L11-B2a: content/settings/floor-sets.json (missing = every set live). */
+  floorSets?: unknown;
 }
 
 export function loadContent(raw: RawContent): Content {
@@ -72,6 +76,7 @@ export function loadContent(raw: RawContent): Content {
       if (enemies[s.enemy].passive && !r.tutorial) throw new Error(`Room "${r.id}" uses practice dummy "${s.enemy}", but only tutorial rooms can`);
     }
   }
+  const floorSets = loadFloorSets(raw.floorSets, rooms);
   for (const kind of ['battle', 'challenge', 'treasure', 'rest', 'boss'] as RoomKind[]) {
     if (!rooms.some((r) => r.kind === kind && !r.tutorial)) throw new Error(`There is no ${kind} room`);
   }
@@ -110,5 +115,16 @@ export function loadContent(raw: RawContent): Content {
     elites,
     named,
     guardianScale,
+    floorSets,
   };
+}
+
+function loadFloorSets(raw: unknown, rooms: Room[]): Record<string, boolean> {
+  const used = [...new Set(rooms.map((r) => r.floorSet).filter((s): s is string => s !== null))];
+  if (raw === undefined) return Object.fromEntries(used.map((s) => [s, true]));
+  const sets = (raw as { sets?: unknown } | null)?.sets;
+  if (typeof sets !== 'object' || sets === null) throw new Error('floor-sets.json needs a "sets" object');
+  for (const [k, v] of Object.entries(sets)) if (typeof v !== 'boolean') throw new Error(`floor-sets.json: "${k}" must be true or false`);
+  for (const s of used) if (!(s in sets)) throw new Error(`Rooms use floor set "${s}", which floor-sets.json doesn't list`);
+  return sets as Record<string, boolean>;
 }
