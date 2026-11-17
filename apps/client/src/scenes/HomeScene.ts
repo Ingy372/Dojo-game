@@ -57,7 +57,7 @@ import { isPlayTimeUp } from '../game/playTime';
 import { KO, homePointer } from '../game/knockout';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
-import { addSlotIcon, loadSlotIcons } from '../art/slotIcons';
+import { addSealMedallion, addSlotIcon, loadSlotIcons } from '../art/slotIcons';
 import { drawStageRings } from '../art/stageRings';
 import { addStatic, loadArt, staticArt, staticBounds } from '../art/art';
 import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skinButton, woodSkin, HONEY_INK } from '../art/menu2';
@@ -1489,7 +1489,8 @@ export class HomeScene extends Phaser.Scene {
       const icon = Math.max(24, Math.min(L.icon, box.h - TYPE.label * 2 - 14));
       const iy = top + 4 + icon / 2;
       const iconId = card.locked ? 'lock' : card.slot === 'seal' ? (card.pick?.id ?? 'empty-slot') : card.slot === 'kata' ? 'kata' : card.pick?.id ?? '';
-      const img = iconId ? addSlotIcon(this, iconId, 0, iy, icon) : null;
+      const family = card.slot === 'seal' && !card.locked && card.pick ? CONTENT.abilities.families.find((f) => f.id === card.pick?.id) : undefined;
+      const img = family ? addSealMedallion(this, family, this.training.abilities, 0, iy, icon) : iconId ? addSlotIcon(this, iconId, 0, iy, icon) : null;
       if (img) v.add(img);
       else if (card.slot === 'stance' || card.slot === 'virtue') {
         const glyphR = Math.min(16, icon / 2);
@@ -1979,7 +1980,7 @@ export class HomeScene extends Phaser.Scene {
     ty += TYPE.title + 4;
     const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(TROPHY_UI.effectLines);
     ty += eff.height + 6;
-    this.text(tx, ty, c.status, TYPE.body, c.earned ? '#a0522d' : '#7a5a3a', true, FONT, textW);
+    this.text(tx, ty, c.status, TYPE.body, c.earned ? '#8b4513' : '#7a5a3a', true, FONT, textW);
     if (c.hint) {
       ty += TYPE.body + 6;
       const hint = this.text(tx, ty, c.hint, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(2);

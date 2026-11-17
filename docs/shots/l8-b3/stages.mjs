@@ -127,6 +127,13 @@ for (const [W, H] of [[844, 390], [667, 375]]) for (const rm of ['off', 'on']) {
   t = await texts(pg);
   const callout = t.find((x) => /^Self-Defense #\d+$/.test(x.t));
   check(tag, 'card has the title, callout and line, on screen', !!callout && t.some((x) => /shines brighter/.test(x.t)) && t.filter((x) => /evolved|Self-Defense #|shines/.test(x.t)).every((x) => inside(x, W, H)), callout?.t);
+  const medalPic = await pg.evaluate(() => {
+    let ok = false;
+    const w = (l) => { for (const c of l) { if (c.type === 'Container' && c.list.some((x) => x.type === 'Graphics') && c.list.some((x) => x.type === 'Arc') && c.list.some((x) => x.type === 'Image')) ok = true; if (c.list) w(c.list); } };
+    w(window.game.scene.getScene('Home').children.list);
+    return ok;
+  });
+  check(tag, 'evolution medallion shows a picture, not an empty disc', medalPic);
   await pg.screenshot({ path: `${OUT}/${tag}-3-evolved.png` });
   let evolved = 1;
   for (let i = 0; i < 40 && (await celebrating(pg)); i++) {
@@ -148,6 +155,12 @@ for (const [W, H] of [[844, 390], [667, 375]]) for (const rm of ['off', 'on']) {
     w(s.children.list); return o;
   });
   check(tag, 'Seal cards draw stage rings', rings.length > 0, rings.join(','));
+  const sealPics = await pg.evaluate(() => {
+    const s = window.game.scene.getScene('Home'); let n = 0;
+    const w = (l) => { for (const c of l) { if (c.getData?.('styleSlot') === 'seal' && c.list.some((x) => x.type === 'Image')) n++; if (c.list) w(c.list); } };
+    w(s.children.list); return n;
+  });
+  check(tag, 'all three Seal cards show a picture (Escape included)', sealPics === 3, `${sealPics}`);
   await pg.screenshot({ path: `${OUT}/${tag}-4-style.png` });
   // 4. The Book: an evolved technique's sheet says its stage.
   const cub = await pg.evaluate(() => { const h = window.game.scene.getScene('Home'); h.openBook('moves'); return h.trophyCubbies().find((c) => c.shelf === 'selfDefense' && /Stage [2-4]/.test(c.status)) ?? null; });
@@ -158,6 +171,8 @@ for (const [W, H] of [[844, 390], [667, 375]]) for (const rm of ['off', 'on']) {
     t = await texts(pg);
     const line = t.find((x) => /Stage [2-4]/.test(x.t));
     check(tag, 'Book sheet shows the stage on screen', !!line && inside(line, W, H), line?.t);
+    const col = await pg.evaluate(() => { let c = null; const w = (l) => { for (const x of l) { if (x.type === 'Text' && /Stage [2-4]/.test(x.text)) c = x.style.color; if (x.list) w(x.list); } }; w(window.game.scene.getScene('Home').children.list); return c; });
+    check(tag, 'Book status ink is #8b4513 (5.6:1 on the cream paper)', col === '#8b4513', col);
     await pg.screenshot({ path: `${OUT}/${tag}-5-book.png` });
   }
   check(tag, 'no page errors', errs.length === 0, errs.join(' | '));

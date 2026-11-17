@@ -1985,3 +1985,4 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - The evolution card: the medallion turns and gains its ring; with Reduced motion it only fades in. Title, "Stage N", "Self-Defense #n" and one line.
 - The loadout's Seal line ends with "Stage N" and an evolved Seal card wears its rings; the Book's self-defense sheet says "<family> Seal: Stage N". The PB-05 no-digits test now allows the "Stage N" label.
 - PLACEHOLDERS: the words in `content/abilities/seal-evolution.json` (copied from the L8-C1 draft) and the code-drawn bronze rings (`art/stageRings.ts`, one ring per stage past 1, dark outline). `incoming-art/lock-stages-l8` waits for Jay's OK.
+- Fix (Manager, #544 review): a Seal with no slot picture yet (Escape) shows its first technique's Book icon as its medallion, on the evolution card and the loadout (`addSealMedallion`). The Book sheet's earned status ink is now `#8b4513` (5.6:1 on the cream paper, was 4.4:1).
