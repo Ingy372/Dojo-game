@@ -1285,3 +1285,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## L10-B — the Book (2026-11-17)
 - A Book button on the Path opens Moves (moves plus lessons and the tutorial replay), Monsters (the Journal), Faith and Trophies (stripes and monster trophies). The Dojo's Journal and Scroll buttons and the Board's Abilities tab are gone; saves are unchanged. "Last run" is now "Last climb". The TUT-B5 door arrow has a dark outline.
 - Proof: `docs/shots/l10-b/` at 844x390 and 667x375; `l10b-book.test.ts` (an old save shows the same items).
+
+## L8-B1 — Lock becomes two groups (2026-11-17)
+- Lock is now Lock (arm) and Lock (wrist), both "Coming later" on the Style screen until L8-B2. Names are placeholders until Jay picks them. Unlit FAITH DOES letters and unselected wood tabs are easier to read.
+- Proof: `l8-b1-lock-groups.test.ts`; shots in `docs/shots/l8-b1/` at 844x390 and 667x375.

@@ -224,8 +224,7 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
     if (!f.live || earnedFamilies.includes(f.id)) continue;
     pushFamily(f, false);
   }
-  const lock = abilities.families.find((f) => f.id === 'lock');
-  if (lock) pushFamily(lock, false, true);
+  for (const f of abilities.families) if (!f.live) pushFamily(f, false, true);
 
   const equippedSeals = (normalized?.seals ?? []).filter((id) => earnedFamilies.includes(id));
   const slots = sealSlots(training.tier);

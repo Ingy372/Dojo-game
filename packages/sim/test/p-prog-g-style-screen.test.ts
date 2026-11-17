@@ -57,8 +57,10 @@ describe('PB-05 Fighting Style screen', () => {
       expect(open.length).toBe(name === 'orange' ? 3 : 2);
       if (name === 'orange') expect(seals.every((c) => c.locked === null)).toBe(true);
       else expect(seals.filter((c) => c.locked !== null).map((c) => c.locked)).toEqual([nextSealBelt(t.tier, t.belts)]);
-      expect(m.trays.seal.find((p) => p.id === 'lock')?.line).toBe('Coming later');
-      expect(m.trays.seal.find((p) => p.id === 'lock')?.comingLater).toBe(true);
+      for (const id of ['lock-arm', 'lock-wrist']) {
+        expect(m.trays.seal.find((p) => p.id === id)?.line).toBe('Coming later');
+        expect(m.trays.seal.find((p) => p.id === id)?.comingLater).toBe(true);
+      }
       expect(m.cards.some((c) => c.slot === 'kata')).toBe(true);
     }
   });

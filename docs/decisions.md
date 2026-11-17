@@ -1964,3 +1964,9 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - Decisions row 9: the Board's "Last run" tab is now "Last climb" (`content/settings/last-run.json`).
 - Book words are in `content/settings/book.json`.
 - Review fixes (Manager, #541): monster trophies get their own shelf row with one label; their art is fitted by its painted part so it fills the cubby; on a small phone (Path bar under 760 wide) the four bar buttons are 12 px narrower and the banner letters size to their room, so FAITH DOES stays readable.
+
+## L8-B1 — Lock becomes two groups (2026-11-17)
+- L8-SPEC sections 1 and 3: `lock` is replaced by `lock-arm` (#17, #28, #31, #36) and `lock-wrist` (#32, #33, #35, #39) in `content/abilities/seal-families.json`. Both stay `live: false` until the hold (L8-B2), so nobody can equip them and they give nothing yet. #28 carries `dashOnBlock` and #33 `healOnPerfect` 2; the hold, evolve and cue ranks have no effects yet.
+- Names and lines are the L8-C1 draft. "Lock (arm)" and "Lock (wrist)" are placeholders (`namePlaceholder: true`) until Jay names the groups (L8-J); the ids never change. Both use the existing lock picture.
+- An old save with `lock` in a Seal slot loads with that slot empty and nothing else changed (Manager, Nov 17). `l8-b1-lock-groups.test.ts` checks it, plus: no Lock rank carries a capped number, #31–40 rank in at least 2 families, and the caps stay 24 ticks and +20%.
+- Contrast (Tester, #541): unlit FAITH DOES and Faith-tab letters are `#b0a088` (5.0:1 on the banner, 6.2:1 on the tab cells); a dimmed wood tab is lighter (tint `0xc0a888`) with darker ink `#24140a` (about 5:1).

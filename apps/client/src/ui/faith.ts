@@ -12,7 +12,7 @@ import type { Box } from './pathScreen';
 export const FAITH = loadFaith(PACK);
 
 const GOLD = '#ffd166';
-const DIM = '#5e5446';
+const DIM = '#b0a088';
 const INK = '#3a2618';
 const INK_SOFT = '#6b5440';
 

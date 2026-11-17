@@ -71,8 +71,8 @@ describe('G2B-04: Throw is live with its two ranks', () => {
     const f = content.abilities.families.find((x) => x.id === 'throw')!;
     expect(f.live).toBe(true);
     expect(f.ranks.map((r) => [r.technique, r.effects])).toEqual([[11, [{ type: 'counterThrow', amount: 30 }]], [12, [{ type: 'downBonus', amount: 0.25 }]]]);
-    // Lock waits for its first rank (#17 Arm Bar, R-G2B-09): a live family needs ranks.
-    expect(familiesJson.families.find((x) => x.id === 'lock')!.live).toBe(false);
+    // The Lock groups wait for the hold (L8-B2).
+    for (const id of ['lock-arm', 'lock-wrist']) expect(familiesJson.families.find((x) => x.id === id)!.live).toBe(false);
   });
 
   it('only brutes and swarmers are throwable in content; a Guardian can never be marked throwable', () => {

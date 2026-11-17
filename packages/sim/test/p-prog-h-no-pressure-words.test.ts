@@ -24,6 +24,6 @@ describe('PB-05 no pressure words', () => {
     check('swap', sealText.ui.swapPrompt);
     check('note', sealText.ui.slotNote);
     check('soon', sealText.ui.emptySlots.kata);
-    check('later', sealText.families.find((f) => f.id === 'lock')?.comingLater ?? '');
+    for (const id of ['lock-arm', 'lock-wrist']) check(`later ${id}`, sealText.families.find((f) => f.id === id)?.comingLater ?? '');
   });
 });

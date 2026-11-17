@@ -245,12 +245,81 @@
       ]
     },
     {
-      "id": "lock",
-      "name": "Lock",
-      "text": "Hold the attacker still. Coming later.",
+      "id": "lock-arm",
+      "name": "Lock (arm)",
+      "namePlaceholder": true,
+      "text": "Hold attackers still after a Great Counter.",
       "icon": "placeholder",
       "live": false,
-      "ranks": []
+      "ranks": [
+        {
+          "technique": 17,
+          "name": "Arm Bar",
+          "text": "A Great Counter holds the attacker still.",
+          "effects": []
+        },
+        {
+          "technique": 28,
+          "name": "Four-Corner Lock",
+          "text": "A Block refills your DASH.",
+          "effects": [
+            {
+              "type": "dashOnBlock"
+            }
+          ]
+        },
+        {
+          "technique": 31,
+          "name": "Arm Bar Release",
+          "text": "Your Lock Seal shines with a new look!",
+          "effects": []
+        },
+        {
+          "technique": 36,
+          "name": "Wide Release",
+          "text": "Sensei will show you this one soon.",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "lock-wrist",
+      "name": "Lock (wrist)",
+      "namePlaceholder": true,
+      "text": "Set a steady hold after a Great Counter.",
+      "icon": "placeholder",
+      "live": false,
+      "ranks": [
+        {
+          "technique": 32,
+          "name": "Slide to the Wrist",
+          "text": "A Great Counter holds the attacker still.",
+          "effects": []
+        },
+        {
+          "technique": 33,
+          "name": "Party Flex",
+          "text": "Each Great Counter restores a little Health.",
+          "effects": [
+            {
+              "type": "healOnPerfect",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "technique": 35,
+          "name": "Catch the Hand",
+          "text": "Your Lock Seal shines with a new look!",
+          "effects": []
+        },
+        {
+          "technique": 39,
+          "name": "Release and Go",
+          "text": "Sensei will show you this one soon.",
+          "effects": []
+        }
+      ]
     }
   ]
 }
