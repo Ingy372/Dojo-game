@@ -109,6 +109,7 @@ import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
 import { NAMED_PACK, NamedView } from '../game/named';
 import { reducedMotion } from '../game/motion';
+import { RATING, overlaps, ratingWordTop } from '../ui/ratingWord';
 import { THROWN_LOOK, getUpAngle, thrownPose } from '../ui/thrownPose';
 import { drawPatternTell } from '../game/patternTells';
 import { loadSave, writeSave } from '../game/save';
@@ -308,6 +309,8 @@ export class GameScene extends Phaser.Scene {
   private afterHelpUp: (() => void) | null = null;
   /** Live floating texts and pop words, cleared when the hero goes down (Q-PREM-F4). */
   private popups = new Set<Phaser.GameObjects.Text>();
+  /** FX-GREAT: popWord's words on screen; the praise ones hide while a "!" cue is under them. */
+  private words = new Set<Phaser.GameObjects.Text>();
   /** Tutorial floor (K24a): where the step flow is, the tip's Got it button, and the success line to lead the next tip. */
   private tflow: TutorialFlow | null = null;
   private gotItBtn: Phaser.GameObjects.Text | null = null;
@@ -544,6 +547,7 @@ export class GameScene extends Phaser.Scene {
       this.afterHelpUp?.();
     });
     this.popups.clear();
+    this.words.clear();
     this.heroPops = [];
     this.leaving = false;
     this.picker = null;
@@ -720,6 +724,7 @@ export class GameScene extends Phaser.Scene {
     this.frameBoss();
     this.syncEnemyViews();
     for (const e of this.world.enemies) this.drawEnemy(e, blend, now);
+    this.hideWordsOverCues();
     this.buttons.counterWindow(this.counterWindowOpen);
 
     this.buttons.update(p);
@@ -1068,8 +1073,8 @@ export class GameScene extends Phaser.Scene {
       if (chain >= 2) {
         // Brighter glow as the chain grows (it stops growing at x5).
         const glow = Math.min(chain, 5);
-        this.chainText.setText(`GREAT x${chain}`).setShadow(0, 0, '#ffd166', 4 + glow * 4, true, true);
-        this.chainText.setColor(glow >= 4 ? '#fff6d5' : '#ffd166');
+        this.chainText.setText(`GREAT x${chain}`).setShadow(0, 0, RATING.color, 4 + glow * 4, true, true);
+        this.chainText.setColor(glow >= 4 ? RATING.bright : RATING.color);
         if (grew) {
           this.tweens.killTweensOf(this.chainText);
           this.chainText.setScale(1.4);
@@ -1217,9 +1222,10 @@ export class GameScene extends Phaser.Scene {
       .setResolution(res)
       .setVisible(false);
     this.chainText = this.add
-      .text(0, 68, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166', stroke: '#14121c', strokeThickness: 5 })
+      .text(0, 68, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '20px', color: RATING.color, stroke: '#14121c', strokeThickness: 5 })
       .setOrigin(0.5, 0)
       .setResolution(res)
+      .setAlpha(RATING.alpha)
       .setVisible(false);
     this.message = this.add
       .text(0, 0, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 6, align: 'center' })
@@ -1383,7 +1389,7 @@ export class GameScene extends Phaser.Scene {
           const heavy = ev.move !== 'basic';
           this.sparks(e.pos, heavy ? 12 : 5, heavy ? COLORS.gold : 0xffffff);
           if (ev.playerId === this.me && this.shopFx.hit) playFx(this, this.shopFx.hit, e.pos.x * TILE, e.pos.y * TILE, this.fxPlace());
-          this.floatText(e.pos, `${ev.damage}`, heavy ? '#ffd166' : '#ffffff', heavy ? 30 : 22);
+          this.floatText(e.pos, `${ev.damage}`, heavy ? RATING.color : '#ffffff', heavy ? 30 : 22);
           // The character punches (the automatic jab only when standing, so walking stays smooth).
           if (ev.move === 'basic' && !this.world.players[ev.playerId].moving && !this.heroAction) this.heroDo('jab');
           else if (ev.move === 'strike') {
@@ -1422,7 +1428,7 @@ export class GameScene extends Phaser.Scene {
           this.impact(FEEL.perfect);
           this.flashScreen(0xffffff, 0.55, 220);
           this.ring(p.pos, COLORS.gold, 2.2);
-          this.popWord('GREAT!', '#ffd166', 54);
+          this.popWord('GREAT!', RATING.color, RATING.great);
           if (ev.playerId === this.me && !this.world.guide) this.lesson('firstPerfectUnaided');
           break;
         }
@@ -1551,7 +1557,7 @@ export class GameScene extends Phaser.Scene {
           sfx.stripe();
           this.flashScreen(0xffd166, 0.35, 260);
           this.ring(p.pos, COLORS.gold, 2.4);
-          this.popWord(p.virtue?.name ?? 'Virtue', '#ffd166', 40);
+          this.popWord(p.virtue?.name ?? 'Virtue', RATING.color, RATING.name);
           if (ev.healed > 0) this.floatText(p.pos, `+${ev.healed}`, '#5cd65c', 26, 1.2);
           break;
         }
@@ -1829,7 +1835,7 @@ export class GameScene extends Phaser.Scene {
           sfx.insight();
           // Sensei's banner first, so the pop-up can keep clear of it (K23c).
           this.tutorialTip('tutorial-insight');
-          this.popWord(name, '#ffd166', 34);
+          this.popWord(name, RATING.color, RATING.name);
           break;
         }
         case 'insightChoice':
@@ -1871,7 +1877,7 @@ export class GameScene extends Phaser.Scene {
       this.controls.reset();
       this.buttons.reset();
       const name = defs.find((d) => d.id === id)?.name ?? '';
-      this.popWord(name, '#ffd166', 34);
+      this.popWord(name, RATING.color, RATING.name);
     });
     this.cameras.main.ignore(this.picker.container);
   }
@@ -2665,18 +2671,34 @@ export class GameScene extends Phaser.Scene {
     }
     const c = this.room.chest;
     if (c && this.chestImgs[0]?.alpha) boxes.push(toScreen((c.x - 0.6) * TILE, (c.y - 0.7) * TILE, (c.x + 0.6) * TILE, (c.y + 0.6) * TILE));
-    // K24b: the wind-up cue ("!" in a ring) over an enemy about to attack.
-    for (const e of this.world.enemies) {
-      const v = e.mode === 'windup' ? this.enemyViews.get(e.id) : undefined;
-      if (!v) continue;
-      const at = this.windupCueSpot(v.container.x, v.container.y, v.top, e.def.radius * TILE);
-      boxes.push(toScreen(at.x - 22, at.y - 22, at.x + 22, at.y + 22));
-    }
+    boxes.push(...this.cueBoxes());
     if (withMessage && this.message.visible) {
       const m = this.message.getBounds();
       boxes.push({ x0: m.left, x1: m.right, y0: m.top, y1: m.bottom });
     }
     return boxes;
+  }
+
+  /** FX-GREAT: a "!" that turns up (or walks) under a praise word is never hidden; the word hides until it's clear. */
+  private hideWordsOverCues(): void {
+    if (this.words.size === 0) return;
+    const cues = this.cueBoxes();
+    for (const t of this.words) {
+      if (t.style.color !== RATING.color) continue;
+      const b = t.getBounds();
+      t.setVisible(!cues.some((c) => overlaps(c, { x0: b.left, x1: b.right, y0: b.top, y1: b.bottom })));
+    }
+  }
+
+  /** K24b: screen boxes of the wind-up cues ("!" in a ring) over enemies about to attack. */
+  private cueBoxes(): { x0: number; x1: number; y0: number; y1: number }[] {
+    return this.world.enemies.flatMap((e) => {
+      const v = e.mode === 'windup' ? this.enemyViews.get(e.id) : undefined;
+      if (!v) return [];
+      const at = this.windupCueSpot(v.container.x, v.container.y, v.top, e.def.radius * TILE);
+      const b = this.toScreen({ left: at.x - 22, right: at.x + 22, top: at.y - 22, bottom: at.y + 22 });
+      return [{ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom }];
+    });
   }
 
   /** Q-PREMIUM-2 M7: true when a door label's screen box touches a loot or decoration toast. */
@@ -3392,31 +3414,51 @@ export class GameScene extends Phaser.Scene {
   private popWord(text: string, color: string, size: number): void {
     if (this.downed) return;
     const { width, height } = view(this);
+    const rating = color === RATING.color;
     const t = this.add
-      .text(width / 2, height * 0.3, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#14121c', strokeThickness: 8 })
+      .text(width / 2, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#14121c', strokeThickness: rating ? RATING.stroke : 8 })
       .setOrigin(0.5)
       .setResolution(window.devicePixelRatio || 1)
-      .setScale(0.4);
+      .setAlpha(rating ? RATING.alpha : 1);
     this.cameras.main.ignore(t);
-    // K23c: keep off the doors, the chest, the centre message, Sensei's banner and the 'Room clear!' line; it drifts up 20 px as it fades.
-    let top = t.y - t.height / 2 - 20;
-    const sb = this.senseiText?.active ? this.senseiText.getBounds() : null;
-    const boxes = this.protectedBoxes(true);
-    const gl = this.gradeLine?.active ? this.gradeLine.getBounds() : null;
-    for (const b of [sb, gl]) if (b) boxes.push({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
-    for (let pass = 0; pass < 2; pass++)
-      for (const b of boxes) {
-        if (b.x1 < width / 2 - t.width / 2 || b.x0 > width / 2 + t.width / 2 || b.y1 < top || b.y0 > top + t.height + 20) continue;
-        top = Math.max(top, b.y1 + 6);
-      }
-    t.setY(top + 20 + t.height / 2);
-    this.tweens.add({ targets: t, scale: 1, duration: 160, ease: 'Back.Out' });
+    // K23c: keep off the doors, the chest, the centre message, Sensei's banner and the 'Room clear!' line.
+    // FX-GREAT: and off, in this order of importance, every "!" cue, enemy, other word (e.g. "Wave 2"), the hero and buttons.
+    const rm = reducedMotion();
+    const drift = rm ? 0 : 20;
+    const box = (b: { left: number; right: number; top: number; bottom: number }) => ({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
+    const enemies = this.world.enemies.flatMap((e) => {
+      const v = e.mode === 'defeated' ? undefined : this.enemyViews.get(e.id);
+      return v ? [box(this.toScreen(v.container.getBounds()))] : [];
+    });
+    const mine = [box(this.playerOnScreen()), ...this.buttons.objects.filter((c) => c.visible).map((c) => box(c.getBounds()))];
+    // Full size and its fade-up path, even while it is still growing in.
+    const words = [...this.words].map((o) => ({ x0: o.x - o.width / 2, x1: o.x + o.width / 2, y0: o.y - o.height / 2 - drift, y1: o.y + o.height / 2 }));
+    const rest = this.protectedBoxes(true);
+    for (const b of [this.senseiText?.active ? this.senseiText.getBounds() : null, this.gradeLine?.active ? this.gradeLine.getBounds() : null]) if (b) rest.push(box(b));
+    const prefTop = height * 0.3 - t.height / 2;
+    const placed = ratingWordTop(prefTop, { x0: width / 2 - t.width / 2, x1: width / 2 + t.width / 2, h: t.height }, drift, [this.cueBoxes(), enemies, words, mine, rest], 4, height - 4);
+    // A rating word never covers a "!" cue: with no spot clear of every cue, it is skipped this time.
+    if (placed === null && rating) {
+      t.destroy();
+      return;
+    }
+    const top = placed ?? prefTop;
+    t.setY(top + t.height / 2);
+    // Only when nothing else fits: an older word under this one makes way rather than the two piling up.
+    const mineBox = { x0: width / 2 - t.width / 2, x1: width / 2 + t.width / 2, y0: top - drift, y1: top + t.height };
+    [...this.words].forEach((o, i) => overlaps(words[i], mineBox) && this.dropPopup(o));
     this.popups.add(t);
-    this.tweens.add({ targets: t, alpha: 0, y: t.y - 20, delay: 450, duration: 300, onComplete: () => this.dropPopup(t) });
+    this.words.add(t);
+    if (!rm) {
+      t.setScale(0.4);
+      this.tweens.add({ targets: t, scale: 1, duration: 160, ease: 'Back.Out' });
+    }
+    this.tweens.add({ targets: t, alpha: 0, y: t.y - drift, delay: 450, duration: 300, onComplete: () => this.dropPopup(t) });
   }
 
   private dropPopup(t: Phaser.GameObjects.Text): void {
     this.popups.delete(t);
+    this.words.delete(t);
     this.tweens.killTweensOf(t);
     t.destroy();
   }
