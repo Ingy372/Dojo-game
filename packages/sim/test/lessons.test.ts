@@ -25,7 +25,7 @@ const NEW_KEYS = ['twoAttacksAtOnce', 'firstInsightChoice', 'firstDecoration', '
 describe("Sensei's Lessons (M7-P5)", () => {
   it('every lesson has its own triggerKey', () => {
     const keys = Object.values(LESSONS).map((l) => l.triggerKey);
-    expect(keys.length).toBe(13);
+    expect(keys.length).toBe(14);
     expect(new Set(keys).size).toBe(keys.length);
     const dup = JSON.parse(JSON.stringify(lessonsData)) as { lessons: Array<{ triggerKey: string }> };
     dup.lessons[1].triggerKey = dup.lessons[0].triggerKey;
@@ -106,7 +106,8 @@ describe("Sensei's Lessons (M7-P5)", () => {
       NEW_KEYS.forEach((k, i) => fire(log, k, day(d), `room-${i}`));
     }
     const listed = scrollLessons(LESSONS, log).map((l) => l.id);
-    const expected = Object.values(LESSONS).filter((l) => !l.fadingFollowUp).map((l) => l.id);
+    // LP-B5: the VIRTUE line counts as new but has no practice room, so it stays off the Scroll.
+    const expected = Object.values(LESSONS).filter((l) => !l.fadingFollowUp && l.id !== 'lesson-virtue-ready').map((l) => l.id);
     expect(listed).toEqual(expected);
     // Each listed lesson replays: it has screens and a practice line.
     for (const l of scrollLessons(LESSONS, log)) {

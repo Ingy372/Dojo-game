@@ -1890,6 +1890,11 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Placeholders:** effect colours and recipes are the Programmer's picks for the Manager's art gate (contact sheet in `docs/shots/lp-b4b/`).
 - **Art gate fix (Manager, Nov 15):** pale effects were hard to see. Every particle now has a 1.5 px darker edge (its own colour at 45%) and stays at full strength for the first 40% of its life before fading. Pale puffs, hit pops, two trails and the firework spokes are bigger or thicker; the dust cloud is darker. Before/after in `docs/shots/lp-b4b/before-after.png`.
 
+## LP-B5 — fewer fight buttons: no STANCE, VIRTUE only at full Focus (L7, 2026-11-15)
+- **Stance is picked before the run:** the in-fight STANCE button and its name tag are gone. The sim's stance action is left in place, so replays, hashes and balance don't change; nothing in the client sends it now.
+- **VIRTUE appears only when it can be used:** Focus full and no Virtue active. It always shows in its old spot (learnable by feel), grows in over 200 ms with no pulse, and just appears with Reduced motion. Hidden, it can't be tapped, so "Fill your Focus first" is gone; "Already active" stays. The Focus bar still shows the filling (the ring on the button is gone).
+- **One first-time line:** `lesson-virtue-ready`, "Your Focus is full. Tap VIRTUE!", shows the first time VIRTUE appears. It counts as that session's one new thing (if the session already had one, it waits for the next), is not on the Scroll (no practice room, like `lesson-sensei-pick`), and clears itself after 3 s so it doesn't sit over the fight.
+- **Banner keep-out:** VIRTUE's spot stays a keep-out zone for Sensei's banner even while hidden, so a banner is never under the button when it appears.
 ## TUT-P1b: slower tutorial rules (2026-11-16)
 
 - **Manager call (Jay asked for a slower tutorial):** core-design section 7's "under two minutes to the first Perfect Counter" is now **under five minutes**. "Under one minute to the first action" stays.

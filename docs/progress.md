@@ -1235,3 +1235,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Each item is previewed on the hero in the Shop. "Wearing" is now plain text (fixes the Tester's contrast note).
 - Tests: `lp-b4b-effects` (6) and `lp-b4-shop` (15). Phone check `docs/shots/lp-b4b/fx-verify.mjs` at 667x375, 844x390 and 932x430, Reduced motion on and off (shop, a real run, the Dojo wall), plus `contact-sheet.png` of every effect and paint next to the hero. `docs/shots/lp-b4/shop-verify.mjs` is kept as history; it predates the tabs.
 - Art gate fix: every effect now has a darker edge and holds full strength longer; the faint puffs, hit pops, snow and confetti trails and win fireworks are bolder (`docs/shots/lp-b4b/before-after.png`).
+
+## LP-B5 — L7: fewer buttons in a fight (2026-11-15)
+- No STANCE button in a fight; the stance is the one picked before the run. Style screen line is now "Pick your stance before you climb."
+- VIRTUE shows only at full Focus, in its usual spot, with a short calm grow (none with Reduced motion). A white belt sees at most 4 buttons (3 until Virtue is ready).
+- New first-time line "Your Focus is full. Tap VIRTUE!" (`lesson-virtue-ready`), once ever, counted as the session's new thing, not on the Scroll.
+- Tests: `lp-b5-virtue-lesson` (3), `lessons` updated. Phone check `docs/shots/lp-b5/buttons-verify.mjs` at 667x375 and 932x430, Reduced motion on and off, four student profiles.

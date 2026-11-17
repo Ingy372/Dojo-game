@@ -33,7 +33,7 @@ export interface BannerAsk {
   y: number;
   /** The heroes: kept clear whenever there is any room. */
   players: Box[];
-  /** Q-STANCE-BANNER: the action buttons (Stance included), a keep-out zone the banner never covers. */
+  /** Q-STANCE-BANNER: the action buttons, a keep-out zone the banner never covers. */
   buttons: Box[];
   /** Other things best left uncovered (warning circles, pickups). */
   others: Box[];
