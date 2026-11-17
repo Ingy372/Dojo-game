@@ -24,6 +24,12 @@ def M(h, flat=False):
     if (h, flat) not in _m: _m[(h, flat)] = toon_material(("F" if flat else "M") + h, h, *((1.0, 1.0) if flat else ()))
     return _m[(h, flat)]
 OUTLINE = outline_material()
+OCUR = [OUTLINE, OUTLINE_W]   # current outline (material, width); thicker for small game-size props
+def outline_tinted(hexcol):
+    m = outline_material(); m.name = "OUTLINE_" + hexcol
+    for n in m.node_tree.nodes:
+        if n.type == "EMISSION": n.inputs["Color"].default_value = srgb(hexcol)
+    return m
 COLL = {}
 def layer(n):
     if n not in COLL:
@@ -35,7 +41,7 @@ def put(name, bm, color, lay, outline=True, flat=False, smooth=False, parent=Non
     bm.to_mesh(me); bm.free(); me.materials.append(M(color, flat) if isinstance(color, str) else color)
     ob = bpy.data.objects.new(name, me); layer(lay).objects.link(ob)
     obs = [ob]
-    if outline: obs.append(add_hull(ob, layer(lay), OUTLINE, OUTLINE_W))
+    if outline: obs.append(add_hull(ob, layer(lay), OCUR[0], OCUR[1]))
     if parent is not None:
         bpy.context.view_layer.update()
         for o in obs: o.parent = parent; o.matrix_parent_inverse = parent.matrix_world.inverted()
@@ -141,55 +147,56 @@ for nm, face in (("hedge-face", True), ("hedge-block", False)):
 
 # ------------------------------------------------------------------ the Tower's foot with its big door (the path leads here)
 def tower_foot():
-    lay = "tower-foot"; c0 = 0; W = 5
-    gbox(lay, lay + "_step1", 1.2, 1.55, 3.8, 2.0, 0, 0.12, "#d9cba8", bevel=0.02)
-    gbox(lay, lay + "_step2", 1.4, 1.2, 3.6, 1.6, 0, 0.24, "#e3d6b4", bevel=0.02)
-    gbox(lay, lay + "_base", 0.0, 0.3, 5.0, 1.25, 0, 0.4, "#c4b598", bevel=0.03)
-    gbox(lay, lay + "_wall", 0.15, 0.35, 4.85, 1.15, 0.4, 2.3, "#efe4c8", bevel=0.02)
-    for x in (0.15, 4.45):  # corner posts
-        gbox(lay, f"{lay}_post{x}", x, 0.3, x + 0.4, 1.22, 0.4, 2.45, "#a46e40", bevel=0.02)
-    gbox(lay, lay + "_beam", 0.05, 0.3, 4.95, 1.22, 2.3, 2.5, "#a46e40", bevel=0.02)
-    # roof: two sloped eaves (a prism each) in the tower's soft blue-slate with gold trim on the front edge
-    def prism(name, c0, c1, rf, rb, ze, zr, col):
-        bm = bmesh.new(); rm = (rf + rb) / 2
-        v = [bm.verts.new(p) for p in (grid(c0, rf, ze), grid(c1, rf, ze), grid(c1, rm, zr), grid(c0, rm, zr), grid(c0, rb, ze), grid(c1, rb, ze))]
-        for f in ((0, 1, 2, 3), (3, 2, 5, 4), (0, 3, 4), (1, 5, 2), (0, 4, 5, 1)):
-            bm.faces.new([v[i] for i in f])
-        bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
-        return put(name, bm, M(col), lay)
-    prism(lay + "_roof0", -0.35, 5.35, 1.45, -0.1, 2.35, 3.05, "#5b74b8")
-    a2, b2 = grid(-0.35, 1.47, 2.3), grid(5.35, 1.4, 2.4)
-    put(lay + "_trim0", box((a2 + b2) / 2, Vector((abs(b2.x - a2.x), abs(b2.y - a2.y), 0.1))), M("#e0b04a"), lay, outline=False)
-    gbox(lay, lay + "_upper", 0.9, 0.45, 4.1, 0.95, 2.6, 3.6, "#efe4c8", bevel=0.02)
-    for x in (1.6, 2.5, 3.4):
-        put(f"{lay}_uwin{x}", box(grid(x, 0.96, 3.15), Vector((0.22, 0.02, 0.36)), bevel=0.01), M("#ffd66e", True), lay)
-    prism(lay + "_roof1", 0.55, 4.45, 1.15, 0.2, 3.55, 4.05, "#4f67aa")
-    a3, b3 = grid(0.55, 1.17, 3.5), grid(4.45, 1.1, 3.6)
-    put(lay + "_trim1", box((a3 + b3) / 2, Vector((abs(b3.x - a3.x), abs(b3.y - a3.y), 0.1))), M("#e0b04a"), lay, outline=False)
-    # the door: big, round-topped, warm wood with gold studs, a little open so the light shows
-    dc = grid(2.5, 1.16)
-    gbox(lay, lay + "_frame", 1.75, 1.1, 3.25, 1.2, 0.4, 2.05, "#8a5a32", bevel=0.02)
-    gbox(lay, lay + "_door", 1.9, 1.15, 3.1, 1.21, 0.4, 1.9, "#b57a45", bevel=0.01)
-    gbox(lay, lay + "_gap", 2.47, 1.16, 2.53, 1.215, 0.42, 1.88, M("#ffe48a", True), outline=False)
+    lay = "tower-foot"
+    # steps up to the door (the bottom row of the footprint)
+    gbox(lay, lay + "_step1", 1.4, 1.55, 3.6, 2.0, 0, 0.12, "#d9d2c2", bevel=0.02)
+    gbox(lay, lay + "_step2", 1.6, 1.25, 3.4, 1.6, 0, 0.24, "#e4ddcd", bevel=0.02)
+    # a big round stone tower: plinth, then the shaft rising off the top of the screen
+    cc = grid(2.5, -0.55); rx = 2.15; sy = 1.65 * K / rx
+    put(lay + "_plinth", tube(cc, cc + Vector((0, 0, 0.45)), rx + 0.18, rx + 0.12, segs=40, sy=(1.65 * K + 0.18) / (rx + 0.18)), M("#9d978c"), lay, smooth=True)
+    put(lay + "_shaft", tube(cc + Vector((0, 0, 0.45)), cc + Vector((0, 0, 8.0)), rx, rx - 0.08, segs=40, sy=sy), M("#c8c2b5"), lay, smooth=True)
+    # stone courses (darker rings) and staggered block seams on the front so it reads as stone
+    for i, z in enumerate((0.95, 1.5, 2.05, 2.6, 3.15, 3.7, 4.25, 4.8, 5.35, 5.9, 6.45)):
+        r = rx - 0.08 * (z - 0.45) / 7.55 + 0.012
+        put(f"{lay}_course{i}", tube(cc + Vector((0, 0, z - 0.02)), cc + Vector((0, 0, z + 0.02)), r, r, segs=40, sy=sy), M("#8f897e", True), lay, outline=False, smooth=True)
+        for k in range(9):
+            ang = math.radians(-90 + (k - 4) * 17 + (8.5 if i % 2 else 0))
+            p = cc + Vector((math.cos(ang) * (r - 0.004), math.sin(ang) * (r - 0.004) * sy, z + 0.27))
+            obox(lay, f"{lay}_seam{i}_{k}", p, (0.025, 0.025, 0.5), "#8f897e", rot=(0, 0, ang), outline=False, flat=True)
+    for i, (k, z) in enumerate(((-3, 1.22), (2, 1.77), (-1, 2.87), (3, 3.42), (-2, 4.52), (1, 5.07))):   # a few lighter blocks
+        ang = math.radians(-90 + k * 17 + 8.5); r = rx - 0.02
+        obox(lay, f"{lay}_blk{i}", cc + Vector((math.cos(ang) * r, math.sin(ang) * r * sy, z)), (0.3, 0.03, 0.46), "#d8d2c5", rot=(0, 0, ang + math.pi / 2), outline=False, flat=True)
+    # gold band and a soft blue banner stripe, the Tower's colours
+    put(lay + "_band", tube(cc + Vector((0, 0, 2.95)), cc + Vector((0, 0, 3.07)), rx + 0.03, rx + 0.03, segs=40, sy=sy), M("#e0b04a"), lay, outline=False, smooth=True)
+    for x in (1.15, 3.85):
+        gbox(lay, f"{lay}_banner{x}", x - 0.2, 0.86, x + 0.2, 0.9, 3.2, 4.6, "#5b74b8")
+        gbox(lay, f"{lay}_bannertrim{x}", x - 0.2, 0.855, x + 0.2, 0.9, 4.45, 4.6, "#e0b04a", outline=False)
+    # the arched door in a deep stone frame, warm wood, gold studs, a little open so light shows
+    fy = 1.08
+    gbox(lay, lay + "_frame", 1.75, fy - 0.05, 3.25, fy + 0.07, 0.24, 2.05, "#8f897e", bevel=0.03)
+    put(lay + "_arch", tube(grid(2.5, fy - 0.05, 2.05), grid(2.5, fy + 0.07, 2.05), 0.75, 0.75, segs=24), M("#8f897e"), lay, smooth=True)
+    gbox(lay, lay + "_door", 1.9, fy + 0.02, 3.1, fy + 0.09, 0.24, 2.0, "#b57a45", bevel=0.01)
+    put(lay + "_doortop", tube(grid(2.5, fy + 0.02, 2.0), grid(2.5, fy + 0.09, 2.0), 0.6, 0.6, segs=24), M("#b57a45"), lay, smooth=True)
+    gbox(lay, lay + "_gap", 2.47, fy + 0.03, 2.53, fy + 0.095, 0.26, 2.55, M("#ffe48a", True), outline=False)
     for x in (2.1, 2.9):
-        for z in (0.7, 1.15, 1.6):
-            oell(lay, f"{lay}_stud{x}{z}", grid(x, 1.215, z), (0.035, 0.02, 0.035), "#ffd36b", segs=8, rings=4, outline=False)
-    oell(lay, lay + "_ring", grid(2.38, 1.22, 1.1), (0.05, 0.02, 0.05), "#ffd36b", segs=10, rings=4)
-    # round gold sign medallion (no text: a blank disc the game can leave as is)
-    put(lay + "_medal", tube(grid(2.5, 1.2, 2.22) + Vector((0, -0.02, 0)), grid(2.5, 1.2, 2.22) + Vector((0, -0.08, 0)), 0.16, 0.16, segs=20), M("#e0b04a"), lay, smooth=True)
-    put(lay + "_medal2", star_bm(0.09, 0.45), M("#fff3c4", True), lay, outline=False).location = grid(2.5, 1.2, 2.22) + Vector((0, -0.1, 0))
+        for z in (0.6, 1.1, 1.6):
+            oell(lay, f"{lay}_stud{x}{z}", grid(x, fy + 0.095, z), (0.035, 0.02, 0.035), "#ffd36b", segs=8, rings=4, outline=False)
+    oell(lay, lay + "_ring", grid(2.38, fy + 0.1, 1.1), (0.05, 0.02, 0.05), "#ffd36b", segs=10, rings=4)
+    # blank gold medallion above the arch (no text)
+    put(lay + "_medal", tube(grid(2.5, fy, 3.3) + Vector((0, -0.02, 0)), grid(2.5, fy, 3.3) + Vector((0, -0.09, 0)), 0.2, 0.2, segs=20), M("#e0b04a"), lay, smooth=True)
+    put(lay + "_medal2", star_bm(0.11, 0.45), M("#fff3c4", True), lay, outline=False).location = grid(2.5, fy, 3.3) + Vector((0, -0.11, 0))
+    # narrow lit arrow-slit windows higher up
+    for x, z in ((1.3, 5.6), (3.7, 5.6), (2.5, 6.9)):
+        put(f"{lay}_win{x}{z}", box(grid(x, 0.9 if x != 2.5 else fy - 0.02, z), Vector((0.18, 0.05, 0.6)), bevel=0.02), M("#ffd66e", True), lay)
     # lanterns either side of the steps
-    for x in (0.9, 4.1):
+    for x in (1.0, 4.0):
         p = grid(x, 1.7)
         obox(lay, f"{lay}_lb{x}", p + Vector((0, 0, 0.1)), (0.22, 0.22, 0.2), "#bdb6a6", bevel=0.02)
         otube(lay, f"{lay}_lp{x}", p + Vector((0, 0, 0.2)), p + Vector((0, 0, 0.55)), 0.05, 0.05, "#bdb6a6", segs=8)
         obox(lay, f"{lay}_lh{x}", p + Vector((0, 0, 0.67)), (0.24, 0.24, 0.22), "#ffe7b0", bevel=0.02)
         obox(lay, f"{lay}_lr{x}", p + Vector((0, 0, 0.82)), (0.32, 0.32, 0.08), "#8e877a", bevel=0.03)
-    # windows, warm and lit (the light is coming back)
-    for x in (0.9, 4.1):
-        put(f"{lay}_win{x}", box(grid(x, 1.16, 1.5), Vector((0.36, 0.02, 0.5)), bevel=0.01), M("#ffd66e", True), lay, outline=True)
-    target(lay, [lay], [-0.4, 0, 5.4, 2], 3.6, anchor=[2.5, 2], group="tower",
-           note="the foot of the Tower with its big door, 5 tiles wide and 2 deep (the steps are the bottom row); place across the top of the Tower Path room so the path ends at the steps. anchorPx = bottom-centre of the 5x2 footprint. The door is the 'D' spot; the bow happens on the steps")
+    target(lay, [lay], [-0.4, -2.4, 5.4, 2], 5.0, anchor=[2.5, 2], group="tower",
+           note="the foot of the stone Tower with its big arched door; the tower rises off the top of the screen. 5 tiles wide; footprint rows -2.4..2 (the steps are the bottom row); place across the top of the Tower Path room so the path ends at the steps. anchorPx = bottom-centre of the 5x2 footprint. The door is the 'D' spot; the bow happens on the steps")
 tower_foot()
 
 # ------------------------------------------------------------------ decor: bush, small rocks, a tree
@@ -233,16 +240,18 @@ def stone():
         kf(root, 20, sc=(1.25, 1.25, 0.7)); kf(root, 21, sc=(0.92, 0.92, 1.12)); kf(root, 22, sc=(1.05, 1.05, 0.95)); kf(root, 23, sc=1.0)
         kf(root, 27, sc=1.0); kf(root, 30, sc=0.35); kf(root, 31, sc=0.0)
         dust = "stone-dust"; dc = c
+        OCUR[:] = [outline_tinted("#8a7350"), 0.028]
         for i in range(8):
             a = i * math.pi / 4 + 0.2
             d = Vector((math.cos(a), math.sin(a) * K * 0.9, 0))
             e = empty(f"{dust}_e{i}", dc + d * 0.18 + Vector((0, 0, 0.05)))
-            oell(dust, f"{dust}_{i}", e.location.copy(), (0.1, 0.1, 0.08), "#f1e6cf", segs=10, rings=6, parent=e)
+            oell(dust, f"{dust}_{i}", e.location.copy(), (0.1, 0.1, 0.08), "#efe3c6", segs=10, rings=6, parent=e)
             kf(e, 19, loc=dc + d * 0.18 + Vector((0, 0, 0.05)), sc=0.0)
             kf(e, 20, sc=0.6)
             kf(e, 24, loc=dc + d * 0.42 + Vector((0, 0, 0.14)), sc=1.15)
             kf(e, 29, loc=dc + d * 0.55 + Vector((0, 0, 0.2)), sc=0.55)
             kf(e, 31, sc=0.0)
+        OCUR[:] = [OUTLINE, OUTLINE_W]
         target(lay, [lay, dust], [23.9, -0.4, 25.1, 1.4], 0.3, anchor=[24.5, 0.5], frames=[20, 31], fps=12, group="stone",
                keyFrames={"impact": 0, "settled": 3, "popAway": [7, 11]},
                note="12 frames at 12 fps (1 s), plays once on the landing tick: impact squash (0), bounce (1-2), sits (3-7), shrinks away (8-11). The stone-dust layer is the cartoon puff ring; draw it over the stone. Same anchor as 'stone'. Cue a soft thud on frame 0")
@@ -255,20 +264,20 @@ def dummy(lay, cx, big):
     root = empty(lay + "_root", c)            # pivot at the foot: hits rock it back and forth
     # wooden stand: two crossed feet and a post (the post shows as 'legs' under the straw)
     for k, ang in enumerate((25, -25)):
-        obox(lay, f"{lay}_foot{k}", c + Vector((0, 0, 0.035)), (0.46 * s, 0.07 * s, 0.07), "#8a5a32", rot=(0, 0, ang), bevel=0.015, parent=root)
-    otube(lay, lay + "_post", c + Vector((0, 0, 0.05)), c + Vector((0, 0, 0.5 * s)), 0.04 * s, 0.04 * s, "#8a5a32", segs=10, parent=root)
+        obox(lay, f"{lay}_foot{k}", c + Vector((0, 0, 0.035)), (0.56 * s, 0.09 * s, 0.08), "#7a4a26", rot=(0, 0, ang), bevel=0.015, parent=root)
+    otube(lay, lay + "_post", c + Vector((0, 0, 0.05)), c + Vector((0, 0, 0.5 * s)), 0.055 * s, 0.055 * s, "#7a4a26", segs=10, parent=root)
     # straw body: a stout bundle with a rounded bottom fringe and two rope ties
-    b0, b1 = 0.24 * s, 0.66 * s
+    b0, b1 = 0.44 * s, 0.78 * s
     put(lay + "_body", tube(c + Vector((0, 0, b0)), c + Vector((0, 0, b1)), 0.17 * s, 0.155 * s, segs=18), M("#ecc65e"), lay, smooth=True, parent=root)
     oell(lay, lay + "_bodytop", c + Vector((0, 0, b1)), (0.155 * s, 0.155 * s, 0.045 * s), "#ecc65e", segs=16, rings=6, outline=False, parent=root)
-    put(lay + "_skirt", tube(c + Vector((0, 0, b0 + 0.05 * s)), c + Vector((0, 0, b0 - 0.07 * s)), 0.17 * s, 0.2 * s, segs=18), M("#e2b84f"), lay, smooth=True, parent=root)
-    for i in range(7):
-        a = -math.pi * 0.95 + i * math.pi * 0.3
+    put(lay + "_skirt", tube(c + Vector((0, 0, b0 + 0.05 * s)), c + Vector((0, 0, b0 - 0.03 * s)), 0.17 * s, 0.19 * s, segs=18), M("#e2b84f"), lay, smooth=True, parent=root)
+    for i in range(9):
+        a = -math.pi * 0.97 + i * math.pi * 0.24
         p0 = c + Vector((math.cos(a) * 0.172 * s, math.sin(a) * 0.172 * s, b0 + 0.06 * s)); p1 = c + Vector((math.cos(a) * 0.157 * s, math.sin(a) * 0.157 * s, b1 - 0.02 * s))
-        otube(lay, f"{lay}_sl{i}", p0, p1, 0.006 * s, 0.006 * s, "#d9a93c", segs=4, outline=False, parent=root, flat=True)
+        otube(lay, f"{lay}_sl{i}", p0, p1, 0.011 * s, 0.011 * s, "#b8862a", segs=4, outline=False, parent=root, flat=True)
     for zz in (b0 + 0.1 * s, b1 - 0.05 * s):
-        r = 0.168 * s
-        put(f"{lay}_tie{zz:.2f}", tube(c + Vector((0, 0, zz - 0.016 * s)), c + Vector((0, 0, zz + 0.016 * s)), r, r, segs=16), M("#b8783f"), lay, outline=False, smooth=True, parent=root)
+        r = 0.172 * s
+        put(f"{lay}_tie{zz:.2f}", tube(c + Vector((0, 0, zz - 0.025 * s)), c + Vector((0, 0, zz + 0.025 * s)), r, r, segs=16), M("#7a4a26"), lay, outline=False, smooth=True, parent=root)
     body_c = c + Vector((0, 0, (b0 + b1) / 2))
     # target patch on the chest: blue and white rings (never red)
     tc = body_c + Vector((0, -0.163 * s, 0.03 * s))
@@ -276,21 +285,21 @@ def dummy(lay, cx, big):
         put(f"{lay}_tg{k}", tube(tc + Vector((0, 0.004 * k, 0)), tc + Vector((0, -0.006 - 0.004 * k, 0)), rr * s, rr * s, segs=20), M(col, True), lay,
             outline=(k == 0), smooth=True, parent=root)
     # arms: a cross-bar with padded straw ends tied with rope
-    al = (0.34 if big else 0.29) * s
-    otube(lay, lay + "_bar", c + Vector((-al, 0.02, 0.58 * s)), c + Vector((al, 0.02, 0.58 * s)), 0.03 * s, 0.03 * s, "#8a5a32", segs=8, parent=root)
+    al = (0.42 if big else 0.38) * s
+    otube(lay, lay + "_bar", c + Vector((-al, 0.02, 0.66 * s)), c + Vector((al, 0.02, 0.66 * s)), 0.04 * s, 0.04 * s, "#7a4a26", segs=8, parent=root)
     for sx in (-1, 1):
-        oell(lay, f"{lay}_arm{sx}", c + Vector((sx * (al - 0.03 * s), 0, 0.58 * s)), ((0.1 if big else 0.08) * s, 0.065 * s, 0.065 * s), "#ecc65e", segs=12, rings=7, parent=root)
-        put(f"{lay}_armtie{sx}", tube(c + Vector((sx * (al - 0.1 * s), 0, 0.58 * s)), c + Vector((sx * (al - 0.075 * s), 0, 0.58 * s)), 0.058 * s, 0.058 * s, segs=12), M("#b8783f"), lay, outline=False, smooth=True, parent=root).rotation_euler = (0, 0, 0)
+        oell(lay, f"{lay}_arm{sx}", c + Vector((sx * (al - 0.02 * s), 0, 0.66 * s)), ((0.075 if big else 0.06) * s, 0.06 * s, 0.06 * s), "#ecc65e", segs=12, rings=7, parent=root)
+        put(f"{lay}_armtie{sx}", tube(c + Vector((sx * (al - 0.075 * s), 0, 0.66 * s)), c + Vector((sx * (al - 0.05 * s), 0, 0.66 * s)), 0.064 * s, 0.064 * s, segs=12), M("#7a4a26"), lay, outline=False, smooth=True, parent=root).rotation_euler = (0, 0, 0)
     # neck tie and a big round straw head (no face), with a little top knot
-    put(lay + "_neck", tube(c + Vector((0, 0, b1 + 0.02 * s)), c + Vector((0, 0, b1 + 0.06 * s)), 0.07 * s, 0.07 * s, segs=12), M("#b8783f"), lay, smooth=True, parent=root)
-    hc = c + Vector((0, 0, b1 + 0.17 * s))
-    oell(lay, lay + "_head", hc, (0.13 * s, 0.12 * s, 0.12 * s), "#efcd6a", segs=16, rings=10, parent=root)
+    put(lay + "_neck", tube(c + Vector((0, 0, b1 + 0.02 * s)), c + Vector((0, 0, b1 + 0.08 * s)), 0.06 * s, 0.075 * s, segs=12), M("#7a4a26"), lay, smooth=True, parent=root)
+    hc = c + Vector((0, 0, b1 + 0.2 * s))
+    oell(lay, lay + "_head", hc, (0.135 * s, 0.13 * s, 0.13 * s), "#efcd6a", segs=18, rings=12, parent=root)
     for i in range(5):
         a = -0.9 + i * 0.45
         p0 = hc + Vector((math.sin(a) * 0.12 * s, -math.cos(a) * 0.115 * s * 0.4 - 0.06 * s, -0.08 * s))
         p1 = hc + Vector((math.sin(a) * 0.1 * s, -math.cos(a) * 0.115 * s * 0.4 - 0.07 * s, 0.07 * s))
-        otube(lay, f"{lay}_hl{i}", p0, p1, 0.005 * s, 0.005 * s, "#d9a93c", segs=4, outline=False, parent=root, flat=True)
-    oell(lay, lay + "_topknot", hc + Vector((0, 0.02, 0.12 * s)), (0.05 * s, 0.05 * s, 0.045 * s), "#e2b84f", segs=10, rings=6, parent=root)
+        otube(lay, f"{lay}_hl{i}", p0, p1, 0.009 * s, 0.009 * s, "#b8862a", segs=4, outline=False, parent=root, flat=True)
+    if False: oell(lay, lay + "_topknot", hc + Vector((0, 0.02, 0.12 * s)), (0.05 * s, 0.05 * s, 0.045 * s), "#e2b84f", segs=10, rings=6, parent=root)
     if big:   # the big one wears a gold sash so it reads as 'the big one'
         put(lay + "_sash", tube(c + Vector((0, 0, b0 + 0.17 * s)), c + Vector((0, 0, b0 + 0.22 * s)), 0.172 * s, 0.172 * s, segs=18), M("#f2b43a"), lay, outline=False, smooth=True, parent=root)
     puff = lay + "-puff"   # straw bits that burst out when it's beaten
@@ -334,27 +343,32 @@ def dummy(lay, cx, big):
     target(nm + "-defeat", [lay, puff], rect, top + 0.2, anchor=[cx, 0.6], frames=[50 + o0, 61 + o0], fps=12, group="dummy",
            keyFrames={"lastWobble": 3, "pop": 7},
            note=f"{nm}: beaten, 12 frames at 12 fps (1 s), once: wobbles, puffs up, then pops into straw bits and little stars (no breaking or tearing). Layers: {lay} then {puff} on top. Cue a soft 'poof' on frame 7")
+OCUR[:] = [OUTLINE, 0.03]
 dummy("dummy-small", 30.5, False)
 dummy("dummy-big", 34.5, True)
+OCUR[:] = [OUTLINE, OUTLINE_W]
 
 # ------------------------------------------------------------------ stumble stars (circle above the hero's head)
 def stars():
+    OCUR[:] = [OUTLINE, 0.03]
     lay = "stumble-stars"; c = grid(40.5, 0.5, 0.0)
     ring = empty(lay + "_ring", c)
     cols = ["#ffd34d", "#fff3c4", "#ffd34d"]
     for i in range(3):
         a = i * math.tau / 3
-        e = empty(f"{lay}_e{i}", c + Vector((math.cos(a) * 0.36, math.sin(a) * 0.36, 0))); par(e, ring)
-        o = put(f"{lay}_s{i}", star_bm(0.17 if i != 1 else 0.14, 0.45), M(cols[i]), lay, outline=True, parent=e)
+        e = empty(f"{lay}_e{i}", c + Vector((math.cos(a) * 0.42, math.sin(a) * 0.42, 0))); par(e, ring)
+        o = put(f"{lay}_s{i}", star_bm(0.125 if i != 1 else 0.115, 0.47), M(cols[i]), lay, outline=True, parent=e)
         o.location = e.location.copy()
-        o.rotation_euler = (math.radians(-20), 0, 0)
+        o.rotation_euler = (math.radians(-35), 0, 0)
     ring.rotation_euler = (0, 0, 0); ring.keyframe_insert("rotation_euler", frame=70)
     ring.rotation_euler = (0, 0, math.tau * 11 / 12); ring.keyframe_insert("rotation_euler", frame=81)
     for fc in ring.animation_data.action.fcurves:
         for k in fc.keyframe_points: k.interpolation = "LINEAR"
-    target(lay, [lay], [39.7, -0.45, 41.3, 1.45], 0.5, anchor=[40.5, 0.5], frames=[70, 81], fps=12, loop=True, group="fx",
+    target(lay, [lay], [39.5, -0.6, 41.5, 1.6], 0.6, anchor=[40.5, 0.5], frames=[70, 81], fps=12, loop=True, group="fx",
            note="3 little stars circling (12-frame loop at 12 fps = 1 s) for the stumble. anchorPx = the ring's centre: put it on the top of the hero's head. Plays only for the short stumble pause; gold and cream, never red")
+OCUR[:] = [OUTLINE, OUTLINE_W]
 stars()
+OCUR[:] = [OUTLINE, OUTLINE_W]
 
 scene.frame_set(1)
 scene["static_targets"] = json.dumps(TARGETS)

@@ -192,7 +192,7 @@
     "tower-foot": {
       "size": [
         464,
-        448
+        752
       ],
       "layers": [
         "tower-foot"
@@ -202,18 +202,18 @@
       },
       "groundRect": {
         "col0": -0.4,
-        "row0": 0,
+        "row0": -2.4,
         "col1": 5.4,
         "row1": 2,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 3.6,
+      "topExtraTiles": 5.0,
       "anchorPx": [
         232.0,
-        448.0
+        752.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "the foot of the Tower with its big door, 5 tiles wide and 2 deep (the steps are the bottom row); place across the top of the Tower Path room so the path ends at the steps. anchorPx = bottom-centre of the 5x2 footprint. The door is the 'D' spot; the bow happens on the steps"
+      "note": "the foot of the stone Tower with its big arched door; the tower rises off the top of the screen. 5 tiles wide; footprint rows -2.4..2 (the steps are the bottom row); place across the top of the Tower Path room so the path ends at the steps. anchorPx = bottom-centre of the 5x2 footprint. The door is the 'D' spot; the bow happens on the steps"
     },
     "decor-bush": {
       "size": [
@@ -545,8 +545,8 @@
     },
     "stumble-stars": {
       "size": [
-        128,
-        192
+        160,
+        224
       ],
       "layers": [
         "stumble-stars"
@@ -555,20 +555,20 @@
         "stumble-stars": "stumble-stars_stumble-stars.png"
       },
       "groundRect": {
-        "col0": 39.7,
-        "row0": -0.45,
-        "col1": 41.3,
-        "row1": 1.45,
+        "col0": 39.5,
+        "row0": -0.6,
+        "col1": 41.5,
+        "row1": 1.6,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.5,
+      "topExtraTiles": 0.6,
       "anchorPx": [
-        64.0,
-        116.0
+        80.0,
+        136.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "frames": 12,
-      "frameWidth": 128,
+      "frameWidth": 160,
       "fps": 12,
       "loop": true,
       "note": "3 little stars circling (12-frame loop at 12 fps = 1 s) for the stumble. anchorPx = the ring's centre: put it on the top of the hero's head. Plays only for the short stumble pause; gold and cream, never red"
