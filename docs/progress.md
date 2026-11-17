@@ -1277,3 +1277,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## L16-B — staff Power Rating report, 5 rows (2026-11-17)
 - The Testing screen's Power Rating has 5 rows (40/10/10/25/15); Training Points fill against 28 per belt. Player power is unchanged (the golden playRun test matches).
 - Proof: `docs/shots/l16-b/power-report.mjs`, 6/0 at 844x390 and 667x375.
+
+## TUT-B5 — arrow to the HOME door (2026-11-17)
+- After the tutorial close, a small gold arrow at the top edge points at the off-screen HOME door until it comes into view. Tutorial rooms only.
+- Proof: `docs/shots/tut-b5/door-arrow.mjs`, the whole floor plus the arrow checks, 68/0 at 844x390 and 667x375.
