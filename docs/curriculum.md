@@ -24,7 +24,7 @@ Every promotion requires 1 kata and the next 5 self-defense techniques. Promotio
 | Red → Red/Black | Pinon 2 | #26–30 | 30 | #6 |
 | Red/Black → Brown | Pinon 3 | #31–35 | 35 | #7 |
 | Brown → Brown/Black | Nahanchi | #36–40 | 40 | none |
-| Brown/Black → Black | Possi | #41–45 | 45 | none |
+| Brown/Black → Black | Possi | none (stops at #40; Review Trials) | 40 | none |
 
 **At black belt,** students learn Kick Combos 8–12.
 
@@ -33,7 +33,7 @@ Each promotion also has a Bible verse, a covenant and a life word (see `docs/fai
 ## What this means for the game
 
 - **One Tower tier per rank,** with a Gate whose locks match this table exactly: 1 kata, 5 self-defense techniques, and a kick combo where the table lists one.
-- **Kata unlocks a Form** (a stance), so 9 Forms are known (one per kata), plus the Beginner's Stance everyone starts with.
+- **Kata unlocks its own kata power** (Jay, Nov 14, review Q1 B). Stances are separate sign-offs, plus the Beginner's Stance everyone starts with.
 - **Each kick combo unlocks a Strike,** and each self-defense technique unlocks a Technique Seal (5 per tier).
 - **Earlier techniques stay part of the requirement in real life** (the counts are cumulative). The game can reflect this: older Seals stay active and keep mattering in higher tiers, and Sensei's Question at the Bow can ask about any technique the student has earned, not only the newest.
 
@@ -61,4 +61,4 @@ The kata names are in the table above. Their descriptions are still a work in pr
 2. **Kick combinations #8–12** for black belt, one line each (#1–7 are in the Kick combos section above).
 3. **One line on each kata's character,** for example "slow and rooted" or "fast, with turns." This decides how each Form plays.
 
-**Settled (Jay, 2026-10-19):** the spellings in this file are the ones students see (Keon, Pinon 1–3, Nahanchi). Brown/Black → Black is Possi with Self-Defense #41–45.
+**Settled (Jay, 2026-10-19):** the spellings in this file are the ones students see (Keon, Pinon 1–3, Nahanchi). Brown/Black → Black is Possi. *Updated (Jay, Nov 14, review Q5 A): self-defense stops at #40, so this rank has no new self-defense; the game offers Review Trials instead (L9).*

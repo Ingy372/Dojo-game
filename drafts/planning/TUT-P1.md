@@ -48,6 +48,14 @@ Times are targets for a 6–9 year old on Guided (ages 6–9 start there, OV-B3)
 
 **Target total: about 6–8 minutes**, spread over 5 rooms instead of 3. Each room is a resume point, so a kid who has to stop doesn't start over (room resume, M7-P11).
 
+## Text rule
+
+Every line a kid reads in the tutorial is **8 words or fewer** (house style; TUT-L1). Success lines can be a cheer sound plus 2–3 words.
+
+## Time to the first Perfect Counter
+
+Core-design section 7 said "under two minutes". In this plan the Brute comes at about minute 3–4, so the Manager changed the rule to **under five minutes** (Nov 16, 2026), because Jay asked for a slower tutorial.
+
 ## What changes from today
 
 | Today | New |
@@ -63,6 +71,13 @@ Times are targets for a 6–9 year old on Guided (ages 6–9 start there, OV-B3)
 ## New pieces (both tutorial-only)
 
 1. **Falling stones (sim hazard).** A room can list stone drops in waves. Each one shows a red ground circle that fills, then the stone lands. If the hero is still inside, they stumble briefly (stars, a short pause). It does no damage, and that wave drops again. Beat 2 is done when the kid has stepped out of 3 waves. The circle uses the same red circle art as enemy warnings, so stones and enemies teach the same signal. Tutorial-only: normal rooms can't list stones (the loader refuses).
+
+   **Stone rules (TUT-L1, [#519](https://github.com/Ingy372/Dojo-game/pull/519)):**
+   - (a) Cartoon stones the size of a melon, not boulders. A soft thump and dust, with no crash and no big screen shake.
+   - (b) Sensei frames it as practice first: "Loose stones! Step out of the red."
+   - (c) A stone never lands on the hero without warning. The circle always fills first.
+   - (d) If a wave is missed twice, the next try fills more slowly and a soft arrow points to a safe spot. After a third miss, the wave counts as done. A kid is never stuck looping.
+   - (e) The stumble line stays kind (for example, "Oops! Dust off. The stones come again.").
 2. **Practice dummies (passive enemy).** They never move and never attack, but they take hits and give Focus like a normal enemy. One is big, with more health, so it lasts until STRIKE. Today every enemy must have a warned attack (`MIN_WINDUP_TICKS`). A `passive: true` enemy skips that check and is allowed only in `tutorial: true` rooms.
 
 **Scope flag:** both are small and tutorial-only, with no effect on normal floors, balance or rewards. Using stones in real Tower rooms later would be a new feature, so it isn't in this plan.
@@ -73,7 +88,7 @@ Times are targets for a 6–9 year old on Guided (ages 6–9 start there, OV-B3)
 
 | Id | Owner | What | Done when | Waits on |
 |---|---|---|---|---|
-| TUT-C1 | Content Designer | Lines for beats 0–11 in `drafts/content/tutorial/TUT-C1.json`: 4 opening cards (taken from chapter-1 screens 1–4 if they fit), one tip and one success line per beat, the stumble line, and the close. Every line under 12 words and kid-safe; `check-tutorial.py` passes. | The file exists and the checker passes. | This plan |
+| TUT-C1 | Content Designer | Lines for beats 0–11 in `drafts/content/tutorial/TUT-C1.json`: 4 opening cards (taken from chapter-1 screens 1–4 if they fit), one tip and one success line per beat, the stumble line, and the close. Every kid line is **8 words or fewer** and kid-safe; `check-tutorial.py` passes. | The file exists and the checker passes. | This plan |
 | TUT-L1 | Learning & Engagement Designer | Review the beat order and lengths for ages 6–9 in `drafts/learning/TUT-L1-review.md`. Is one skill per beat right? Is 6–8 minutes too long for one sitting? Do the stones scare anyone? | The review names a yes or a change for each beat. | TUT-C1 draft |
 | TUT-A1 | Artist | A falling stone plus its landing dust (cartoon, no cracks on characters), a straw practice dummy (small and big), stumble stars, the Tower Path background. The red ground circle is reused, not new. | Assets are in the repo at the game's sizes. | This plan |
 | TUT-B1 | Programmer | Sim: falling-stone hazard (room `hazards`, waves, the stumble event, `tutorial`-only loader check) plus tests. | Tests show a stone lands after its fill time, the hero inside stumbles with no health change, the wave repeats, the step completes after 3 dodged waves, and a non-tutorial room with stones fails to load. | This plan |
