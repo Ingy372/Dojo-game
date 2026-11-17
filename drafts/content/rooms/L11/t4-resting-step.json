@@ -1,0 +1,23 @@
+{
+  "id": "t4-resting-step",
+  "name": "Resting Step",
+  "kind": "rest",
+  "minBeltTier": 4,
+  "floorSet": "giants-steps",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#..#.....#..#",
+    "#.....S.....#",
+    "#..#.....#..#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from quiet-shrine. Theme and props from the giants-steps draft room \"resting-step\". A wide flat step with two warm blankets and a small lantern on the ledge.",
+  "signs": [
+    "Rest on the step. You have come far."
+  ]
+}

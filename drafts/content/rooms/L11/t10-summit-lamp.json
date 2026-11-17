@@ -1,0 +1,62 @@
+{
+  "id": "t10-summit-lamp",
+  "name": "The Empty Lamp",
+  "kind": "boss",
+  "minBeltTier": 10,
+  "floorSet": "summit",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "##########D#########",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........C........#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "lost-lightbearer",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 6,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 6,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 5,
+      "wave": 2
+    }
+  ],
+  "artProps": "Layout copied from keepers-hall. Theme and props from the summit draft room \"summit-lamp\". The very top: an empty lamp stand under swirling clouds; the Lightbearer stands beside it, tired but holding on.",
+  "signs": [
+    "Come, let us finish together.",
+    "Everyone is safe now."
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "id": "t5-lantern-barge",
+  "name": "The Lantern Barge",
+  "kind": "challenge",
+  "minBeltTier": 5,
+  "floorSet": "quiet-river",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "challenge": {
+    "seconds": 90,
+    "text": "Finish in 90 seconds for a better chest!",
+    "inTimeText": "In time!",
+    "outOfTimeText": "Wide river! You still earned a chest.",
+    "outOfTimeShort": "Time's up!"
+  },
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#.........C........#",
+    "#..##..........##..#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..##..........##..#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "earliestRoom": 4,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "mix": "L11 swap: every Rolling Pins -> Boppers.",
+  "enemies": [
+    {
+      "enemy": "spark-sprite",
+      "column": 4,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 8,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 12,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 16,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "dough-blob",
+      "column": 10,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "ladle-lobber",
+      "column": 15,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "bopper",
+      "column": 5,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 5,
+      "wave": 3
+    }
+  ],
+  "artProps": "Layout copied from supper-rush. Theme and props from the quiet-river draft room \"lantern-barge\". A wide barge with a row of unlit lanterns; two lantern posts in each corner.",
+  "signs": [
+    "Many oars make the river easy."
+  ]
+}

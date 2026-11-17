@@ -1,0 +1,62 @@
+{
+  "id": "t4-great-stair",
+  "name": "The Great Stair",
+  "kind": "boss",
+  "minBeltTier": 4,
+  "floorSet": "giants-steps",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "##########D#########",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........C........#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "stone-giant",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 5,
+      "wave": 2
+    }
+  ],
+  "artProps": "Layout copied from keepers-hall. Theme and props from the giants-steps draft room \"great-stair\". A giant staircase rising on the top wall, each step bigger than the last; the Giant sits on the lowest step.",
+  "signs": [
+    "Tall steps? Take them one at a time.",
+    "Even a giant likes a kind word."
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "id": "t4-swarm-slope",
+  "name": "Swarm Slope",
+  "kind": "battle",
+  "minBeltTier": 4,
+  "floorSet": "giants-steps",
+  "mix": "Yellow belt and up. Bouncy Boppers + swarmers: watch for the staff going up, then step aside or Counter. L11 swap: every Swarmers -> Doughlings.",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "bopper",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "doughling",
+      "column": 4,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "doughling",
+      "column": 16,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "bopper",
+      "column": 5,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "doughling",
+      "column": 14,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "doughling",
+      "column": 10,
+      "row": 2,
+      "wave": 2
+    }
+  ],
+  "artProps": "Layout copied from bopper-yard. Theme and props from the giants-steps draft room \"swarm-slope\". A loose gravel hillside; the diagonal stone blocks are old steps that slid into a V.",
+  "signs": [
+    "Small stones tumble. Big hearts hold."
+  ]
+}

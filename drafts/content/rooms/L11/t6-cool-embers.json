@@ -1,0 +1,23 @@
+{
+  "id": "t6-cool-embers",
+  "name": "Cool Embers",
+  "kind": "rest",
+  "minBeltTier": 6,
+  "floorSet": "forge-of-courage",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#..#.....#..#",
+    "#.....S.....#",
+    "#..#.....#..#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from quiet-shrine. Theme and props from the forge-of-courage draft room \"cool-embers\". A bed of glowing coals that do not burn, two cushions and a kettle.",
+  "signs": [
+    "Rest by the coals. They are gentle."
+  ]
+}

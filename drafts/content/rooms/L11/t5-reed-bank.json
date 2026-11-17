@@ -1,0 +1,65 @@
+{
+  "id": "t5-reed-bank",
+  "name": "Reed Bank",
+  "kind": "battle",
+  "minBeltTier": 5,
+  "floorSet": "quiet-river",
+  "mix": "Yellow belt and up. Bouncy Boppers + swarmers: watch for the staff going up, then step aside or Counter.",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "bopper",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "bopper",
+      "column": 5,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 2,
+      "wave": 2
+    }
+  ],
+  "artProps": "Layout copied from bopper-yard. Theme and props from the quiet-river draft room \"reed-bank\". Tall soft reeds along both sides (the '#' blocks are reed clumps); lily pads on the floor.",
+  "signs": [
+    "Still water, steady breath."
+  ]
+}

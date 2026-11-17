@@ -1,0 +1,108 @@
+{
+  "id": "t9-drum-landing",
+  "name": "Drum Landing",
+  "kind": "battle",
+  "minBeltTier": 9,
+  "floorSet": "storm-stair",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..###........###..#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "earliestRoom": 3,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "rolling-pin",
+      "column": 10,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "rolling-pin",
+      "column": 5,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "ladle-lobber",
+      "column": 14,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "dough-blob",
+      "column": 10,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 10,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 10,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 3,
+      "wave": 4
+    },
+    {
+      "enemy": "rolling-pin",
+      "column": 14,
+      "row": 3,
+      "wave": 4
+    },
+    {
+      "enemy": "ladle-lobber",
+      "column": 6,
+      "row": 3,
+      "wave": 4
+    }
+  ],
+  "artProps": "Layout copied from pin-lanes. Theme and props from the storm-stair draft room \"drum-landing\". Two big storm drums on stone stands; rain streaks down the windows.",
+  "signs": [
+    "Count the beat. Then step."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "t9-feather-nook",
+  "name": "Feather Nook",
+  "kind": "treasure",
+  "minBeltTier": 9,
+  "floorSet": "storm-stair",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#.#.......#.#",
+    "#.....C.....#",
+    "#.#.......#.#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from treasure-vault. Theme and props from the storm-stair draft room \"feather-nook\". A single feather hanging in the air, very still; the chest is a wind-worn trunk.",
+  "signs": [
+    "A calm feather floats here."
+  ]
+}
