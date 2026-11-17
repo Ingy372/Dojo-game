@@ -1273,3 +1273,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Success lines show alone for 1.5 s before the next tip, and play waits for that tip. No room word on tutorial doors (the boss door keeps BOSS), no combo count in the Training Hall, the Shadows! tip clears with the room, and the Brute stands still under its tip until Got it.
 - Home: a saved run is offered first; on "No" every welcome reward plays as before, on "Yes" they play on the bow home.
 - Proof: `docs/shots/tut-b4/tut-verify.mjs`, 58/0 at 667x375 and 844x390. No wave words in tutorial rooms.
+
+## L16-B — staff Power Rating report, 5 rows (2026-11-17)
+- The Testing screen's Power Rating has 5 rows (40/10/10/25/15); Training Points fill against 28 per belt. Player power is unchanged (the golden playRun test matches).
+- Proof: `docs/shots/l16-b/power-report.mjs`, 6/0 at 844x390 and 667x375.

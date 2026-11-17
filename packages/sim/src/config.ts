@@ -373,14 +373,13 @@ export function byTier<T>(rows: readonly T[], tier: number): T {
 export const POWER = {
   perTier: 1000,
   perDegree: 500,
+  // About 60% from real training (sign-offs, Training Points, virtues), 40% from play (Jay, Nov 14, review Q10 A).
   shares: {
     signOffs: 0.4,
-    trainingPoints: 0.17,
+    trainingPoints: 0.1,
     virtues: 0.1,
-    level: 0.18,
-    gear: 0.08,
-    streetSmarts: 0.05,
-    mastery: 0.02,
+    level: 0.25,
+    gear: 0.15,
   },
   /** Character stripes possible per belt (real limit). */
   stripesPerBelt: 2,

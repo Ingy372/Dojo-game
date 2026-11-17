@@ -1948,3 +1948,8 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - A success line shows alone for 1.5 s; a tip that comes due meanwhile waits, and the world pauses while it waits so nobody leaves the room before it shows.
 - The Brute's tip is a Got it tip and the Brute stands still under it, instead of being held off-screen.
 - A returner with a saved run is asked about it before the welcome; the welcome rewards play now on "No" or on the bow home after "Yes".
+
+## L16-B — staff Power Rating report, 5 rows (2026-11-17)
+- Rows 1, 2 and 12 above are now in code. `POWER.shares` in `config.ts` has 5 rows: sign-offs 40, Training Points 10, virtues 10, level 25 and gear 15, which is about 60% from real training. Street Smarts and Mastery are gone.
+- The Training Points row now fills against 28 per belt so far (`TRAINING_POINTS_PER_BELT`), the same ceiling the stats use.
+- The report is staff-only (`powerRating` is read only by the Testing screen), so a player's real power does not change. The golden `playRun` test (4 students, 3 seeds) still matches.

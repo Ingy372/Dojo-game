@@ -240,12 +240,13 @@ describe('levels and experience', () => {
 });
 
 describe('Power Rating (hidden from players)', () => {
-  it('splits the tier max into the seven sources', () => {
+  it('splits the tier max into five sources, about 60% from real training (L16)', () => {
     const pr = powerRating(train(newWhite), newProfile());
-    expect(pr.parts.map((p) => p.max)).toEqual([400, 170, 100, 180, 80, 50, 20]);
+    expect(pr.parts.map((p) => p.max)).toEqual([400, 100, 100, 250, 150]);
+    expect(POWER.shares.signOffs + POWER.shares.trainingPoints + POWER.shares.virtues).toBeCloseTo(0.6);
     expect(pr.parts.reduce((s, p) => s + p.max, 0)).toBe(1000);
     // A brand-new white belt at level 1: only the level part has anything in it.
-    expect(pr.total).toBe(18);
+    expect(pr.total).toBe(25);
   });
 
   it('adds up a yellow belt', () => {
@@ -255,8 +256,8 @@ describe('Power Rating (hidden from players)', () => {
     const part = (s: string) => pr.parts.find((x) => x.source === s)!;
     expect(part('signOffs').value).toBe(Math.round(800 * (13 / 14)));
     expect(part('virtues').value).toBe(Math.round(200 * (3 / 4)));
-    expect(part('trainingPoints').value).toBe(Math.round(340 * (32 / 56)));
-    expect(part('level').value).toBe(Math.round(360 * (12 / 20)));
+    expect(part('trainingPoints').value).toBe(Math.round(200 * (32 / 56)));
+    expect(part('level').value).toBe(Math.round(500 * (12 / 20)));
     expect(pr.total).toBeLessThanOrEqual(pr.tierMax);
   });
 

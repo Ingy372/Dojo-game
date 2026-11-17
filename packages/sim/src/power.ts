@@ -2,7 +2,7 @@
 // views and balancing only. Each belt tier's max is split between sources, and each
 // source has its own ceiling, so nobody can out-power their real rank.
 
-import { gearCapsForTier, POWER, TRAINING_POINTS } from './config';
+import { gearCapsForTier, POWER, TRAINING_POINTS_PER_BELT } from './config';
 import { GEAR_SLOTS, gearScore, type GearItem } from './loot';
 import { effectiveLevel } from './progression';
 import { wornItem, type Profile } from './profile';
@@ -62,8 +62,8 @@ export function powerRating(t: TrainingState, profile: Profile): PowerRating {
   const signed = t.requirements.filter((r) => r.signedOff).length;
   add('signOffs', t.requirements.length ? signed / t.requirements.length : 0, `${signed} of ${t.requirements.length} requirements signed off`);
 
-  // Training Points: each ability can be upgraded 4 times (level 1 to 5).
-  const maxPoints = t.requirements.length * TRAINING_POINTS.upgradesPerAbility;
+  // Training Points: 28 per belt so far, the same ceiling the stats use.
+  const maxPoints = TRAINING_POINTS_PER_BELT * t.tier;
   add('trainingPoints', maxPoints ? t.trainingPoints / maxPoints : 0, `${t.trainingPoints} of ${maxPoints} Training Points (${t.approvedMinutes} approved minutes)`);
 
   // Virtues: up to 2 stripes per belt so far.
@@ -76,9 +76,6 @@ export function powerRating(t: TrainingState, profile: Profile): PowerRating {
   const score = GEAR_SLOTS.reduce((sum, slot) => sum + gearScore(wornItem(profile, slot)), 0);
   const best = maxGearScore(t.tier);
   add('gear', score / best, `gear score ${Math.round(score)} of ${Math.round(best)}`);
-
-  add('streetSmarts', 0, 'not built yet');
-  add('mastery', 0, 'not built yet');
 
   return { tierMax: t.tierMax, total: parts.reduce((s, p) => s + p.value, 0), parts };
 }
