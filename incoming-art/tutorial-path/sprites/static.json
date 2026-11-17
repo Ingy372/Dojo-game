@@ -1,0 +1,577 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "grass": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "grass"
+      ],
+      "files": {
+        "grass": "grass_grass.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "grass ground tile, exactly 80 x 80 px; anchorPx = top-left corner of the cell. Tiles seamlessly"
+    },
+    "grass-flowers": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "grass-flowers"
+      ],
+      "files": {
+        "grass-flowers": "grass-flowers_grass-flowers.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "grass-flowers ground tile, exactly 80 x 80 px; anchorPx = top-left corner of the cell. Tiles seamlessly"
+    },
+    "path": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "path"
+      ],
+      "files": {
+        "path": "path_path.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "path: flagstone path tile, 80 x 80 px; anchorPx = top-left of the cell"
+    },
+    "path-edge-w": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "path-edge-w"
+      ],
+      "files": {
+        "path-edge-w": "path-edge-w_path-edge-w.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "path-edge-w: flagstone path tile, 80 x 80 px; anchorPx = top-left of the cell; grass verge on the w side"
+    },
+    "path-edge-e": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "path-edge-e"
+      ],
+      "files": {
+        "path-edge-e": "path-edge-e_path-edge-e.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "path-edge-e: flagstone path tile, 80 x 80 px; anchorPx = top-left of the cell; grass verge on the e side"
+    },
+    "hedge-face": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "hedge-face"
+      ],
+      "files": {
+        "hedge-face": "hedge-face_hedge-face.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        0,
+        128.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "low hedge on a stone kerb for the room's top edge, one tile wide; repeat along the top row; anchorPx = bottom-left of its cell; blocks the cell"
+    },
+    "hedge-block": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "hedge-block"
+      ],
+      "files": {
+        "hedge-block": "hedge-block_hedge-block.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        0,
+        128.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the same hedge seen from above, for the side and bottom edges; anchorPx = bottom-left of its cell; blocks the cell"
+    },
+    "tower-foot": {
+      "size": [
+        464,
+        752
+      ],
+      "layers": [
+        "tower-foot"
+      ],
+      "files": {
+        "tower-foot": "tower-foot_tower-foot.png"
+      },
+      "groundRect": {
+        "col0": -0.4,
+        "row0": -2.4,
+        "col1": 5.4,
+        "row1": 2,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 5.0,
+      "anchorPx": [
+        232.0,
+        752.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the foot of the stone Tower with its big arched door; the tower rises off the top of the screen. 5 tiles wide; footprint rows -2.4..2 (the steps are the bottom row); place across the top of the Tower Path room so the path ends at the steps. anchorPx = bottom-centre of the 5x2 footprint. The door is the 'D' spot; the bow happens on the steps"
+    },
+    "decor-bush": {
+      "size": [
+        88,
+        132
+      ],
+      "layers": [
+        "decor-bush"
+      ],
+      "files": {
+        "decor-bush": "decor-bush_decor-bush.png"
+      },
+      "groundRect": {
+        "col0": -0.05,
+        "row0": 0,
+        "col1": 1.05,
+        "row1": 1.05,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        44.0,
+        128.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "round flowering bush (blocks 1 cell)"
+    },
+    "decor-rocks": {
+      "size": [
+        88,
+        108
+      ],
+      "layers": [
+        "decor-rocks"
+      ],
+      "files": {
+        "decor-rocks": "decor-rocks_decor-rocks.png"
+      },
+      "groundRect": {
+        "col0": -0.05,
+        "row0": 0,
+        "col1": 1.05,
+        "row1": 1.05,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.3,
+      "anchorPx": [
+        44.0,
+        104.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "a few small path-side rocks (blocks 1 cell)"
+    },
+    "decor-tree": {
+      "size": [
+        120,
+        248
+      ],
+      "layers": [
+        "decor-tree"
+      ],
+      "files": {
+        "decor-tree": "decor-tree_decor-tree.png"
+      },
+      "groundRect": {
+        "col0": -0.25,
+        "row0": 0,
+        "col1": 1.25,
+        "row1": 1.1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 2.0,
+      "anchorPx": [
+        60.0,
+        240.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "a round blossom tree for the path's sides (blocks 1 cell)"
+    },
+    "stone": {
+      "size": [
+        80,
+        96
+      ],
+      "layers": [
+        "stone"
+      ],
+      "files": {
+        "stone": "stone_stone.png"
+      },
+      "groundRect": {
+        "col0": 20,
+        "row0": 0,
+        "col1": 21,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        40.0,
+        56.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the falling stone (1 frame). The game drops it from above onto the red circle's centre (anchorPx = its resting ground point), then swaps to stone-land on the landing tick. Its shadow is the red circle itself"
+    },
+    "stone-land": {
+      "size": [
+        96,
+        168
+      ],
+      "layers": [
+        "stone-land",
+        "stone-dust"
+      ],
+      "files": {
+        "stone-land": "stone-land_stone-land.png",
+        "stone-dust": "stone-land_stone-dust.png"
+      },
+      "groundRect": {
+        "col0": 23.9,
+        "row0": -0.4,
+        "col1": 25.1,
+        "row1": 1.4,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.3,
+      "anchorPx": [
+        48.0,
+        96.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 12,
+      "frameWidth": 96,
+      "fps": 12,
+      "loop": false,
+      "note": "12 frames at 12 fps (1 s), plays once on the landing tick: impact squash (0), bounce (1-2), sits (3-7), shrinks away (8-11). The stone-dust layer is the cartoon puff ring; draw it over the stone. Same anchor as 'stone'. Cue a soft thud on frame 0",
+      "keyFrames": {
+        "impact": 0,
+        "settled": 3,
+        "popAway": [
+          7,
+          11
+        ]
+      }
+    },
+    "dummy-small-idle": {
+      "size": [
+        96,
+        192
+      ],
+      "layers": [
+        "dummy-small"
+      ],
+      "files": {
+        "dummy-small": "dummy-small-idle_dummy-small.png"
+      },
+      "groundRect": {
+        "col0": 29.9,
+        "row0": -0.1,
+        "col1": 31.1,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.3,
+      "anchorPx": [
+        48.0,
+        160.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "dummy-small: still idle (it never moves or attacks). anchorPx = its foot point on the ground"
+    },
+    "dummy-small-hit": {
+      "size": [
+        96,
+        192
+      ],
+      "layers": [
+        "dummy-small"
+      ],
+      "files": {
+        "dummy-small": "dummy-small-hit_dummy-small.png"
+      },
+      "groundRect": {
+        "col0": 29.9,
+        "row0": -0.1,
+        "col1": 31.1,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.3,
+      "anchorPx": [
+        48.0,
+        160.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 8,
+      "frameWidth": 96,
+      "fps": 16,
+      "loop": false,
+      "note": "dummy-small: hit wobble, 8 frames at 16 fps (0.5 s), once per hit; restart on each new hit. Ends on the idle pose"
+    },
+    "dummy-small-defeat": {
+      "size": [
+        96,
+        208
+      ],
+      "layers": [
+        "dummy-small",
+        "dummy-small-puff"
+      ],
+      "files": {
+        "dummy-small": "dummy-small-defeat_dummy-small.png",
+        "dummy-small-puff": "dummy-small-defeat_dummy-small-puff.png"
+      },
+      "groundRect": {
+        "col0": 29.9,
+        "row0": -0.1,
+        "col1": 31.1,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.5,
+      "anchorPx": [
+        48.0,
+        176.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 12,
+      "frameWidth": 96,
+      "fps": 12,
+      "loop": false,
+      "note": "dummy-small: beaten, 12 frames at 12 fps (1 s), once: wobbles, puffs up, then pops into straw bits and little stars (no breaking or tearing). Layers: dummy-small then dummy-small-puff on top. Cue a soft 'poof' on frame 7",
+      "keyFrames": {
+        "lastWobble": 3,
+        "pop": 7
+      }
+    },
+    "dummy-big-idle": {
+      "size": [
+        152,
+        228
+      ],
+      "layers": [
+        "dummy-big"
+      ],
+      "files": {
+        "dummy-big": "dummy-big-idle_dummy-big.png"
+      },
+      "groundRect": {
+        "col0": 33.55,
+        "row0": -0.1,
+        "col1": 35.45,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.75,
+      "anchorPx": [
+        76.0,
+        196.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "dummy-big: still idle (it never moves or attacks). anchorPx = its foot point on the ground"
+    },
+    "dummy-big-hit": {
+      "size": [
+        152,
+        228
+      ],
+      "layers": [
+        "dummy-big"
+      ],
+      "files": {
+        "dummy-big": "dummy-big-hit_dummy-big.png"
+      },
+      "groundRect": {
+        "col0": 33.55,
+        "row0": -0.1,
+        "col1": 35.45,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.75,
+      "anchorPx": [
+        76.0,
+        196.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 8,
+      "frameWidth": 152,
+      "fps": 16,
+      "loop": false,
+      "note": "dummy-big: hit wobble, 8 frames at 16 fps (0.5 s), once per hit; restart on each new hit. Ends on the idle pose"
+    },
+    "dummy-big-defeat": {
+      "size": [
+        152,
+        244
+      ],
+      "layers": [
+        "dummy-big",
+        "dummy-big-puff"
+      ],
+      "files": {
+        "dummy-big": "dummy-big-defeat_dummy-big.png",
+        "dummy-big-puff": "dummy-big-defeat_dummy-big-puff.png"
+      },
+      "groundRect": {
+        "col0": 33.55,
+        "row0": -0.1,
+        "col1": 35.45,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.95,
+      "anchorPx": [
+        76.0,
+        212.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 12,
+      "frameWidth": 152,
+      "fps": 12,
+      "loop": false,
+      "note": "dummy-big: beaten, 12 frames at 12 fps (1 s), once: wobbles, puffs up, then pops into straw bits and little stars (no breaking or tearing). Layers: dummy-big then dummy-big-puff on top. Cue a soft 'poof' on frame 7",
+      "keyFrames": {
+        "lastWobble": 3,
+        "pop": 7
+      }
+    },
+    "stumble-stars": {
+      "size": [
+        160,
+        224
+      ],
+      "layers": [
+        "stumble-stars"
+      ],
+      "files": {
+        "stumble-stars": "stumble-stars_stumble-stars.png"
+      },
+      "groundRect": {
+        "col0": 39.5,
+        "row0": -0.6,
+        "col1": 41.5,
+        "row1": 1.6,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        80.0,
+        136.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 12,
+      "frameWidth": 160,
+      "fps": 12,
+      "loop": true,
+      "note": "3 little stars circling (12-frame loop at 12 fps = 1 s) for the stumble. anchorPx = the ring's centre: put it on the top of the hero's head. Plays only for the short stumble pause; gold and cream, never red"
+    }
+  }
+}
