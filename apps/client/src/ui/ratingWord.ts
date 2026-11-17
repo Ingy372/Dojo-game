@@ -11,9 +11,10 @@ type Box = { x0: number; x1: number; y0: number; y1: number };
 /**
  * The word's top edge: as near `prefTop` as possible, with the word (plus `drift` px above it, for the
  * fade-up) clear of every box and inside [minTop, maxBottom]. `tiers` go from must-avoid ("!" cues) to
- * nice-to-avoid; when no spot clears them all, the last tier is let go first. Falls back to `prefTop`.
+ * nice-to-avoid; when no spot clears them all, the last tier is let go first. The first tier is never let go:
+ * null means no spot clears it, so the word is skipped.
  */
-export function ratingWordTop(prefTop: number, w: { x0: number; x1: number; h: number }, drift: number, tiers: Box[][], minTop: number, maxBottom: number): number {
+export function ratingWordTop(prefTop: number, w: { x0: number; x1: number; h: number }, drift: number, tiers: Box[][], minTop: number, maxBottom: number): number | null {
   for (let n = tiers.length; n > 0; n--) {
     const boxes = tiers.slice(0, n).flat();
     const clear = (top: number) => top - drift >= minTop && top + w.h <= maxBottom && !boxes.some((b) => overlaps(b, { x0: w.x0, x1: w.x1, y0: top - drift, y1: top + w.h }));
@@ -21,7 +22,7 @@ export function ratingWordTop(prefTop: number, w: { x0: number; x1: number; h: n
     const top = tops.find(clear);
     if (top !== undefined) return top;
   }
-  return prefTop;
+  return null;
 }
 
 export function overlaps(a: Box, b: Box): boolean {

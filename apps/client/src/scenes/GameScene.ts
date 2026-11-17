@@ -3435,7 +3435,14 @@ export class GameScene extends Phaser.Scene {
     const words = [...this.words].map((o) => ({ x0: o.x - o.width / 2, x1: o.x + o.width / 2, y0: o.y - o.height / 2 - drift, y1: o.y + o.height / 2 }));
     const rest = this.protectedBoxes(true);
     for (const b of [this.senseiText?.active ? this.senseiText.getBounds() : null, this.gradeLine?.active ? this.gradeLine.getBounds() : null]) if (b) rest.push(box(b));
-    const top = ratingWordTop(height * 0.3 - t.height / 2, { x0: width / 2 - t.width / 2, x1: width / 2 + t.width / 2, h: t.height }, drift, [this.cueBoxes(), enemies, words, mine, rest], 4, height - 4);
+    const prefTop = height * 0.3 - t.height / 2;
+    const placed = ratingWordTop(prefTop, { x0: width / 2 - t.width / 2, x1: width / 2 + t.width / 2, h: t.height }, drift, [this.cueBoxes(), enemies, words, mine, rest], 4, height - 4);
+    // A rating word never covers a "!" cue: with no spot clear of every cue, it is skipped this time.
+    if (placed === null && rating) {
+      t.destroy();
+      return;
+    }
+    const top = placed ?? prefTop;
     t.setY(top + t.height / 2);
     // Only when nothing else fits: an older word under this one makes way rather than the two piling up.
     const mineBox = { x0: width / 2 - t.width / 2, x1: width / 2 + t.width / 2, y0: top - drift, y1: top + t.height };

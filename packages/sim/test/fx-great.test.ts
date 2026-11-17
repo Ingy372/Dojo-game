@@ -30,15 +30,16 @@ describe('FX-GREAT rating words', () => {
 
   it('moves off an enemy or "!" box, to the nearest clear spot, drift included', () => {
     const enemy = { x0: 300, x1: 360, y0: 110, y1: 170 };
-    const top = ratingWordTop(100, word, 20, [[enemy]], 4, 371);
+    const top = ratingWordTop(100, word, 20, [[enemy]], 4, 371)!;
     expect(top + word.h < enemy.y0 || top - 20 > enemy.y1).toBe(true);
     expect(top).toBe(enemy.y0 - 6 - word.h);
   });
 
-  it('keeps on screen, and stays put when no spot is clear', () => {
+  it('keeps on screen, may overlap a lesser tier, and is skipped when no spot clears the cues', () => {
     const wall = { x0: 0, x1: 667, y0: 0, y1: 375 };
-    expect(ratingWordTop(100, word, 20, [[wall]], 4, 371)).toBe(100);
-    const top = ratingWordTop(20, word, 20, [[{ x0: 300, x1: 360, y0: 10, y1: 80 }]], 4, 371);
+    expect(ratingWordTop(100, word, 20, [[wall]], 4, 371)).toBeNull();
+    expect(ratingWordTop(100, word, 20, [[], [wall]], 4, 371)).toBe(100);
+    const top = ratingWordTop(20, word, 20, [[{ x0: 300, x1: 360, y0: 10, y1: 80 }]], 4, 371)!;
     expect(top - 20).toBeGreaterThanOrEqual(4);
   });
 
@@ -46,7 +47,7 @@ describe('FX-GREAT rating words', () => {
     const cue = { x0: 300, x1: 344, y0: 70, y1: 114 };
     const banner = { x0: 0, x1: 667, y0: 0, y1: 60 };
     const below = { x0: 0, x1: 667, y0: 120, y1: 371 };
-    const top = ratingWordTop(70, word, 20, [[cue], [], [banner, below]], 4, 371);
+    const top = ratingWordTop(70, word, 20, [[cue], [], [banner, below]], 4, 371)!;
     expect(overlaps(cue, { x0: word.x0, x1: word.x1, y0: top - 20, y1: top + word.h })).toBe(false);
   });
 });
