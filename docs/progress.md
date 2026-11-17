@@ -1293,3 +1293,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## L8-B2 — the Lock hold (2026-11-17)
 - Lock (arm) and Lock (wrist) are live: their first rank makes a Perfect Counter hold the enemy for the length of its stagger. Held enemies can't shield; Guardians, bosses and elites are never held; a throw wins. A placeholder bronze ring shows the hold. The Board opens on Last climb after the Book.
 - Proof: `l8-b2-hold.test.ts`, `l10b-book.test.ts`; `docs/shots/l8-b2/hold.mjs` 30/0 at 844x390 and 667x375, Reduced motion on and off.
+
+## L8-B3 — Seal stages (2026-11-17)
+- Seals now have stages (1 to 4 at ranks 1, 3, 6, 9). A new stage plays one evolution card after the sign-offs; a returning student sees the evolved Seals on the welcome card. The Fighting Style and the Book show each Seal's stage. Words and rings are marked placeholders.
+- Proof: `l8-b3-stages.test.ts`; `docs/shots/l8-b3/stages.mjs` 52/0 at 844x390 and 667x375, Reduced motion on and off.

@@ -63,6 +63,8 @@ export interface TrophyInput {
   virtueName: (v: VirtueInfo) => string;
   virtueEffect: (v: VirtueInfo) => string;
   kataLine: (requirementId: string) => string | undefined;
+  /** L8-B3: the Seal family and stage line for a signed-off self-defense technique (1-based), if it is in a live family. */
+  sealStage?: (technique: number) => string | undefined;
 }
 
 /** Every cubby, by shelf, earned first (curriculum order kept inside each half). */
@@ -72,6 +74,7 @@ export function buildCubbies(t: TrophyInput): Cubby[] {
   for (const a of t.abilities) {
     const r = a.requirement;
     const n = seen[a.kind]++;
+    const stage = a.kind === 'seal' && a.unlocked ? t.sealStage?.(n + 1) : undefined;
     out.push({
       id: r.id,
       shelf: KIND_SHELF[a.kind],
@@ -79,7 +82,7 @@ export function buildCubbies(t: TrophyInput): Cubby[] {
       earned: a.unlocked,
       icon: a.stance?.id ?? a.perk?.id,
       effect: a.stance?.text ?? a.perk?.text ?? words.comingLater,
-      status: a.unlocked ? fill(words.signedAt, 'belt', r.beltName) : words.askSensei,
+      status: a.unlocked ? fill(words.signedAt, 'belt', r.beltName) + (stage ? ` · ${stage}` : '') : words.askSensei,
       hint: a.unlocked ? undefined : lockedHint(a.kind, n, a.stance?.id ?? a.perk?.id),
       kata: a.kind === 'stance' && a.unlocked ? t.kataLine(r.id) : undefined,
     });

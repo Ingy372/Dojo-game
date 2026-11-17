@@ -3,9 +3,10 @@
 // Tap a card, then tap a pick. Wording comes from content/abilities/fighting-style.json.
 // Rank names come from the live seal families (J27), not the older draft labels.
 
-import { defaultStrikeDef, earnedKataPowers, earnedStrikes, resolveKataPowerId, emptyLoadout, equipSeal, equipStrike, normalizeLoadout, removeSeal, sealSlots, signedOffTechniques, swapSeal, unlockedFamilies, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type PickLine, type SealFamilyDef, type TrainingState } from '@dojo/sim';
+import { defaultStrikeDef, earnedKataPowers, familyRank, familyStage, earnedStrikes, resolveKataPowerId, emptyLoadout, equipSeal, equipStrike, normalizeLoadout, removeSeal, sealSlots, signedOffTechniques, swapSeal, unlockedFamilies, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type PickLine, type SealFamilyDef, type TrainingState } from '@dojo/sim';
 import words from '../../../../content/abilities/fighting-style.json';
 import helpFile from '../../../../content/abilities/fighting-style-help.json';
+import EVO from '../../../../content/abilities/seal-evolution.json';
 import { MIN_TAP, S1, S2, TYPE, pageDots } from './tokens';
 
 export const STYLE_WORDS = words;
@@ -31,6 +32,8 @@ export interface StylePick {
   requirementId?: string;
   /** Lock: show "Coming later" and do not equip. */
   comingLater?: boolean;
+  /** L8-B3: an earned Seal family's stage (1 to 4). */
+  stage?: number;
 }
 
 export interface AlwaysItem {
@@ -211,9 +214,11 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
   const sealTray: StylePick[] = [];
   const pushFamily = (f: SealFamilyDef, earned: boolean, comingLater = false) => {
     const rank = newestRank(f, signed);
+    const stage = earned ? familyStage(familyRank(f, signed)) : 0;
     sealTray.push({
       id: f.id, slot: 'seal', name: f.name, earned, comingLater,
-      line: comingLater ? words.comingLater : earned && rank ? sealLine(f.name, rank.name) : words.notYet,
+      line: comingLater ? words.comingLater : earned && rank ? `${sealLine(f.name, rank.name)} · ${EVO.stageLabel.replace('{stage}', String(stage))}` : words.notYet,
+      ...(stage > 0 ? { stage } : {}),
     });
   };
   for (const id of earnedFamilies) {

@@ -40,6 +40,7 @@ import {
   dismissSlotNote,
   earnedPicks,
   senseiPick,
+  signedOffTechniques,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
@@ -57,6 +58,7 @@ import { KO, homePointer } from '../game/knockout';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { addSlotIcon, loadSlotIcons } from '../art/slotIcons';
+import { drawStageRings } from '../art/stageRings';
 import { addStatic, loadArt, staticArt, staticBounds } from '../art/art';
 import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skinButton, woodSkin, HONEY_INK } from '../art/menu2';
 import { MENU2_PACK, artRarity } from '../art/menu2Frames';
@@ -64,7 +66,7 @@ import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
 import { drawBanner, drawFaithPage } from '../ui/faith';
-import { BOOK_TABS, BOOK_WORDS, boardTab, bookCubbies, tabCubbies, type BookTab } from '../ui/book';
+import { BOOK_TABS, BOOK_WORDS, boardTab, bookCubbies, sealStageLine, tabCubbies, type BookTab } from '../ui/book';
 import { drawMonsterJournal } from '../ui/MonsterJournal';
 import { isOpen } from '../game/unlocks';
 import { NAMED_PACK } from '../game/named';
@@ -280,7 +282,7 @@ export class HomeScene extends Phaser.Scene {
     }
     this.training = currentTraining();
     const blessingAdded = creditBlessing(this.profile.blessing, this.training.classCheckIns);
-    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name, blessingAdded);
+    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name, blessingAdded, CONTENT.abilities.families);
     // OV-B1: Sensei's Pick puts new Kicks and Defenses in their slots; the lesson comes the first time one moves.
     const picked = senseiPick(this.profile, earnedPicks(this.training, CONTENT.abilities), this.training.tier);
     const picks = { lesson: [] as string[], lines: picked.map((l) => pickLineText(l, CONTENT.abilities)) };
@@ -1499,6 +1501,13 @@ export class HomeScene extends Phaser.Scene {
         g.lineStyle(3, 0xa8703f, 1).strokeCircle(0, iy, icon / 2 - 3);
         v.add(g);
       }
+      // L8-B3: the Seal's stage rings (placeholder art).
+      const stage = card.slot === 'seal' && !card.locked ? card.pick?.stage ?? 0 : 0;
+      if (stage >= 2) {
+        const rings = this.add.graphics().setData('stageRings', stage);
+        drawStageRings(rings, 0, iy, icon / 2 - 4, stage);
+        v.add(rings);
+      }
       // The slot word is always there. The pick's name is added only when it fits on one line,
       // so a long name is not cut in half. The full line stays on the right when the card is open.
       const under = iy + icon / 2 + 2;
@@ -1731,6 +1740,7 @@ export class HomeScene extends Phaser.Scene {
         const k = KATAS.get(id);
         return k ? kataArrows(k) : undefined;
       },
+      sealStage: sealStageLine(CONTENT.abilities.families, signedOffTechniques(t)),
     });
   }
 

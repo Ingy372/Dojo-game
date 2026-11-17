@@ -2,8 +2,9 @@
 // to be the Trophy Case, the Monster Journal and Sensei's Scroll, plus the Faith pages.
 // Moves: katas, kicks, self-defense and the lessons seen. Trophies: Virtue stripes and monster trophies.
 
-import type { JournalKind, SenseiLesson } from '@dojo/sim';
+import { familyRank, familyStage, type JournalKind, type SealFamilyDef, type SenseiLesson } from '@dojo/sim';
 import words from '../../../../content/settings/book.json';
+import EVO from '../../../../content/abilities/seal-evolution.json';
 import type { Cubby, ShelfId } from './trophyCase';
 
 export const BOOK_WORDS = words;
@@ -32,6 +33,14 @@ export interface BookInput {
   journalOpen: boolean;
   monsterName: (k: JournalKind) => string;
   unknown: { name: string; fact: string };
+}
+
+/** L8-B3: "Counter Seal: Stage 2" for a technique in a live family, so the Book shows each family's stage. */
+export function sealStageLine(families: readonly SealFamilyDef[], signed: ReadonlySet<number>): (technique: number) => string | undefined {
+  return (n) => {
+    const f = families.find((x) => x.live && x.ranks.some((r) => r.technique === n));
+    return f ? EVO.legacyRow.replace('{family}', f.name).replace('{stage}', String(familyStage(familyRank(f, signed)))) : undefined;
+  };
 }
 
 /** Every cubby on the Book's shelves: the Trophy Case's, then the lessons, then the monster trophies. */

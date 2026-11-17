@@ -1,0 +1,10 @@
+{
+  "_placeholder": "PLACEHOLDER text for the L8-B3 Seal evolution card. Copied from the L8-C1 draft (drafts/content/abilities/L8-lock-text.json); replace with the approved L8-C1 words.",
+  "title": "Your {family} Seal evolved!",
+  "callout": "Self-Defense #{n}",
+  "line": "It shines brighter, just like your training.",
+  "button": "Continue",
+  "legacyTitle": "Your Seals evolved!",
+  "legacyRow": "{family} Seal: Stage {stage}",
+  "stageLabel": "Stage {stage}"
+}

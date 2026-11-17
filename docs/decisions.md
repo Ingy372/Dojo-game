@@ -1977,3 +1977,11 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - The loader now only needs an effect on a live family's first rank; later ranks can be a look or a cue only (the evolve and cue ranks).
 - Client: a held enemy wears a bronze `#c07a2c` ring with a dark outline, a PLACEHOLDER until Jay OKs the Artist's ring (never the ! yellow `#ffd166`). It breathes gently and holds still with Reduced motion on. The hold plays the guard swish.
 - Board fix (Tester, #541): opening the Board from a Book tab lands on Last climb (`boardTab` in `ui/book.ts`).
+
+## L8-B3 — Seal stages and the evolution card (2026-11-17)
+- L8-SPEC section 4: a Seal family's stage comes from its rank: stage 1 at rank 1, 2 at 3, 3 at 6, 4 at 9 (`familyStage`, `STAGE_RANKS` in `sealFamilies.ts`). An evolution adds no numbers.
+- `rewardMoments` takes the families (optional, last argument). A family whose stage went up since the snapshot gets one `evolved` moment, after the sign-off cards; the snapshot then moves on, so it shows once. If it comes with a promotion, it is a line on the summary screen, like the other extras.
+- Legacy cascade (L8-SPEC section 3, Manager's call): a student already past rank 3 sees the evolved Seals on the existing welcome card ("Your Seals evolved!" plus one row each). No evolution cards play on that first visit.
+- The evolution card: the medallion turns and gains its ring; with Reduced motion it only fades in. Title, "Stage N", "Self-Defense #n" and one line.
+- The loadout's Seal line ends with "Stage N" and an evolved Seal card wears its rings; the Book's self-defense sheet says "<family> Seal: Stage N". The PB-05 no-digits test now allows the "Stage N" label.
+- PLACEHOLDERS: the words in `content/abilities/seal-evolution.json` (copied from the L8-C1 draft) and the code-drawn bronze rings (`art/stageRings.ts`, one ring per stage past 1, dark outline). `incoming-art/lock-stages-l8` waits for Jay's OK.

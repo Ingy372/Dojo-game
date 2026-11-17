@@ -3,6 +3,8 @@
 // it has already celebrated as a small snapshot. Moments come biggest first:
 // promotion, then stripes, then sign-offs, then Sensei's Seal, then the Blessing.
 
+import type { SealFamilyDef } from './abilities';
+import { evolutionsSince, signedOffTechniques, techniquesIn, type Evolution } from './sealFamilies';
 import type { BeltInfo, RequirementStatus, TrainingState, VirtueInfo } from './training';
 import { byTier, TRAINING_STATS } from './config';
 import { virtueTitle } from './training';
@@ -59,13 +61,15 @@ export type RewardMoment =
    * stripes already earned follow as their own moments. A player with no sign-offs yet gets
    * the preview instead: the Beginner's Stance and what the first sign-off unlocks.
    */
-  | { kind: 'welcome'; name: string; belt: BeltInfo; count: number; preview: WelcomePreview | null }
+  | { kind: 'welcome'; name: string; belt: BeltInfo; count: number; preview: WelcomePreview | null; evolutions: Evolution[] }
   /** The biggest moment: a real promotion. */
   | { kind: 'promotion'; from: BeltInfo; to: BeltInfo; levelCap: number; preview: RequirementStatus[] }
   | { kind: 'stripe'; word: string; virtue: string; rank: number; belt: string }
   | { kind: 'signOff'; requirement: RequirementStatus; ability: string }
   /** Several sign-offs at once (more than 3) are shown together. */
   | { kind: 'signOffs'; list: Array<{ requirement: RequirementStatus; ability: string }> }
+  /** L8-B3: a Seal family reached a new stage (after the sign-off cards; once, since the snapshot moves on). */
+  | { kind: 'evolved'; evolution: Evolution }
   | { kind: 'testApproved'; testDate: string | null }
   /** OV-B5: a new class added Blessing runs. full: it was already at the most it holds. */
   | { kind: 'blessing'; full: boolean };
@@ -112,10 +116,11 @@ export function abilityLabel(t: TrainingState, id: string): string {
 /**
  * What's new since the last snapshot, biggest celebration first. `prev` null = first time.
  * `blessingAdded` is what `creditBlessing` returned: runs a new class added, or null for none.
+ * `families`: the Seal families, so an evolution can follow its sign-off (L8-B3).
  */
-export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, stance = "Beginner's Stance", blessingAdded: number | null = null): RewardMoment[] {
+export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, stance = "Beginner's Stance", blessingAdded: number | null = null, families: readonly SealFamilyDef[] = []): RewardMoment[] {
   if (!prev || prev.studentId !== t.studentId) {
-    return unlockCascade(t, stance);
+    return unlockCascade(t, stance, families);
   }
   // Going down in rank can only happen while testing with fake profiles: nothing to celebrate.
   if (t.tier < prev.tier) return [];
@@ -144,6 +149,7 @@ export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, s
   const fresh = [...t.requirements, ...t.stances.map((s) => s.requirement)].filter((r) => r.signedOff && !oldSigned.has(r.id)).map((r) => ({ requirement: r, ability: abilityLabel(t, r.id) }));
   if (fresh.length > MAX_SINGLE_SIGNOFFS) out.push({ kind: 'signOffs', list: fresh });
   else for (const f of fresh) out.push({ kind: 'signOff', ...f });
+  for (const evolution of evolutionsSince(families, techniquesIn(t, oldSigned), signedOffTechniques(t))) out.push({ kind: 'evolved', evolution });
 
   if (t.gate.sealLit && !prev.approved) out.push({ kind: 'testApproved', testDate: t.gate.testDate });
   if (blessingAdded !== null) out.push({ kind: 'blessing', full: blessingAdded === 0 });
@@ -159,7 +165,7 @@ function titleAtRank(v: VirtueInfo, rank: number): string {
  * earned these in the dojo." The opening card, then each sign-off in the order it was earned
  * (more than 3 are shown together), then each stripe. Nothing earned yet: the preview.
  */
-export function unlockCascade(t: TrainingState, stance: string): RewardMoment[] {
+export function unlockCascade(t: TrainingState, stance: string, families: readonly SealFamilyDef[] = []): RewardMoment[] {
   const signed = [...t.requirements, ...t.stances.map((s) => s.requirement)]
     .filter((r) => r.signedOff)
     .map((r, i) => ({ r, i }))
@@ -171,7 +177,9 @@ export function unlockCascade(t: TrainingState, stance: string): RewardMoment[] 
   const count = signed.length + stripes.length;
   const next = t.path.next;
   const preview: WelcomePreview | null = count === 0 ? { stance, next, ability: next ? abilityLabel(t, next.id) : '' } : null;
-  const out: RewardMoment[] = [{ kind: 'welcome', name: t.firstName, belt: t.belt, count, preview }];
+  // L8-B3: families already past rank 3 are listed on this welcome card, with no card each.
+  const evolutions = evolutionsSince(families, new Set(), signedOffTechniques(t));
+  const out: RewardMoment[] = [{ kind: 'welcome', name: t.firstName, belt: t.belt, count, preview, evolutions }];
   if (signed.length > MAX_SINGLE_SIGNOFFS) out.push({ kind: 'signOffs', list: signed });
   else for (const f of signed) out.push({ kind: 'signOff', ...f });
   out.push(...stripes);
