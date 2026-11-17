@@ -1,0 +1,11 @@
+{
+  "_note": "L10-B: the Book (Moves, Monsters, Faith, Trophies). One screen for the Trophy Case, the Monster Journal, Sensei's Scroll and the Faith pages. Wording here so another dojo can change it.",
+  "button": "📖 Book",
+  "title": "Book",
+  "tabs": { "moves": "Moves", "monsters": "Monsters", "faith": "Faith", "trophies": "Trophies" },
+  "tutorial": "Tutorial floor",
+  "tutorialLine": "Climb the first floor again, any time.",
+  "replayTutorial": "↻ Replay",
+  "tryIt": "Try it: {practice}",
+  "monstersLater": "Special monsters you meet in the Tower get a page here."
+}

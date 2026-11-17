@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GOLD, GREEN, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
+import { GOLD, GREEN, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, BOARD, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import BLESS from '../../../../content/settings/blessing.json';
@@ -26,6 +26,8 @@ import {
   wornItem,
   sealBell,
   newTrophies,
+  journalKinds,
+  scrollLessons,
   xpToNext,
   type GearItem,
   type GearSlot,
@@ -55,18 +57,22 @@ import { KO, homePointer } from '../game/knockout';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { addSlotIcon, loadSlotIcons } from '../art/slotIcons';
-import { loadArt } from '../art/art';
+import { addStatic, loadArt, staticArt } from '../art/art';
 import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skinButton, woodSkin, HONEY_INK } from '../art/menu2';
 import { MENU2_PACK, artRarity } from '../art/menu2Frames';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
-import { drawBanner, openFaithPage } from '../ui/faith';
+import { drawBanner, drawFaithPage } from '../ui/faith';
+import { BOOK_TABS, BOOK_WORDS, bookCubbies, tabCubbies, type BookTab } from '../ui/book';
+import { drawMonsterJournal } from '../ui/MonsterJournal';
+import { isOpen } from '../game/unlocks';
+import { NAMED_PACK } from '../game/named';
 import { openShop, type ShopScreen } from '../ui/shop';
 import { SHOP_WORDS, wornShop } from '../game/shop';
 import { playFx } from '../fx/shopFx';
 import { PATH_LABEL, PATH_LOCK_R, PATH_WORDS as PW, clampStart, fill, pathLayout, towerStart, type Box } from '../ui/pathScreen';
-import { takeLesson } from '../game/lessons';
+import { LESSONS, lessonTitle, takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
 import { chestIcon } from '../ui/classChest';
 import { BETA } from '../game/beta';
@@ -84,7 +90,8 @@ export interface HomeSceneData {
 const SLOT_NAME: Record<GearSlot, string> = { hands: 'Hands', gi: 'Gi', charm: 'Charm' };
 const KIND_MARK: Record<string, string> = { rest: '+' };
 
-type Tab = 'run' | 'gear' | 'abilities';
+/** The board's tabs (Last climb, Gear, Fighting Style), then the Book's (L10-B). */
+type Tab = 'run' | 'gear' | 'style' | BookTab;
 /**
  * Home (opened from the notice board in the Home Dojo). LP-B1: it opens on the one Path screen
  * (the Tower, the Gate, the next class step and the next game step); its Board button shows the
@@ -96,6 +103,8 @@ type Tab = 'run' | 'gear' | 'abilities';
 /** A-LEGENDARY-wire: where the 9-slice's gold rim ends inside the tile box (CSS px; frame drawn 6 px outside the box at k 0.5): sides 22/2 - 6, bottom 33/2 - 6 (+0.5 for the inner highlight). */
 /** LP-B4: the Shop button in the Path top bar (narrower than Dojo and Board, so the banner keeps its room). */
 const SHOP_BUTTON_W = 80;
+/** L10-B: Dojo and Board in the Path top bar (the Book button took 88 px from them and the chip). */
+const PATH_BAR_W = 84;
 const LEGEND_RIM = { side: 5, bottom: 11 } as const;
 /** Clear paper between the rarity word (descenders included) and the rim. */
 const LEGEND_CLEAR = 8;
@@ -116,17 +125,14 @@ export class HomeScene extends Phaser.Scene {
   private profile!: Profile;
   private training!: TrainingState;
   private tab: Tab = 'run';
-  /** LP-B1: the Path screen, or the training board (Last run, Gear, Abilities). Straight from a run, the board. */
-  view: 'path' | 'board' = 'path';
-  /** LP-B2: the open Faith page (null = closed), kept so a resize redraws it. */
-  private faithPage: number | null = null;
-  private faithLayer: Phaser.GameObjects.Container | null = null;
+  /** LP-B1: the Path screen, or the training board (Last climb, Gear, Fighting Style), or the Book (L10-B). Straight from a run, the board. */
+  view: 'path' | 'board' | 'book' = 'path';
+  /** L10-B: the Book's Faith page. */
+  private faithPage = 0;
   /** LP-B4: the looks shop over the Path, while open. */
   private shop: ShopScreen | null = null;
   /** LP-B1: the lowest Tower tier shown on the Path (null = around the current tier). */
   private towerFrom: number | null = null;
-  /** P-MENU2-a: which part of Abilities is showing. */
-  private part: AbilitiesPart = 'trophy';
   /** PB-05: the open Fighting Style card. Null until a card is tapped. Shot scripts may set this. */
   styleSlot: StyleSlot | null = null;
   /** Which Seal card is open. */
@@ -185,7 +191,7 @@ export class HomeScene extends Phaser.Scene {
   private drag: { startY: number; from: number; moved: boolean } | null = null;
   /** P-MENU2-i: the code-drawn panel frame, hidden while the panel-frame art is drawn. */
   private codeFrame: Phaser.GameObjects.Graphics | null = null;
-  private tabBox = { rx: 0, y: 0, tabW: 0 };
+  private tabBox = { rx: 0, y: 0, tabW: 0, h: 34 };
   private testing: TestingPanel | null = null;
   private celebrating = false;
   /** Times the title was tapped recently (5 quick taps open the hidden testing screen). */
@@ -203,7 +209,7 @@ export class HomeScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, [...playerPacks(), ICON_PACK, MENU2_PACK]);
+    loadArt(this, [...playerPacks(), ICON_PACK, MENU2_PACK, NAMED_PACK, ...new Set(CONTENT.dojo.decorations.flatMap((d) => (d.art ? [d.art] : [])))]);
     loadGearIcons(this);
     loadSlotIcons(this);
   }
@@ -220,8 +226,7 @@ export class HomeScene extends Phaser.Scene {
     this.tab = 'run';
     this.view = this.fromRun || this.knockout ? 'board' : 'path';
     this.towerFrom = null;
-    this.faithPage = null;
-    this.faithLayer = null;
+    this.faithPage = 0;
     this.shop = null;
     this.page = 0;
     this.selected = null;
@@ -436,7 +441,7 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /** LP-B1: Path or Board. */
-  private setView(v: 'path' | 'board'): void {
+  private setView(v: 'path' | 'board' | 'book'): void {
     if (this.celebrating) return;
     this.view = v;
     this.bagOpen = false;
@@ -448,7 +453,8 @@ export class HomeScene extends Phaser.Scene {
   /** Everything: the shell, the tab bar and the panel. */
   private render(): void {
     if (this.view === 'path') return this.renderPathScreen();
-    this.renderShell();
+    if (this.view === 'book') this.renderBookShell();
+    else this.renderShell();
     this.renderTabs(false);
     this.renderPanel('none');
   }
@@ -480,14 +486,18 @@ export class HomeScene extends Phaser.Scene {
 
     // Top bar: Dojo, Board, the title, and the student chip.
     const { bar } = L;
-    this.button(bar.x, bar.y, 96, bar.h, PW.back, 0x8a5a35, TYPE.body, () => this.backToDojo());
-    this.button(bar.x + 96 + S2, bar.y, 96, bar.h, PW.board, 0x3a3a4a, TYPE.body, () => this.setView('board'));
-    this.button(bar.x + 2 * (96 + S2), bar.y, SHOP_BUTTON_W, bar.h, SHOP_WORDS.button, GOLD, TYPE.body, () => this.openShop());
-    const chipW = Math.min(220, Math.round(bar.w * 0.3));
+    // L10-B: Dojo, Board, Shop and Book, a little narrower so the banner keeps its room.
+    const bw = [PATH_BAR_W, PATH_BAR_W, SHOP_BUTTON_W, SHOP_BUTTON_W];
+    const bx = (i: number) => bar.x + bw.slice(0, i).reduce((a, w) => a + w + S2, 0);
+    this.button(bx(0), bar.y, bw[0], bar.h, PW.back, 0x8a5a35, TYPE.body, () => this.backToDojo());
+    this.button(bx(1), bar.y, bw[1], bar.h, PW.board, 0x3a3a4a, TYPE.body, () => this.setView('board'));
+    this.button(bx(2), bar.y, bw[2], bar.h, SHOP_WORDS.button, GOLD, TYPE.body, () => this.openShop());
+    this.button(bx(3), bar.y, bw[3], bar.h, BOOK_WORDS.button, 0x6b5a2a, TYPE.body, () => this.openBook('moves'));
+    const chipW = Math.min(220, Math.round(bar.w * 0.26));
     const chipX = bar.x + bar.w - chipW;
-    const titleL = bar.x + 2 * 96 + SHOP_BUTTON_W + 3 * S2;
-    // LP-B2: the FAITH DOES banner takes the title's place; it opens the Faith page.
-    drawBanner(this, (o) => this.ui.add(o), { x: titleL, y: bar.y, w: chipX - titleL - S2, h: bar.h }, t, () => this.openFaith(0));
+    const titleL = bx(4);
+    // LP-B2: the FAITH DOES banner takes the title's place; it opens the Book on Faith (L10-B).
+    drawBanner(this, (o) => this.ui.add(o), { x: titleL, y: bar.y, w: chipX - titleL - S2, h: bar.h }, t, () => this.openBook('faith'));
     const chip = this.add.graphics();
     chip.fillStyle(0x221d2e).fillRoundedRect(chipX, bar.y, chipW, bar.h, RADIUS.panel);
     this.ui.add(chip);
@@ -500,7 +510,6 @@ export class HomeScene extends Phaser.Scene {
     this.renderPathGate(L.gate);
     this.renderClassStep(L.classCard, pv.classStep);
     this.renderGameStep(L.gameCard, pv.game, level);
-    if (this.faithPage !== null) this.openFaith(this.faithPage);
     if (this.shop) this.openShop();
   }
 
@@ -516,17 +525,33 @@ export class HomeScene extends Phaser.Scene {
     });
   }
 
-  /** LP-B2: the Faith page over the Path (the banner, the Creed Scroll, the verse scrolls found). */
-  private openFaith(page: number): void {
-    if (this.celebrating && this.faithPage === null) return;
-    this.faithLayer?.destroy();
-    this.faithPage = page;
+  /** L10-B: the Book, on one of its tabs. */
+  private openBook(tab: BookTab): void {
+    if (this.celebrating) return;
+    this.tab = tab;
+    this.page = 0;
+    this.setView('book');
+  }
+
+  /**
+   * L10-B: the Book's frame: Back and the four tabs on one row, and the page under them using
+   * the whole screen (the Journal and Faith pages need the room).
+   */
+  private renderBookShell(): void {
+    this.shell.removeAll(true);
+    this.ui = this.shell;
     const { width, height } = view(this);
-    this.faithLayer = openFaithPage(this, width, height, this.training, page, PW.boardBack, (p) => this.openFaith(p), () => {
-      this.faithLayer?.destroy();
-      this.faithLayer = null;
-      this.faithPage = null;
-    });
+    const pad = height < LEFT_FULL_H + 20 ? S2 : 12;
+    this.ui.add(this.add.rectangle(0, 0, width, height, 0x1e1a14).setOrigin(0));
+    for (let x = 0; x < width; x += 48) this.ui.add(this.add.rectangle(x, 0, 2, height, 0x2a241c).setOrigin(0));
+    this.button(pad, pad, 96, MIN_TAP, PW.boardBack, 0x8a5a35, TYPE.body, () => this.setView('path'));
+    const rx = pad + 96 + S2;
+    const rw = width - rx - pad;
+    this.tabBox = { rx, y: pad, tabW: (rw - 6 * (BOOK_TABS.length - 1)) / BOOK_TABS.length, h: MIN_TAP };
+    const top = pad + MIN_TAP + S2;
+    this.panelBox = { rx: pad, top, rw: width - 2 * pad, panelH: height - top - pad };
+    this.codeFrame = woodFrame(this, pad, top, width - 2 * pad, height - top - pad);
+    this.ui.add(this.codeFrame);
   }
 
   /** LP-B1: the Tower, one tier per belt: cleared tiers lit, yours glowing with you on it, the next in mist, the rest grey. */
@@ -808,27 +833,29 @@ export class HomeScene extends Phaser.Scene {
     this.codeFrame = woodFrame(this, rx, top, rw, panelH);
     this.ui.add(this.codeFrame);
     this.panelBox = { rx, top, rw, panelH };
-    this.tabBox = { rx, y: pad, tabW: (rw - 6 * 2) / 3 };
+    this.tabBox = { rx, y: pad, tabW: (rw - 6 * 2) / 3, h: 34 };
   }
 
   /** P-MENU-b: the tab buttons, and the underline slides to the picked tab (jumps with Reduced motion). */
   private renderTabs(slide: boolean): void {
     this.tabBar.removeAll(true);
     this.ui = this.tabBar;
-    const { rx, y: pad } = this.tabBox;
-    const tabs: Array<[Tab, string]> = [
-      ['run', 'Last run'],
-      ['gear', `Gear (${this.profile.inventory.length})`],
-      ['abilities', 'Abilities'],
-    ];
+    const { rx, y: pad, h: th } = this.tabBox;
+    const tabs: Array<[Tab, string]> = this.view === 'book'
+      ? BOOK_TABS.map((tab): [Tab, string] => [tab, BOOK_WORDS.tabs[tab]])
+      : [
+          ['run', LASTRUN_WORDS.title],
+          ['gear', `Gear (${this.profile.inventory.length})`],
+          ['style', TROPHY_WORDS.style],
+        ];
     const tabW = this.tabBox.tabW;
     tabs.forEach(([tab, label], i) => {
-      const b = button(this, { x: rx + i * (tabW + 6), y: pad, w: tabW, h: 34, label, color: this.tab === tab ? 0x4a3f63 : 0x2a2536, size: 14, onTap: () => this.setTab(tab) }, this.ui);
-      woodSkin(this, b, tabW, 34, { dim: this.tab !== tab });
+      const b = button(this, { x: rx + i * (tabW + 6), y: pad, w: tabW, h: th, label, color: this.tab === tab ? 0x4a3f63 : 0x2a2536, size: 14, onTap: () => this.setTab(tab) }, this.ui);
+      woodSkin(this, b, tabW, th, { dim: this.tab !== tab });
     });
     const i = tabs.findIndex(([tab]) => tab === this.tab);
     const ux = rx + i * (tabW + 6) + 8;
-    const uy = pad + 34 + 3;
+    const uy = pad + th + 3;
     this.children.bringToTop(this.underline);
     this.tweens.killTweensOf(this.underline);
     this.underline.setVisible(true).setSize(tabW - 16, 3);
@@ -860,9 +887,17 @@ export class HomeScene extends Phaser.Scene {
     const inner = panelH - 20;
     const h = Math.max(inner, this.panelMinH());
     this.runFooter = 0;
+    const area = { x: rx + 10, y: top + 10, w: rw - 20, h };
     if (this.tab === 'run') this.renderRun(rx + 12, top + 10, rw - 24, h, inner);
-    else if (this.tab === 'gear') this.renderGear(rx + 10, top + 10, rw - 20, h);
-    else this.renderAbilities(rx + 10, top + 10, rw - 20, h);
+    else if (this.tab === 'gear') this.renderGear(area.x, area.y, area.w, h);
+    else if (this.tab === 'style') this.renderFightingStyle(area.x, area.y, area.w, h);
+    else if (this.tab === 'moves' || this.tab === 'trophies') this.renderTrophyCase(area.x, area.y, area.w, h, this.tab);
+    else if (this.tab === 'monsters') this.renderMonsters(area);
+    else drawFaithPage(this, (o) => this.ui.add(o), area, this.training, this.faithPage, (p) => {
+      const change = p > this.faithPage ? 'pageNext' : 'pagePrev';
+      this.faithPage = p;
+      this.renderPanel(change);
+    });
     // Q-PREM-F6: a pinned footer (Last run's Again!) keeps the scroll window clear above it.
     this.panelScroll = this.makePanelScroll(content, h > inner ? h - inner + this.runFooter : 0, this.runFooter);
     const swap = panelSwap(change, reducedMotion());
@@ -879,7 +914,7 @@ export class HomeScene extends Phaser.Scene {
    */
   private panelMinH(): number {
     if (this.tab === 'run') return this.profile.lastRun ? PANEL_FULL_H : 0;
-    if (this.tab === 'abilities') return this.part === 'style' ? PANEL_FULL_H : 0;
+    if (this.tab === 'style') return PANEL_FULL_H;
     return 0;
   }
 
@@ -888,7 +923,7 @@ export class HomeScene extends Phaser.Scene {
    * thumb on the right). Taps on parts scrolled out of view are switched off.
    */
   private makePanelScroll(content: Phaser.GameObjects.Container, max: number, footer = 0): { max: number; y: number; to: (y: number) => void } | null {
-    const key = `${this.tab}/${this.part}`;
+    const key = this.tab;
     if (key !== this.scrollKey) this.scrollY = 0;
     this.scrollKey = key;
     if (max <= 0) {
@@ -1301,11 +1336,10 @@ export class HomeScene extends Phaser.Scene {
     else this.openRunSheet(decorationDef(CONTENT.dojo, f.id).name, [[LASTRUN_WORDS.forDojo, '#a0522d', true]]);
   }
 
-  /** "New for you": opens the Trophy Case, where the unlock moment plays and it is marked seen. */
+  /** "New for you": opens the Book where the trophy sits; its unlock moment plays there and it is marked seen. */
   private openNewForYou(): void {
-    this.part = 'trophy';
-    this.page = 0;
-    this.setTab('abilities');
+    const fresh = newForYou(this.trophyCubbies(), this.profile.trophiesSeen);
+    this.openBook(fresh?.shelf === 'stripes' ? 'trophies' : 'moves');
   }
 
   /** The Bests sheet: the student's own bests only (no comparing, no streaks). */
@@ -1359,22 +1393,17 @@ export class HomeScene extends Phaser.Scene {
     }
   }
 
-  /** Every earned and not-yet-earned ability, named after the real technique. */
-  private renderAbilities(x: number, y: number, w: number, h: number): void {
-    // P-MENU2-a: the segmented switch at the top: Trophy Case | Fighting Style, both 44 tall.
-    const sw = abilitiesSwitch(w);
-    const parts: Array<[AbilitiesPart, string]> = [
-      ['trophy', TROPHY_WORDS.parts.trophy],
-      ['style', TROPHY_WORDS.parts.style],
-    ];
-    parts.forEach(([part, label], i) => {
-      const on = this.part === part;
-      // Selected gold (switchOn, #a8703f) put white text at 4.15:1. The wood frame brown keeps it above 4.5. The gold outline still marks the selected half.
-      button(this, { x: x + sw.x0 + i * (sw.segW + sw.gap), y, w: sw.segW, h: sw.h, label, color: on ? WOOD.frame : WOOD.switchOff, size: TYPE.body, selected: on, onTap: () => this.setPart(part) }, this.ui);
-    });
-    const top = y + sw.h + S2;
-    if (this.part === 'style') this.renderFightingStyle(x, top, w, h - (top - y));
-    else this.renderTrophyCase(x, top, w, h - (top - y));
+  /** L10-B: the Book's Monsters tab: the Monster Journal, once Sensei has shown it (Welcome Week). */
+  private renderMonsters(area: { x: number; y: number; w: number; h: number }): void {
+    if (!this.journalOpen()) {
+      this.text(area.x + area.w / 2, area.y + S3, BOOK_WORDS.monstersLater, TYPE.body, '#f2e3c4', false, FONT, area.w - 2 * S3).setOrigin(0.5, 0).setAlign('center');
+      return;
+    }
+    drawMonsterJournal(this, this.ui, area, this.profile.monsterJournal, this.profile.decorEarning.given);
+  }
+
+  private journalOpen(): boolean {
+    return this.training.tier >= CONTENT.named.rules.minBeltTier && isOpen(this.profile, this.training, 'journal');
   }
 
   /**
@@ -1541,7 +1570,7 @@ export class HomeScene extends Phaser.Scene {
   private styleModel(): StyleModel {
     return buildStyle(this.training, CONTENT.abilities, this.profile.loadout, this.profile.grandfatheredStances, {
       seen: this.profile.styleSeen, showNote: this.profile.showSlotNote, helpSeen: this.profile.styleHelpSeen,
-      helpUsed: this.styleHelpUsed, triggers: this.part === 'style' && !this.styleHelpUsed ? this.styleTriggers : [],
+      helpUsed: this.styleHelpUsed, triggers: this.tab === 'style' && !this.styleHelpUsed ? this.styleTriggers : [],
     });
   }
 
@@ -1623,10 +1652,10 @@ export class HomeScene extends Phaser.Scene {
    * Sensei's seal; not yet: paper card, lantern and "Learn this at the dojo"), pages as dots.
    * No locks, no counts. Tapping a cubby opens its detail sheet.
    */
-  private renderTrophyCase(x: number, y: number, w: number, h: number): void {
+  private renderTrophyCase(x: number, y: number, w: number, h: number, tab: 'moves' | 'trophies'): void {
     const L = trophyLayout(w, h);
     this.beltRibbon(x, y, w, L.ribbonH);
-    const cubbies = this.trophyCubbies();
+    const cubbies = tabCubbies(this.bookCubbies(), tab);
     const pages = trophyPages(shelfRows(cubbies, L.perRow), L.rowsPerPage);
     this.trophyPages = pages.length;
     this.page = Math.min(this.page, pages.length - 1);
@@ -1636,7 +1665,9 @@ export class HomeScene extends Phaser.Scene {
     // P-MENU2-c: cubbies on this page earned since the last look play their unlock moment once.
     const shown = pages[this.page].flatMap((r) => r.segments.flatMap((sg) => sg.cubbies)).filter((c) => c.earned).map((c) => c.id);
     const migrating = this.profile.trophiesSeen === null;
-    const fresh = newTrophies(this.profile, cubbies.filter((c) => c.earned).map((c) => c.id), shown);
+    // Lessons and monster trophies have no unlock moment (they were never Trophy Case cubbies).
+    const moments = new Set(this.trophyCubbies().map((c) => c.id));
+    const fresh = newTrophies(this.profile, cubbies.filter((c) => c.earned && moments.has(c.id)).map((c) => c.id), shown.filter((id) => moments.has(id)));
     if (fresh.length || migrating) writeSave(this.profile);
     if (fresh.length) sfx.seal();
     const nextId = cubbies.find((c) => !c.earned)?.id;
@@ -1667,6 +1698,21 @@ export class HomeScene extends Phaser.Scene {
     woodSkin(this, this.button(x, midY, MIN_TAP, MIN_TAP, '◀', WOOD.switchOff, 15, () => this.turn(-1)), MIN_TAP, MIN_TAP);
     woodSkin(this, this.button(x + w - MIN_TAP, midY, MIN_TAP, MIN_TAP, '▶', WOOD.switchOff, 15, () => this.turn(1)), MIN_TAP, MIN_TAP);
     this.pageDotsRow(x + L.shelfX, y + h - L.pagerH / 2, L.shelfW, pages.length);
+  }
+
+  /** L10-B: every cubby on the Book's shelves (the Trophy Case's, the lessons seen, the monster trophies). */
+  private bookCubbies(): Cubby[] {
+    const p = this.profile;
+    return bookCubbies({
+      cubbies: this.trophyCubbies(),
+      lessons: scrollLessons(LESSONS, p.lessons),
+      scrollOpen: isOpen(p, this.training, 'scroll'),
+      lessonTitle,
+      kinds: journalKinds(CONTENT, p.decorEarning.given),
+      journalOpen: this.journalOpen(),
+      monsterName: (k) => CONTENT.enemies[k.monster]?.shortName ?? k.trophy.name,
+      unknown: CONTENT.named.journalUnknown,
+    });
   }
 
   /** P-MENU2-b: the Trophy Case cubbies for this student. */
@@ -1741,7 +1787,7 @@ export class HomeScene extends Phaser.Scene {
   /** B-POLISH-2: a cubby's label, wrapped to the padded inner width (after its 2 px stroke). */
   private cubbyLabel(c: Cubby, size: number): Phaser.GameObjects.Text {
     const tw = cubbyTextW(size);
-    const label = c.earned ? (c.short ?? c.name) : TROPHY_WORDS.notYet;
+    const label = c.earned ? (c.short ?? c.name) : (c.notYet ?? TROPHY_WORDS.notYet);
     const txt = this.add
       .text(0, 0, label, { fontFamily: FONT, fontSize: `${c.earned ? (size >= 112 ? TYPE.body : TYPE.label) : TYPE.label}px`, color: c.earned ? '#fff6e6' : WOOD.ink, fontStyle: c.earned ? 'bold' : 'normal', align: 'center', wordWrap: { width: tw } })
       .setResolution(crisp())
@@ -1771,8 +1817,8 @@ export class HomeScene extends Phaser.Scene {
     txt.setY(iy + iconS / 2 + TROPHY_UI.cubbyGap);
     // QA: the cream names sit over the yellow icon disc and the honey wood; a dark ink outline keeps them 4.5:1+.
     if (skin && c.earned) txt.setStroke(WOOD.ink, 4).setData('cubbyName', true);
-    const icon = c.icon ? addIcon(this, c.icon, 0, iy, iconS) : null;
-    if (icon) v.add(icon.setAlpha(c.earned ? 1 : 0.3));
+    const icon = c.art ? this.cubbyArt(c, 0, iy, iconS) : c.icon ? addIcon(this, c.icon, 0, iy, iconS) : null;
+    if (icon) v.add(icon.setAlpha(c.earned || c.art ? 1 : 0.3));
     else v.add(placeholderIcon(this, 0, iy, iconS, c.earned));
     v.add(txt);
     const seal = c.earned && skin ? menu2Image(this, 'cubby-seal', half - 12, -half + 12, 24, 24) : null;
@@ -1798,6 +1844,19 @@ export class HomeScene extends Phaser.Scene {
     }
     if (c.earned && skin) shine = () => this.playOver(v, 'cubby-earned-shine', 6, size);
     if (unlock) this.unlockMoment(v, size, !!skin);
+  }
+
+  /** L10-B: a monster trophy (or its silhouette) fitted into an s x s square, centred on x, y. */
+  private cubbyArt(c: Cubby, x: number, y: number, s: number): Phaser.GameObjects.Container | null {
+    if (!c.art || !staticArt(this, c.art.pack, c.art.id)) return null;
+    const box = this.add.container(x, y);
+    const st = staticArt(this, c.art.pack, c.art.id)!;
+    // Small pixel art grows by a whole number to stay crisp; big art shrinks to fit.
+    const fit = Math.min(s / st.frameWidth, s / st.frameHeight);
+    const k = fit >= 1 ? Math.floor(fit) : fit;
+    // Bottom-centre anchored art: drop it so the picture's middle sits on y.
+    box.add(addStatic(this, c.art.pack, c.art.id, 0, (st.anchor[1] - st.frameHeight / 2) * k).map((p) => p.setScale(k)));
+    return box;
   }
 
   /** P-MENU2-i: plays an A-MENU2 overlay once (16 fps) over a cubby, centred. Skipped under Reduced motion. */
@@ -1896,8 +1955,8 @@ export class HomeScene extends Phaser.Scene {
     bg.lineStyle(3, c.earned ? 0xffd166 : WOOD.grain).strokeRoundedRect(sx, sy, sw, sh, RADIUS.panel);
     bg.setInteractive(new Phaser.Geom.Rectangle(sx, sy, sw, sh), Phaser.Geom.Rectangle.Contains);
     body.add(bg);
-    const icon = c.icon ? addIcon(this, c.icon, sx + pad + 28, sy + pad + 28, 56) : null;
-    if (icon) body.add(icon.setAlpha(c.earned ? 1 : 0.4));
+    const icon = c.art ? this.cubbyArt(c, sx + pad + 28, sy + pad + 28, 56) : c.icon ? addIcon(this, c.icon, sx + pad + 28, sy + pad + 28, 56) : null;
+    if (icon) body.add(icon.setAlpha(c.earned || c.art ? 1 : 0.4));
     else if (!c.hideBlankIcon) body.add(this.add.circle(sx + pad + 28, sy + pad + 28, 26, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.35));
     // R-STANCE-READY-NUM: no icon and no circle, so the text starts at the left edge (no blank gap).
     const iconW = icon || !c.hideBlankIcon ? 56 + S2 : 0;
@@ -1922,6 +1981,7 @@ export class HomeScene extends Phaser.Scene {
       this.kataSteps(sx + pad, ty, c.kata, sw - 2 * pad, { num: WOOD.ink, arrow: KATA_INK.onPaper.arrow });
     }
     button(this, { x: sx + sw - pad - 96, y: sy + sh - pad - 44 + 8, w: 96, h: 44, label: TROPHY_WORDS.close, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.closeCubby() }, body);
+    if (c.action === 'replayTutorial') button(this, { x: sx + sw - pad - 2 * 96 - S2, y: sy + sh - pad - 44 + 8, w: 96, h: 44, label: BOOK_WORDS.replayTutorial, color: 0x3a6ea5, size: TYPE.body, onTap: () => this.replayTutorial() }, body);
     this.ui = prevUi;
     this.panel?.add(sheet);
     if (reducedMotion()) {
@@ -2337,6 +2397,12 @@ export class HomeScene extends Phaser.Scene {
 
   // ---------------------------------------------------------------- actions
 
+  /** The tutorial floor again, from the Book's Moves tab. */
+  private replayTutorial(): void {
+    if (isPlayTimeUp(this.profile)) return this.goTo('Dojo', {});
+    this.goTo('Game', { run: startTowerRun(this.profile, this.training, { replayTutorial: true }) });
+  }
+
   private enterTower(): void {
     // Today's play time is used up: back to the dojo, whose door says it's resting (M7-P9).
     if (isPlayTimeUp(this.profile)) return this.goTo('Dojo', {});
@@ -2425,19 +2491,13 @@ export class HomeScene extends Phaser.Scene {
   private setTab(tab: Tab): void {
     this.tab = tab;
     this.selected = null;
-    this.renderTabs(true);
-    this.renderPanel('tab');
-  }
-
-  private setPart(part: AbilitiesPart): void {
-    if (part === this.part) return;
-    this.part = part;
     this.page = 0;
-    if (part === 'style') {
+    if (tab === 'style') {
       this.styleHelpUsed = false;
       this.styleHelpLine = null;
       this.styleTriggers = ['open'];
     }
+    this.renderTabs(true);
     this.renderPanel('tab');
   }
 
@@ -2563,7 +2623,7 @@ export class HomeScene extends Phaser.Scene {
    * still read. Missing art: the code frame stays.
    */
   private panelFrameArt(rx: number, top: number, rw: number, panelH: number): void {
-    const on = this.tab === 'run' || this.tab === 'gear' || (this.tab === 'abilities' && this.part === 'trophy');
+    const on = this.tab === 'run' || this.tab === 'gear' || this.tab === 'moves' || this.tab === 'trophies';
     const sh = 6 * 2 * 0.25;
     const art = on ? menu2Slice(this, 'panel-frame', rx - sh, top - sh, rw + 2 * sh, panelH + 2 * sh, 0.25) : null;
     this.codeFrame?.setVisible(!art);

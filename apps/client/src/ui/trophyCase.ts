@@ -8,8 +8,8 @@ import { BOARD, MIN_TAP, S1, S2, TYPE } from './tokens';
 
 export const TROPHY_WORDS = words;
 
-export type ShelfId = 'katas' | 'kicks' | 'selfDefense' | 'stripes';
-const SHELF_ORDER: readonly ShelfId[] = ['katas', 'kicks', 'selfDefense', 'stripes'];
+export type ShelfId = 'katas' | 'kicks' | 'selfDefense' | 'lessons' | 'stripes' | 'monsters';
+const SHELF_ORDER: readonly ShelfId[] = ['katas', 'kicks', 'selfDefense', 'lessons', 'stripes', 'monsters'];
 const KIND_SHELF = { stance: 'katas', strike: 'kicks', seal: 'selfDefense' } as const;
 
 export interface Cubby {
@@ -32,6 +32,12 @@ export interface Cubby {
   hint?: string;
   /** Earned katas: the kataArrows line for the sheet. */
   kata?: string;
+  /** L10-B: a picture from an art pack instead of an icon (monster trophies, or their silhouette). */
+  art?: { pack: string; id: string };
+  /** L10-B: the not-yet label, when "Learn this at the dojo" is not the way to get it. */
+  notYet?: string;
+  /** L10-B: the sheet's extra button (the tutorial floor's Replay). */
+  action?: 'replayTutorial';
 }
 
 /** One shelf's run of cubbies inside a row. */

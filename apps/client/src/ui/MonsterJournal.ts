@@ -9,7 +9,8 @@ import { journalKinds, namedForTier, type JournalEntry } from '@dojo/sim';
 import { addStatic, staticArt } from '../art/art';
 import { CONTENT } from '../game/content';
 import { NAMED_PACK } from '../game/named';
-import { FONT, crisp, view } from './theme';
+import { FONT, crisp } from './theme';
+import { MIN_TAP } from './tokens';
 
 /** Card spots on the page, in the art's source pixels (journal-page-frame note). */
 const CARD_X = 36;
@@ -22,34 +23,25 @@ const BODY_PX = 15;
 const NOTE_MIN_W = 220;
 
 type Box = [number, number, number, number];
+type Area = { x: number; y: number; w: number; h: number };
 
-/** Opens the journal over the scene. Returns its container (destroyed when closed). */
-export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, JournalEntry>, trophies: readonly string[], onClose: () => void): Phaser.GameObjects.Container {
-  const { width, height } = view(scene);
-  const box = scene.add.container(0, 0).setDepth(80).setScrollFactor(0);
-  const close = () => {
-    box.destroy();
-    onClose();
-  };
-  const dim = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive();
-  dim.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
-  box.add(dim);
-
+/** L10-B: the journal drawn into area (the Book's Monsters tab), page arrows included. */
+export function drawMonsterJournal(scene: Phaser.Scene, box: Phaser.GameObjects.Container, area: Area, journal: Record<string, JournalEntry>, trophies: readonly string[]): void {
+  const { w: width, h: height } = area;
   const frame = staticArt(scene, NAMED_PACK, 'journal-page-frame');
   const pw = frame?.frameWidth ?? 234;
   const ph = frame?.frameHeight ?? 360;
   const k = pw / SOURCE_PAGE_WIDTH; // source pixels -> packed pixels
-  const scale = Math.min((height - 12) / ph, (width - 12) / pw, 1.6);
+  const scale = Math.min((height - 4) / ph, (width - 12) / pw, 1.6);
   // Landscape phones: the page goes left and each card's fact sits in a note beside it, at
   // body size, so it is never shrunk with the page or drawn under the stamp (K10).
-  const noteW = Math.min(360, width - pw * scale - 48);
+  const noteW = Math.min(360, width - pw * scale - 72);
   const side = noteW >= NOTE_MIN_W;
   const groupW = side ? pw * scale + 16 + noteW : pw * scale;
-  const pageX = width / 2 - groupW / 2 + (pw * scale) / 2;
-  const page = scene.add.container(pageX, height / 2).setScale(scale);
+  const pageX = area.x + width / 2 - groupW / 2 + (pw * scale) / 2;
+  const midY = area.y + height / 2;
+  const page = scene.add.container(pageX, midY).setScale(scale);
   box.add(page);
-  // The page itself swallows taps (only the dark area around it closes).
-  page.add(scene.add.rectangle(0, 0, pw, ph, 0x000000, 0.001).setInteractive());
   page.add(addStatic(scene, NAMED_PACK, 'journal-page-frame', 0, 0));
   const left = -pw / 2;
   const top = -ph / 2;
@@ -79,7 +71,7 @@ export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, 
   /** A card's fact: in a note beside the card, or (narrow screens) in the card's fact area, left of the stamp. */
   const fact = (cx: number, cy: number, str: string, color: string, bold: boolean) => {
     if (side) {
-      const y = height / 2 + cy * scale;
+      const y = midY + cy * scale;
       const h = ch * scale;
       const note = scene.add.rectangle(noteX, y + 4, noteW, h - 8, 0xf6ecd6).setOrigin(0).setStrokeStyle(2, 0x8a6a48);
       const tail = scene.add.triangle(noteX, y + h / 2, 0, 0, -10, 8, 0, 16, 0xf6ecd6).setOrigin(1, 0.5);
@@ -170,20 +162,12 @@ export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, 
   turn(0);
 
   // Big page-turn arrows at the page's bottom corners.
-  const ay = height / 2 + (ph / 2) * scale - 22;
+  const ay = midY + (ph / 2) * scale - 22;
   const arrow = (x: number, label: string, step: number) => {
-    const c = scene.add.circle(x, ay, 20, 0x3a3a4a).setStrokeStyle(2, 0xffffff, 0.5).setInteractive();
+    const c = scene.add.circle(x, ay, MIN_TAP / 2, 0x3a3a4a).setStrokeStyle(2, 0xffffff, 0.5).setInteractive();
     c.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => turn(shown + step));
     box.add([c, scene.add.text(x, ay, label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
   };
   arrow(pageX - (pw / 2) * scale - (side ? 0 : -22), '‹', -1);
   arrow(pageX + (pw / 2) * scale + (side ? 0 : -22), '›', 1);
-
-  // A big, easy close button.
-  const bx = side ? Math.min(width - 22, noteX + noteW) : pageX + (pw / 2) * scale - 4;
-  const by = height / 2 - (ph / 2) * scale + 4;
-  const btn = scene.add.circle(bx, by, 18, 0x3a3a4a).setStrokeStyle(2, 0xffffff, 0.5).setInteractive();
-  btn.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
-  box.add([btn, scene.add.text(bx, by, '✕', { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
-  return box;
 }

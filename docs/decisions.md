@@ -1957,3 +1957,9 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 ## TUT-B5 — arrow to the HOME door after the tutorial close (2026-11-17)
 - TUT-Q1 (#539) found the Keep's HOME door above the screen after the close on every run. In tutorial rooms only, once the doors open, an open door the camera can't see gets a small gold arrow (the stones help arrow's shape) at the nearest screen edge, under the health bars and the door line. It bobs, holds still with Reduced motion on, and goes once the door is in view (Manager, Nov 17).
 - It stays up under the close card's Got it, since that card says the door home is open; it hides under menus. Normal floors are unchanged.
+
+## L10-B — the Book (2026-11-17)
+- One Book screen, opened from a Book button on the Path bar, with four tabs: Moves, Monsters, Faith and Trophies (Manager, Nov 17). Moves has the katas, kicks and self-defense from the Trophy Case, then a Lessons shelf with every lesson Sensei's Scroll kept and a "Tutorial floor" cubby whose sheet has Replay. Trophies has the Virtue stripes and the monster trophies (Street Smarts badges join in L17). Monsters is the Monster Journal; Faith is the FAITH DOES pages, also opened by the banner.
+- Only buttons moved: the Dojo's Journal and Scroll buttons, the Board's Abilities tab and its Trophy Case / Fighting Style switch are gone. Saves are untouched, and Welcome Week still opens the lessons and the Journal at the same times. `l10b-book.test.ts` checks that an old save shows the same items.
+- Decisions row 9: the Board's "Last run" tab is now "Last climb" (`content/settings/last-run.json`).
+- Book words are in `content/settings/book.json`.

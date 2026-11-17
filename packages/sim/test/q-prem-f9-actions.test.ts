@@ -42,7 +42,7 @@ describe('Q-PREM-F9 action button contrast', () => {
 
 describe('Q-PREM-F9 Dojo top buttons are at least 44 px tall', () => {
   const t = () => src('scenes/DojoScene.ts');
-  for (const label of ["'Done'", 'streetUi.button', "'Put away'", 'CONTENT.named.journalButton', "'Scroll'"]) {
+  for (const label of ["'Done'", 'streetUi.button', "'Put away'"]) {
     it(`${label} uses MIN_TAP`, () => {
       const line = t().split('\n').find((l) => l.includes('this.button(') && l.includes(label));
       expect(line, label).toBeTruthy();

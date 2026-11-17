@@ -2167,8 +2167,10 @@ export class GameScene extends Phaser.Scene {
       : [width - 6 + bob, Phaser.Math.Clamp(door.y, top, height - m), 1, 0];
     const bx = tx - dx * 14;
     const by = ty - dy * 14;
-    g.fillStyle(COLORS.gold, 1).fillTriangle(tx, ty, bx + dy * 11, by - dx * 11, bx - dy * 11, by + dx * 11);
-    g.fillRect(Math.min(bx, bx - dx * 14) - Math.abs(dy) * 4, Math.min(by, by - dy * 14) - Math.abs(dx) * 4, dx ? 14 : 8, dy ? 14 : 8);
+    const shaft: [number, number, number, number] = [Math.min(bx, bx - dx * 14) - Math.abs(dy) * 4, Math.min(by, by - dy * 14) - Math.abs(dx) * 4, dx ? 14 : 8, dy ? 14 : 8];
+    // A dark outline so the gold reads on the Keep's light floor (Tester, #540).
+    g.lineStyle(4, 0x14121c, 1).strokeTriangle(tx, ty, bx + dy * 11, by - dx * 11, bx - dy * 11, by + dx * 11).strokeRect(...shaft);
+    g.fillStyle(COLORS.gold, 1).fillTriangle(tx, ty, bx + dy * 11, by - dx * 11, bx - dy * 11, by + dx * 11).fillRect(...shaft);
   }
 
   /** A looping tutorial-pack animation on images made by tutorialStatic. */
