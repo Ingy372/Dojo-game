@@ -1942,3 +1942,9 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - STRIKE glows gold and pulses only while the STRIKE step is waiting and focus is full.
 - Art: the TUT-A1 `tutorial-path` pack, named by the Manager for this item. Dummies use still frames through `staticCharacter`.
 - Review fixes (Manager, #536): a stone wave may name its own `"safeSpot"` in the room file (the loader refuses one inside a red circle); the Tower Path uses an open path tile two rows below the steps and lamps. Sensei's banner treats that spot and its arrow like a button, so it never covers them. The Tower door has no room-type word, practice dummies stand solid from the start, and the tutorial's last room shows no "Room clear!" stats line, only Sensei's close.
+
+## TUT-B4 — tutorial pacing (2026-11-17)
+- Stone waves carry their own calm pause (`pauseSeconds` in the room file, default `STONES.gapSeconds`), so the tutorial can be slower without changing other rooms.
+- A success line shows alone for 1.5 s; a tip that comes due meanwhile waits, and the world pauses while it waits so nobody leaves the room before it shows.
+- The Brute's tip is a Got it tip and the Brute stands still under it, instead of being held off-screen.
+- A returner with a saved run is asked about it before the welcome; the welcome rewards play now on "No" or on the bow home after "Yes".

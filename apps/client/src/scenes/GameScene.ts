@@ -150,6 +150,8 @@ import { VISIBLE_ROWS, bossHeadroom, bossRoomZoom, bossZoomPlan, cameraBounds } 
 const TILE = 48;
 /** B-T3: how long an enemy whose art has no defeat animation takes to fade out (ms; a visual choice, not balance). */
 const NO_DEFEAT_FADE_MS = 600;
+/** TUT-B4: how long a tutorial success line shows alone before the next tip. */
+const SUCCESS_ALONE_MS = 1500;
 /** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
 const HUD_TOP_PX = 56;
 /** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 36, 20 px bold, bottom ~64) and an 8 px gap. */
@@ -328,6 +330,9 @@ export class GameScene extends Phaser.Scene {
   private tflow: TutorialFlow | null = null;
   private gotItBtn: Phaser.GameObjects.Text | null = null;
   private tutorialLead = '';
+  /** TUT-B4: no tutorial tip before this time, so a success line shows alone first. */
+  private tipNotBefore = 0;
+  private tipQueued = false;
   /** Tiles walked since the 'use all of it' tip (walkAround). */
   private walked = 0;
   /** True once leaving the room (next room, or home). */
@@ -522,6 +527,8 @@ export class GameScene extends Phaser.Scene {
       this.tflow = null;
       this.gotItBtn = null;
       this.tutorialLead = '';
+      this.tipNotBefore = 0;
+      this.tipQueued = false;
     } else {
       // Q-P4 QA: ?force=wide-bonk puts the attack's owner (the bopper) in Practice, at Challenge, with only that attack.
       const forced = testForced();
@@ -654,7 +661,8 @@ export class GameScene extends Phaser.Scene {
 
   update(_time: number, delta: number): void {
     // K23: the camera follows the player, so a door can slide under Sensei's banner at any time.
-    if (this.menuOpen || this.leaving) {
+    // TUT-B4: a tip waiting behind a success line pauses play too, so no one walks out before it shows.
+    if (this.menuOpen || this.leaving || this.tipQueued) {
       // Paused: drop any touches so nothing happens when play resumes.
       this.controls.takeInput();
       this.buttons.takeAction();
@@ -1066,7 +1074,8 @@ export class GameScene extends Phaser.Scene {
     // Basic hits land while the Brute walks in, before the guided Counter; the combo waits for that lesson.
     // K23: the count also clears when the fight ends: no enemies left standing, or the hero is down.
     const fightOver = p.health <= 0 || !this.world.enemies.some((e) => e.mode !== 'defeated');
-    const combo = this.world.guide?.step === 0 || fightOver ? 0 : p.combo;
+    // TUT-B4: no combo in the Training Hall, so the dummies and STRIKE lessons stay calm.
+    const combo = this.world.guide?.step === 0 || fightOver || this.room.id === 'training-hall' ? 0 : p.combo;
     if (combo !== this.shownCombo) {
       const grew = combo > this.shownCombo;
       this.shownCombo = combo;
@@ -1658,7 +1667,8 @@ export class GameScene extends Phaser.Scene {
           break;
         case 'wave':
           sfx.wave();
-          this.popWord(ev.wave === ev.of ? 'Final wave!' : `Wave ${ev.wave}`, '#ff8a80', 40);
+          // TUT-B4: no big wave words in tutorial rooms.
+          if (!this.run?.tutorial) this.popWord(ev.wave === ev.of ? 'Final wave!' : `Wave ${ev.wave}`, '#ff8a80', 40);
           break;
         case 'breath': {
           const p = this.world.players[ev.playerId];
@@ -1684,7 +1694,21 @@ export class GameScene extends Phaser.Scene {
           if (this.run?.tutorial && this.room.kind === 'boss') this.tutorialDid('defeatBoss');
           // K24a: if the fights end before a step's try, that step ends quietly.
           const until = TUTORIAL_ROOM_STEPS[this.room.id]?.until;
-          if (this.tflow && until) while (this.tflow.index < TUTORIAL_STEPS.indexOf(until)) skipStep(this.tflow, currentStep(this.tflow)!);
+          if (this.tflow && until) {
+            // TUT-B4: a try the clear just finished still gets its success line, and a skipped step's tip goes.
+            const at = this.tflow.index;
+            this.checkTutorialTry();
+            const praised = this.tflow.index !== at;
+            let skipped = false;
+            while (this.tflow.index < TUTORIAL_STEPS.indexOf(until)) {
+              skipStep(this.tflow, currentStep(this.tflow)!);
+              skipped = true;
+            }
+            if (skipped && !praised && !this.gotItBtn) {
+              this.senseiText?.destroy();
+              this.senseiText = null;
+            }
+          }
           break;
         case 'stoneWarn': {
           // TUT-B3: red circles fill where the stones will land; with help on, an arrow points at a safe spot.
@@ -1729,9 +1753,10 @@ export class GameScene extends Phaser.Scene {
         case 'chestOpened': {
           // The chest wiggles first; the chime, ring and sparks come when the lid bursts open.
           this.chestOpenAt = this.time.now;
+          // TUT-B4: the try counts now, so walking out before the lid bursts can't skip the step.
+          if (this.run?.tutorial) this.tutorialDid('openChest');
           const at = this.room.chest;
           this.time.delayedCall(this.chestTiming().burstMs, () => {
-            if (this.run?.tutorial) this.tutorialDid('openChest');
             sfx.chest();
             if (at) {
               this.ring(at, COLORS.gold, 1.8);
@@ -2320,10 +2345,8 @@ export class GameScene extends Phaser.Scene {
         break;
       }
       case 'tutorial-brute':
-        // The guided Counter teaches this step with its own lines, and holds until COUNTER is tapped.
-        showTip(f, id);
-        gotIt(f, TUTORIAL);
-        this.world.enemyHold = false;
+        // TUT-B4: the Brute stands still under its tip; after Got it the guided Counter teaches with its own lines.
+        this.tutorialTip(id);
         break;
       case 'tutorial-swarmers':
       case 'tutorial-dash':
@@ -2366,19 +2389,30 @@ export class GameScene extends Phaser.Scene {
       this.tutorialTick();
       return;
     }
-    this.tutorialLead = line ?? '';
-    this.tutorialTick();
-    // Nothing follows straight away: the success line shows on its own until the next step.
-    if (this.tutorialLead && !this.gotItBtn) {
-      this.senseiSay([this.tutorialLead]);
-      this.tutorialLead = '';
+    // TUT-B4: the success line shows alone for a moment; the next tip waits for it.
+    if (line && !this.gotItBtn) {
+      this.senseiSay([line]);
+      this.tipNotBefore = this.time.now + SUCCESS_ALONE_MS;
     }
+    this.tutorialTick();
   }
 
   /** A tip with a Got it button (K24a): the game waits until it is tapped. */
   private tutorialTip(id: TutorialStep): void {
     const f = this.tflow;
-    if (!f || !showTip(f, id)) return;
+    if (!f) return;
+    const wait = this.tipNotBefore - this.time.now;
+    if (wait > 0) {
+      if (!this.tipQueued) {
+        this.tipQueued = true;
+        this.time.delayedCall(wait, () => {
+          this.tipQueued = false;
+          this.tutorialTip(id);
+        });
+      }
+      return;
+    }
+    if (!showTip(f, id)) return;
     const step = TUTORIAL[id];
     const lead = this.tutorialLead;
     this.tutorialLead = '';
@@ -2422,7 +2456,7 @@ export class GameScene extends Phaser.Scene {
   /** After Got it on a move step: let in what the player is to try against. */
   private startTutorialTry(id: TutorialStep): void {
     if (id === 'tutorial-swarmers' || id === 'tutorial-dash') this.letInWave();
-    if (id === 'tutorial-swarmers') this.world.enemyHold = false;
+    if (id === 'tutorial-swarmers' || id === 'tutorial-brute') this.world.enemyHold = false;
     if (id === 'tutorial-dash') this.buttons.pulseDash(true);
   }
 
@@ -2533,9 +2567,9 @@ export class GameScene extends Phaser.Scene {
         const images = tower ? [] : addStatic(this, this.towerPack, art, at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.6));
         const glow = kind === 'boss' ? addStatic(this, this.towerPack, 'door-boss-glow', at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.61)) : [];
         const look = DOOR_LOOK[kind];
-        // TUT-B3: the Tower itself is the door, so it carries no room-type word.
+        // TUT-B4: the tutorial's doors lead one way, so only the Keep's BOSS door carries a room-type word.
         const label = this.add
-          .text(at.x * TILE, (at.y + 0.55) * TILE, tower ? '' : look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#14121c', strokeThickness: 4 })
+          .text(at.x * TILE, (at.y + 0.55) * TILE, this.run?.tutorial && kind !== 'boss' ? '' : look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#14121c', strokeThickness: 4 })
           .setOrigin(0.5, 0)
           .setResolution(crisp())
           .setDepth(6);
@@ -2605,11 +2639,12 @@ export class GameScene extends Phaser.Scene {
       this.keepLabelOffBoss(d);
     }
 
-    // The chest appears once the room is clear: a glinting chest, then (once opened)
-    // its 2.5 s opening (wiggle, the lid bursts open, light and stars), then a soft shimmer.
+    // The chest appears once the room is clear (at once in a room with no fight, TUT-B4): a glinting chest,
+    // then (once opened) its 2.5 s opening (wiggle, the lid bursts open, light and stars), then a soft shimmer.
     if (this.chestImgs.length) {
-      this.chestImgs.forEach((img) => img.setAlpha(prog.cleared ? 1 : 0));
-      if (prog.cleared) {
+      const shown = prog.cleared || this.room.enemySpawns.length === 0;
+      this.chestImgs.forEach((img) => img.setAlpha(shown ? 1 : 0));
+      if (shown) {
         if (!prog.chestOpened) this.animateStatic('chest-closed', this.chestImgs, now / 1000);
         else {
           const since = now - (this.chestOpenAt ?? now - 1e9);

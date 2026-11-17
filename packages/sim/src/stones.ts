@@ -25,7 +25,7 @@ export interface StoneState {
 
 export function newStones(room: Room): StoneState | null {
   if (room.stoneWaves.length === 0) return null;
-  return { wave: 0, misses: 0, gapTicks: secondsToTicks(STONES.gapSeconds), fillLeft: 0, safeSpot: null, stumble: {}, done: false };
+  return { wave: 0, misses: 0, gapTicks: room.stoneWaves[0].pauseTicks, fillLeft: 0, safeSpot: null, stumble: {}, done: false };
 }
 
 /** True while this player is stumbling and can't move or act. */
@@ -67,7 +67,7 @@ export function stepStones(world: WorldState, room: Room, ids: PlayerId[]): void
     st.done = true;
     world.events.push({ kind: 'stonesDone' });
   } else {
-    st.gapTicks = secondsToTicks(STONES.gapSeconds);
+    st.gapTicks = room.stoneWaves[st.wave].pauseTicks;
   }
 }
 

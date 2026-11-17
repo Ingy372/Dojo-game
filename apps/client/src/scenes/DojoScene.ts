@@ -335,11 +335,21 @@ export class DojoScene extends Phaser.Scene {
 
   // ---------------------------------------------------------------- arriving
 
-  /** After the bow: a welcome card (first visit, or back after a while), then any real celebrations. */
+  /**
+   * After the bow: a welcome card (first visit, or back after a while), then any real celebrations.
+   * TUT-B4: a climb left open is asked about first. Picking it up leaves the rest (nothing is opened or
+   * saved yet) for the bow on the way home; resting plays them all now.
+   */
   private arrive(hoursAway: number): void {
     this.arriving = true;
     this.arrived = true;
     this.bowHoursAway ??= hoursAway;
+    this.mode = 'arriving';
+    if (savedRun()) this.offerResume(() => this.welcome(hoursAway));
+    else this.welcome(hoursAway);
+  }
+
+  private welcome(hoursAway: number): void {
     this.mode = 'arriving';
     const name = this.training.displayName.split(' ')[0];
     const chores = choresLeft(this.dojo);
@@ -397,7 +407,6 @@ export class DojoScene extends Phaser.Scene {
       writeSave(this.profile);
       steps.push(() => this.card('Sensei', system.screens, 'Okay!', next));
     }
-    if (savedRun()) steps.push(() => this.offerResume(next));
     let i = 0;
     const next = (): void => {
       const step = steps[i++];
