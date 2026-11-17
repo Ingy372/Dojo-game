@@ -41,13 +41,17 @@ export function drawBanner(scene: Phaser.Scene, add: Add, b: Box, t: TrainingSta
   add(g);
   const lit = bannerLetters(FAITH, t);
   const glyphs = FAITH.faithDoesBanner.acrostic.split('');
-  const cell = Math.min(24, (b.w - 12) / glyphs.length);
-  const x0 = b.x + (b.w - cell * glyphs.length) / 2 + cell / 2;
+  // A space takes half a cell; letters shrink with a narrow banner so they never touch.
+  const units = glyphs.reduce((n, ch) => n + (ch === ' ' ? 0.5 : 1), 0);
+  const cell = Math.min(24, (b.w - 12) / units);
+  const size = Math.min(20, Math.floor(cell * 1.2));
+  let cx = b.x + (b.w - cell * units) / 2;
   let li = 0;
-  glyphs.forEach((ch, i) => {
-    if (ch === ' ') return;
+  glyphs.forEach((ch) => {
+    if (ch === ' ') return void (cx += cell / 2);
     const on = lit[li++]?.lit;
-    text(scene, add, x0 + i * cell, b.y + b.h / 2 - 12, ch, 20, on ? GOLD : DIM, true, undefined, true).setName(`faith-letter-${ch}-${on ? 'lit' : 'dim'}`);
+    text(scene, add, cx + cell / 2, b.y + b.h / 2 - size * 0.6, ch, size, on ? GOLD : DIM, true, undefined, true).setName(`faith-letter-${ch}-${on ? 'lit' : 'dim'}`);
+    cx += cell;
   });
   const hit = scene.add.zone(b.x, b.y, b.w, Math.max(b.h, MIN_TAP)).setOrigin(0).setInteractive({ useHandCursor: true });
   hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, onTap);
@@ -133,31 +137,27 @@ export function faithPages(t: TrainingState): ({ kind: 'banner' } | { kind: 'cre
   return [{ kind: 'banner' }, { kind: 'creed' }, ...scrollsFound(FAITH, t).map((scroll) => ({ kind: 'scroll' as const, scroll }))];
 }
 
-/** The Faith page over the Path, at `page`. Returns its container (destroyed by `onClose` or a page turn). */
-export function openFaithPage(scene: Phaser.Scene, width: number, height: number, t: TrainingState, page: number, back: string, onPage: (p: number) => void, onClose: () => void): Phaser.GameObjects.Container {
-  const box = scene.add.container(0, 0).setDepth(60);
-  const add: Add = (o) => box.add(o);
-  add(scene.add.rectangle(0, 0, width, height, 0x1e1a14, 1).setOrigin(0).setInteractive());
+/** L10-B: the Faith tab of the Book: ◀ ▶ and page dots on top, the page below, inside area. */
+export function drawFaithPage(scene: Phaser.Scene, add: Add, area: Box, t: TrainingState, page: number, onPage: (p: number) => void): void {
   const pages = faithPages(t);
   const p = Math.max(0, Math.min(page, pages.length - 1));
-  const pad = height < 400 ? S2 : 12;
-  button(scene, { x: pad, y: pad, w: 96, h: MIN_TAP, label: back, color: 0x8a5a35, size: TYPE.body, onTap: onClose }, box);
+  const box = scene.add.container(0, 0);
+  add(box);
   const arrows = (dx: number, label: string, to: number, on: boolean) =>
-    button(scene, { x: width - pad - (dx + 1) * MIN_TAP - dx * S2, y: pad, w: MIN_TAP, h: MIN_TAP, label, color: 0x3a3a4a, size: TYPE.title, disabled: !on, onTap: () => onPage(to) }, box);
+    button(scene, { x: area.x + area.w - (dx + 1) * MIN_TAP - dx * S2, y: area.y, w: MIN_TAP, h: MIN_TAP, label, color: 0x3a3a4a, size: TYPE.title, disabled: !on, onTap: () => onPage(to) }, box);
   arrows(1, '◀', p - 1, p > 0);
   arrows(0, '▶', p + 1, p < pages.length - 1);
-  // Page dots between the back button and the arrows.
-  const dotsL = pad + 96 + S2;
-  const dotsR = width - pad - 2 * MIN_TAP - 2 * S2;
+  const dotsL = area.x;
+  const dotsR = area.x + area.w - 2 * MIN_TAP - 2 * S2;
   const step = Math.min(18, (dotsR - dotsL) / pages.length);
   const d0 = (dotsL + dotsR) / 2 - (step * (pages.length - 1)) / 2;
   const dots = scene.add.graphics();
-  pages.forEach((_, i) => dots.fillStyle(i === p ? 0xffd166 : 0x5e5446).fillCircle(d0 + i * step, pad + MIN_TAP / 2, i === p ? 5 : 4));
-  add(dots);
-  const body: Box = { x: pad + 24, y: pad + MIN_TAP + S2, w: width - 2 * pad - 48, h: height - 2 * pad - MIN_TAP - S2 };
+  pages.forEach((_, i) => dots.fillStyle(i === p ? 0xffd166 : 0x5e5446).fillCircle(d0 + i * step, area.y + MIN_TAP / 2, i === p ? 5 : 4));
+  box.add(dots);
+  const body: Box = { x: area.x + 12, y: area.y + MIN_TAP + S2, w: area.w - 24, h: area.h - MIN_TAP - S2 };
   const pg = pages[p];
-  if (pg.kind === 'banner') drawBannerPage(scene, add, body, t);
-  else if (pg.kind === 'creed') drawCreed(scene, add, body);
-  else drawScroll(scene, add, body, pg.scroll);
-  return box;
+  const put: Add = (o) => box.add(o);
+  if (pg.kind === 'banner') drawBannerPage(scene, put, body, t);
+  else if (pg.kind === 'creed') drawCreed(scene, put, body);
+  else drawScroll(scene, put, body, pg.scroll);
 }

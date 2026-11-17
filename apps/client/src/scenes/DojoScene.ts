@@ -42,8 +42,6 @@ import {
   challengeUnlocked,
   chooseDifficulty,
   PLAY_LIMIT_CHOICES,
-  scrollLessons,
-  type SenseiLesson,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { LOCK_SHAKE, LOCKED_CARD, lockedLine, lockedTapFeedback, lockShakeOffset } from '../ui/lockCard';
@@ -65,7 +63,7 @@ import { applyBeltEntry, entryRank, feedEntry, fixBeltEntry, pickBelt, recordBel
 import { button as roundButton } from '../ui/button';
 import { GREEN, MIN_TAP, RADIUS } from '../ui/tokens';
 import { startTowerRun } from '../game/tower';
-import { LESSONS, addDevDays, devDayOffset, lessonTitle, localDay, takeLesson } from '../game/lessons';
+import { addDevDays, devDayOffset, localDay, takeLesson } from '../game/lessons';
 import { TouchControls } from '../input/TouchControls';
 import { addStatic, addTinted, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
@@ -79,7 +77,6 @@ import { showGrownUpGate } from '../ui/grownUpGate';
 import { BETA, wipeAllData } from '../game/beta';
 import SAFE_TEXT from '../../../../content/settings/safety.json';
 import { NAMED_PACK } from '../game/named';
-import { openMonsterJournal } from '../ui/MonsterJournal';
 import { isOpen, systemForToday } from '../game/unlocks';
 import { PATH_WORDS as PW, fill } from '../ui/pathScreen';
 import { CHEST_WORDS as CW, chestIcon, streakAura } from '../ui/classChest';
@@ -976,23 +973,15 @@ export class DojoScene extends Phaser.Scene {
       // One line says which difficulty they're on, shown once ever (M7-P1).
       if (!this.profile.difficultyLineShown && this.profile.difficulty) {
         const name = DIFFICULTY_TEXT.choices.find((c) => c.id === activeDifficulty(this.profile, this.training.belt.tier))?.name ?? '';
-        // Below the second button row (Scroll, Journal, Street Smarts) so nothing covers it.
+        // Below the second button row (Street Smarts) so nothing covers it.
         this.text(pad, ROW2_Y + MIN_TAP + 8, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
         this.profile.difficultyLineShown = true;
         writeSave(this.profile);
       }
       // Welcome Week (M7-P7): an existing student's systems show once Sensei has introduced them.
       const street = streetSmartsOpen(this.training.tier, streetUi.unlockTier) && isOpen(this.profile, this.training, 'street-smarts');
-      const journal = this.training.tier >= CONTENT.named.rules.minBeltTier && isOpen(this.profile, this.training, 'journal');
       if (street) this.button(width - pad - 130, ROW2_Y, 130, MIN_TAP, streetUi.button, GREEN, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
-      // The Monster Journal, from the belt where named monsters start showing up.
-      if (journal) {
-        const x = width - pad - (street ? 130 + 8 : 0) - 100;
-        this.button(x, ROW2_Y, 100, MIN_TAP, CONTENT.named.journalButton, 0x6b5a2a, 14, () => this.openJournal());
-      }
-      // Sensei's Scroll (M7-P5): every lesson seen so far, and the tutorial floor, to replay any time.
-      const rowLeft = (street ? 130 + 8 : 0) + (journal ? 100 + 8 : 0);
-      if (isOpen(this.profile, this.training, 'scroll')) this.button(width - pad - rowLeft - 90, ROW2_Y, 90, MIN_TAP, 'Scroll', 0x7a4a6a, 14, () => this.openScroll());
+      // L10-B: the Monster Journal and Sensei's Scroll moved into the Book (Home's Path screen).
       // PLACEHOLDER (A4-DOJO-ii): a temporary way out to the town, and from there to the Action Zone.
       // The Home Dojo has no town door yet; a later step replaces this button with a real door.
       this.button(width - pad - 130, ROW2_Y + MIN_TAP + 8, 130, MIN_TAP, 'Town', 0x3d6a99, 14, () => this.leaveTo('ActionZoneTown', { from: 'home' }));
@@ -1037,80 +1026,6 @@ export class DojoScene extends Phaser.Scene {
     for (const [x, y, label, dx, dy] of buttons) this.button(x, y, a, a, label, 0x3a3a4a, 22, () => this.nudge(dx, dy));
   }
 
-
-  /**
-   * Sensei's Scroll (M7-P5): the lessons seen so far (not the fading follow-ups or the welcome
-   * line). Tap one to hear it again, one screen per tap; or replay the tutorial floor.
-   */
-  private openScroll(): void {
-    const back = this.mode;
-    this.mode = 'menu';
-    this.controls.reset();
-    const { width, height } = view(this);
-    const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
-    const close = (reopen = false) => {
-      box.destroy();
-      if (reopen) return;
-      this.mode = back === 'menu' ? 'play' : back;
-      this.renderUi();
-    };
-    box.add(this.add.text(width / 2, 12, "Sensei's Scroll", { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
-    const seen = scrollLessons(LESSONS, loadSave().lessons);
-    const entries: Array<{ label: string; color: number; onTap: () => void }> = seen.map((l) => ({
-      label: lessonTitle(l),
-      color: 0x2a2536,
-      onTap: () => {
-        close(true);
-        this.replayLesson(l, () => this.openScroll());
-      },
-    }));
-    entries.push({ label: '↻ Replay the tutorial floor', color: 0x3a6ea5, onTap: () => this.replayTutorial() });
-    const cols = width >= 800 ? 3 : 2;
-    const gap = 8;
-    const w = Math.min(230, (width - 40 - gap * (cols - 1)) / cols);
-    const h = MIN_TAP;
-    const x0 = width / 2 - (cols * w + (cols - 1) * gap) / 2;
-    const top = 50;
-    if (seen.length === 0) box.add(this.add.text(width / 2, top - 4, 'Lessons from Sensei show up here.', { fontFamily: FONT, fontSize: '14px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
-    const listTop = seen.length === 0 ? top + 22 : top;
-    entries.forEach((e, i) => {
-      const x = x0 + (i % cols) * (w + gap);
-      const y = listTop + Math.floor(i / cols) * (h + gap);
-      roundButton(this, { x, y, w, h, label: e.label, color: e.color, size: 15, stroke: 0xffd166, onTap: e.onTap }, box);
-    });
-    const cw = 120;
-    roundButton(this, { x: width / 2 - cw / 2, y: height - 12 - MIN_TAP, w: cw, h: MIN_TAP, label: 'Close', color: GREEN, size: 16, onTap: () => close() }, box);
-  }
-
-  /** A lesson again: one screen per tap as a Sensei card, then its practice line. */
-  private replayLesson(lesson: SenseiLesson, done: () => void): void {
-    const screens = lesson.practice ? [...lesson.screens, `Try it: ${lesson.practice}`] : lesson.screens;
-    const show = (i: number) => {
-      const last = i === screens.length - 1;
-      this.card(`Sensei · ${lessonTitle(lesson)}`, [screens[i]], last ? 'Got it!' : 'Next', () => (last ? done() : show(i + 1)));
-    };
-    show(0);
-  }
-
-  /** The tutorial floor again, from the Scroll. */
-  private replayTutorial(): void {
-    if (this.leaving) return;
-    if (isPlayTimeUp(this.profile)) return this.showResting();
-    this.leaveTo('Game', { run: startTowerRun(this.profile, this.training, { replayTutorial: true }) });
-  }
-
-  /** The Monster Journal page (read-only keepsake). */
-  private openJournal(): void {
-    const before = this.mode;
-    this.mode = 'menu';
-    this.controls.reset();
-    const saved = loadSave();
-    openMonsterJournal(this, saved.monsterJournal, saved.decorEarning.given, () => {
-      this.mode = before === 'menu' ? 'play' : before;
-      this.renderUi();
-    });
-  }
 
   /** Settings: the difficulty choice (Guided / Steady / Challenge). Picking one makes it the player's own. */
   private openDifficulty(): void {

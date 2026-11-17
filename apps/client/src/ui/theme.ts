@@ -5,7 +5,7 @@ import { CONTENT } from '../game/content';
 import type { Grade, InsightFamily, Rarity } from '@dojo/sim';
 import { BOARD_PAPER } from './tokens';
 
-export { S1, S2, S3, S4, TYPE, RADIUS, MIN_TAP, MOTION, tapArea, BOARD, abilitiesSwitch, cubbySize } from './tokens';
+export { S1, S2, S3, S4, TYPE, RADIUS, MIN_TAP, MOTION, tapArea, BOARD, cubbySize } from './tokens';
 
 /**
  * P-MENU2-a: mood A, warm dojo wood and paper (Jay's pick). Placeholder colours drawn in code;

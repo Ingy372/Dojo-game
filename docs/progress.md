@@ -1281,3 +1281,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## TUT-B5 — arrow to the HOME door (2026-11-17)
 - After the tutorial close, a small gold arrow at the top edge points at the off-screen HOME door until it comes into view. Tutorial rooms only.
 - Proof: `docs/shots/tut-b5/door-arrow.mjs`, the whole floor plus the arrow checks, 68/0 at 844x390 and 667x375.
+
+## L10-B — the Book (2026-11-17)
+- A Book button on the Path opens Moves (moves plus lessons and the tutorial replay), Monsters (the Journal), Faith and Trophies (stripes and monster trophies). The Dojo's Journal and Scroll buttons and the Board's Abilities tab are gone; saves are unchanged. "Last run" is now "Last climb". The TUT-B5 door arrow has a dark outline.
+- Proof: `docs/shots/l10-b/` at 844x390 and 667x375; `l10b-book.test.ts` (an old save shows the same items).

@@ -35,7 +35,6 @@ export interface NamedContent {
   monsters: NamedMonsterDef[];
   journalTitle: string;
   /** The Home Dojo button that opens the journal. */
-  journalButton: string;
   journalUnknown: { name: string; fact: string };
   tierNames: Record<string, string>;
   senseiIntro: string;
@@ -109,7 +108,6 @@ export function loadNamed(data: unknown, enemies: Record<string, EnemyDef>): Nam
     rules,
     monsters,
     journalTitle: text(d.journalTitle, 'journalTitle'),
-    journalButton: text(d.journalButton, 'journalButton'),
     journalUnknown: { name: text(d.journalUnknown?.name, 'journalUnknown.name'), fact: text(d.journalUnknown?.fact, 'journalUnknown.fact') },
     tierNames: d.tierNames && typeof d.tierNames === 'object' ? { ...d.tierNames } : {},
     senseiIntro: text(d.senseiIntro, 'senseiIntro'),

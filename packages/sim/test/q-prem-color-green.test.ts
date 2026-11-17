@@ -19,9 +19,9 @@ describe('Q-PREM-COLOR shared green', () => {
     expect(hits).toEqual([]);
   });
 
-  it('the 8 files that used it now use GREEN (26 uses)', () => {
+  it('the 8 files that used it now use GREEN (25 uses; L10-B moved Replay out of the Dojo)', () => {
     const want: Record<string, number> = {
-      'scenes/DojoScene.ts': 13, 'scenes/StreetSmartsScene.ts': 4, 'scenes/HomeScene.ts': 2, 'ui/RunOverCard.ts': 2,
+      'scenes/DojoScene.ts': 12, 'scenes/StreetSmartsScene.ts': 4, 'scenes/HomeScene.ts': 2, 'ui/RunOverCard.ts': 2,
       'scenes/CreateScene.ts': 1, 'scenes/TitleScene.ts': 1, 'input/ActionButtons.ts': 1, 'ui/TestingPanel.ts': 1,
     };
     for (const [f, n] of Object.entries(want)) {

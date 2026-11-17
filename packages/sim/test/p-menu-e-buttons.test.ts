@@ -17,7 +17,6 @@ const DIM = /rectangle\(0, 0, width, height[^)]*\)[^;]*setInteractive\(\)/;
 const scopes: Record<string, string> = {
   grownUpGate: raw('/ui/grownUpGate.ts'),
   card: method(dojo, 'card'),
-  openScroll: method(dojo, 'openScroll'),
   openDifficulty: method(dojo, 'openDifficulty'),
   offerResume: method(dojo, 'offerResume'),
   dojoButton: method(dojo, 'button'),
