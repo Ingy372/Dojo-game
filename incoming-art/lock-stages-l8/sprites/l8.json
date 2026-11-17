@@ -40,6 +40,21 @@
       "family": "lock-wrist (Lock group B, placeholder name)",
       "rim": "#6870cc",
       "note": "Same medallion kit, size and margin as icons-slots (PB-07)."
+    },
+    "lock-arm": {
+      "file": "medallions/lock-arm.png",
+      "size": [
+        128,
+        128
+      ],
+      "at2x": "lock-arm@2x.png",
+      "anchorPx": [
+        64,
+        64
+      ],
+      "family": "lock-arm (Lock group A, placeholder name)",
+      "rim": "#6870cc",
+      "note": "Arm bar picture. Replaces nothing yet: the old padlock stays the not-open-yet icon."
     }
   },
   "holdRing": {

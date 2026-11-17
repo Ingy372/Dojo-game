@@ -9,9 +9,9 @@ def font(sz, bold=True):
     return ImageFont.load_default()
 F14, F11, F18 = font(14), font(11), font(18)
 BG = (92, 58, 36); PAPER = (244, 234, 210); INKT = (58, 38, 24)
-FAM = [('counter', 'Counter'), ('guard', 'Guard'), ('disarm', 'Disarm'), ('lock-wrist', 'Lock (wrist)')]
+FAM = [('counter', 'Counter'), ('guard', 'Guard'), ('disarm', 'Disarm'), ('lock-wrist', 'Lock (wrist)'), ('lock-arm', 'Lock (arm)')]
 def med(n, px):
-    p = os.path.join(SPR, 'medallions', 'lock-wrist@2x.png') if n == 'lock-wrist' else os.path.join(IS, f'{n}@2x.png')
+    p = os.path.join(SPR, 'medallions', f'{n}@2x.png') if n.startswith('lock-') else os.path.join(IS, f'{n}@2x.png')
     return Image.open(p).convert('RGBA').resize((px, px), Image.LANCZOS)
 def ring(s, px): return Image.open(os.path.join(SPR, 'stage-rings', f'stage-{s}@2x.png')).convert('RGBA').resize((px, px), Image.LANCZOS)
 def staged(n, s, px):
@@ -21,10 +21,11 @@ def staged(n, s, px):
 def ctext(d, x, y, t, f, col=INKT): d.text((x - d.textlength(t, font=f) / 2, y), t, font=f, fill=col)
 
 # ---- sheet 1: every family at stages 1-4, large (96 px) and at phone size (48 and 32 px)
-W, H = 980, 640
+W, H = 1220, 722
+LOW = 82
 sh = Image.new('RGBA', (W, H), BG + (255,)); d = ImageDraw.Draw(sh)
 d.text((20, 14), 'L8-A1  Seal stages: one shared ring behind every medallion', font=F18, fill=(255, 244, 220))
-d.rounded_rectangle((16, 46, W - 16, 410), 14, fill=PAPER)
+d.rounded_rectangle((16, 46, W - 16, 410 + LOW), 14, fill=PAPER)
 for j, s in enumerate((1, 2, 3, 4)):
     ctext(d, 200 + j * 195, 56, ['Stage 1 (rank 1)', 'Stage 2 (rank 3)', 'Stage 3 (rank 6)', 'Stage 4 (rank 9)'][j], F14)
 for i, (n, lab) in enumerate(FAM):
@@ -32,27 +33,27 @@ for i, (n, lab) in enumerate(FAM):
     d.text((28, y + 30), lab, font=F14, fill=INKT)
     for j, s in enumerate((1, 2, 3, 4)):
         sh.alpha_composite(staged(n, s, 80), (160 + j * 195, y))
-d.rounded_rectangle((16, 422, W - 16, H - 16), 14, fill=PAPER)
-d.text((28, 430), 'PHONE SIZE (real pixels): 48 px and 32 px, as on the loadout and the Book', font=F11, fill=INKT)
+d.rounded_rectangle((16, 422 + LOW, W - 16, H - 16), 14, fill=PAPER)
+d.text((28, 430 + LOW), 'PHONE SIZE (real pixels): 48 px and 32 px, as on the loadout and the Book', font=F11, fill=INKT)
 for i, (n, lab) in enumerate(FAM):
     x0 = 30 + i * 238
-    ctext(d, x0 + 100, 448, lab, F11)
+    ctext(d, x0 + 100, 448 + LOW, lab, F11)
     for j, s in enumerate((1, 2, 3, 4)):
-        sh.alpha_composite(staged(n, s, 48), (x0 + j * 50, 466))
-        sh.alpha_composite(staged(n, s, 32), (x0 + 8 + j * 50, 528))
-    ctext(d, x0 + 100, 572, '1      2      3      4', F11)
+        sh.alpha_composite(staged(n, s, 48), (x0 + j * 50, 466 + LOW))
+        sh.alpha_composite(staged(n, s, 32), (x0 + 8 + j * 50, 528 + LOW))
+    ctext(d, x0 + 100, 572 + LOW, '1      2      3      4', F11)
 g = ImageOps.grayscale(sh.convert('RGB')).convert('RGBA')
 sh.save(os.path.join(PV, '01-stages-all-families-1x.png')); g.save(os.path.join(PV, '01-stages-all-families-grey.png'))
 sh.resize((W * 2, H * 2), Image.NEAREST).save(os.path.join(PV, '01-stages-all-families-2x.png'))
 
 # ---- sheet 2: the new Lock (wrist) medallion, large, next to the PB-07 set
-sh = Image.new('RGBA', (980, 330), BG + (255,)); d = ImageDraw.Draw(sh)
-d.text((20, 14), 'L8-A1  Lock group B (wrist locks) base medallion, with the existing set', font=F18, fill=(255, 244, 220))
-d.rounded_rectangle((16, 46, 964, 314), 14, fill=PAPER)
+sh = Image.new('RGBA', (1180, 330), BG + (255,)); d = ImageDraw.Draw(sh)
+d.text((20, 14), 'L8-A1  Lock medallions (wrist = group B, arm bar = group A), with the existing set', font=F18, fill=(255, 244, 220))
+d.rounded_rectangle((16, 46, 1164, 314), 14, fill=PAPER)
 for i, (n, lab) in enumerate(FAM):
     x = 40 + i * 230
     sh.alpha_composite(med(n, 200), (x, 56)); ctext(d, x + 100, 262, lab, F14)
-ctext(d, 820, 284, 'new (indigo rim = Lock, placeholder)', F11)
+ctext(d, 940, 284, 'new: the two Lock groups (indigo rim = placeholder)', F11)
 sh.save(os.path.join(PV, '02-lock-wrist-medallion.png'))
 
 # ---- sheet 3: the hold ring in a fight at game size (48 px tiles), plus a 3x close-up
@@ -110,3 +111,53 @@ for j, st in enumerate((1, 2, 3, 4)):
     big.alpha_composite(staged('lock-wrist', st, 256), (14 + j * 270, 10)); ctext(d, 142 + j * 270, 272, f'Stage {st}', F14)
 big.save(os.path.join(PV, '05-stages-large-2x.png'))
 print('previews ok')
+
+# ---- sheet 6: before / after for the gate fixes (v1 archived in archive/v1/)
+AR = os.path.join(L8, 'archive', 'v1')
+def old_med(n, px): return Image.open(os.path.join(AR, 'medallions', f'{n}@2x.png')).convert('RGBA').resize((px, px), Image.LANCZOS)
+def old_ring(s, px): return Image.open(os.path.join(AR, 'stage-rings', f'stage-{s}@2x.png')).convert('RGBA').resize((px, px), Image.LANCZOS)
+def stack(r, m, px):
+    im = Image.new('RGBA', (px, px), (0, 0, 0, 0))
+    if r is not None: im.alpha_composite(r)
+    im.alpha_composite(m); return im
+padlock = lambda px: Image.open(os.path.join(IS, 'lock@2x.png')).convert('RGBA').resize((px, px), Image.LANCZOS)
+sh = Image.new('RGBA', (1180, 636), BG + (255,)); d = ImageDraw.Draw(sh)
+d.text((20, 14), 'L8-A1 rev 2  Before / after (BEFORE = v1, AFTER = now)', font=F18, fill=(255, 244, 220))
+# top: big close-ups 200 px
+d.rounded_rectangle((16, 46, 1164, 330), 14, fill=PAPER)
+items = [('Stage 3', stack(ring(3, 200), med('counter', 200), 200), 'Stage 4 BEFORE', stack(old_ring(4, 200), med('counter', 200), 200),
+          'Stage 4 AFTER', stack(ring(4, 200), med('counter', 200), 200))]
+big = [('Stage 3 (same)', stack(ring(3, 180), med('counter', 180), 180)),
+       ('Stage 4 BEFORE', stack(old_ring(4, 180), med('counter', 180), 180)),
+       ('Stage 4 AFTER', stack(ring(4, 180), med('counter', 180), 180)),
+       ('Wrist BEFORE', old_med('lock-wrist', 180)), ('Wrist AFTER', med('lock-wrist', 180)),
+       ('Arm: padlock before', padlock(180)), ('Arm bar AFTER', med('lock-arm', 180))]
+for i, (lab, im) in enumerate(big):
+    x = 26 + i * 162
+    sh.alpha_composite(im.resize((156, 156), Image.LANCZOS), (x, 70)); ctext(d, x + 78, 236, lab, F11)
+d.text((28, 270), 'Stage 4 is now an 8-point star crown, so its outline is a star, not a circle like stages 2 and 3.', font=F11, fill=INKT)
+d.text((28, 288), 'Wrist: the paw is lighter lilac with toes and 3 blunt claws, folded down at the wrist. Arm bar: one hand holds the wrist, one presses above the elbow.', font=F11, fill=INKT)
+# bottom: real phone pixels, 48 and 32, for every family stage 3 / old 4 / new 4, and the medallions
+d.rounded_rectangle((16, 342, 1164, 620), 14, fill=PAPER)
+d.text((28, 350), 'PHONE SIZE (real pixels, not scaled up): 48 px row, then 32 px row', font=F11, fill=INKT)
+for i, (n, lab) in enumerate(FAM):
+    x0 = 30 + i * 226
+    ctext(d, x0 + 90, 372, lab, F11)
+    for j, (r, tag) in enumerate(((ring(3, 48), '3'), (old_ring(4, 48), '4 old'), (ring(4, 48), '4 new'))):
+        sh.alpha_composite(stack(r, med(n, 48), 48), (x0 + j * 62, 392)); ctext(d, x0 + 24 + j * 62, 444, tag, F11)
+    for j, r in enumerate((ring(3, 32), old_ring(4, 32), ring(4, 32))):
+        sh.alpha_composite(stack(r, med(n, 32), 32), (x0 + 8 + j * 62, 466))
+d.text((28, 520), 'Lock medallions at 48 and 32 px:', font=F11, fill=INKT)
+row = [('wrist before', old_med('lock-wrist', 48), old_med('lock-wrist', 32)), ('wrist after', med('lock-wrist', 48), med('lock-wrist', 32)),
+       ('padlock before', padlock(48), padlock(32)), ('arm bar after', med('lock-arm', 48), med('lock-arm', 32))]
+for i, (lab, a48, a32) in enumerate(row):
+    x = 40 + i * 150
+    sh.alpha_composite(a48, (x, 544)); sh.alpha_composite(a32, (x + 60, 552)); ctext(d, x + 46, 600, lab, F11)
+# the same 48/32 row on a dark loadout-like strip, to check the paw against dark UI
+d.rounded_rectangle((640, 520, 1150, 616), 10, fill=(40, 34, 58))
+for i, (lab, a48, a32) in enumerate(row):
+    x = 652 + i * 124
+    sh.alpha_composite(a48, (x, 532)); sh.alpha_composite(a32, (x + 56, 540))
+sh.save(os.path.join(PV, '06-rev2-before-after.png'))
+sh.resize((sh.width * 2, sh.height * 2), Image.NEAREST).save(os.path.join(PV, '06-rev2-before-after-2x.png'))
+print('sheet 6 ok')

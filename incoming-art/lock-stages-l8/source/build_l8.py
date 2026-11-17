@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__)); L8 = os.path.dirname(HERE); ART = os.path.dirname(L8)
 sys.path.insert(0, HERE)
-from lock_wrist import lock_wrist, LOCK_RIM
+from lock_wrist import lock_wrist, lock_arm, LOCK_RIM
 
 SPR = os.path.join(L8, 'sprites'); PV = os.path.join(L8, 'preview')
 for d in (SPR, os.path.join(SPR, 'stage-rings'), os.path.join(SPR, 'medallions'), os.path.join(SPR, 'hold-ring'), PV):
@@ -14,6 +14,7 @@ INK = (58, 40, 34, 255)
 # stage rings: pearl silver, never gold or yellow (gold/yellow is GREAT!, the dizzy stars and the warning cue)
 SILVER, SILVER_S, SILVER_H = (172, 184, 208), (118, 130, 160), (246, 249, 255)
 PEARL, PEARL_S = (252, 253, 255), (196, 204, 228)
+STEEL = (112, 126, 168)   # stage 4 crown points: a deeper blue steel so the star outline reads at 32 px
 # hold ring: a pale tint of the Lock indigo, with a dark indigo outline so it reads on the dark shadow creatures
 HOLD, HOLD_H, HOLD_INK = (148, 160, 255), (228, 232, 255), (30, 32, 90)
 SS = 4   # supersample
@@ -30,21 +31,32 @@ def stage_ring(stage, px=256):
     S = px * SS / 256; c = px * SS / 2
     im = Image.new('RGBA', (px * SS, px * SS), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     R0, R1 = 92 * S, 117 * S
+    if stage >= 4:   # v2: a bold 8-point silver crown behind the band, so stage 4 is a star shape, not a circle
+        def star(ro, ri, grow=0.0):
+            pts = []
+            for i in range(16):
+                a = -math.pi / 2 + math.pi / 8 + i * math.pi / 8
+                r = (ro if i % 2 == 0 else ri) + grow
+                pts.append((c + r * S * math.cos(a), c + r * S * math.sin(a)))
+            return pts
+        d.polygon(star(124.5, 106, 3.2), fill=INK)
+        d.polygon(star(124.5, 106), fill=STEEL + (255,))
+        for i in range(8):   # a light facet on each point
+            a = -math.pi / 2 + math.pi / 8 + i * math.pi / 4
+            d.polygon([(c + 122 * S * math.cos(a), c + 122 * S * math.sin(a)),
+                       (c + 108 * S * math.cos(a - .17), c + 108 * S * math.sin(a - .17)),
+                       (c + 108 * S * math.cos(a), c + 108 * S * math.sin(a))], fill=SILVER_H + (255,))
+        R1 = 110 * S
     ring(d, c, c, R0 - 3 * S, R1 + 3 * S, INK)                                       # ink outline
     ring(d, c, c, R0, R1, SILVER + (255,))
     ring(d, c, c, R1 - 2.5 * S, R1, SILVER_H + (255,))                                  # thin outer shine
     ring(d, c, c, 102 * S, 106 * S, SILVER_S + (255,))                                  # shade just outside the medallion
-    if stage >= 4:   # 8 short pearl points between the pearls, outside the band
-        for i in range(8):
-            a = math.pi / 8 + i * math.pi / 4 - math.pi / 2
-            def pt(r, da): return (c + r * S * math.cos(a + da), c + r * S * math.sin(a + da))
-            d.polygon([pt(127.5, 0), pt(114, -.17), pt(114, .17)], fill=INK)
-            d.polygon([pt(124, 0), pt(116, -.12), pt(116, .12)], fill=PEARL + (255,))
     if stage >= 3:   # pearls on the band: 4 at stage 3, 8 at stage 4
         n = 4 if stage == 3 else 8
         for i in range(n):
             a = -math.pi / 2 + i * 2 * math.pi / n
-            x, y = c + 109 * S * math.cos(a), c + 109 * S * math.sin(a); r = 9.5 * S
+            pr = 109 if stage == 3 else 106
+            x, y = c + pr * S * math.cos(a), c + pr * S * math.sin(a); r = (9.5 if stage == 3 else 8) * S
             d.ellipse([x - r - 2.5 * S, y - r - 2.5 * S, x + r + 2.5 * S, y + r + 2.5 * S], fill=INK)
             d.ellipse([x - r, y - r, x + r, y + r], fill=PEARL_S + (255,))
             d.ellipse([x - r, y - r, x + r * .55, y + r * .55], fill=PEARL + (255,))
@@ -106,6 +118,8 @@ def pb07(img, px):
 # check the PB-07 medallion edge first so the new one sits exactly like the others
 ref = np.array(Image.open(os.path.join(ART, 'icons-slots', 'sprites', 'counter@2x.png')))
 pb07(lw, 256).save(os.path.join(SPR, 'medallions', 'lock-wrist@2x.png')); pb07(lw, 128).save(os.path.join(SPR, 'medallions', 'lock-wrist.png'))
+la = lock_arm().resize((256, 256), Image.LANCZOS)
+pb07(la, 256).save(os.path.join(SPR, 'medallions', 'lock-arm@2x.png')); pb07(la, 128).save(os.path.join(SPR, 'medallions', 'lock-arm.png'))
 N = 6; FPS = 8
 for half in ('back', 'front'):
     for sc, suf in ((1, ''), (2, '@2x')):
@@ -124,7 +138,10 @@ json.dump({
                    'usedBy': 'every family; the ring is shared, not tinted'},
     'medallions': {'lock-wrist': {'file': 'medallions/lock-wrist.png', 'size': [128, 128], 'at2x': 'lock-wrist@2x.png', 'anchorPx': [64, 64],
                                   'family': 'lock-wrist (Lock group B, placeholder name)', 'rim': '#%02x%02x%02x' % LOCK_RIM,
-                                  'note': 'Same medallion kit, size and margin as icons-slots (PB-07).'}},
+                                  'note': 'Same medallion kit, size and margin as icons-slots (PB-07).'},
+                   'lock-arm': {'file': 'medallions/lock-arm.png', 'size': [128, 128], 'at2x': 'lock-arm@2x.png', 'anchorPx': [64, 64],
+                                'family': 'lock-arm (Lock group A, placeholder name)', 'rim': '#%02x%02x%02x' % LOCK_RIM,
+                                'note': 'Arm bar picture. Replaces nothing yet: the old padlock stays the not-open-yet icon.'}},
     'holdRing': {'frame': [96, 48], 'at2x': '<name>@2x.png, frames 192 x 48*2', 'frames': N, 'fps': FPS, 'loop': True,
                  'layout': 'one row, frames left to right, no padding', 'anchorPx': [48, 24], 'anchorNote': "the enemy's feet point",
                  'pixelsPerTile': 80, 'ringWidthTiles': 0.8 * 96 / 80,

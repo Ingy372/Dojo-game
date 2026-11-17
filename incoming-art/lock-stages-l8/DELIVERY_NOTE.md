@@ -1,19 +1,17 @@
-# Delivery Note
+# Delivery Note (rev 2)
 
-ITEM: L8-A1 (board 3da65e0a), from L8-SPEC section 6: 3 stage ring overlays used by every family, 1 base medallion for the second Lock group, and the hold ring.
+ITEM: L8-A1 (board 3da65e0a), rev 2. These are the 3 fixes from your gate. The hold ring passed and hasn't changed.
 
 WHAT:
-- Three shared stage rings in pearl silver: stage 2 is a band, stage 3 adds 4 pearls, and stage 4 has 8 pearls plus small points. They sit behind any family medallion.
-- A Lock (wrist) medallion: the student's two hands fold a shadow creature's paw at the wrist.
-- A periwinkle hold ring at a held enemy's feet. It has front and back halves, 6 pulse frames and a still version for reduced motion.
-- Every preview is shown at phone size.
+1) Stage 4 is now a bold 8-point star crown in a deeper blue steel, with 8 pearls. Stages 2 and 3 are round and stage 4 is a star, so they tell apart at 32 px.
+2) The wrist medallion's paw is now lighter lilac, with toes and 3 blunt cream claws. It's clearly bent down at the wrist, with one hand pressing it and the other holding the forearm.
+3) There's a new arm-bar medallion for Lock group A, in the same style and placeholder indigo. One hand holds the wrist, the other presses just above the elbow, and an arrow shows the press.
+- Before/after views at 48 and 32 px are in preview/06-rev2-before-after.png. The v1 sprites are archived in archive/v1/.
 
-WHY: L8 evolutions give each family a new look at ranks 3, 6 and 9. The hold needs a cue that differs from a plain stagger. Following your note, the hold ring uses no gold or yellow, since Jay found yellow confusing next to the !.
+WHY: These are the Manager's gate notes on #529.
 
 DECIDE:
-1) The Lock colour: indigo is a placeholder. Both Lock groups would share it.
-2) Lock group A (arm and shoulder) has no picture medallion yet. Today's "lock" icon is the padlock for "coming later". Should I make an arm-bar one next?
-3) At 32 px, stages 3 and 4 are told apart mostly by the pearls. The evolution card shows them large.
-4) The wrist-lock picture is technique art, so Jay should judge it.
+1) The Lock colour: indigo is still a placeholder.
+2) Both Lock pictures are technique art, so Jay should judge them.
 
-NEXT: Fixes from your gate. After that, the arm-lock medallion if wanted. Nothing is imported.
+NEXT: Fixes from your gate. Nothing is imported.
