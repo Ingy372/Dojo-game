@@ -1,0 +1,111 @@
+{
+  "item": "L8-C1",
+  "notes": "DRAFT text for L8-SPEC.md (sections 1, 3 and 4). Drops into the seal-families.json shape: family id, name, text, ranks (technique, name, text). The group names 'Lock (arm)' and 'Lock (wrist)' are PLACEHOLDERS until Jay names the groups; ids never change, so a rename is text only. Every kid line is 8 words or fewer, one sentence, and names no body targets. Rank names are the J27 real-name list where one exists; OPEN ones wait on Jay. No line promises a number the spec dropped (no extra hold time, no push, no Focus).",
+  "placeholders": [
+    "Lock (arm)",
+    "Lock (wrist)"
+  ],
+  "families": [
+    {
+      "id": "lock-arm",
+      "name": "Lock (arm)",
+      "namePlaceholder": true,
+      "text": "Hold attackers still after a Great Counter.",
+      "ranks": [
+        {
+          "technique": 17,
+          "callout": "Self-Defense #17",
+          "id": "arm-bar",
+          "name": "Arm Bar",
+          "text": "A Great Counter holds the attacker still.",
+          "kind": "counterLock"
+        },
+        {
+          "technique": 28,
+          "callout": "Self-Defense #28",
+          "id": "four-corner-lock",
+          "name": "Four-Corner Lock",
+          "text": "A Block refills your DASH.",
+          "kind": "dashOnBlock",
+          "nameStatus": "PROPOSED: from 'four-corner shoulder lock' in docs/self-defense.md #28; Jay to confirm"
+        },
+        {
+          "technique": 31,
+          "callout": "Self-Defense #31",
+          "id": "arm-bar-release",
+          "name": "Arm Bar Release",
+          "text": "Your Lock Seal shines with a new look!",
+          "kind": "evolve",
+          "nameStatus": "OPEN (J27): candidate Arm Bar, also #17"
+        },
+        {
+          "technique": 36,
+          "callout": "Self-Defense #36",
+          "id": "wide-release",
+          "name": "Wide Release",
+          "text": "Sensei will show you this one soon.",
+          "kind": "cue",
+          "nameStatus": "OPEN: Jay hasn't described #36 yet"
+        }
+      ]
+    },
+    {
+      "id": "lock-wrist",
+      "name": "Lock (wrist)",
+      "namePlaceholder": true,
+      "text": "Set a steady hold after a Great Counter.",
+      "ranks": [
+        {
+          "technique": 32,
+          "callout": "Self-Defense #32",
+          "id": "slide-to-the-wrist",
+          "name": "Slide to the Wrist",
+          "text": "A Great Counter holds the attacker still.",
+          "kind": "counterLock",
+          "nameStatus": "OPEN (J27): candidate Wrist Lock, also #19"
+        },
+        {
+          "technique": 33,
+          "callout": "Self-Defense #33",
+          "id": "party-flex",
+          "name": "Party Flex",
+          "text": "Each Great Counter restores a little Health.",
+          "kind": "healOnPerfect"
+        },
+        {
+          "technique": 35,
+          "callout": "Self-Defense #35",
+          "id": "catch-the-hand",
+          "name": "Catch the Hand",
+          "text": "Your Lock Seal shines with a new look!",
+          "kind": "evolve",
+          "nameStatus": "OPEN (J27): candidate Wrist Lock, also #19"
+        },
+        {
+          "technique": 39,
+          "callout": "Self-Defense #39",
+          "id": "release-and-go",
+          "name": "Release and Go",
+          "text": "Sensei will show you this one soon.",
+          "kind": "cue",
+          "nameStatus": "OPEN: Jay hasn't described #39 yet"
+        }
+      ]
+    }
+  ],
+  "bothGroups": "Both Lock Seals share one hold.",
+  "held": {
+    "event": "held",
+    "note": "No words on the hold itself: the gold ring and guard swish show it (spec section 2)."
+  },
+  "evolution": {
+    "title": "Your {family} Seal evolved!",
+    "callout": "Self-Defense #{n}",
+    "line": "It shines brighter, just like your training.",
+    "button": "Continue",
+    "legacyTitle": "Your Seals evolved!",
+    "legacyRow": "{family} Seal: Stage {stage}",
+    "stageLabel": "Stage {stage}",
+    "note": "One card after the sign-off cards; tap to continue. {family} is the family name (Counter, Escape, Lock (arm)...), {n} the technique number, {stage} 2-4. The legacy cascade uses legacyTitle plus one legacyRow per family on the welcome list. Shown on the loadout and in the Book as stageLabel."
+  }
+}
