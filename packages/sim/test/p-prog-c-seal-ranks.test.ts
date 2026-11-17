@@ -44,9 +44,9 @@ const mods = (effects: Effect[]) => modsFrom(effects, TICKS_PER_SECOND);
 
 describe('PB-02 family ranks', () => {
   it('lists seven families (J27: Advancing added), each technique in one family, and the plan\'s map', () => {
-    expect(fams.map((f) => f.id)).toEqual(['escape', 'advancing', 'counter', 'guard', 'throw', 'disarm', 'lock']);
+    expect(fams.map((f) => f.id)).toEqual(['escape', 'advancing', 'counter', 'guard', 'throw', 'disarm', 'lock-arm', 'lock-wrist']);
     const map = Object.fromEntries(fams.map((f) => [f.id, f.ranks.map((r) => r.technique)]));
-    expect(map).toEqual({ escape: [1, 2, 15], advancing: [4], counter: [3, 5, 6, 7, 10], guard: [8, 9], throw: [11, 12], disarm: [13, 14], lock: [] });
+    expect(map).toEqual({ escape: [1, 2, 15], advancing: [4], counter: [3, 5, 6, 7, 10], guard: [8, 9], throw: [11, 12], disarm: [13, 14], 'lock-arm': [17, 28, 31, 36], 'lock-wrist': [32, 33, 35, 39] });
   });
 
   it('rank = how many of the family\'s techniques are signed off; a family unlocks at its first', () => {
@@ -78,14 +78,14 @@ describe('PB-02 family ranks', () => {
     expect(fams.flatMap((f) => familyEffects(f, signedOffTechniques(t)))).toEqual(all);
   });
 
-  it('Lock has no ranks yet (R-G2B-09) and stays off; Throw is live since R-G2B-04', () => {
-    expect(fam('lock').live).toBe(false);
+  it('both Lock groups stay off until L8-B2; Throw is live since R-G2B-04', () => {
+    for (const id of ['lock-arm', 'lock-wrist']) expect(fam(id).live).toBe(false);
     expect(fam('throw').live).toBe(true);
-    const everything = new Set(Array.from({ length: 30 }, (_, i) => i + 1));
+    const everything = new Set(Array.from({ length: 40 }, (_, i) => i + 1));
     expect(familyEffects(fam('throw'), everything)).toEqual([{ type: 'counterThrow', amount: 30 }, { type: 'downBonus', amount: 0.25 }]);
-    expect(familyEffects(fam('lock'), everything)).toEqual([]);
+    for (const id of ['lock-arm', 'lock-wrist']) expect(familyEffects(fam(id), everything)).toEqual([]);
     expect(unlockedFamilies(training(green), fams)).toContain('throw');
-    expect(unlockedFamilies(training(green), fams)).not.toContain('lock');
+    expect(unlockedFamilies(training(green), fams)).not.toContain('lock-arm');
   });
 
   it('only the equipped families give effects: a White profile with two equipped has just those', () => {
@@ -110,7 +110,7 @@ describe('PB-02 loading the family file', () => {
   const clone = () => JSON.parse(JSON.stringify(sealFamilyData));
 
   it('accepts the shipped file', () => {
-    expect(loadSealFamilies(sealFamilyData)).toHaveLength(7);
+    expect(loadSealFamilies(sealFamilyData)).toHaveLength(8);
   });
 
   it('J27: #4 is in Advancing (live), name still OPEN (no "Drive Back"), push unchanged at 1.5 tiles', () => {

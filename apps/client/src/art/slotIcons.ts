@@ -10,6 +10,7 @@ const key = (id: string) => `slot:${id}`;
 /** Which saved picture a slot id uses. Spin Kick and Butterfly Kick share the Strike picture. */
 export function slotIconId(id: string): string | null {
   if (id === 'spin-kick' || id === 'butterfly-flow') return 'strike';
+  if (id === 'lock-arm' || id === 'lock-wrist') return 'lock';
   return (FILES as readonly string[]).includes(id) ? id : null;
 }
 

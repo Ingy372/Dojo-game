@@ -60,7 +60,7 @@ describe('PB-01 equipSeal, swapSeal, removeSeal', () => {
   });
 
   it('does not equip a family that is not earned', () => {
-    const r = equipSeal(none, 'lock', ALL, 3);
+    const r = equipSeal(none, 'lock-arm', ALL, 3);
     expect(r.result).toBe('locked');
     expect(r.loadout).toBe(none);
   });
@@ -69,7 +69,7 @@ describe('PB-01 equipSeal, swapSeal, removeSeal', () => {
     const full: Loadout = { ...none, seals: ['escape', 'counter'] };
     expect(swapSeal(full, 'escape', 'guard', ALL).seals).toEqual(['guard', 'counter']);
     expect(swapSeal(full, 'disarm', 'guard', ALL)).toBe(full);
-    expect(swapSeal(full, 'escape', 'lock', ALL)).toBe(full);
+    expect(swapSeal(full, 'escape', 'lock-arm', ALL)).toBe(full);
   });
 
   it('removing is always allowed, and removing one that is not there does nothing', () => {

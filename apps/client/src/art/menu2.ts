@@ -42,6 +42,8 @@ export function menu2Slice(scene: Phaser.Scene, name: Name, x: number, y: number
 
 /** Dark ink for words on the honey button and the title plaque (README). */
 export const HONEY_INK = '#462a16';
+/** Label ink on a dimmed (unselected) wood tab: 5:1 or more on the dim wood. */
+const DIM_INK = '#24140a';
 
 /**
  * Puts the honey wood button art on a button() (w x h, centred in its visual). `dim` darkens it
@@ -51,9 +53,9 @@ export function woodSkin(scene: Phaser.Scene, b: { visual: Phaser.GameObjects.Co
   const name = o.disabled ? 'button-primary-disabled' : 'button-primary-normal';
   const skin = menu2Slice(scene, name, -w / 2, -h / 2, w, h, 'height');
   if (!skin) return false;
-  if (o.dim) skin.setTint(0xa89078);
+  if (o.dim) skin.setTint(0xc0a888);
   skinButton(scene, b, skin, name, o.disabled ? undefined : 'button-primary-pressed');
-  for (const c of b.visual.list) if (c instanceof Phaser.GameObjects.Text) c.setColor(HONEY_INK);
+  for (const c of b.visual.list) if (c instanceof Phaser.GameObjects.Text) c.setColor(o.dim ? DIM_INK : HONEY_INK);
   if (o.disabled) b.visual.setAlpha(1);
   return true;
 }
