@@ -2,6 +2,7 @@
 // Positions are measured in tiles: the top-left corner of the room is (0, 0)
 // and the center of tile (column 3, row 2) is (3.5, 2.5).
 
+import { secondsToTicks } from './config';
 import type { Vec2 } from './math';
 
 const WALL = '#';
@@ -65,6 +66,14 @@ export interface Room {
   goal: Vec2 | null;
   /** A tutorial floor room (M7-P2): only the tutorial floor uses it, never a normal floor. */
   tutorial: boolean;
+  /** TUT-B1: falling-stone waves (tutorial rooms only), in order. Empty when the room has none. */
+  stoneWaves: StoneWave[];
+}
+
+/** TUT-B1: one wave of falling stones. Each spot gets a red circle that fills for `fillTicks`, then the stone lands. */
+export interface StoneWave {
+  spots: Vec2[];
+  fillTicks: number;
 }
 
 export interface EnemySpawn {
@@ -203,7 +212,9 @@ export function loadRoom(data: unknown): Room {
   if (raw.floorSet !== undefined && (typeof raw.floorSet !== 'string' || raw.floorSet.length === 0)) throw new RoomError(id, '"floorSet" must be a non-empty text');
   const floorSet = typeof raw.floorSet === 'string' ? raw.floorSet : null;
   if (goal && !tutorial) throw new RoomError(id, 'only tutorial rooms can have a glowing spot "G"');
-  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom, minBeltTier, floorSet, goal, tutorial };
+  const stoneWaves = loadStoneWaves(id, raw.hazards, walls, width, height);
+  if (stoneWaves.length > 0 && !tutorial) throw new RoomError(id, 'only tutorial rooms can have falling stones');
+  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom, minBeltTier, floorSet, goal, tutorial, stoneWaves };
 }
 
 /**
@@ -248,6 +259,30 @@ function loadEnemySpawns(id: string, data: unknown, walls: boolean[][], width: n
       throw new RoomError(id, `enemy ${n}'s "wave" must be a whole number from 1`);
     }
     return { enemy: e.enemy, pos: { x: col - 0.5, y: row - 0.5 }, wave };
+  });
+}
+
+/** TUT-B1: reads the optional "hazards": { "stones": [{ "fillSeconds": 1.5, "spots": [{ "column", "row" }] }] }. */
+function loadStoneWaves(id: string, data: unknown, walls: boolean[][], width: number, height: number): StoneWave[] {
+  if (data === undefined) return [];
+  const stones = (data as Record<string, unknown> | null)?.stones;
+  if (typeof data !== 'object' || data === null || !Array.isArray(stones)) throw new RoomError(id, '"hazards" must be { "stones": [ ...waves ] }');
+  return stones.map((item, i) => {
+    const w = item as Record<string, unknown>;
+    const n = i + 1;
+    if (typeof w !== 'object' || w === null || typeof w.fillSeconds !== 'number' || !(w.fillSeconds > 0)) {
+      throw new RoomError(id, `stone wave ${n} needs "fillSeconds" above 0 (the red circle always fills first)`);
+    }
+    if (!Array.isArray(w.spots) || w.spots.length === 0) throw new RoomError(id, `stone wave ${n} needs a list of "spots"`);
+    const spots = w.spots.map((sp: Record<string, unknown>) => {
+      const col = sp?.column;
+      const row = sp?.row;
+      if (typeof col !== 'number' || typeof row !== 'number' || !Number.isInteger(col) || !Number.isInteger(row) || col < 1 || row < 1 || col > width || row > height || walls[row - 1][col - 1]) {
+        throw new RoomError(id, `stone wave ${n}: each spot needs a whole-number "column" and "row" on a floor tile`);
+      }
+      return { x: col - 0.5, y: row - 0.5 };
+    });
+    return { spots, fillTicks: secondsToTicks(w.fillSeconds) };
   });
 }
 

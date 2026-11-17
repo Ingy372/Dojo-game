@@ -12,6 +12,7 @@ import { namedDef, type NamedRules, type NamedSpawn } from './named';
 import { eliteDef, eliteWindup, type EliteKind, type EliteRules, type EliteSpawn } from './elite';
 import { challengeDef, type ChallengeAt, type EnemyAttackDef, type EnemyDef } from './enemy';
 import { clamp, distance, length, quantize, type Vec2 } from './math';
+import { isStumbling, newStones, stepStones, type StoneState } from './stones';
 import { findPath, standableSpot } from './path';
 import { activeDoorSlots, waveCount, type EnemySpawn, type Room } from './room';
 
@@ -236,6 +237,16 @@ export type CombatEvent =
   | { kind: 'wave'; wave: number; of: number }
   | { kind: 'playerOut'; playerId: PlayerId }
   | { kind: 'goalReached' }
+  /** TUT-B1: a stone wave's red circles start filling (`ticks` until they land; `safeSpot` once help is on). */
+  | { kind: 'stoneWarn'; wave: number; spots: Vec2[]; ticks: number; safeSpot: Vec2 | null }
+  /** TUT-B1: the stones land (a soft thump and dust). */
+  | { kind: 'stoneLand'; wave: number; spots: Vec2[] }
+  /** TUT-B1: a stone landed on this player: a short stumble, no damage. */
+  | { kind: 'stumble'; playerId: PlayerId }
+  /** TUT-B1: a wave is finished (dodged, or passed after enough misses) and won't drop again. */
+  | { kind: 'stoneWaveDone'; wave: number; dodged: boolean }
+  /** TUT-B1: every stone wave is finished. */
+  | { kind: 'stonesDone' }
   | { kind: 'roomCleared' }
   | { kind: 'breath'; playerId: PlayerId; healed: number }
   | { kind: 'chestOpened'; playerId: PlayerId }
@@ -280,6 +291,8 @@ export interface WorldState {
   minHealth: number;
   /** The tutorial floor's glowing spot, or null. */
   goal: GoalState | null;
+  /** TUT-B1: the tutorial's falling stones, or null when the room has none. */
+  stones: StoneState | null;
   /** Tutorial floor (K24a): the enemies stand still until Sensei's step lets them go. */
   enemyHold: boolean;
   /** B-T3-TUNE-2c: ticks left in a boss phase pause (0 = none). Like the guide hold, nothing moves. */
@@ -550,6 +563,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     namedRules,
     minHealth: Math.max(0, options.minHealth ?? 0),
     goal: room.goal ? { pos: { ...room.goal }, reached: false } : null,
+    stones: newStones(room),
     enemyHold: false,
     phaseHoldTicks: 0,
     waveHold: false,
@@ -631,8 +645,9 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
     return;
   }
   for (const id of ids) {
-    stepPlayer(world, world.players[id], room, inputs[id] ?? NO_INPUT);
+    stepPlayer(world, world.players[id], room, isStumbling(world, id) ? NO_INPUT : (inputs[id] ?? NO_INPUT));
   }
+  stepStones(world, room, ids);
   // Tutorial floor: the enemies wait until the player has walked to the glowing spot.
   const goal = world.goal;
   if (goal && !goal.reached) {
@@ -1810,7 +1825,7 @@ function updateProgress(world: WorldState, room: Room, ids: PlayerId[]): void {
   }
 
   if (!prog.cleared) {
-    if (allEnemiesBeaten(world)) {
+    if (allEnemiesBeaten(world) && (!world.stones || world.stones.done)) {
       prog.cleared = true;
       world.events.push({ kind: 'roomCleared' });
       // Catch your breath: a small heal after a fight.

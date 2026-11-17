@@ -436,6 +436,25 @@ export const BOW = {
 } as const;
 
 /**
+ * TUT-B1: the tutorial's falling stones. No damage ever: a stone that lands on the hero is a short stumble.
+ * Each wave's fill time is a playtest setting in the room file (content/rooms), not here.
+ */
+export const STONES = {
+  /** The red circle's size around each stone spot, in tiles (melon-sized stone, kid-sized circle). */
+  radius: 0.9,
+  /** A short pause before the first wave and between drops, in seconds. */
+  gapSeconds: 1,
+  /** How long a stumble holds the hero still, in seconds (stars, then on again). */
+  stumbleSeconds: 0.8,
+  /** After this many misses on a wave, the circle fills slower and a safe spot is shown. */
+  helpAfterMisses: 2,
+  /** How much slower the circle fills with help on. */
+  helpFillScale: 1.5,
+  /** After this many misses, the wave counts as done anyway, so a kid is never stuck. */
+  passAfterMisses: 3,
+} as const;
+
+/**
  * K25 (Jay's phone playtest): the whole game runs a bit slower. The rules still count the same
  * ticks; the client just plays each tick this much slower in real time, so movement, enemies,
  * attacks and animations all slow together and every wind-up and counter window gets longer
