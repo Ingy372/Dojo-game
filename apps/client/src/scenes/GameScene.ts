@@ -80,11 +80,14 @@ import {
   patternKey,
   firstPatternSight,
   guardianLine,
+  STONES,
 } from '@dojo/sim';
 import { FAITH } from '../ui/faith';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
+// TUT-B3: the story cards before the first step and the close line (placeholders until Jay checks the tone).
+import STORY from '../../../../content/tutorial/tutorial-story.json';
 // L-PREMIUM-b: the Counter tip's rules.
 import COUNTER_HINT from '../../../../content/settings/counter-hint.json';
 import { Celebrations } from '../ui/Celebrations';
@@ -96,11 +99,20 @@ import { forceAttack, withForced } from '../game/forceAttack';
 
 /** The tutorial floor's lines (M7-P2). */
 const TUTORIAL = loadTutorialLines(tutorialData);
-import { type PackName, addStatic, characterArt, characterTop, frameOf, loadArt, setStaticFrame, staticArt } from '../art/art';
+TUTORIAL['tutorial-door'].success = STORY.close;
+/** TUT-B3: where the tutorial flow starts in each room, and the last step a room's clear may skip to. */
+const TUTORIAL_ROOM_STEPS: Record<string, { from: TutorialStep; until?: TutorialStep }> = {
+  'tutorial-path': { from: 'tutorial-path', until: 'tutorial-bow' },
+  'training-hall': { from: 'tutorial-dummies', until: 'tutorial-brute' },
+  'tutorial-hall': { from: 'tutorial-brute', until: 'tutorial-insight' },
+  'tutorial-vault': { from: 'tutorial-chest' },
+  'tutorial-keep': { from: 'tutorial-boss' },
+};
+import { type PackName, addStatic, characterArt, characterTop, frameOf, loadArt, setStaticFrame, staticArt, staticCharacter } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
-import { ENEMY_ART_PACKS, attackAnim, auraId, enemyArt, testAura, towerPack } from '../art/tiers';
+import { DUMMY_ART, ENEMY_ART_PACKS, TUTORIAL_PACK, attackAnim, auraId, enemyArt, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { streakAura } from '../ui/classChest';
 import { loadLook, playerPacks } from '../game/look';
@@ -455,15 +467,18 @@ export class GameScene extends Phaser.Scene {
   /** The tower art for the student's belt tier (or the ?tower= test link). */
   private towerPack: PackName = 'tower-t1';
 
-  /** Tutorial floor (M7-P2): the glowing spot, and whether Strike has been taught in the boss room. */
+  /** Tutorial floor (M7-P2): the glowing spot. */
   private goalView: Phaser.GameObjects.Arc | null = null;
-  private strikeTaught = false;
+  /** TUT-B3: the big dummy has been let in (the STRIKE step), the falling stones' look, and the stumble stars. */
+  private strikeWave = false;
+  private stoneWarn: { spots: Vec2[]; ticks: number; safe: Vec2 | null } | null = null;
+  private fallingStones: Phaser.GameObjects.Image[][] = [];
+  private stumbleStars: { images: Phaser.GameObjects.Image[]; until: number } | null = null;
   /** Sensei's Lessons (M7-P5): this run's tag for the one-lesson-per-room limit, and warnings still filling. */
   private runTag = '';
   private warnings = new Map<string, { until: number; inside: boolean }>();
   /** R-CHALLENGE P4: enemies whose first-sight pattern line played this fight (skips the boss phase line). */
   private patternLineSaid = new Set<string>();
-  private strikeHit = false;
 
   constructor() {
     super('Game');
@@ -478,7 +493,7 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || testFlags().has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK]);
+    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK, ...(this.run?.tutorial ? [TUTORIAL_PACK] : [])]);
 
     loadGearIcons(this);
   }
@@ -565,11 +580,13 @@ export class GameScene extends Phaser.Scene {
     this.heroAction = null;
 
     this.chestOpenAt = null;
-    this.strikeTaught = false;
+    this.strikeWave = false;
+    this.stoneWarn = null;
+    this.fallingStones = [];
+    this.stumbleStars = null;
     this.runTag ||= `run-${Date.now()}`;
     this.warnings.clear();
     this.patternLineSaid.clear();
-    this.strikeHit = false;
     const roomGfx = this.drawRoom();
     const objects = this.makeRoomObjects();
     // Lantern Dark twist: the room is dim, but the warning circles are drawn on top, extra bright.
@@ -617,7 +634,7 @@ export class GameScene extends Phaser.Scene {
     this.bossSeen = false;
     this.bossLift = 0;
     this.bossWatchFrom = this.time.now + 600;
-    if (this.run && this.run.depth === 0 && !this.run.bowed) this.askForBow();
+    if (this.run && this.run.depth === 0 && !this.run.bowed && !this.run.tutorial) this.askForBow();
     else this.introduceRoom();
 
     this.layout();
@@ -660,7 +677,6 @@ export class GameScene extends Phaser.Scene {
         this.playEvents(this.world.events);
         this.tutorialTick();
         if (this.run) this.playRunEvents(updateRun(CONTENT, this.run, this.world));
-        this.checkStrikeLesson();
         if (this.hitStopMs > 0 || this.menuOpen || this.leaving) break;
       }
     }
@@ -724,6 +740,7 @@ export class GameScene extends Phaser.Scene {
     this.frameBoss();
     this.syncEnemyViews();
     for (const e of this.world.enemies) this.drawEnemy(e, blend, now);
+    this.drawStones(now);
     this.hideWordsOverCues();
     this.buttons.counterWindow(this.counterWindowOpen);
 
@@ -1091,6 +1108,7 @@ export class GameScene extends Phaser.Scene {
    * drawn front-to-back with the characters, so a wall below a character hides its feet.
    */
   private drawRoom(): Phaser.GameObjects.GameObject[] {
+    if (this.room.id === 'tutorial-path' && staticArt(this, TUTORIAL_PACK, 'grass')) return this.drawTowerPath();
     const out: Phaser.GameObjects.GameObject[] = [];
     const { walls, width, height } = this.room;
     const wall = (r: number, c: number) => r < 0 || c < 0 || r >= height || c >= width || walls[r][c];
@@ -1120,6 +1138,33 @@ export class GameScene extends Phaser.Scene {
         }
       }
     }
+    return out;
+  }
+
+  /**
+   * TUT-B3: the Tower Path outside the Tower (TUT-A1 art): grass with a path up the middle to the
+   * Tower's steps, hedges for walls, and a few trees in the side hedges.
+   */
+  private drawTowerPath(): Phaser.GameObjects.GameObject[] {
+    const out: Phaser.GameObjects.GameObject[] = [];
+    const { walls, width, height } = this.room;
+    const put = (id: string, x: number, y: number, depth: number) => out.push(...addStatic(this, TUTORIAL_PACK, id, x, y).map((img) => img.setDepth(depth)));
+    const mid = Math.floor(width / 2);
+    for (let row = 0; row < height; row++) {
+      for (let col = 0; col < width; col++) {
+        const x = col * TILE;
+        const y = row * TILE;
+        if (walls[row][col]) {
+          put(row === 0 ? 'hedge-face' : 'hedge-block', x, y + TILE, row === 0 ? 0.5 : depthAt(y + 1));
+          continue;
+        }
+        const h = ((col * 73856093) ^ (row * 19349663)) >>> 0;
+        const ground = col === mid ? 'path' : col === mid - 1 ? 'path-edge-w' : col === mid + 1 ? 'path-edge-e' : h % 100 < 15 ? 'grass-flowers' : 'grass';
+        put(ground, x, y, 0);
+      }
+    }
+    put('tower-foot', (mid + 0.5) * TILE, 2 * TILE, 0.55);
+    for (const [col, row] of [[0, 4], [width - 1, 6], [0, 8], [width - 1, 10]]) put('decor-tree', (col + 0.5) * TILE, (row + 1) * TILE, depthAt((row + 1) * TILE));
     return out;
   }
 
@@ -1160,7 +1205,11 @@ export class GameScene extends Phaser.Scene {
     const r = e.def.radius * TILE;
     const color = Phaser.Display.Color.HexStringToColor(e.def.color).color;
     const own = enemyArt(e.def.id, e.health / e.def.maxHealth);
-    const art = (own && characterArt(this, own.pack, own.id)) || characterArt(this, 'enemies-t1', e.def.id)!;
+    const dummy = DUMMY_ART[e.def.id];
+    const art =
+      (dummy && staticCharacter(this, TUTORIAL_PACK, { idle: `${dummy}-idle`, move: `${dummy}-idle`, hit: `${dummy}-hit`, defeat: `${dummy}-defeat` })) ||
+      (own && characterArt(this, own.pack, own.id)) ||
+      characterArt(this, 'enemies-t1', e.def.id)!;
     const sprite = new LayeredSprite(this, art);
     // GUARD-SCALE-01: a Guardian's art is drawn `scale` times bigger (the sim's radius already is). The shadow
     // sits inside the scaled container, so it is made at the body size / scale.
@@ -1385,7 +1434,11 @@ export class GameScene extends Phaser.Scene {
           const v = this.enemyViews.get(e.id)!;
           v.flashUntil = this.time.now + (ev.move === 'basic' ? 70 : 120);
           if (ev.defeated) v.defeatAt = this.time.now;
-          else v.hitUntil = this.time.now + 250; // a quick flinch (only while chasing)
+          // A quick flinch (only while chasing); a practice dummy plays its whole wobble.
+          else if (e.def.passive) {
+            v.hitUntil = this.time.now + 500;
+            v.sprite.play('hit', { restart: true });
+          } else v.hitUntil = this.time.now + 250;
           const heavy = ev.move !== 'basic';
           this.sparks(e.pos, heavy ? 12 : 5, heavy ? COLORS.gold : 0xffffff);
           if (ev.playerId === this.me && this.shopFx.hit) playFx(this, this.shopFx.hit, e.pos.x * TILE, e.pos.y * TILE, this.fxPlace());
@@ -1394,11 +1447,7 @@ export class GameScene extends Phaser.Scene {
           if (ev.move === 'basic' && !this.world.players[ev.playerId].moving && !this.heroAction) this.heroDo('jab');
           else if (ev.move === 'strike') {
             this.heroDo('strike');
-            // Tutorial boss room: the Strike lesson's well done, once.
-            if (this.strikeTaught && !this.strikeHit) {
-              this.strikeHit = true;
-              this.senseiSay([LESSONS[STRIKE_LESSON].success!]);
-            }
+            if (ev.playerId === this.me) this.tutorialDid('strike');
           }
           if (ev.move === 'basic') {
             sfx.hit();
@@ -1632,7 +1681,36 @@ export class GameScene extends Phaser.Scene {
           if (this.room.kind !== 'treasure' && this.room.kind !== 'rest') sfx.roomClear();
           if (this.run?.tutorial && this.room.kind === 'boss') this.tutorialDid('defeatBoss');
           // K24a: if the fights end before a step's try, that step ends quietly.
-          if (this.tflow && this.room.kind === 'battle') while (this.tflow.index < TUTORIAL_STEPS.indexOf('tutorial-insight')) skipStep(this.tflow, currentStep(this.tflow)!);
+          const until = TUTORIAL_ROOM_STEPS[this.room.id]?.until;
+          if (this.tflow && until) while (this.tflow.index < TUTORIAL_STEPS.indexOf(until)) skipStep(this.tflow, currentStep(this.tflow)!);
+          break;
+        case 'stoneWarn': {
+          // TUT-B3: red circles fill where the stones will land; with help on, an arrow points at a safe spot.
+          this.stoneWarn = { spots: ev.spots, ticks: ev.ticks, safe: ev.safeSpot };
+          this.fallingStones = ev.spots.map((s) => this.tutorialStatic('stone', s.x * TILE, s.y * TILE, 9));
+          if (ev.safeSpot) this.senseiSay([TUTORIAL['tutorial-stones'].help!]);
+          break;
+        }
+        case 'stoneLand':
+          sfx.clank();
+          this.fallingStones.flat().forEach((img) => img.destroy());
+          this.fallingStones = [];
+          this.stoneWarn = null;
+          for (const s of ev.spots) this.playTutorialOnce('stone-land', s.x * TILE, s.y * TILE, depthAt(s.y * TILE));
+          break;
+        case 'stumble': {
+          if (ev.playerId !== this.me) break;
+          sfx.winded();
+          this.heroDo('hit');
+          this.stumbleStars?.images.forEach((img) => img.destroy());
+          const images = this.tutorialStatic('stumble-stars', 0, -characterTop(this, this.hero.art), 0);
+          this.player.add(images);
+          this.stumbleStars = { images, until: this.time.now + (STONES.stumbleSeconds * 1000) / TEMPO.speed };
+          this.senseiSay([TUTORIAL['tutorial-stones'].retry!]);
+          break;
+        }
+        case 'stonesDone':
+          this.tutorialDid('dodgeStones');
           break;
         case 'goalReached': {
           const p = this.world.players[this.me];
@@ -1643,7 +1721,7 @@ export class GameScene extends Phaser.Scene {
             this.tweens.killTweensOf(this.goalView);
             this.tweens.add({ targets: this.goalView, alpha: 0, scale: 2, duration: 400, onComplete: () => this.goalView?.destroy() });
           }
-          this.tutorialDid('reachSpot');
+          this.tutorialDid('reachPathEnd');
           break;
         }
         case 'chestOpened': {
@@ -1969,6 +2047,74 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.ignore(c.root);
   }
 
+  /** TUT-B3: a still sprite from the tutorial pack, kept off the HUD camera ([] if the pack isn't loaded). */
+  private tutorialStatic(id: string, x: number, y: number, depth: number): Phaser.GameObjects.Image[] {
+    if (!staticArt(this, TUTORIAL_PACK, id)) return [];
+    const images = addStatic(this, TUTORIAL_PACK, id, x, y).map((img) => img.setDepth(depth));
+    this.uiCamera.ignore(images);
+    return images;
+  }
+
+  /** TUT-B3: plays a tutorial-pack animation once where it stands, then removes it. */
+  private playTutorialOnce(id: string, x: number, y: number, depth: number): void {
+    const images = this.tutorialStatic(id, x, y, depth);
+    const art = staticArt(this, TUTORIAL_PACK, id);
+    if (!art) return;
+    const counter = { f: 0 };
+    this.tweens.add({
+      targets: counter,
+      f: art.frames - 0.01,
+      duration: (art.frames / (art.fps ?? 12)) * 1000,
+      onUpdate: () => setStaticFrame(this, TUTORIAL_PACK, id, images, Math.floor(counter.f)),
+      onComplete: () => images.forEach((img) => img.destroy()),
+    });
+  }
+
+  /**
+   * TUT-B3: the falling stones' red circles (drawn like an enemy's warning), the stone dropping in
+   * at the end, the help arrow over the safe spot, and the stumble stars' loop.
+   */
+  private drawStones(now: number): void {
+    const stars = this.stumbleStars;
+    if (stars) {
+      if (now > stars.until) {
+        stars.images.forEach((img) => img.destroy());
+        this.stumbleStars = null;
+      } else this.animateTutorial('stumble-stars', stars.images, now / 1000);
+    }
+    const st = this.world.stones;
+    const w = this.stoneWarn;
+    if (!st || !w || st.fillLeft <= 0) return;
+    const g = this.danger;
+    const area = STONES.radius * TILE;
+    const progress = 1 - st.fillLeft / w.ticks;
+    for (const s of w.spots) {
+      g.fillStyle(COLORS.danger, 0.16).fillCircle(s.x * TILE, s.y * TILE, area);
+      g.lineStyle(3, COLORS.danger, 0.9).strokeCircle(s.x * TILE, s.y * TILE, area);
+      g.fillStyle(COLORS.danger, 0.4).fillCircle(s.x * TILE, s.y * TILE, area * progress);
+    }
+    // The stone drops in over the last 0.4 s.
+    const fall = Math.min(1, (st.fillLeft * TICK_MS) / 400);
+    this.fallingStones.forEach((images, i) => {
+      const s = w.spots[i];
+      images.forEach((img) => img.setPosition(s.x * TILE, (s.y - fall * 6) * TILE).setVisible(fall < 1));
+    });
+    if (w.safe) {
+      const x = w.safe.x * TILE;
+      const y = w.safe.y * TILE;
+      const bob = reducedMotion() ? 0 : Math.abs(Math.sin(now / 200)) * 8;
+      g.lineStyle(4, COLORS.gold, 0.9).strokeCircle(x, y, TILE * 0.45);
+      g.fillStyle(COLORS.gold, 1).fillTriangle(x - 14, y - TILE * 0.9 - bob, x + 14, y - TILE * 0.9 - bob, x, y - TILE * 0.55 - bob);
+      g.fillRect(x - 5, y - TILE * 1.35 - bob, 10, TILE * 0.47);
+    }
+  }
+
+  /** A looping tutorial-pack animation on images made by tutorialStatic. */
+  private animateTutorial(id: string, images: Phaser.GameObjects.Image[], seconds: number): void {
+    const art = staticArt(this, TUTORIAL_PACK, id);
+    if (art) setStaticFrame(this, TUTORIAL_PACK, id, images, Math.floor(seconds * (art.fps ?? 8)) % art.frames);
+  }
+
   /** The bow at the start of the floor: the fight waits, then a small Focus head start. */
   private askForBow(): void {
     this.menuOpen = true;
@@ -1984,7 +2130,10 @@ export class GameScene extends Phaser.Scene {
         this.controls.reset();
         this.buttons.reset();
         this.floatText(this.world.players[this.me].pos, '+Focus', '#9ad1ff', 18);
-        this.introduceRoom();
+        if (tutorial) {
+          if (this.tflow && currentStep(this.tflow) === 'tutorial-bow') gotIt(this.tflow, TUTORIAL);
+          this.tutorialDid('bow');
+        } else this.introduceRoom();
         // The enemies arrive now, with a puff where each one stands.
         this.enemiesAt = this.time.now;
         sfx.appear();
@@ -2073,24 +2222,55 @@ export class GameScene extends Phaser.Scene {
   }
 
   /**
-   * Tutorial floor (M7-P2): one Sensei line per step, and at most one new lesson per room.
-   * Room 1: bow, then walk to the glowing spot (the guided Counter lines follow on their own).
-   * Room 2: the chest. Room 3: the easy boss, with Strike taught when Focus fills.
+   * Tutorial floor (TUT-P1): one Sensei line per step, and at most one new lesson per room.
+   * Tower Path: story cards, walk to the glowing spot, dodge the stones, bow. Training Hall: dummies,
+   * STRIKE, Swarmers. First Steps Hall: the guided Counter, Dash, the Insight. Vault: the chest. Keep: the boss.
    */
   private introduceTutorialRoom(): void {
-    const kind = this.room.kind;
-    if (kind === 'battle') {
-      // The bow prompt was the bow step's tip, and bowing was its try.
-      this.tflow = tutorialFlow('tutorial-bow');
-      showTip(this.tflow, 'tutorial-bow');
-      gotIt(this.tflow, TUTORIAL);
-      this.tutorialDid('bow');
-    } else if (kind === 'treasure') {
-      this.tflow = tutorialFlow('tutorial-chest');
-    } else if (kind === 'boss') {
-      this.tflow = tutorialFlow('tutorial-boss');
-    }
-    this.tutorialTick();
+    const steps = TUTORIAL_ROOM_STEPS[this.room.id];
+    if (!steps) return;
+    const start = () => {
+      this.tflow = tutorialFlow(steps.from);
+      this.tutorialTick();
+    };
+    if (this.room.id !== 'tutorial-path') return start();
+    this.showStory(() => {
+      this.tutorialLead = STORY.opening.sensei;
+      start();
+    });
+  }
+
+  /** TUT-B3: the story cards (tap to go on), before the first step. Play beats are never skipped. */
+  private showStory(done: () => void): void {
+    this.menuOpen = true;
+    const { width, height } = view(this);
+    const back = this.add.rectangle(0, 0, width, height, 0x14121c, 0.94).setOrigin(0, 0).setInteractive();
+    const text = this.add
+      .text(width / 2, height * 0.42, '', { fontFamily: FONT, fontStyle: 'bold', fontSize: width < 720 ? '26px' : '30px', color: '#ffffff', align: 'center', wordWrap: { width: width * 0.8 } })
+      .setOrigin(0.5)
+      .setResolution(crisp());
+    const hint = this.add.text(width / 2, height * 0.8, 'Tap to go on', { fontFamily: FONT, fontSize: '16px', color: '#ffd166' }).setOrigin(0.5).setResolution(crisp());
+    const dots = STORY.opening.cards.map((_, i) => this.add.circle(width / 2 + (i - (STORY.opening.cards.length - 1) / 2) * 18, height * 0.68, 4, 0xffffff, 0.3));
+    const layer = this.add.container(0, 0, [back, text, hint, ...dots]).setDepth(50);
+    this.cameras.main.ignore(layer);
+    let card = -1;
+    const next = () => {
+      card++;
+      if (card >= STORY.opening.cards.length) {
+        layer.destroy();
+        this.menuOpen = false;
+        this.controls.reset();
+        this.buttons.reset();
+        done();
+        return;
+      }
+      sfx.tap();
+      text.setText(STORY.opening.cards[card]).setAlpha(0);
+      this.tweens.add({ targets: text, alpha: 1, duration: 300 });
+      dots.forEach((d, i) => d.setFillStyle(i === card ? COLORS.gold : 0xffffff, i === card ? 1 : 0.3));
+    };
+    back.on('pointerup', next);
+    next();
   }
 
   /**
@@ -2104,35 +2284,51 @@ export class GameScene extends Phaser.Scene {
       return;
     }
     const id = currentStep(f);
+    // Each room teaches only its own steps; the rest wait for the next room.
+    const rooms = Object.values(TUTORIAL_ROOM_STEPS);
+    const next = rooms[rooms.findIndex((r) => r === TUTORIAL_ROOM_STEPS[this.room.id]) + 1];
+    if (!id || (next && f.index >= TUTORIAL_STEPS.indexOf(next.from))) return;
     const live = this.world.enemies.some((e) => e.mode !== 'defeated');
     switch (id) {
-      case 'tutorial-walk':
-      case 'tutorial-space':
-      case 'tutorial-tip-tough':
-        this.tutorialTip(id);
-        break;
+      case 'tutorial-path':
+      case 'tutorial-stones':
+      case 'tutorial-dummies':
       case 'tutorial-chest':
       case 'tutorial-boss':
-        // K27: each only in its own room (the chest tip once showed in room 1, Q5 B2).
-        if (this.room.kind === (id === 'tutorial-chest' ? 'treasure' : 'boss')) this.tutorialTip(id);
+        this.tutorialTip(id);
         break;
+      case 'tutorial-bow':
+        // The bow prompt is the bow step's tip; bowing is its try.
+        showTip(f, id);
+        this.askForBow();
+        break;
+      case 'tutorial-strike': {
+        // The big dummy comes in, and the tip waits until Focus is full (if it falls first, the step ends quietly).
+        if (!this.strikeWave) {
+          this.strikeWave = true;
+          this.letInWave();
+        } else if (!live) skipStep(f, id);
+        else {
+          const p = this.world.players[this.me];
+          if (p && p.focus >= strikeCost(p)) {
+            this.buttons.pulseStrike(true);
+            this.tutorialTip(id);
+          }
+        }
+        break;
+      }
       case 'tutorial-brute':
         // The guided Counter teaches this step with its own lines, and holds until COUNTER is tapped.
         showTip(f, id);
         gotIt(f, TUTORIAL);
         this.world.enemyHold = false;
         break;
-      case 'tutorial-tip-warning':
-        if (live) this.tutorialTip(id);
-        else skipStep(f, id);
-        break;
-      case 'tutorial-tip-swarmers':
-      case 'tutorial-tip-space':
-      case 'tutorial-tip-dash':
+      case 'tutorial-swarmers':
+      case 'tutorial-dash':
         if (!live) this.tutorialTip(id);
         break;
       default:
-        break; // bow, insight and door tips come from their own events
+        break; // the Insight and door tips come from their own events
     }
   }
 
@@ -2142,12 +2338,10 @@ export class GameScene extends Phaser.Scene {
     if (!f || f.phase !== 'trying') return;
     const alive = (kind?: string) => this.world.enemies.some((e) => e.mode !== 'defeated' && (!kind || e.def.id === kind));
     const id = currentStep(f);
-    if (id === 'tutorial-space' && this.walked >= 8) this.tutorialDid('walkAround');
-    else if (id === 'tutorial-tip-swarmers' && !alive('swarmer')) this.tutorialDid('defeatSwarmers');
-    else if (id === 'tutorial-tip-tough' && !alive()) this.tutorialDid('defeatBrute');
-    else if (id === 'tutorial-tip-space' && !alive()) this.tutorialDid('keepSpace');
-    else if (id === 'tutorial-tip-warning' && !alive()) skipStep(f, id);
-    else if (id === 'tutorial-tip-dash' && !alive()) {
+    if (id === 'tutorial-dummies' && !alive('practice-dummy')) this.tutorialDid('defeatDummies');
+    else if (id === 'tutorial-swarmers' && !alive('swarmer')) this.tutorialDid('defeatSwarmers');
+    else if ((id === 'tutorial-strike' || id === 'tutorial-dash') && !alive()) {
+      this.buttons.pulseStrike(false);
       this.buttons.pulseDash(false);
       skipStep(f, id);
     }
@@ -2159,7 +2353,11 @@ export class GameScene extends Phaser.Scene {
     if (!f) return;
     const done = tutorialEvent(f, TUTORIAL, ev);
     if (!done) return;
-    if (done === 'tutorial-tip-dash') this.buttons.pulseDash(false);
+    if (done === 'tutorial-dash') this.buttons.pulseDash(false);
+    if (done === 'tutorial-strike') {
+      this.buttons.pulseStrike(false);
+      noteLessonSeen(STRIKE_LESSON, this.roomTag());
+    }
     const line = TUTORIAL[done].success;
     if (done === 'tutorial-brute') {
       // The guided Counter already said its own success line.
@@ -2221,13 +2419,15 @@ export class GameScene extends Phaser.Scene {
 
   /** After Got it on a move step: let in what the player is to try against. */
   private startTutorialTry(id: TutorialStep): void {
-    if (id === 'tutorial-space') this.walked = 0;
-    if (id === 'tutorial-tip-swarmers' || id === 'tutorial-tip-space' || id === 'tutorial-tip-dash') {
-      const from = this.world.events.length;
-      // The new wave's spawn puffs play now (views are made on the next draw).
-      if (releaseWave(this.world)) this.playEvents(this.world.events.slice(from));
-    }
-    if (id === 'tutorial-tip-dash') this.buttons.pulseDash(true);
+    if (id === 'tutorial-swarmers' || id === 'tutorial-dash') this.letInWave();
+    if (id === 'tutorial-swarmers') this.world.enemyHold = false;
+    if (id === 'tutorial-dash') this.buttons.pulseDash(true);
+  }
+
+  /** The next held wave comes in now, with its spawn puffs (views are made on the next draw). */
+  private letInWave(): void {
+    const from = this.world.events.length;
+    if (releaseWave(this.world)) this.playEvents(this.world.events.slice(from));
   }
 
   /** This room, for the one-new-lesson-per-room limit. */
@@ -2256,16 +2456,6 @@ export class GameScene extends Phaser.Scene {
         this.senseiText = null;
       }
     });
-  }
-
-  /** Tutorial boss room: teach Strike the first time Focus fills (Manager call, M7-P2). */
-  private checkStrikeLesson(): void {
-    if (!this.run?.tutorial || this.room.kind !== 'boss' || this.strikeTaught) return;
-    const p = this.world.players[this.me];
-    if (!p || p.focus < strikeCost(p)) return;
-    this.strikeTaught = true;
-    noteLessonSeen(STRIKE_LESSON, this.roomTag());
-    this.senseiSay(LESSONS[STRIKE_LESSON].screens, 1600);
   }
 
   /** The door hint sits in the top strip between the health bars (left) and the room label (right). */
@@ -2336,7 +2526,9 @@ export class GameScene extends Phaser.Scene {
         const at = this.room.doors[slots[i]];
         // The door stands in its wall slot, its feet on the wall's bottom edge.
         const art = DOOR_ART[kind];
-        const images = addStatic(this, this.towerPack, art, at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.6));
+        // TUT-B3: on the Tower Path, the Tower's own arched door is the door.
+        const tower = this.room.id === 'tutorial-path' && !!staticArt(this, TUTORIAL_PACK, 'tower-foot');
+        const images = tower ? [] : addStatic(this, this.towerPack, art, at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.6));
         const glow = kind === 'boss' ? addStatic(this, this.towerPack, 'door-boss-glow', at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.61)) : [];
         const look = DOOR_LOOK[kind];
         const label = this.add

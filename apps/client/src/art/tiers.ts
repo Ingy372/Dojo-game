@@ -69,3 +69,9 @@ const ATTACK_ANIMS: Record<string, string> = { 'ladle bonk': 'bonk', 'hot pot ru
 export function attackAnim(attackName: string): string {
   return ATTACK_ANIMS[attackName] ?? attackName;
 }
+
+/** TUT-A1: the tutorial floor's own art (Tower Path ground, stones, dummies, stumble stars). */
+export const TUTORIAL_PACK: PackName = 'tutorial-path';
+
+/** TUT-B3: the practice dummies are drawn from still sprites in the tutorial pack (sprite id prefix). */
+export const DUMMY_ART: Record<string, string> = { 'practice-dummy': 'dummy-small', 'big-practice-dummy': 'dummy-big' };

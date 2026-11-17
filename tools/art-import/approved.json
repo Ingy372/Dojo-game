@@ -999,6 +999,16 @@
           }
         }
       ]
+    },
+    "tutorial-path": {
+      "note": "TUT-A1 Tower Path and Training Hall art (grass, path, hedges, Tower foot, decor, falling stone, practice dummies, stumble stars). Named for TUT-B3 by the Manager (Nov 17, 2026).",
+      "sources": [
+        {
+          "id": "tutorial-path",
+          "type": "static",
+          "json": "incoming-art/tutorial-path/sprites/static.json"
+        }
+      ]
     }
   }
 }

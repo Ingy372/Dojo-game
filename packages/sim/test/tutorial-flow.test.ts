@@ -21,25 +21,27 @@ import { testContent } from './load-content';
 const LINES = loadTutorialLines(tutorialData);
 const content = testContent();
 const BASE = { maxHealth: 100, power: 10, guard: 0 };
+/** A tutorial run standing in First Steps Hall (the Brute and the Dash crowd). */
+const hallRun = (seed: number) => ({ ...startRun(content, { seed, dryRuns: 0, tutorial: true }), roomId: 'tutorial-hall' });
 
 describe('tutorial step flow (K24a)', () => {
-  it('has the 13 C12 steps, each tap step with no event and each move step with one', () => {
+  it('has the 12 TUT-P1 steps, each tap step with no event and each move step with one', () => {
     expect(Object.keys(LINES).sort()).toEqual([...TUTORIAL_STEPS].sort());
-    expect(TUTORIAL_STEPS).toHaveLength(13);
+    expect(TUTORIAL_STEPS).toHaveLength(12);
     for (const id of TUTORIAL_STEPS) expect(LINES[id].advance === 'tap' ? LINES[id].waitFor === null : !!LINES[id].waitFor).toBe(true);
   });
 
   it('a move step waits for Got it, then for the try; nothing else moves it on', () => {
-    const f = tutorialFlow('tutorial-walk');
-    expect(tutorialEvent(f, LINES, 'reachSpot')).toBeNull(); // no tip yet
-    expect(showTip(f, 'tutorial-space')).toBe(false); // not this step's turn
-    expect(showTip(f, 'tutorial-walk')).toBe(true);
-    expect(tutorialEvent(f, LINES, 'reachSpot')).toBeNull(); // still waiting for Got it
+    const f = tutorialFlow();
+    expect(tutorialEvent(f, LINES, 'reachPathEnd')).toBeNull(); // no tip yet
+    expect(showTip(f, 'tutorial-stones')).toBe(false); // not this step's turn
+    expect(showTip(f, 'tutorial-path')).toBe(true);
+    expect(tutorialEvent(f, LINES, 'reachPathEnd')).toBeNull(); // still waiting for Got it
     expect(gotIt(f, LINES)).toBeNull();
     expect(f.phase).toBe('trying');
     expect(tutorialEvent(f, LINES, 'counter')).toBeNull(); // the wrong move
-    expect(tutorialEvent(f, LINES, 'reachSpot')).toBe('tutorial-walk');
-    expect(currentStep(f)).toBe('tutorial-space');
+    expect(tutorialEvent(f, LINES, 'reachPathEnd')).toBe('tutorial-path');
+    expect(currentStep(f)).toBe('tutorial-stones');
     expect(f.phase).toBe('ready');
   });
 
@@ -50,7 +52,7 @@ describe('tutorial step flow (K24a)', () => {
     expect(currentStep(f)).toBe('tutorial-chest');
   });
 
-  it('plays all 13 steps in order, each needing its own Got it and try', () => {
+  it('plays all 12 steps in order, each needing its own Got it and try', () => {
     const f = tutorialFlow();
     const done: string[] = [];
     for (const id of TUTORIAL_STEPS) {
@@ -63,20 +65,19 @@ describe('tutorial step flow (K24a)', () => {
   });
 
   it('a step that can no longer happen ends quietly', () => {
-    const f = tutorialFlow('tutorial-tip-warning');
-    showTip(f, 'tutorial-tip-warning');
+    const f = tutorialFlow('tutorial-dash');
+    showTip(f, 'tutorial-dash');
     gotIt(f, LINES);
-    expect(skipStep(f, 'tutorial-tip-warning')).toBe(true);
-    expect(currentStep(f)).toBe('tutorial-tip-swarmers');
+    expect(skipStep(f, 'tutorial-dash')).toBe(true);
+    expect(currentStep(f)).toBe('tutorial-insight');
   });
 });
 
 describe('tutorial health floor and held waves (K24a)', () => {
   it('health never drops below 1 anywhere on the tutorial floor, Swarmers included', () => {
-    const run = startRun(content, { seed: 3, dryRuns: 0, tutorial: true });
+    const run = hallRun(3);
     const room = currentRoom(content, run);
     const world = createRunWorld(content, run, BASE, [], undefined, 3);
-    world.goal!.reached = true;
     let low = Infinity;
     let hits = 0;
     // The player stands still while every wave comes in at once and attacks for two minutes.
@@ -87,16 +88,15 @@ describe('tutorial health floor and held waves (K24a)', () => {
       hits += world.events.filter((e) => e.kind === 'hit' || e.kind === 'block').length;
       low = Math.min(low, world.players.p1.health);
     }
-    expect(world.enemies.filter((e) => e.def.id === 'swarmer').length).toBe(9);
-    expect(hits).toBeGreaterThan(20);
+    expect(world.enemies.filter((e) => e.def.id === 'swarmer').length).toBe(4);
+    expect(hits).toBeGreaterThan(10);
     expect(low).toBe(1);
   });
 
   it('held enemies stand still and held waves wait for releaseWave', () => {
-    const run = startRun(content, { seed: 1, dryRuns: 0, tutorial: true });
+    const run = hallRun(1);
     const room = currentRoom(content, run);
     const world = createRunWorld(content, run, BASE, [], undefined, 3);
-    world.goal!.reached = true;
     world.enemyHold = true;
     world.waveHold = true;
     const start = { ...world.enemies[0].pos };
@@ -110,14 +110,13 @@ describe('tutorial health floor and held waves (K24a)', () => {
     expect(world.progress.cleared).toBe(false);
     expect(releaseWave(world)).toBe(true);
     expect(world.wave).toBe(2);
-    expect(world.enemies.filter((e) => e.mode !== 'defeated').map((e) => e.def.id).sort()).toEqual(['brute', 'swarmer', 'swarmer', 'swarmer']);
+    expect(world.enemies.filter((e) => e.mode !== 'defeated').map((e) => e.def.id).sort()).toEqual(['swarmer', 'swarmer', 'swarmer', 'swarmer']);
   });
 
   it('with seeAll, a far enemy still comes to the player', () => {
-    const run = startRun(content, { seed: 1, dryRuns: 0, tutorial: true });
+    const run = hallRun(1);
     const room = currentRoom(content, run);
     const world = createRunWorld(content, run, BASE, [], undefined, 3);
-    world.goal!.reached = true;
     const e = world.enemies[0];
     world.players.p1.pos = { x: e.pos.x + 14, y: e.pos.y - 5 };
     const far = () => Math.hypot(world.players.p1.pos.x - e.pos.x, world.players.p1.pos.y - e.pos.y);

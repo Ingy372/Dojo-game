@@ -1261,3 +1261,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - A tutorial room can list stone waves under `"hazards": { "stones": [...] }`, each with its spots and `fillSeconds` (the playtest setting: 1.5 s, then 1.2 s). The loader refuses stones in any room that isn't `"tutorial": true`.
 - Each drop: the red circle fills first (`stoneWarn`), then the stones land (`stoneLand`). A hero still inside stumbles for 0.8 s (`stumble`, can't move, no health change) and that wave drops again. After 2 misses the circle fills 1.5x slower and gives a safe spot to stand; the 3rd miss passes the wave anyway. After the last wave, `stonesDone`, and only then does the room count as done. Other numbers live in `STONES` (`packages/sim/src/config.ts`).
 - Tests: `tut-b1-stones` (5).
+
+## TUT-B3 — the tutorial floor on screen (2026-11-17)
+- New Tower Path room (grass, path, hedges, Tower foot) with the story cards, two stone waves with the red circles, stumble stars and the help arrow, then the bow at the Tower door.
+- New Training Hall with three practice dummies and the big dummy; STRIKE glows when focus is full; then swarmers. First Steps Hall keeps the Brute, DASH and Insight; vault and Keep end on the close line.
+- Proof: `docs/shots/tut-b3/tut-verify.mjs` plays the whole floor as a new student with real taps, 20/0 at 844x390 and 667x375. Suite 1543, both builds OK.

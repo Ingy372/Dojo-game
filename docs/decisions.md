@@ -1934,3 +1934,10 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - `"passive": true` on an enemy means no moving and no attacks at all, so a passive file can't carry an attack, a speed, or a boss, shield, summon or other fight extra. That keeps "it can't hurt you" true by construction, not by tuning.
 - Passive enemies are allowed only in tutorial rooms; the loader refuses them anywhere else, so a dummy can't leak into Tower floors.
 - Health 40 and 120 are first-pass numbers (Manager to confirm). The rule they must keep: a starting hero reaches the STRIKE cost on the big dummy before it falls (tested).
+
+## TUT-B3: the tutorial floor follows TUT-P1 beats 0-11 (2026-11-17)
+- Floor order: Tower Path (story, stones, bow), Training Hall (dummies, STRIKE, swarmers), First Steps Hall (Brute, DASH, Insight), vault, Keep. Each room owns a fixed span of lesson steps (`TUTORIAL_ROOM_STEPS` in `GameScene.ts`), so a tip never shows in the wrong room.
+- Story cards and the close line live in `content/tutorial/tutorial-story.json`, so they swap without code (placeholders until Jay checks the tone). Every tutorial line is 8 words or fewer (`TUTORIAL_MAX_WORDS`, tested).
+- Sensei "walking ahead" is shown as the glowing safe spot and arrow; there is no Sensei sprite yet.
+- STRIKE glows gold and pulses only while the STRIKE step is waiting and focus is full.
+- Art: the TUT-A1 `tutorial-path` pack, named by the Manager for this item. Dummies use still frames through `staticCharacter`.

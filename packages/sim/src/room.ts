@@ -166,7 +166,8 @@ export function loadRoom(data: unknown): Room {
   if (kind !== 'practice' && kind !== 'boss' && doors.length < 3) {
     throw new RoomError(id, 'this kind of room needs 3 door slots "D" (for up to 3 door choices)');
   }
-  if (fights && enemySpawns.length === 0) throw new RoomError(id, `a ${kind} room needs enemies`);
+  // TUT-B3: the tutorial's Tower Path fights falling stones instead (stones are tutorial-only, checked below).
+  if (fights && enemySpawns.length === 0 && !raw.hazards) throw new RoomError(id, `a ${kind} room needs enemies or falling stones`);
   const lastWave = enemySpawns.reduce((m, s) => Math.max(m, s.wave), 0);
   for (let w = 1; w <= lastWave; w++) {
     if (!enemySpawns.some((s) => s.wave === w)) throw new RoomError(id, `wave ${w} has no enemies (waves must be 1, 2, 3... with no gaps)`);
