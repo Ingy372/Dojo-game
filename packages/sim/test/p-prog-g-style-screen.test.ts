@@ -214,6 +214,8 @@ describe('PB-05 Fighting Style screen', () => {
         // Curriculum names are shown as written (Basic Form 1, Self-Defense #4). The words around them have no digits.
         let left = bit;
         for (const name of names) if (name) left = left.split(name).join('');
+        // L8-SPEC section 4: a Seal's stage is shown as "Stage 2" (the one number the spec adds).
+        left = left.replace(/Stage [1-4]/, '');
         expect(left).not.toMatch(/\d/);
       }
     }

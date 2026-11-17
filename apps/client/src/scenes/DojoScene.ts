@@ -387,7 +387,7 @@ export class DojoScene extends Phaser.Scene {
     // OV-B5: new classes add Blessing runs once, in whichever screen sees them first.
     const blessingAdded = creditBlessing(this.profile.blessing, t.classCheckIns);
     writeSave(this.profile);
-    const moments = rewardMoments(this.profile.seen, this.training, undefined, blessingAdded);
+    const moments = rewardMoments(this.profile.seen, this.training, undefined, blessingAdded, CONTENT.abilities.families);
     if (moments.length > 0) {
       steps.push(() =>
         new Celebrations(this, moments, this.training, () => {

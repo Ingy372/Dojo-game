@@ -1,0 +1,64 @@
+PASS  844x390-rm-off  welcome card lists the evolved Seals
+PASS  844x390-rm-off  welcome rows say "<family> Seal: Stage N"  (Escape Seal: Stage 2 | Counter Seal: Stage 2)
+PASS  844x390-rm-off  welcome rows fit on screen
+PASS  844x390-rm-off  first visit shows no evolution card  (0)
+PASS  844x390-rm-off  sign-offs come before the evolution
+PASS  844x390-rm-off  medallion turns  (["0.00","0.81","0.63","1.00","1.00","1.00","1.00","1.00"])
+PASS  844x390-rm-off  card has the title, callout and line, on screen  (Self-Defense #18)
+PASS  844x390-rm-off  evolution medallion shows a picture, not an empty disc
+PASS  844x390-rm-off  evolution cards counted  (2)
+PASS  844x390-rm-off  nothing plays twice
+PASS  844x390-rm-off  Seal cards draw stage rings  (2,2)
+PASS  844x390-rm-off  all three Seal cards show a picture (Escape included)  (3)
+PASS  844x390-rm-off  Book cubby status has the stage  (Signed at White Belt · Escape Seal: Stage 2)
+PASS  844x390-rm-off  Book sheet shows the stage on screen  (Signed at White Belt · Escape Seal: Stage 2)
+PASS  844x390-rm-off  Book status ink is #8b4513 (5.6:1 on the cream paper)  (#8b4513)
+PASS  844x390-rm-off  no page errors
+PASS  844x390-rm-on  welcome card lists the evolved Seals
+PASS  844x390-rm-on  welcome rows say "<family> Seal: Stage N"  (Escape Seal: Stage 2 | Counter Seal: Stage 2)
+PASS  844x390-rm-on  welcome rows fit on screen
+PASS  844x390-rm-on  first visit shows no evolution card  (0)
+PASS  844x390-rm-on  sign-offs come before the evolution
+PASS  844x390-rm-on  Reduced motion: no turn, a fade  (["1/0.52","1/0.84","1/1.00","1/1.00","1/1.00","1/1.00","1/1.00","1/1.00"])
+PASS  844x390-rm-on  card has the title, callout and line, on screen  (Self-Defense #18)
+PASS  844x390-rm-on  evolution medallion shows a picture, not an empty disc
+PASS  844x390-rm-on  evolution cards counted  (2)
+PASS  844x390-rm-on  nothing plays twice
+PASS  844x390-rm-on  Seal cards draw stage rings  (2,2)
+PASS  844x390-rm-on  all three Seal cards show a picture (Escape included)  (3)
+PASS  844x390-rm-on  Book cubby status has the stage  (Signed at White Belt · Escape Seal: Stage 2)
+PASS  844x390-rm-on  Book sheet shows the stage on screen  (Signed at White Belt · Escape Seal: Stage 2)
+PASS  844x390-rm-on  Book status ink is #8b4513 (5.6:1 on the cream paper)  (#8b4513)
+PASS  844x390-rm-on  no page errors
+PASS  667x375-rm-off  welcome card lists the evolved Seals
+PASS  667x375-rm-off  welcome rows say "<family> Seal: Stage N"  (Escape Seal: Stage 2 | Counter Seal: Stage 2)
+PASS  667x375-rm-off  welcome rows fit on screen
+PASS  667x375-rm-off  first visit shows no evolution card  (0)
+PASS  667x375-rm-off  sign-offs come before the evolution
+PASS  667x375-rm-off  medallion turns  (["0.01","0.61","0.87","1.00","1.00","1.00","1.00","1.00"])
+PASS  667x375-rm-off  card has the title, callout and line, on screen  (Self-Defense #18)
+PASS  667x375-rm-off  evolution medallion shows a picture, not an empty disc
+PASS  667x375-rm-off  evolution cards counted  (2)
+PASS  667x375-rm-off  nothing plays twice
+PASS  667x375-rm-off  Seal cards draw stage rings  (2,2)
+PASS  667x375-rm-off  all three Seal cards show a picture (Escape included)  (3)
+PASS  667x375-rm-off  Book cubby status has the stage  (Signed at White Belt · Escape Seal: Stage 2)
+PASS  667x375-rm-off  Book sheet shows the stage on screen  (Signed at White Belt · Escape Seal: Stage 2)
+PASS  667x375-rm-off  Book status ink is #8b4513 (5.6:1 on the cream paper)  (#8b4513)
+PASS  667x375-rm-off  no page errors
+PASS  667x375-rm-on  welcome card lists the evolved Seals
+PASS  667x375-rm-on  welcome rows say "<family> Seal: Stage N"  (Escape Seal: Stage 2 | Counter Seal: Stage 2)
+PASS  667x375-rm-on  welcome rows fit on screen
+PASS  667x375-rm-on  first visit shows no evolution card  (0)
+PASS  667x375-rm-on  sign-offs come before the evolution
+PASS  667x375-rm-on  Reduced motion: no turn, a fade  (["1/0.48","1/0.80","1/1.00","1/1.00","1/1.00","1/1.00","1/1.00","1/1.00"])
+PASS  667x375-rm-on  card has the title, callout and line, on screen  (Self-Defense #18)
+PASS  667x375-rm-on  evolution medallion shows a picture, not an empty disc
+PASS  667x375-rm-on  evolution cards counted  (2)
+PASS  667x375-rm-on  nothing plays twice
+PASS  667x375-rm-on  Seal cards draw stage rings  (2,2)
+PASS  667x375-rm-on  all three Seal cards show a picture (Escape included)  (3)
+PASS  667x375-rm-on  Book cubby status has the stage  (Signed at White Belt · Escape Seal: Stage 2)
+PASS  667x375-rm-on  Book sheet shows the stage on screen  (Signed at White Belt · Escape Seal: Stage 2)
+PASS  667x375-rm-on  Book status ink is #8b4513 (5.6:1 on the cream paper)  (#8b4513)
+PASS  667x375-rm-on  no page errors

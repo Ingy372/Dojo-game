@@ -21,6 +21,41 @@ export function signedOffTechniques(training: TrainingState): Set<number> {
   return out;
 }
 
+/** L8-B3: the technique numbers among these requirement ids (an older snapshot's sign-offs). */
+export function techniquesIn(training: TrainingState, requirementIds: ReadonlySet<string>): Set<number> {
+  const out = new Set<number>();
+  training.abilities.filter((a) => a.kind === 'seal').forEach((a, i) => {
+    if (requirementIds.has(a.requirement.id)) out.add(i + 1);
+  });
+  return out;
+}
+
+/** L8-B3 (L8-SPEC section 4): the rank where each stage starts. Stage 1 at rank 1, then it evolves at 3, 6 and 9. */
+export const STAGE_RANKS = [1, 3, 6, 9] as const;
+
+/** A family's stage from its rank (0 = not unlocked). An evolution adds no numbers. */
+export function familyStage(rank: number): number {
+  return STAGE_RANKS.filter((r) => rank >= r).length;
+}
+
+/** A family that evolved: its stage now, and the technique whose sign-off reached it. */
+export interface Evolution {
+  family: string;
+  name: string;
+  stage: number;
+  technique: number;
+}
+
+/** The families whose stage went up between two sets of signed-off techniques (one entry each, at the new stage). */
+export function evolutionsSince(families: readonly SealFamilyDef[], before: ReadonlySet<number>, after: ReadonlySet<number>): Evolution[] {
+  return families.flatMap((f) => {
+    const stage = familyStage(familyRank(f, after));
+    if (stage < 2 || stage <= familyStage(familyRank(f, before))) return [];
+    const reached = f.ranks.filter((r) => after.has(r.technique))[STAGE_RANKS[stage - 1] - 1];
+    return [{ family: f.id, name: f.name, stage, technique: reached.technique }];
+  });
+}
+
 /** How many of a family's techniques are signed off (0 = not unlocked). A family that is not live has no rank: it cannot be equipped, so it never counts as unlocked. */
 export function familyRank(family: SealFamilyDef, signed: ReadonlySet<number>): number {
   if (!family.live) return 0;

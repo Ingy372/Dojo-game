@@ -8,9 +8,13 @@ import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, sign
 import GAINS from '../../../../content/settings/training-gains.json';
 import BLESS from '../../../../content/settings/blessing.json';
 import STYLE from '../../../../content/abilities/fighting-style.json';
+import EVO from '../../../../content/abilities/seal-evolution.json';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
 import { makeStandingCharacter } from '../art/player';
+import { addSealMedallion } from '../art/slotIcons';
+import { CONTENT } from '../game/content';
+import { drawStageRings } from '../art/stageRings';
 import { loadLook } from '../game/look';
 import { reducedMotion } from '../game/motion';
 import { hex } from './belt';
@@ -118,6 +122,7 @@ export class Celebrations {
         break;
       case 'moment':
         this.moment(step.moment);
+        if (step.moment.kind === 'evolved') wait = 1400;
         break;
       case 'sensei':
         this.sensei(step.lines);
@@ -221,6 +226,7 @@ export class Celebrations {
       if (e.kind === 'stripe' || e.kind === 'signOff' || e.kind === 'signOffs') continue;
       else if (e.kind === 'testApproved') earned.push({ line: `Sensei's Seal is lit${e.testDate ? `: test day ${shortDate(e.testDate)}` : ''}`, color: '#ffd166' });
       else if (e.kind === 'blessing') earned.push({ line: e.full ? BLESS.full : BLESS.celebration, color: '#9ad1ff' });
+      else if (e.kind === 'evolved') earned.push({ line: fill(EVO.legacyRow, { family: e.evolution.name, stage: e.evolution.stage }), color: '#e0a060' });
     }
     // Right: the new belt's techniques, in the school's own words.
     const colW = Math.min(360, width / 2 - 28);
@@ -261,6 +267,13 @@ export class Celebrations {
         if (!m.preview) {
           this.text(cx, y, "You've already earned these in the dojo.", 19, '#f2e9d8', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
           this.text(cx, y + 34, `${m.count} ${m.count === 1 ? 'thing' : 'things'} to unlock!`, 17, '#5cd65c', true).setOrigin(0.5, 0);
+          // L8-B3: families already evolved are listed here, with no card each (L8-SPEC section 3).
+          if (m.evolutions.length > 0) {
+            const top = y + 66;
+            const rowH = Math.min(22, (height - 44 - top - 24) / m.evolutions.length);
+            this.text(cx, top, EVO.legacyTitle, 16, '#e0a060', true).setOrigin(0.5, 0);
+            m.evolutions.forEach((e, i) => this.text(cx, top + 24 + i * rowH, fill(EVO.legacyRow, { family: e.name, stage: e.stage }), 15, '#f2e9d8').setOrigin(0.5, 0));
+          }
           this.burst(cx, height * 0.12, [0x5cd65c, GOLD], 24);
           break;
         }
@@ -272,6 +285,39 @@ export class Celebrations {
           this.text(cx, y2, `When Sensei signs off ${m.preview.next.name}, you unlock:`, 15, '#b9ad99', false, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
           this.text(cx, y2 + 26, m.preview.ability, 17, '#ffd166', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
         }
+        break;
+      }
+      case 'evolved': {
+        // L8-B3: the medallion turns and gains a ring (placeholder rings, L8-SPEC section 4). Reduced motion: a fade, no turn.
+        const e = m.evolution;
+        sfx.seal();
+        const my = height * 0.44;
+        const r = Math.min(44, height * 0.11);
+        this.text(cx, height * 0.12, fill(EVO.title, { family: e.name }), 24, '#ffd166', true, 'Georgia, serif', width - 40).setOrigin(0.5).setAlign('center');
+        this.text(cx, height * 0.12 + 30, fill(EVO.stageLabel, { stage: e.stage }), 16, '#e0a060', true).setOrigin(0.5);
+        const medal = this.scene.add.container(cx, my);
+        const disc = this.scene.add.circle(0, 0, r, 0x2a2238).setStrokeStyle(3, 0x6a5a80);
+        medal.add(disc);
+        const family = CONTENT.abilities.families.find((f) => f.id === e.family);
+        const icon = family ? addSealMedallion(this.scene, family, this.training.abilities, 0, 0, r * 1.6) : null;
+        if (icon) medal.add(icon);
+        const rings = this.scene.add.graphics();
+        drawStageRings(rings, 0, 0, r, e.stage);
+        medal.add(rings);
+        this.layer.add(medal);
+        if (reducedMotion()) {
+          medal.setAlpha(0);
+          rings.setAlpha(0);
+          this.scene.tweens.add({ targets: medal, alpha: 1, duration: 400 });
+          this.scene.tweens.add({ targets: rings, alpha: 1, delay: 400, duration: 500 });
+        } else {
+          rings.setAlpha(0).setScale(1.3);
+          this.scene.tweens.add({ targets: medal, scaleX: 0, duration: 220, yoyo: true, repeat: 1, ease: 'Sine.InOut' });
+          this.scene.tweens.add({ targets: rings, alpha: 1, scale: 1, delay: 880, duration: 350, ease: 'Back.Out' });
+          this.scene.time.delayedCall(880, () => this.burst(cx, my, [0xe0a060, GOLD], 30));
+        }
+        this.text(cx, my + r + 30, fill(EVO.callout, { n: e.technique }), 18, '#5cd65c', true).setOrigin(0.5);
+        this.text(cx, my + r + 60, EVO.line, 16, '#f2e9d8', false, FONT, width - 40).setOrigin(0.5).setAlign('center');
         break;
       }
       case 'stripe': {

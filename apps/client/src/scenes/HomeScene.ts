@@ -40,6 +40,7 @@ import {
   dismissSlotNote,
   earnedPicks,
   senseiPick,
+  signedOffTechniques,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
@@ -56,7 +57,8 @@ import { isPlayTimeUp } from '../game/playTime';
 import { KO, homePointer } from '../game/knockout';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
-import { addSlotIcon, loadSlotIcons } from '../art/slotIcons';
+import { addSealMedallion, addSlotIcon, loadSlotIcons } from '../art/slotIcons';
+import { drawStageRings } from '../art/stageRings';
 import { addStatic, loadArt, staticArt, staticBounds } from '../art/art';
 import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skinButton, woodSkin, HONEY_INK } from '../art/menu2';
 import { MENU2_PACK, artRarity } from '../art/menu2Frames';
@@ -64,7 +66,7 @@ import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
 import { drawBanner, drawFaithPage } from '../ui/faith';
-import { BOOK_TABS, BOOK_WORDS, boardTab, bookCubbies, tabCubbies, type BookTab } from '../ui/book';
+import { BOOK_TABS, BOOK_WORDS, boardTab, bookCubbies, sealStageLine, tabCubbies, type BookTab } from '../ui/book';
 import { drawMonsterJournal } from '../ui/MonsterJournal';
 import { isOpen } from '../game/unlocks';
 import { NAMED_PACK } from '../game/named';
@@ -280,7 +282,7 @@ export class HomeScene extends Phaser.Scene {
     }
     this.training = currentTraining();
     const blessingAdded = creditBlessing(this.profile.blessing, this.training.classCheckIns);
-    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name, blessingAdded);
+    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name, blessingAdded, CONTENT.abilities.families);
     // OV-B1: Sensei's Pick puts new Kicks and Defenses in their slots; the lesson comes the first time one moves.
     const picked = senseiPick(this.profile, earnedPicks(this.training, CONTENT.abilities), this.training.tier);
     const picks = { lesson: [] as string[], lines: picked.map((l) => pickLineText(l, CONTENT.abilities)) };
@@ -1487,7 +1489,8 @@ export class HomeScene extends Phaser.Scene {
       const icon = Math.max(24, Math.min(L.icon, box.h - TYPE.label * 2 - 14));
       const iy = top + 4 + icon / 2;
       const iconId = card.locked ? 'lock' : card.slot === 'seal' ? (card.pick?.id ?? 'empty-slot') : card.slot === 'kata' ? 'kata' : card.pick?.id ?? '';
-      const img = iconId ? addSlotIcon(this, iconId, 0, iy, icon) : null;
+      const family = card.slot === 'seal' && !card.locked && card.pick ? CONTENT.abilities.families.find((f) => f.id === card.pick?.id) : undefined;
+      const img = family ? addSealMedallion(this, family, this.training.abilities, 0, iy, icon) : iconId ? addSlotIcon(this, iconId, 0, iy, icon) : null;
       if (img) v.add(img);
       else if (card.slot === 'stance' || card.slot === 'virtue') {
         const glyphR = Math.min(16, icon / 2);
@@ -1498,6 +1501,13 @@ export class HomeScene extends Phaser.Scene {
         g.fillStyle(BOARD_PAPER, 1).fillCircle(0, iy, icon / 2 - 3);
         g.lineStyle(3, 0xa8703f, 1).strokeCircle(0, iy, icon / 2 - 3);
         v.add(g);
+      }
+      // L8-B3: the Seal's stage rings (placeholder art).
+      const stage = card.slot === 'seal' && !card.locked ? card.pick?.stage ?? 0 : 0;
+      if (stage >= 2) {
+        const rings = this.add.graphics().setData('stageRings', stage);
+        drawStageRings(rings, 0, iy, icon / 2 - 4, stage);
+        v.add(rings);
       }
       // The slot word is always there. The pick's name is added only when it fits on one line,
       // so a long name is not cut in half. The full line stays on the right when the card is open.
@@ -1731,6 +1741,7 @@ export class HomeScene extends Phaser.Scene {
         const k = KATAS.get(id);
         return k ? kataArrows(k) : undefined;
       },
+      sealStage: sealStageLine(CONTENT.abilities.families, signedOffTechniques(t)),
     });
   }
 
@@ -1969,7 +1980,7 @@ export class HomeScene extends Phaser.Scene {
     ty += TYPE.title + 4;
     const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(TROPHY_UI.effectLines);
     ty += eff.height + 6;
-    this.text(tx, ty, c.status, TYPE.body, c.earned ? '#a0522d' : '#7a5a3a', true, FONT, textW);
+    this.text(tx, ty, c.status, TYPE.body, c.earned ? '#8b4513' : '#7a5a3a', true, FONT, textW);
     if (c.hint) {
       ty += TYPE.body + 6;
       const hint = this.text(tx, ty, c.hint, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(2);
