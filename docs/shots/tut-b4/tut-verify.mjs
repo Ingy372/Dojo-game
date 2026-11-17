@@ -153,6 +153,7 @@ for (const [W, H] of SIZES) {
   s = await until(pg, (s) => /Every hit fills your Focus!/.test(s.sensei), 8000);
   check(tag, 'the dummies success line shows alone', !!s && !s.gotIt && !/\n/.test(s.sensei), s?.sensei);
   await shot('S1-success-alone');
+  check(tag, 'no wave words in the tutorial', !(await texts(pg)).some((x) => /Wave|Final wave/.test(x.t)));
   let combo = false;
   s = await until(pg, (s) => s.gotIt && /STRIKE/.test(s.sensei), 30000);
   if (!s) {

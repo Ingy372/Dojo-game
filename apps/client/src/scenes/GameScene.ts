@@ -1667,7 +1667,8 @@ export class GameScene extends Phaser.Scene {
           break;
         case 'wave':
           sfx.wave();
-          this.popWord(ev.wave === ev.of ? 'Final wave!' : `Wave ${ev.wave}`, '#ff8a80', 40);
+          // TUT-B4: no big wave words in tutorial rooms.
+          if (!this.run?.tutorial) this.popWord(ev.wave === ev.of ? 'Final wave!' : `Wave ${ev.wave}`, '#ff8a80', 40);
           break;
         case 'breath': {
           const p = this.world.players[ev.playerId];
