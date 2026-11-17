@@ -10,7 +10,7 @@ import { chance, makeItem, rarityRank, rollRarity, type GearItem } from './loot'
 import type { Vec2 } from './math';
 import { createRng, nextFloat, nextInt, pick, pickWeighted, shuffled, type Rng } from './rng';
 import { baseRoomId, type Room, type RoomKind } from './room';
-import { counterHintFor, createWorld, type CounterHintRules, type PlayerSetup, type WorldState } from './world';
+import { counterHintFor, createWorld, GUIDE_DONE, type CounterHintRules, type PlayerSetup, type WorldState } from './world';
 import type { TwistDef } from './twist';
 import { namedForTier, type NamedSpawn } from './named';
 import { elitesAllowed, type EliteKind, type EliteSpawn } from './elite';
@@ -152,12 +152,20 @@ export interface RunOptions {
 }
 
 /**
- * The tutorial floor (M7-P2): always these rooms in this order, from the rooms marked
- * "tutorial". Health never drops below 1, the Insight is picked for the player, the chest
- * is Uncommon or better and the boss is an easy one.
+ * The tutorial floor (M7-P2, TUT-P1): always these rooms in this order, all marked "tutorial".
+ * Health never drops below 1, the Insight is picked for the player after the last fight before
+ * the chest, the chest is Uncommon or better and the boss is an easy one.
  */
 export const TUTORIAL_FLOOR = {
-  rooms: ['battle', 'treasure', 'boss'] as const,
+  rooms: [
+    { id: 'tutorial-path', kind: 'battle' },
+    { id: 'training-hall', kind: 'battle' },
+    { id: 'tutorial-hall', kind: 'battle' },
+    { id: 'tutorial-vault', kind: 'treasure' },
+    { id: 'tutorial-keep', kind: 'boss' },
+  ] as const satisfies ReadonlyArray<{ id: string; kind: DoorKind }>,
+  /** The guided Counter starts in this room (its Brute), never before. */
+  guideFrom: 'tutorial-hall',
   minHealth: 1,
   chestMinRarity: 'uncommon' as Rarity,
   /** The boss has this share of its health and calls in no helpers. */
@@ -266,7 +274,8 @@ export function createRunWorld(
     respawnEnemies: false,
     doorCount: run.doors.length,
     twist: currentTwist(content, run),
-    guideStep,
+    // TUT-B3: the guided Counter waits for First Steps Hall's Brute (the Swarmers in the Training Hall come unguided).
+    guideStep: run.tutorial && tutorialIndex(room.id) < tutorialIndex(TUTORIAL_FLOOR.guideFrom) ? GUIDE_DONE : guideStep,
     counterHint: hintRules ? counterHintFor(hintRules, run.perfects, hintOn) : null,
     enemyScale: byTier(ENEMY_TRAINING_SCALE, run.tier),
     // R-CHALLENGE P2: tutorial floors never get Challenge patterns.
@@ -322,8 +331,10 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
             for (let i = 0; i < GRADES.sGradeBonusItems; i++) out.push(drop(content, run, 'common', p.pos, 'grade'));
           }
         }
-        if (run.tutorial && room.kind === 'battle') {
-          // Tutorial floor: Sensei picks the Insight, with no menu (the real choice opens in session 3).
+        if (run.tutorial) {
+          // Tutorial floor: Sensei picks the Insight after the last fight before the chest, with no menu
+          // (the real choice opens in session 3). The other tutorial rooms give none.
+          if (TUTORIAL_FLOOR.rooms[run.depth + 1]?.kind !== 'treasure') break;
           const id = offerInsights(content, run)[0];
           if (id) {
             run.insights.push(id);
@@ -576,11 +587,16 @@ export function beltRoomId(content: Content, id: string, tier: number): string {
   return copy ? copy.id : id;
 }
 
+function tutorialIndex(id: string): number {
+  return TUTORIAL_FLOOR.rooms.findIndex((r) => r.id === id);
+}
+
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
   // Harder rooms wait until later in the floor (depth 0 is room 1), and some wait for a higher belt.
   if (run.tutorial) {
-    const room = content.rooms.find((r) => r.tutorial && r.kind === kind);
-    if (!room) throw new Error(`There is no tutorial ${kind} room`);
+    const id = TUTORIAL_FLOOR.rooms[Math.min(run.depth, TUTORIAL_FLOOR.rooms.length - 1)].id;
+    const room = content.rooms.find((r) => r.tutorial && r.id === id);
+    if (!room) throw new Error(`There is no tutorial room "${id}"`);
     return room;
   }
   // Tutorial rooms are only ever used by the tutorial floor.
@@ -604,7 +620,7 @@ function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
 /** Which doors appear when a room is done. */
 function offerDoors(run: RunState, room: Room, treasureSoFar: number, restSoFar: number): DoorKind[] {
   if (room.kind === 'boss') return ['home'];
-  if (run.tutorial) return [TUTORIAL_FLOOR.rooms[Math.min(run.depth + 1, TUTORIAL_FLOOR.rooms.length - 1)]];
+  if (run.tutorial) return [TUTORIAL_FLOOR.rooms[Math.min(run.depth + 1, TUTORIAL_FLOOR.rooms.length - 1)].kind];
   if (run.depth >= run.totalRooms - 2) return ['boss'];
   const count = Math.min(room.doors.length, nextFloat(run.rng) < FLOOR.threeDoorChance ? 3 : 2);
   let pool = Object.entries(FLOOR.doorWeights) as Array<[DoorKind, number]>;
@@ -639,7 +655,8 @@ export function parSeconds(room: Room, world: WorldState): number {
 function roomResult(room: Room, world: WorldState): RoomResult {
   const prog = world.progress;
   const p = world.players.p1;
-  const fights = room.kind === 'battle' || room.kind === 'challenge' || room.kind === 'boss';
+  // TUT-B3: a room with no enemies at all (the tutorial's Tower Path) gets no grade.
+  const fights = (room.kind === 'battle' || room.kind === 'challenge' || room.kind === 'boss') && world.enemies.length > 0;
   return {
     roomId: room.id,
     name: room.name,

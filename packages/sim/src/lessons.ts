@@ -65,29 +65,32 @@ export function loadLessons(data: unknown): Record<string, SenseiLesson> {
   return out;
 }
 
-/** The tutorial floor's steps (content/tutorial/tutorial-floor.json), in order (13 since C12/K24a). */
+/** The tutorial floor's steps (content/tutorial/tutorial-floor.json), in order: TUT-P1 beats 1-11. */
 export const TUTORIAL_STEPS = [
+  'tutorial-path',
+  'tutorial-stones',
   'tutorial-bow',
-  'tutorial-walk',
-  'tutorial-space',
+  'tutorial-dummies',
+  'tutorial-strike',
+  'tutorial-swarmers',
   'tutorial-brute',
-  'tutorial-tip-warning',
-  'tutorial-tip-swarmers',
-  'tutorial-tip-tough',
-  'tutorial-tip-space',
-  'tutorial-tip-dash',
+  'tutorial-dash',
   'tutorial-insight',
   'tutorial-chest',
   'tutorial-boss',
   'tutorial-door',
 ] as const;
 export type TutorialStep = (typeof TUTORIAL_STEPS)[number];
-/** Taught in the tutorial's boss room when Focus first fills (Manager call, M7-P2). */
+
+/** What the game waits for after a 'move' step's tip (K24a, TUT-B3). */
+export const TUTORIAL_EVENTS = ['reachPathEnd', 'dodgeStones', 'bow', 'defeatDummies', 'strike', 'defeatSwarmers', 'counter', 'dash', 'openChest', 'defeatBoss'] as const;
+export type TutorialEvent = (typeof TUTORIAL_EVENTS)[number];
+
+/** Taught on the tutorial floor's big dummy (TUT-B3); kept as a lesson so the Lesson Scroll lists it. */
 export const STRIKE_LESSON = 'lesson-strike';
 
-/** What the game waits for after a 'move' step's tip (K24a). */
-export const TUTORIAL_EVENTS = ['bow', 'reachSpot', 'walkAround', 'counter', 'defeatSwarmers', 'defeatBrute', 'keepSpace', 'dash', 'openChest', 'defeatBoss'] as const;
-export type TutorialEvent = (typeof TUTORIAL_EVENTS)[number];
+/** Every line a kid reads in the tutorial is this many words or fewer (TUT-P1 text rule). */
+export const TUTORIAL_MAX_WORDS = 8;
 
 /**
  * One tutorial step (K24a). advance 'tap': done when Got it is tapped.
@@ -96,6 +99,8 @@ export type TutorialEvent = (typeof TUTORIAL_EVENTS)[number];
 export interface TutorialLine extends Lesson {
   advance: 'tap' | 'move';
   waitFor: TutorialEvent | null;
+  /** Said when the game starts helping (the stones' slower retry with a pointer). */
+  help?: string;
 }
 
 /** Reads the tutorial floor's steps and checks every step is there, with a valid advance and waitFor. */
@@ -112,7 +117,7 @@ export function loadTutorialLines(data: unknown): Record<TutorialStep, TutorialL
     if (l.advance === 'move' && !(TUTORIAL_EVENTS as readonly string[]).includes(l.waitFor as string)) {
       throw new Error(`Tutorial floor: move step "${l.id}" waits for an unknown event ${JSON.stringify(l.waitFor)}`);
     }
-    out[l.id as TutorialStep] = { id: l.id, screens: l.screens, success: l.success, retry: l.retry, nudge: l.nudge, advance: l.advance, waitFor: l.waitFor ?? null };
+    out[l.id as TutorialStep] = { id: l.id, screens: l.screens, success: l.success, retry: l.retry, nudge: l.nudge, help: l.help, advance: l.advance, waitFor: l.waitFor ?? null };
   }
   for (const id of TUTORIAL_STEPS) if (!out[id]) throw new Error(`Tutorial floor: missing "${id}"`);
   return out as Record<TutorialStep, TutorialLine>;
@@ -129,7 +134,7 @@ export interface TutorialFlow {
 }
 
 /** A flow starting at `from` (each tutorial room picks up at its own first step). */
-export function tutorialFlow(from: TutorialStep = 'tutorial-bow'): TutorialFlow {
+export function tutorialFlow(from: TutorialStep = 'tutorial-path'): TutorialFlow {
   return { index: TUTORIAL_STEPS.indexOf(from), phase: 'ready' };
 }
 

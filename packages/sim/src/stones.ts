@@ -38,13 +38,14 @@ export function stepStones(world: WorldState, room: Room, ids: PlayerId[]): void
   const st = world.stones;
   if (!st) return;
   for (const id of ids) if (st.stumble[id] > 0) st.stumble[id]--;
-  if (st.done) return;
+  // TUT-B3: in a room with a glowing spot, the stones wait until the hero reaches it.
+  if (st.done || (world.goal && !world.goal.reached)) return;
   const wave = room.stoneWaves[st.wave];
   if (st.gapTicks > 0) {
     if (--st.gapTicks > 0) return;
     const help = st.misses >= STONES.helpAfterMisses;
     st.fillLeft = help ? Math.round(wave.fillTicks * STONES.helpFillScale) : wave.fillTicks;
-    st.safeSpot = help ? safeSpot(world, room, wave.spots, ids) : null;
+    st.safeSpot = help ? (wave.safeSpot ? { ...wave.safeSpot } : safeSpot(world, room, wave.spots, ids)) : null;
     world.events.push({ kind: 'stoneWarn', wave: st.wave + 1, spots: wave.spots.map((s) => ({ ...s })), ticks: st.fillLeft, safeSpot: st.safeSpot });
     return;
   }

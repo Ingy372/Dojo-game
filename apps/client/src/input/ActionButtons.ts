@@ -133,6 +133,12 @@ export class ActionButtons {
   }
   private dashPulse = false;
 
+  /** TUT-B3: makes STRIKE pulse for the tutorial's STRIKE tip. */
+  pulseStrike(on: boolean): void {
+    this.strikePulse = on;
+  }
+  private strikePulse = false;
+
   /** K24b: COUNTER flashes while an attack on the player is in its Counter window (steady glow with Reduced motion). */
   counterWindow(open: boolean): void {
     this.windowOpen = open;
@@ -204,7 +210,8 @@ export class ActionButtons {
       this.dashRing.strokePath();
     }
     this.dash.container.setScale(this.dashPulse ? 1 + Math.abs(Math.sin(this.scene.time.now / 140)) * 0.14 : 1);
-    if (strikeGold) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
+    if (strikeGold && this.strikePulse) this.strike.container.setScale(1 + Math.abs(Math.sin(this.scene.time.now / 140)) * 0.14);
+    else if (strikeGold) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
     else this.strike.container.setScale(1);
 
     if (this.virtue) this.showVirtue(alive && p.focus >= COMBAT.focus.max && p.virtueTicks === 0);

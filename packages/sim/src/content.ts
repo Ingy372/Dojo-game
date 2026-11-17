@@ -10,6 +10,7 @@ import { loadNamed, type NamedContent } from './named';
 import { loadInsights, type InsightDef } from './insight';
 import { loadLootTables, type LootTables } from './loot';
 import { loadRoom, type Room, type RoomKind } from './room';
+import { TUTORIAL_FLOOR } from './run';
 import { loadTwists, type TwistContent } from './twist';
 
 export interface Content {
@@ -74,9 +75,10 @@ export function loadContent(raw: RawContent): Content {
   for (const kind of ['battle', 'challenge', 'treasure', 'rest', 'boss'] as RoomKind[]) {
     if (!rooms.some((r) => r.kind === kind && !r.tutorial)) throw new Error(`There is no ${kind} room`);
   }
-  // The tutorial floor (M7-P2) needs one tutorial room of each of its kinds.
-  for (const kind of ['battle', 'treasure', 'boss'] as RoomKind[]) {
-    if (rooms.filter((r) => r.tutorial && r.kind === kind).length !== 1) throw new Error(`There must be exactly one tutorial ${kind} room`);
+  // The tutorial floor (M7-P2, TUT-P1) needs each of its rooms, marked tutorial and of the right kind.
+  for (const t of TUTORIAL_FLOOR.rooms) {
+    const r = rooms.find((x) => x.id === t.id);
+    if (!r?.tutorial || r.kind !== t.kind) throw new Error(`The tutorial floor needs a tutorial ${t.kind} room "${t.id}"`);
   }
   const elites = loadElites(raw.elites);
   for (const k of Object.values(elites.kinds)) {

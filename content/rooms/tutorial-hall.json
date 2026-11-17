@@ -3,16 +3,16 @@
   "name": "First Steps Hall",
   "kind": "battle",
   "tutorial": true,
-  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), G = the glowing spot (tutorial only)",
-  "notes": "Tutorial floor room 1 (M7-P2, waves K24a): walk to the glowing spot and walk around, then one Brute for the guided Counter (it starts low, clear of the Sensei banner). Later waves come only when Sensei's step lets them in (waveHold): 3 Swarmers + a Brute, then a small Swarmer group, then Swarmers from two sides for Dash. Health never drops below 1.",
-  "parSeconds": 60,
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall)",
+  "notes": "Tutorial room 3 (TUT-P1 beats 7-8, cut down in TUT-B3): one Brute for the guided Counter (it starts low, clear of the Sensei banner), then Swarmers from two sides for Dash. The second wave comes only when Sensei's step lets it in (waveHold). Health never drops below 1.",
+  "parSeconds": 40,
   "tiles": [
     "####D####D####D####",
     "#.................#",
     "#.................#",
     "#.................#",
     "#.................#",
-    "#........G........#",
+    "#.................#",
     "#.................#",
     "#.................#",
     "#........P........#",
@@ -28,63 +28,27 @@
     },
     {
       "enemy": "swarmer",
-      "column": 4,
-      "row": 3,
-      "wave": 2
-    },
-    {
-      "enemy": "swarmer",
-      "column": 10,
-      "row": 2,
-      "wave": 2
-    },
-    {
-      "enemy": "swarmer",
-      "column": 16,
-      "row": 3,
-      "wave": 2
-    },
-    {
-      "enemy": "brute",
-      "column": 16,
-      "row": 9,
-      "wave": 2
-    },
-    {
-      "enemy": "swarmer",
-      "column": 5,
-      "row": 3,
-      "wave": 3
-    },
-    {
-      "enemy": "swarmer",
-      "column": 15,
-      "row": 3,
-      "wave": 3
-    },
-    {
-      "enemy": "swarmer",
       "column": 2,
       "row": 5,
-      "wave": 4
+      "wave": 2
     },
     {
       "enemy": "swarmer",
       "column": 2,
       "row": 7,
-      "wave": 4
+      "wave": 2
     },
     {
       "enemy": "swarmer",
       "column": 18,
       "row": 5,
-      "wave": 4
+      "wave": 2
     },
     {
       "enemy": "swarmer",
       "column": 18,
       "row": 7,
-      "wave": 4
+      "wave": 2
     }
   ]
 }

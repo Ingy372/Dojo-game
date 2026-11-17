@@ -4,7 +4,11 @@ import {
   TICKS_PER_SECOND,
   TUTORIAL_FLOOR,
   ENEMY_TRAINING_SCALE,
+  TUTORIAL_MAX_WORDS,
   TUTORIAL_STEPS,
+  GUIDE_LESSONS,
+  STRIKE_LESSON,
+  WARNING_LESSON,
   activeDoorSlots,
   createRunWorld,
   currentRoom,
@@ -19,6 +23,8 @@ import {
   type WorldState,
 } from '../src';
 import tutorialData from '../../../content/tutorial/tutorial-floor.json';
+import storyData from '../../../content/tutorial/tutorial-story.json';
+import firstSession from '../../../content/tutorial/first-session-lessons.json';
 import { testContent } from './load-content';
 
 const content = testContent();
@@ -27,7 +33,7 @@ const IDLE: PlayerInput = { kind: 'none' };
 const tutorial = (seed = 1) => startRun(content, { seed, dryRuns: 0, tutorial: true });
 
 /**
- * A plain player: walks to the glowing spot, then to the nearest enemy (basic attacks are
+ * A plain player: walks to the glowing spot (and stands in the stones), then to the nearest enemy (basic attacks are
  * automatic), taps COUNTER when the guide waits or a circle is nearly full, Strikes when it
  * can, then opens the chest and takes the door. Returns every run event and world event kind.
  */
@@ -76,25 +82,59 @@ describe('tutorial floor (M7-P2)', () => {
     for (const id of TUTORIAL_STEPS) expect(lines[id].screens.length).toBeGreaterThan(0);
   });
 
-  it('is always the glowing-spot room (Brute first, then the K24a waves), then the chest, then the boss, then home', () => {
+  it('is always the Tower Path, the Training Hall, First Steps Hall, the chest and the boss, then home (TUT-P1)', () => {
     for (let seed = 1; seed <= 20; seed++) {
       const run = tutorial(seed);
-      expect(run.totalRooms).toBe(3);
+      expect(run.totalRooms).toBe(5);
       const first = currentRoom(content, run);
+      expect(first.id).toBe('tutorial-path');
       expect(first.goal).not.toBeNull();
-      expect(first.enemySpawns.map((s) => `${s.wave}:${s.enemy}`)).toEqual([
-        '1:brute',
-        '2:swarmer', '2:swarmer', '2:swarmer', '2:brute',
+      expect(first.enemySpawns).toEqual([]);
+      expect(first.stoneWaves.map((w) => w.spots.length)).toEqual([1, 2, 3]);
+      const hall = content.rooms.find((r) => r.id === 'training-hall')!;
+      expect(hall.enemySpawns.map((s) => `${s.wave}:${s.enemy}`)).toEqual([
+        '1:practice-dummy', '1:practice-dummy', '1:practice-dummy',
+        '2:big-practice-dummy',
         '3:swarmer', '3:swarmer',
-        '4:swarmer', '4:swarmer', '4:swarmer', '4:swarmer',
       ]);
+      const steps = content.rooms.find((r) => r.id === 'tutorial-hall')!;
+      expect(steps.goal).toBeNull();
+      expect(steps.enemySpawns.map((s) => `${s.wave}:${s.enemy}`)).toEqual(['1:brute', '2:swarmer', '2:swarmer', '2:swarmer', '2:swarmer']);
       const { runEvents } = play(run);
       expect(run.status).toBe('cleared');
-      expect(run.usedRooms.map((id) => content.rooms.find((r) => r.id === id)!.kind)).toEqual(['battle', 'treasure', 'boss']);
-      expect(runEvents.filter((e) => e.kind === 'nextRoom').map((e) => e.kind === 'nextRoom' && e.door)).toEqual(['treasure', 'boss']);
+      expect(run.usedRooms).toEqual(TUTORIAL_FLOOR.rooms.map((r) => r.id));
+      expect(runEvents.filter((e) => e.kind === 'nextRoom').map((e) => e.kind === 'nextRoom' && e.door)).toEqual(['battle', 'battle', 'treasure', 'boss']);
       expect(run.elites).toEqual([]);
       expect(run.named).toBeNull();
     }
+  });
+
+  it('gives the Tower Path no grade (it has no fight)', () => {
+    const { runEvents } = play(tutorial(2));
+    const graded = runEvents.flatMap((e) => (e.kind === 'graded' ? [e.result.roomId] : []));
+    expect(graded).not.toContain('tutorial-path');
+    expect(graded).toContain('training-hall');
+  });
+
+  it('keeps every line a kid reads in the tutorial to 8 words or fewer (TUT-P1)', () => {
+    const lines = loadTutorialLines(tutorialData);
+    const texts: string[] = [...storyData.opening.cards, storyData.opening.sensei, storyData.close];
+    for (const id of TUTORIAL_STEPS) {
+      const l = lines[id];
+      texts.push(...l.screens, ...[l.success, l.retry, l.nudge, l.help].filter((t): t is string => !!t));
+    }
+    const guided = new Set<string>([WARNING_LESSON, ...GUIDE_LESSONS, STRIKE_LESSON]);
+    for (const l of firstSession.lessons as Array<Record<string, unknown>>) {
+      if (!guided.has(l.id as string)) continue;
+      for (const k of ['screens', 'success', 'retry', 'nudge']) {
+        const v = l[k];
+        if (typeof v === 'string') texts.push(v);
+        else if (Array.isArray(v)) texts.push(...(v as string[]));
+      }
+    }
+    expect(texts.length).toBeGreaterThan(40);
+    const long = texts.filter((t) => t.trim().split(/\s+/).length > TUTORIAL_MAX_WORDS);
+    expect(long).toEqual([]);
   });
 
   it('never puts tutorial rooms on a normal floor', () => {
@@ -106,14 +146,22 @@ describe('tutorial floor (M7-P2)', () => {
     }
   });
 
-  it('lands the first Perfect Counter well under 2 minutes after the floor starts', () => {
+  it('lands the first Perfect Counter under five minutes after the floor starts (TUT-P1)', () => {
     for (let seed = 1; seed <= 20; seed++) {
       const { worldEvents } = play(tutorial(seed));
-      const first = worldEvents.find((e) => e.kind === 'perfectCounter');
-      expect(first?.room).toBe('tutorial-hall');
+      // The guided Counter is on First Steps Hall's Brute (a Swarmer may be countered earlier, unguided).
+      const first = worldEvents.find((e) => e.kind === 'perfectCounter' && e.room === 'tutorial-hall');
+      expect(first).toBeDefined();
       // Sim time only; the client adds the bow and the creation screen (timed check in the PR).
-      expect(first!.tick / TICKS_PER_SECOND).toBeLessThan(60);
+      expect(first!.tick / TICKS_PER_SECOND).toBeLessThan(300);
     }
+  });
+
+  it('starts the guided Counter in First Steps Hall, not before (TUT-B3)', () => {
+    const at = (roomId: string) => createRunWorld(content, { ...tutorial(1), roomId }, BASE, [], undefined, 0).guide;
+    expect(at('tutorial-path')).toBeNull();
+    expect(at('training-hall')).toBeNull();
+    expect(at('tutorial-hall')?.step).toBe(0);
   });
 
   it('picks the Insight automatically, with no menu', () => {
@@ -146,7 +194,7 @@ describe('tutorial floor (M7-P2)', () => {
   });
 
   it("can't be lost by doing nothing, in any room", () => {
-    for (const roomId of ['tutorial-hall', 'tutorial-vault', 'tutorial-keep']) {
+    for (const roomId of TUTORIAL_FLOOR.rooms.map((r) => r.id)) {
       // Guide finished (worst case: nothing holds still), standing still for 10 minutes.
       for (const goalReached of [false, true]) {
         const run = tutorial(7);
@@ -167,14 +215,21 @@ describe('tutorial floor (M7-P2)', () => {
     }
   });
 
-  it('keeps the enemies waiting until the player reaches the glowing spot', () => {
+  it('holds the stones until the player reaches the glowing spot', () => {
     const run = tutorial(1);
     const room = currentRoom(content, run);
     const w = createRunWorld(content, run, BASE, [], undefined, 0);
-    const start = { ...w.enemies[0].pos };
-    for (let t = 0; t < 200; t++) stepWorld(w, room, { p1: IDLE });
-    expect(w.enemies[0].pos).toEqual(start);
-    expect(w.enemies[0].mode).toBe('waiting');
+    for (let t = 0; t < 200; t++) {
+      stepWorld(w, room, { p1: IDLE });
+      expect(w.events.some((e) => e.kind === 'stoneWarn')).toBe(false);
+    }
+    w.players.p1.pos = { ...w.goal!.pos };
+    let warned = false;
+    for (let t = 0; t < 100 && !warned; t++) {
+      stepWorld(w, room, { p1: IDLE });
+      warned = w.events.some((e) => e.kind === 'stoneWarn');
+    }
+    expect(warned).toBe(true);
   });
 
   it('a normal floor still lets health reach 0', () => {

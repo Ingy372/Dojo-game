@@ -1,0 +1,58 @@
+{
+  "id": "training-hall",
+  "name": "Training Hall",
+  "kind": "battle",
+  "tutorial": true,
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall)",
+  "notes": "TUT-B3, tutorial room 2 (TUT-P1 beats 4-6): wave 1 is 3 small practice dummies (auto-attack fills Focus), wave 2 the big dummy (STRIKE is taught once Focus is full), wave 3 two Swarmers. Waves come only when Sensei's step lets them in (waveHold). The dummies never move or attack.",
+  "parSeconds": 40,
+  "tiles": [
+    "###D###D###D###",
+    "#.............#",
+    "#.............#",
+    "#.............#",
+    "#.............#",
+    "#.............#",
+    "#......P......#",
+    "#.............#",
+    "###############"
+  ],
+  "enemies": [
+    {
+      "enemy": "practice-dummy",
+      "column": 5,
+      "row": 5,
+      "wave": 1
+    },
+    {
+      "enemy": "practice-dummy",
+      "column": 8,
+      "row": 5,
+      "wave": 1
+    },
+    {
+      "enemy": "practice-dummy",
+      "column": 11,
+      "row": 5,
+      "wave": 1
+    },
+    {
+      "enemy": "big-practice-dummy",
+      "column": 8,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 2,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 2,
+      "wave": 3
+    }
+  ]
+}

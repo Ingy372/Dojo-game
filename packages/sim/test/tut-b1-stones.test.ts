@@ -14,10 +14,10 @@ const room: Room = loadRoom({ id: 'stone-path', name: 'Tower Path', kind: 'rest'
 const IDLE: PlayerInput = { kind: 'none' };
 const SAFE = { x: 4.5, y: 5.5 }; // far from every spot
 
-function run(world: WorldState, ticks: number, input: (w: WorldState) => PlayerInput = () => IDLE): CombatEvent[] {
+function run(world: WorldState, ticks: number, input: (w: WorldState) => PlayerInput = () => IDLE, where: Room = room): CombatEvent[] {
   const out: CombatEvent[] = [];
   for (let i = 0; i < ticks; i++) {
-    stepWorld(world, room, { p1: input(world) });
+    stepWorld(world, where, { p1: input(world) });
     out.push(...world.events);
   }
   return out;
@@ -87,5 +87,13 @@ describe('TUT-B1 falling stones', () => {
     expect(() => loadRoom({ id: 'x', name: 'X', kind: 'rest', tutorial: true, tiles, hazards: { stones: [{ fillSeconds: 0, spots: [{ column: 2, row: 2 }] }] } })).toThrow(RoomError);
     expect(() => loadRoom({ id: 'x', name: 'X', kind: 'rest', tutorial: true, tiles, hazards: { stones: [{ fillSeconds: 1, spots: [{ column: 1, row: 1 }] }] } })).toThrow(/floor tile/);
     expect(loadRoom({ id: 'x', name: 'X', kind: 'rest', tiles }).stoneWaves).toEqual([]);
+  });
+
+  it('a wave can name its own safe spot, which must be clear of every circle', () => {
+    const named = loadRoom({ id: 'x', name: 'X', kind: 'rest', tutorial: true, tiles, hazards: { stones: [{ fillSeconds: 1, spots: [{ column: 5, row: 3 }], safeSpot: { column: 2, row: 2 } }] } });
+    const w = createWorld(named, ['p1']);
+    const warns = run(w, 15 * TICKS_PER_SECOND, () => IDLE, named).filter((e): e is Extract<CombatEvent, { kind: 'stoneWarn' }> => e.kind === 'stoneWarn');
+    expect(warns[2].safeSpot).toEqual({ x: 1.5, y: 1.5 });
+    expect(() => loadRoom({ id: 'x', name: 'X', kind: 'rest', tutorial: true, tiles, hazards: { stones: [{ fillSeconds: 1, spots: [{ column: 5, row: 3 }], safeSpot: { column: 5, row: 3 } }] } })).toThrow(/clear of every red circle/);
   });
 });

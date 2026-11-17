@@ -219,3 +219,34 @@ export function addTinted(scene: Phaser.Scene, pack: PackName, id: string, x: nu
   if (hex && i >= 0 && images[i]) images[i].setTint(Phaser.Display.Color.HexStringToColor(hex).color);
   return images;
 }
+
+/**
+ * TUT-B3: a creature drawn from still sprites (the practice dummies) as a layered character, so it
+ * plays through the normal enemy view. `anims` maps an animation name (idle, hit, defeat...) to a
+ * static sprite id; every one faces all 8 ways the same. Sizes and anchor come from the first one.
+ */
+export function staticCharacter(scene: Phaser.Scene, pack: PackName, anims: Record<string, string>): CharacterArt | null {
+  const sprites = Object.entries(anims).map(([name, id]) => [name, staticArt(scene, pack, id)] as const);
+  if (sprites.some(([, s]) => !s)) return null;
+  const [, first] = sprites[0];
+  const layers: CharacterArt['layers'] = [];
+  const animations: Record<string, ArtAnimation> = {};
+  for (const [name, s] of sprites) {
+    const anim: ArtAnimation = { frames: s!.frames, fps: s!.fps ?? 1, loop: s!.loop ?? s!.frames === 1, layers: {} };
+    for (const [layer, ids] of Object.entries(s!.layers)) {
+      if (!layers.some((l) => l.name === layer)) layers.push({ name: layer, tint: false });
+      anim.layers[layer] = Array.from({ length: 8 }, () => ids);
+    }
+    animations[name] = anim;
+  }
+  return {
+    kind: 'character',
+    pack,
+    frameWidth: first!.frameWidth,
+    frameHeight: first!.frameHeight,
+    anchor: { x: first!.anchor[0], y: first!.anchor[1] },
+    directions: ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'],
+    layers,
+    animations,
+  };
+}
