@@ -20,7 +20,7 @@ def check(label, line):
         for w in BANNED:
             if re.search(r"\b" + w + r"\b", line.lower()): bad.append((label, "banned: " + w, line))
 for s in d["lessons"]:
-    for line in s["screens"] + [s.get("success"), s.get("retry"), s.get("nudge")]: check(s["id"], line)
+    for line in s["screens"] + [s.get("success"), s.get("retry"), s.get("nudge"), s.get("help")]: check(s["id"], line)
     if s.get("advance") not in ("tap", "move"): bad.append((s["id"], "advance"))
     if s["advance"] == "move" and not s.get("waitFor"): bad.append((s["id"], "waitFor"))
     for w in re.findall(r"\b(Swarmers?|Brutes?|Shield Guard|Bopper|Floor Keeper)\b", " ".join(s["screens"] + [s.get("retry") or ""])):
