@@ -1996,5 +1996,5 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 
 ## L11-B2a — the floor-set switch (2026-11-17)
 - One true/false per floorSet name in `content/settings/floor-sets.json`, read by `floorRooms`. A tier turns on in L11-B2 by moving its 8 rooms into `content/rooms/` and setting its set to true.
-- The loader refuses a room whose floorSet isn't listed, so a moved room can't go live by accident. A content bundle with no floor-sets file treats every set as on (old behaviour, for tests that build their own bundle).
+- Fail safe (Tester, Manager): only a set marked true is live. A missing file, an unlisted set or any other value is off, so that tier keeps the shared rooms and a moved room can't go live by accident.
 - The L11-C1 draft rooms stay in `drafts/content/rooms/L11/`; only the test loads them (Manager).

@@ -49,7 +49,7 @@ export interface RawContent {
   named: unknown;
   /** GUARD-SCALE-01: content/settings/guardian-scale.json (missing = no scaling). */
   guardianScale?: unknown;
-  /** L11-B2a: content/settings/floor-sets.json (missing = every set live). */
+  /** L11-B2a: content/settings/floor-sets.json (missing = every set off). */
   floorSets?: unknown;
 }
 
@@ -76,7 +76,7 @@ export function loadContent(raw: RawContent): Content {
       if (enemies[s.enemy].passive && !r.tutorial) throw new Error(`Room "${r.id}" uses practice dummy "${s.enemy}", but only tutorial rooms can`);
     }
   }
-  const floorSets = loadFloorSets(raw.floorSets, rooms);
+  const floorSets = loadFloorSets(raw.floorSets);
   for (const kind of ['battle', 'challenge', 'treasure', 'rest', 'boss'] as RoomKind[]) {
     if (!rooms.some((r) => r.kind === kind && !r.tutorial)) throw new Error(`There is no ${kind} room`);
   }
@@ -119,12 +119,9 @@ export function loadContent(raw: RawContent): Content {
   };
 }
 
-function loadFloorSets(raw: unknown, rooms: Room[]): Record<string, boolean> {
-  const used = [...new Set(rooms.map((r) => r.floorSet).filter((s): s is string => s !== null))];
-  if (raw === undefined) return Object.fromEntries(used.map((s) => [s, true]));
-  const sets = (raw as { sets?: unknown } | null)?.sets;
-  if (typeof sets !== 'object' || sets === null) throw new Error('floor-sets.json needs a "sets" object');
-  for (const [k, v] of Object.entries(sets)) if (typeof v !== 'boolean') throw new Error(`floor-sets.json: "${k}" must be true or false`);
-  for (const s of used) if (!(s in sets)) throw new Error(`Rooms use floor set "${s}", which floor-sets.json doesn't list`);
-  return sets as Record<string, boolean>;
+/** L11-B2a: only a set the file marks true is live; a missing file, a missing set or any other value is off (shared rooms). */
+function loadFloorSets(raw: unknown): Record<string, boolean> {
+  const sets = (raw as { sets?: unknown } | null | undefined)?.sets;
+  if (typeof sets !== 'object' || sets === null) return {};
+  return Object.fromEntries(Object.entries(sets).map(([k, v]) => [k, v === true]));
 }

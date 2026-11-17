@@ -51,10 +51,14 @@ describe('L11-B2a: the floor-set switch', () => {
     });
   }
 
-  it('refuses a room whose floor set is not listed, and a setting that is not true or false', () => {
+  it('fails safe: a missing file, an unlisted set or a value that is not true leaves that tier on the shared rooms', () => {
+    const shared = (c: Content, t: number) => floorRooms(c, t).every((r) => r.floorSet === null);
     const raw = testRawContent();
     const { 'ember-kitchens': _, ...rest } = floorSetsRaw.sets;
-    expect(() => loadContent({ ...raw, floorSets: { sets: rest } })).toThrow(/ember-kitchens/);
-    expect(() => loadContent({ ...raw, floorSets: { sets: { ...floorSetsRaw.sets, summit: 'yes' } } })).toThrow(/summit/);
+    expect(shared(loadContent({ ...raw, floorSets: undefined }), 3)).toBe(true);
+    expect(shared(loadContent({ ...raw, floorSets: { sets: rest } }), 3)).toBe(true);
+    expect(shared(loadContent({ ...raw, floorSets: { sets: { ...floorSetsRaw.sets, 'ember-kitchens': 'yes' } } }), 3)).toBe(true);
+    expect(shared(loadContent({ ...raw, floorSets: 'broken' }), 3)).toBe(true);
+    expect(shared(live, 3)).toBe(false);
   });
 });
