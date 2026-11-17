@@ -1,0 +1,209 @@
+{
+  "item": "TUT-C1",
+  "notes": "DRAFT for TUT-P1 (#517). Lines for tutorial beats 0-11, in the tutorial-floor.json lesson format so they drop in. Every kid line is 8 words or fewer. Beat 0 is the opening cards below (tap to go on; the kid may tap through them, never skip play beats). Story wording waits on Jay (TUT-P1 DECIDE 1). Cut from today's floor: tutorial-walk, tutorial-space, tutorial-tip-warning, tutorial-tip-tough, tutorial-tip-space. New waitFor events for the Programmer: reachPathEnd, dodgeStones, defeatDummies, strike. Faith-layer swap for card 2: drafts/content/faith/TUT-C1-faith.json. TUT-C1b: 4 line edits from TUT-L1 (#519).",
+  "speaker": "sensei",
+  "opening": {
+    "beat": 0,
+    "cards": [
+      {
+        "n": 1,
+        "speaker": "narrator",
+        "text": "Long ago, a great light shone.",
+        "from": "chapter-1 screen 1, shortened"
+      },
+      {
+        "n": 2,
+        "speaker": "narrator",
+        "text": "It kept the whole town warm and safe.",
+        "from": "chapter-1 screen 2, shortened (faith layer swaps this card)"
+      },
+      {
+        "n": 3,
+        "speaker": "narrator",
+        "text": "One night, the light broke into pieces.",
+        "from": "chapter-1 screen 3"
+      },
+      {
+        "n": 4,
+        "speaker": "narrator",
+        "text": "Shadow slipped into the Tower, floor by floor.",
+        "from": "chapter-1 screen 4"
+      }
+    ],
+    "sensei": "The Tower is waking up. Come with me."
+  },
+  "stumble": "Oops! Dust off. The stones come again.",
+  "lessons": [
+    {
+      "id": "tutorial-path",
+      "beat": 1,
+      "trigger": "Tower Path: the hero follows Sensei to the Tower door",
+      "screens": [
+        "Tap to walk, or use the stick."
+      ],
+      "success": "Good steps! Stay close to me.",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "reachPathEnd",
+      "note": "New event (TUT-B3).",
+      "order": 1
+    },
+    {
+      "id": "tutorial-stones",
+      "beat": 2,
+      "trigger": "The Tower rumbles; stones fall, a red circle shows first (3 waves)",
+      "screens": [
+        "Red circle on the ground? Step out!"
+      ],
+      "success": "Quick feet! You stayed safe.",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "dodgeStones",
+      "retry": "Oops! Dust off. The stones come again.",
+      "note": "New event (TUT-B1): done after 3 dodged waves. The retry line is the stumble line. 'help' shows on the slower retry after 2 missed waves; after a third miss the wave counts as done (TUT-L1 rule d).",
+      "order": 2,
+      "help": "Watch the red. Step where I point."
+    },
+    {
+      "id": "tutorial-bow",
+      "beat": 3,
+      "trigger": "At the Tower door: bow",
+      "screens": [
+        "Bow at the door to show respect."
+      ],
+      "success": "Nice bow. Let's go in.",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "bow",
+      "note": "Same as today.",
+      "order": 3
+    },
+    {
+      "id": "tutorial-dummies",
+      "beat": 4,
+      "trigger": "Training Hall: 3 straw practice dummies",
+      "screens": [
+        "Walk close. You strike on your own!"
+      ],
+      "success": "Every hit fills your Focus!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "defeatDummies",
+      "note": "New event (TUT-B2).",
+      "order": 4
+    },
+    {
+      "id": "tutorial-strike",
+      "beat": 5,
+      "trigger": "Big dummy; Focus is full and STRIKE glows",
+      "screens": [
+        "Focus is full! Tap the glowing STRIKE!"
+      ],
+      "success": "What a STRIKE!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "strike",
+      "nudge": "Take your time. Tap the glowing STRIKE button!",
+      "note": "New event. Replaces lesson-strike in the boss room.",
+      "order": 5
+    },
+    {
+      "id": "tutorial-swarmers",
+      "beat": 6,
+      "trigger": "2 Swarmers slip out of a crack",
+      "screens": [
+        "Shadows! Walk close, just like the dummies."
+      ],
+      "success": "The shadows ran away!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "defeatSwarmers",
+      "retry": "That's okay. The Swarmers will come back.",
+      "order": 6
+    },
+    {
+      "id": "tutorial-brute",
+      "beat": 7,
+      "trigger": "First Steps Hall: a slow Brute winds up (guided Counter)",
+      "screens": [
+        "Red circle again! This time, tap COUNTER!"
+      ],
+      "success": "Great! You did it!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "counter",
+      "retry": "Almost! The circle will come again.",
+      "nudge": "Take your time. Tap the glowing COUNTER button!",
+      "note": "The guided Counter lines in first-session-lessons.json still play here, as today.",
+      "order": 7
+    },
+    {
+      "id": "tutorial-dash",
+      "beat": 8,
+      "trigger": "Swarmers from two sides; DASH glows",
+      "screens": [
+        "Crowded? DASH out to open space."
+      ],
+      "success": "Nice DASH! Lots of room now.",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "dash",
+      "nudge": "Take your time. Tap the glowing DASH button!",
+      "order": 8
+    },
+    {
+      "id": "tutorial-insight",
+      "beat": 9,
+      "trigger": "Vault: the automatic Insight",
+      "screens": [
+        "Here is an Insight for you!"
+      ],
+      "success": "It will help you until you go home.",
+      "earliestRun": 1,
+      "advance": "tap",
+      "waitFor": null,
+      "order": 9
+    },
+    {
+      "id": "tutorial-chest",
+      "beat": 9,
+      "trigger": "Vault: the chest",
+      "screens": [
+        "A treasure chest! Walk up to open it."
+      ],
+      "success": "Look what you found!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "openChest",
+      "order": 10
+    },
+    {
+      "id": "tutorial-boss",
+      "beat": 10,
+      "trigger": "Keep: the easy Floor Keeper; Sensei says one line, then stays quiet",
+      "screens": [
+        "A big one! Use everything you learned."
+      ],
+      "success": "You stayed calm. Well done!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "defeatBoss",
+      "order": 11
+    },
+    {
+      "id": "tutorial-door",
+      "beat": 11,
+      "trigger": "Keep: the door home opens (no light piece)",
+      "screens": [
+        "The door home is open."
+      ],
+      "success": "Train in class. Your belt opens the Gate.",
+      "earliestRun": 1,
+      "advance": "tap",
+      "waitFor": null,
+      "note": "Points back to real class (TUT-L1 edit 4). Only the real belt opens the Gate.",
+      "order": 12
+    }
+  ],
+  "maxNewLessonsPerRoom": 1
+}

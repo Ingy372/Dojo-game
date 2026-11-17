@@ -1,0 +1,415 @@
+{
+  "notes": "DRAFT for Jay's read and edit (L17-C, Jay t1031u Nov 16). Not for release until Jay approves. Same format as content/street-smarts/store-separated.json. Ages 10-13: a little more mature, still calm. Threat implied, never shown: the driver stays in the car, never opens the door, never grabs, and drives off. Every kid line is 8 words or fewer. Rewards: stars and the badge only, no power and no fight bonus (Jay Q6a). Secret word and Mom/Dad follow J11. Helpers: crossing guard and bus driver (both in uniform).",
+  "status": "DRAFT",
+  "id": "busstop-ride",
+  "location": "bus-stop",
+  "ageBand": "10-13",
+  "topic": "A driver you don't know offers a ride from the bus stop",
+  "priorities": [
+    "awareness",
+    "boundary",
+    "voice",
+    "get-help"
+  ],
+  "characters": [
+    {
+      "id": "sensei",
+      "role": "Sensei",
+      "name": null,
+      "title": "Sensei"
+    },
+    {
+      "id": "driver",
+      "role": "Driver",
+      "name": null,
+      "title": null,
+      "note": "An ordinary adult in an ordinary car. Friendly voice, not scary. Stays in the car. Never opens the door, never grabs, never threatens. Drives away when the player says no."
+    },
+    {
+      "id": "guard",
+      "role": "Crossing guard",
+      "name": null,
+      "title": null,
+      "note": "In a bright safety vest. Calm and kind. The safe helper here."
+    },
+    {
+      "id": "grownup",
+      "role": "Player's grown-up",
+      "name": null,
+      "title": null,
+      "note": "Mom or Dad (ui.json grownups). Calm, warm, never angry."
+    }
+  ],
+  "speakers": {
+    "driver": "Driver",
+    "guard": "Crossing guard",
+    "grownup": "{grownup}"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "kind": "story",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "{player} waits at the bus stop after school."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The bus is running late today."
+        },
+        {
+          "speaker": "narrator",
+          "text": "A crossing guard and some kids are nearby."
+        },
+        {
+          "speaker": "sensei",
+          "text": "Let's look around first, {player}.",
+          "expression": "neutral",
+          "animation": "nod"
+        }
+      ]
+    },
+    {
+      "id": "spot",
+      "kind": "awareness",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Where is the safest place to wait?",
+          "id": "choice-spot",
+          "choices": [
+            {
+              "text": "Near the other kids and the guard.",
+              "stars": 1,
+              "next": "spot-good"
+            },
+            {
+              "text": "Alone, behind the bus shelter.",
+              "stars": 0,
+              "next": "spot-retry"
+            },
+            {
+              "text": "Off by the trees, out of sight.",
+              "stars": 0,
+              "next": "spot-retry"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "spot-good": [
+          {
+            "speaker": "sensei",
+            "text": "Good spot. People can see you there.",
+            "expression": "proud",
+            "animation": "nod"
+          }
+        ],
+        "spot-retry": [
+          {
+            "speaker": "sensei",
+            "text": "Let's see what could have gone differently.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "If you need help, who can see you?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try again."
+          }
+        ]
+      }
+    },
+    {
+      "id": "offer",
+      "kind": "choice",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A car slows and stops by the curb."
+        },
+        {
+          "speaker": "driver",
+          "text": "Hey! {grownup} asked me to pick you up.",
+          "expression": "happy"
+        },
+        {
+          "speaker": "narrator",
+          "text": "{player} doesn't know this driver."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Do they know your family's secret word?"
+        },
+        {
+          "speaker": "narrator",
+          "text": "What do you do?",
+          "id": "choice-ride",
+          "choices": [
+            {
+              "text": "Step back and say, \"No thanks.\"",
+              "stars": 1,
+              "next": "ride-good"
+            },
+            {
+              "text": "Walk over to the car window.",
+              "stars": 0,
+              "next": "ride-retry-window"
+            },
+            {
+              "text": "Get in. They know {grownup}'s name.",
+              "stars": 0,
+              "next": "ride-retry-in"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "ride-good": [
+          {
+            "speaker": "sensei",
+            "text": "Smart. Keep your distance from the car.",
+            "expression": "proud"
+          }
+        ],
+        "ride-retry-window": [
+          {
+            "speaker": "sensei",
+            "text": "Let's see what could have gone differently.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "How close do you need to answer?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try again."
+          }
+        ],
+        "ride-retry-in": [
+          {
+            "speaker": "sensei",
+            "text": "Let's see what could have gone differently.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Knowing a name isn't the secret word.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Only safe grown-ups know your secret word.",
+            "expression": "neutral"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try again."
+          }
+        ]
+      }
+    },
+    {
+      "id": "voice",
+      "kind": "voice",
+      "lines": [
+        {
+          "speaker": "driver",
+          "text": "Come on, it's fine. Hop in.",
+          "expression": "neutral"
+        },
+        {
+          "speaker": "narrator",
+          "text": "The driver keeps asking. What now?",
+          "id": "choice-voice",
+          "choices": [
+            {
+              "text": "Say loudly, \"NO! I don't know you!\"",
+              "stars": 1,
+              "next": "voice-good"
+            },
+            {
+              "text": "Say nothing and wait.",
+              "stars": 0,
+              "next": "voice-retry"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "voice-good": [
+          {
+            "speaker": "narrator",
+            "text": "{player} steps back toward the crossing guard."
+          },
+          {
+            "speaker": "narrator",
+            "text": "The car drives away."
+          }
+        ],
+        "voice-retry": [
+          {
+            "speaker": "sensei",
+            "text": "Let's see what could have gone differently.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "A loud voice gets people to look.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try again."
+          }
+        ]
+      }
+    },
+    {
+      "id": "help",
+      "kind": "get-help",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Who do you tell?",
+          "id": "choice-help",
+          "choices": [
+            {
+              "text": "The crossing guard, right now.",
+              "stars": 1,
+              "next": "help-good"
+            },
+            {
+              "text": "The bus driver, when the bus comes.",
+              "stars": 1,
+              "next": "help-good"
+            },
+            {
+              "text": "No one. It's over now.",
+              "stars": 0,
+              "next": "help-retry"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "help-good": [
+          {
+            "speaker": "guard",
+            "text": "Thank you for telling me.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "guard",
+            "text": "What color was the car?",
+            "expression": "neutral"
+          },
+          {
+            "speaker": "player",
+            "text": "It was a blue car."
+          },
+          {
+            "speaker": "guard",
+            "text": "Good noticing. I'll let your school know.",
+            "expression": "happy"
+          }
+        ],
+        "help-retry": [
+          {
+            "speaker": "sensei",
+            "text": "Let's see what could have gone differently.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Could that driver ask another kid tomorrow?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try again."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ending",
+      "kind": "story",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The bus pulls up, and {player} climbs on."
+        },
+        {
+          "speaker": "narrator",
+          "text": "At home, {player} tells {grownup} too."
+        },
+        {
+          "speaker": "grownup",
+          "text": "I'm proud of you for telling me.",
+          "expression": "happy"
+        }
+      ]
+    },
+    {
+      "id": "sensei-reflect",
+      "kind": "reflection",
+      "lines": [
+        {
+          "speaker": "sensei",
+          "text": "What did you do that helped?",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "sensei",
+          "text": "You waited where people could see you.",
+          "expression": "proud"
+        },
+        {
+          "speaker": "sensei",
+          "text": "You kept your distance and used your voice.",
+          "expression": "proud"
+        },
+        {
+          "speaker": "sensei",
+          "text": "Then you told safe grown-ups.",
+          "expression": "proud"
+        },
+        {
+          "speaker": "sensei",
+          "text": "Awareness is your first defense.",
+          "expression": "happy",
+          "animation": "bow"
+        }
+      ]
+    }
+  ],
+  "stars": {
+    "max": 3,
+    "rule": "Best choice on the first try at spot, ride and help earns 1 star each (voice is required to continue, like the store). A retry still finishes and can be replayed for all 3 stars.",
+    "note": "Street Smarts power is 0 (Jay Q6a)."
+  },
+  "starChoices": [
+    "choice-spot",
+    "choice-ride",
+    "choice-help"
+  ],
+  "badge": {
+    "id": "badge-bus-stop",
+    "name": "Bus Stop Badge",
+    "earned": "You earned the Bus Stop Badge!",
+    "book": "Stayed aware, said no and told helpers.",
+    "rule": "Location set done: every scenario at this location with at least 2 stars (core-design section 12). Shows in the Book (L10)."
+  },
+  "townLight": {
+    "location": "bus-stop",
+    "line": "The bus stop glows on the town map!",
+    "note": "Looks only. The Bus Stop spot on the town map lights up when the badge is earned. No power."
+  }
+}
