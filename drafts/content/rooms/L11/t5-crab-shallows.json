@@ -1,0 +1,108 @@
+{
+  "id": "t5-crab-shallows",
+  "name": "Crab Shallows",
+  "kind": "battle",
+  "minBeltTier": 5,
+  "floorSet": "quiet-river",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.##............##.#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..##..........##..#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "mix": "L11 swap: every Shield -> Ladle Lobbers.",
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 9,
+      "row": 5,
+      "wave": 1
+    },
+    {
+      "enemy": "ladle-lobber",
+      "column": 10,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 9,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 5,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 9,
+      "row": 5,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
+      "row": 5,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 7,
+      "wave": 3
+    }
+  ],
+  "artProps": "Layout copied from lantern-room. Theme and props from the quiet-river draft room \"crab-shallows\". Two sandbars with shells; shallow water ripples on the floor.",
+  "signs": [
+    "Shells keep soft hearts safe."
+  ]
+}

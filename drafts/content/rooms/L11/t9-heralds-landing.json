@@ -1,0 +1,62 @@
+{
+  "id": "t9-heralds-landing",
+  "name": "The Herald's Landing",
+  "kind": "boss",
+  "minBeltTier": 9,
+  "floorSet": "storm-stair",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "##########D#########",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........C........#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "storm-herald",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 5,
+      "wave": 2
+    }
+  ],
+  "artProps": "Layout copied from keepers-hall. Theme and props from the storm-stair draft room \"heralds-landing\". A wide windy platform in the clouds; the Storm Herald stands tall in the middle with ribbons of wind.",
+  "signs": [
+    "Listen for the calm.",
+    "A bell rings from the top."
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "id": "t6-smiths-rush",
+  "name": "Smith's Rush",
+  "kind": "challenge",
+  "minBeltTier": 6,
+  "floorSet": "forge-of-courage",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "challenge": {
+    "seconds": 120,
+    "text": "Finish in 2 minutes for a better chest!",
+    "inTimeText": "In time!",
+    "outOfTimeText": "Busy forge! You still earned a chest.",
+    "outOfTimeShort": "Time's up!"
+  },
+  "tiles": [
+    "#####D#####D#####D####",
+    "#....................#",
+    "#..........C.........#",
+    "#....................#",
+    "#..##............##..#",
+    "#....................#",
+    "#..##............##..#",
+    "#....................#",
+    "#....................#",
+    "#..........P.........#",
+    "#....................#",
+    "######################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "brute",
+      "column": 4,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "shield",
+      "column": 16,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "shield",
+      "column": 5,
+      "row": 4,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 10,
+      "row": 4,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 4,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 8,
+      "row": 6,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 13,
+      "row": 6,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 8,
+      "wave": 3
+    },
+    {
+      "enemy": "brute",
+      "column": 4,
+      "row": 3,
+      "wave": 4
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 4,
+      "wave": 4
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 4,
+      "wave": 4
+    },
+    {
+      "enemy": "swarmer",
+      "column": 8,
+      "row": 6,
+      "wave": 4
+    }
+  ],
+  "artProps": "Layout copied from gauntlet. Theme and props from the forge-of-courage draft room \"smiths-rush\". A big forge clock above the door, a bucket of cool water in each corner.",
+  "signs": [
+    "Strong hands, kind heart."
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "id": "t4-pebble-path",
+  "name": "Pebble Path",
+  "kind": "battle",
+  "minBeltTier": 4,
+  "floorSet": "giants-steps",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..#....#....#...#.#",
+    "#..................#",
+    "#..................#",
+    "#..#....#....#...#.#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "mix": "L11 swap: every Swarmers -> Spark Sprites.",
+  "enemies": [
+    {
+      "enemy": "shield",
+      "column": 4,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 7,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 11,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 15,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 7,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 11,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 15,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 18,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 4,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 11,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 15,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 18,
+      "row": 3,
+      "wave": 3
+    }
+  ],
+  "artProps": "Layout copied from pillar-court. Theme and props from the giants-steps draft room \"pebble-path\". Flat stepping stones along a worn path; the stair-shaped blocks in the corners are the old steps.",
+  "signs": [
+    "One step at a time."
+  ]
+}

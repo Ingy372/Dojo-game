@@ -1,0 +1,23 @@
+{
+  "id": "t10-bell-nook",
+  "name": "Bell Nook",
+  "kind": "treasure",
+  "minBeltTier": 10,
+  "floorSet": "summit",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#.#.......#.#",
+    "#.....C.....#",
+    "#.#.......#.#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from treasure-vault. Theme and props from the summit draft room \"bell-nook\". A small bronze bell on a hook; the chest is a travel trunk with a clean sash on top.",
+  "signs": [
+    "Ring the bell for the whole town."
+  ]
+}

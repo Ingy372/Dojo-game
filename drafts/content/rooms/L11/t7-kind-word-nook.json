@@ -1,0 +1,23 @@
+{
+  "id": "t7-kind-word-nook",
+  "name": "Kind Word Nook",
+  "kind": "treasure",
+  "minBeltTier": 7,
+  "floorSet": "hall-of-echoes",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#.#.......#.#",
+    "#.....C.....#",
+    "#.#.......#.#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from treasure-vault. Theme and props from the hall-of-echoes draft room \"kind-word-nook\". A smooth stone with a hollow for whispers; the chest is a small music box.",
+  "signs": [
+    "Whisper a kind word to the stone."
+  ]
+}

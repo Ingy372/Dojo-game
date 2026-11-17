@@ -1,5 +1,7 @@
 # R-G2B: tower tiers 4 to 10 (Green to Black)
 
+**Nov 16, 2026 (L11-S):** for launch, this plan is replaced by `drafts/planning/L11-SPEC.md` (tiers 4–10 as remixes of the existing rooms and enemies, one Guardian each). The new enemies here are saved for after launch; the Guardian names, moves and freed lines are still the source.
+
 Written Nov 1, 2026 by the Researcher & Planner. Docs only, no game code. Plain words for Jay first, then the tables.
 
 **Sources:** `drafts/content/enemies/bestiary-plan.json` (enemies and Guardians), `drafts/content/rooms/ember-kitchens-brief.md` (the room pattern), `content/elites/elites.json` (live elite rules), `power-and-progression-redesign.md` (Jay's "floors that need the new move"), `R-G2B-balance-check.md` (numbers) and the incoming-art READMEs (art). Nothing here is a number I made up. Where a number is missing, it says who sets it.

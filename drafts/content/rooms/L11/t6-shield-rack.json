@@ -1,0 +1,23 @@
+{
+  "id": "t6-shield-rack",
+  "name": "Shield Rack",
+  "kind": "treasure",
+  "minBeltTier": 6,
+  "floorSet": "forge-of-courage",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#.#.......#.#",
+    "#.....C.....#",
+    "#.#.......#.#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from treasure-vault. Theme and props from the forge-of-courage draft room \"shield-rack\". A rack of round shields; the chest is a smith's tool chest with a red lid.",
+  "signs": [
+    "Shields are for helping."
+  ]
+}

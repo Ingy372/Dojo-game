@@ -1,0 +1,85 @@
+{
+  "id": "t9-storm-gate",
+  "name": "The Storm Gate",
+  "kind": "challenge",
+  "minBeltTier": 9,
+  "floorSet": "storm-stair",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "challenge": {
+    "seconds": 90,
+    "text": "Finish in 90 seconds for a better chest!",
+    "inTimeText": "In time!",
+    "outOfTimeText": "Loud storm! You still earned a chest.",
+    "outOfTimeShort": "Time's up!"
+  },
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#.........C........#",
+    "#..##..........##..#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..##..........##..#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "earliestRoom": 4,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "spark-sprite",
+      "column": 4,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 8,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 12,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 16,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "dough-blob",
+      "column": 10,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "ladle-lobber",
+      "column": 15,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "rolling-pin",
+      "column": 5,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 5,
+      "wave": 3
+    }
+  ],
+  "artProps": "Layout copied from supper-rush. Theme and props from the storm-stair draft room \"storm-gate\". A tall iron gate swirled with cloud; a lightning rod in each corner.",
+  "signs": [
+    "Even storms pass."
+  ]
+}
