@@ -1,0 +1,23 @@
+{
+  "id": "t10-lamp-stand",
+  "name": "The Lamp Stand",
+  "kind": "rest",
+  "minBeltTier": 10,
+  "floorSet": "summit",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#..#.....#..#",
+    "#.....S.....#",
+    "#..#.....#..#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from quiet-shrine. Theme and props from the summit draft room \"lamp-stand\". An empty lamp stand glowing softly, two cushions, and a view of the whole town below.",
+  "signs": [
+    "The great lamp waits. Rest first."
+  ]
+}

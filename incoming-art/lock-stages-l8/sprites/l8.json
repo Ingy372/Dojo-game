@@ -1,0 +1,86 @@
+{
+  "kind": "L8-A1 art (not imported)",
+  "stageRings": {
+    "files": {
+      "stage2": "stage-rings/stage-2.png",
+      "stage3": "stage-rings/stage-3.png",
+      "stage4": "stage-rings/stage-4.png"
+    },
+    "size": [
+      128,
+      128
+    ],
+    "at2x": "<name>@2x.png 256 x 256",
+    "anchorPx": [
+      64,
+      64
+    ],
+    "drawOrder": "BEHIND the family medallion: stage ring first, then the medallion on top, same centre and size",
+    "stage1": "no ring (the plain medallion)",
+    "stageFromRank": {
+      "1": 1,
+      "3": 2,
+      "6": 3,
+      "9": 4
+    },
+    "usedBy": "every family; the ring is shared, not tinted"
+  },
+  "medallions": {
+    "lock-wrist": {
+      "file": "medallions/lock-wrist.png",
+      "size": [
+        128,
+        128
+      ],
+      "at2x": "lock-wrist@2x.png",
+      "anchorPx": [
+        64,
+        64
+      ],
+      "family": "lock-wrist (Lock group B, placeholder name)",
+      "rim": "#6870cc",
+      "note": "Same medallion kit, size and margin as icons-slots (PB-07)."
+    },
+    "lock-arm": {
+      "file": "medallions/lock-arm.png",
+      "size": [
+        128,
+        128
+      ],
+      "at2x": "lock-arm@2x.png",
+      "anchorPx": [
+        64,
+        64
+      ],
+      "family": "lock-arm (Lock group A, placeholder name)",
+      "rim": "#6870cc",
+      "note": "Arm bar picture. Replaces nothing yet: the old padlock stays the not-open-yet icon."
+    }
+  },
+  "holdRing": {
+    "frame": [
+      96,
+      48
+    ],
+    "at2x": "<name>@2x.png, frames 192 x 48*2",
+    "frames": 6,
+    "fps": 8,
+    "loop": true,
+    "layout": "one row, frames left to right, no padding",
+    "anchorPx": [
+      48,
+      24
+    ],
+    "anchorNote": "the enemy's feet point",
+    "pixelsPerTile": 80,
+    "ringWidthTiles": 0.9600000000000002,
+    "scaleNote": "scale so the ring is about 2.6 x the enemy radius wide (radiusInData), e.g. swarmer 0.3 -> 0.78 tiles",
+    "drawOrder": "hold-ring-back, then the enemy, then hold-ring-front",
+    "reducedMotion": "hold-ring-back-static.png + hold-ring-front-static.png (no pulse)",
+    "colours": {
+      "fill": "#b0baff",
+      "outline": "#242860",
+      "not": "no gold or yellow: GREAT!, the dizzy stars and the warning cue use those"
+    }
+  }
+}

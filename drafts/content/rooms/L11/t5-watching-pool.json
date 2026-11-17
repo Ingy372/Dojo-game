@@ -1,0 +1,62 @@
+{
+  "id": "t5-watching-pool",
+  "name": "The Watching Pool",
+  "kind": "boss",
+  "minBeltTier": 5,
+  "floorSet": "quiet-river",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "##########D#########",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........C........#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "river-watcher",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 6,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 6,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 5,
+      "wave": 2
+    }
+  ],
+  "artProps": "Layout copied from keepers-hall. Theme and props from the quiet-river draft room \"watching-pool\". A wide shallow pool with stepping stones; a tall water heron stands in the middle, its feathers streaked with mud.",
+  "signs": [
+    "Be still, and the water clears.",
+    "Even a heron likes kind words."
+  ]
+}

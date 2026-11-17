@@ -1,0 +1,89 @@
+{
+  "id": "t6-cub-crowd",
+  "name": "Cub Crowd",
+  "kind": "battle",
+  "minBeltTier": 6,
+  "floorSet": "forge-of-courage",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D####D####D###",
+    "#................#",
+    "#................#",
+    "#................#",
+    "#................#",
+    "#......####......#",
+    "#................#",
+    "#................#",
+    "#................#",
+    "#.......P........#",
+    "#................#",
+    "##################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "brute",
+      "column": 15,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 13,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 9,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 15,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 13,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 9,
+      "row": 4,
+      "wave": 3
+    }
+  ],
+  "artProps": "Layout copied from training-yard. Theme and props from the forge-of-courage draft room \"cub-crowd\". A cozy corner cushion pile; small cool ember piles on the floor.",
+  "signs": [
+    "Many little cubs. Step with care."
+  ]
+}
