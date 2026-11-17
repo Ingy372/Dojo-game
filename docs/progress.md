@@ -1266,3 +1266,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - New Tower Path room (grass, path, hedges, Tower foot) with the story cards, two stone waves with the red circles, stumble stars and the help arrow, then the bow at the Tower door.
 - New Training Hall with three practice dummies and the big dummy; STRIKE glows when focus is full; then swarmers. First Steps Hall keeps the Brute, DASH and Insight; vault and Keep end on the close line.
 - Proof: `docs/shots/tut-b3/tut-verify.mjs` plays the whole floor as a new student with real taps, 20/0 at 844x390 and 667x375. Suite 1543, both builds OK.
+
+## TUT-B4 — tutorial fixes from the TUT-B3 playtest (2026-11-17)
+- Stones: six waves (1, 1, 2, 2, 3, 3 stones) with a calm 3.2 s pause each, about 30 s when every wave is dodged; still help after 2 misses and a pass on the 3rd. Each wave's pause lives in the room file (`pauseSeconds`).
+- The vault chest shows with its tip and counts the moment it opens; the door stays shut until then.
+- Success lines show alone for 1.5 s before the next tip, and play waits for that tip. No room word on tutorial doors (the boss door keeps BOSS), no combo count in the Training Hall, the Shadows! tip clears with the room, and the Brute stands still under its tip until Got it.
+- Home: a saved run is offered first; on "No" every welcome reward plays as before, on "Yes" they play on the bow home.
+- Proof: `docs/shots/tut-b4/tut-verify.mjs`, 56/0 at 667x375 and 844x390.

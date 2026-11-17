@@ -76,6 +76,8 @@ export interface StoneWave {
   fillTicks: number;
   /** TUT-B3: where Sensei points once help is on, picked in the room file (clear of scenery). Null: the nearest clear tile. */
   safeSpot: Vec2 | null;
+  /** TUT-B4: the calm pause before this wave drops (and before each retry of it). */
+  pauseTicks: number;
 }
 
 export interface EnemySpawn {
@@ -265,7 +267,7 @@ function loadEnemySpawns(id: string, data: unknown, walls: boolean[][], width: n
   });
 }
 
-/** TUT-B1: reads the optional "hazards": { "stones": [{ "fillSeconds": 1.5, "spots": [{ "column", "row" }], "safeSpot"?: { "column", "row" } }] }. */
+/** TUT-B1: reads the optional "hazards": { "stones": [{ "fillSeconds": 1.5, "spots": [{ "column", "row" }], "safeSpot"?: { "column", "row" }, "pauseSeconds"?: 3 }] }. */
 function loadStoneWaves(id: string, data: unknown, walls: boolean[][], width: number, height: number): StoneWave[] {
   if (data === undefined) return [];
   const stones = (data as Record<string, unknown> | null)?.stones;
@@ -290,7 +292,11 @@ function loadStoneWaves(id: string, data: unknown, walls: boolean[][], width: nu
     if (safeSpot && spots.some((sp) => distance(sp, safeSpot) <= STONES.radius + MOVEMENT.playerRadius)) {
       throw new RoomError(id, `stone wave ${n}: "safeSpot" must be clear of every red circle`);
     }
-    return { spots, fillTicks: secondsToTicks(w.fillSeconds), safeSpot };
+    if (w.pauseSeconds !== undefined && (typeof w.pauseSeconds !== 'number' || !(w.pauseSeconds > 0))) {
+      throw new RoomError(id, `stone wave ${n}: "pauseSeconds" must be above 0`);
+    }
+    const pauseTicks = secondsToTicks(typeof w.pauseSeconds === 'number' ? w.pauseSeconds : STONES.gapSeconds);
+    return { spots, fillTicks: secondsToTicks(w.fillSeconds), safeSpot, pauseTicks };
   });
 }
 

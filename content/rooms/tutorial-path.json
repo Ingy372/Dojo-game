@@ -4,7 +4,7 @@
   "kind": "battle",
   "tutorial": true,
   "legend": "# = hedge, . = grass or path, P = player start, D = the Tower door, G = the glowing spot at the end of the path (tutorial only)",
-  "notes": "TUT-B3, tutorial room 1 (TUT-P1 beats 1-3): walk the path to the glowing spot by the Tower door, then the stones fall in 3 waves (1, then 2, then 3 spots; the red circle fills first). The stones wait until the glowing spot is reached. When they are done the door opens and Sensei asks for the bow. No enemies, no grade. The client draws grass, the path, hedges and the Tower foot (TUT-A1 art). Each wave's safeSpot is an open path tile well clear of the Tower steps and lamps.",
+  "notes": "TUT-B3, tutorial room 1 (TUT-P1 beats 1-3): walk the path to the glowing spot by the Tower door, then the stones fall in 6 waves (1, 1, 2, 2, 3, 3 spots; a calm 3.2 s pause before each, and the red circle fills first), about 30 s when every wave is dodged (TUT-B4). The stones wait until the glowing spot is reached. When they are done the door opens and Sensei asks for the bow. No enemies, no grade. The client draws grass, the path, hedges and the Tower foot (TUT-A1 art). Each wave's safeSpot is an open path tile well clear of the Tower steps and lamps.",
   "tiles": [
     "##D###D###D##",
     "#...........#",
@@ -23,7 +23,8 @@
   "hazards": {
     "stones": [
       {
-        "fillSeconds": 1.5,
+        "pauseSeconds": 3.2,
+        "fillSeconds": 2.2,
         "spots": [
           {
             "column": 7,
@@ -36,7 +37,22 @@
         }
       },
       {
-        "fillSeconds": 1.2,
+        "pauseSeconds": 3.2,
+        "fillSeconds": 2.0,
+        "spots": [
+          {
+            "column": 6,
+            "row": 3
+          }
+        ],
+        "safeSpot": {
+          "column": 6,
+          "row": 5
+        }
+      },
+      {
+        "pauseSeconds": 3.2,
+        "fillSeconds": 2.0,
         "spots": [
           {
             "column": 6,
@@ -53,7 +69,26 @@
         }
       },
       {
-        "fillSeconds": 1.2,
+        "pauseSeconds": 3.2,
+        "fillSeconds": 1.8,
+        "spots": [
+          {
+            "column": 7,
+            "row": 3
+          },
+          {
+            "column": 5,
+            "row": 4
+          }
+        ],
+        "safeSpot": {
+          "column": 6,
+          "row": 5
+        }
+      },
+      {
+        "pauseSeconds": 3.2,
+        "fillSeconds": 1.8,
         "spots": [
           {
             "column": 5,
@@ -66,6 +101,28 @@
           {
             "column": 9,
             "row": 3
+          }
+        ],
+        "safeSpot": {
+          "column": 6,
+          "row": 5
+        }
+      },
+      {
+        "pauseSeconds": 3.2,
+        "fillSeconds": 1.6,
+        "spots": [
+          {
+            "column": 6,
+            "row": 3
+          },
+          {
+            "column": 8,
+            "row": 3
+          },
+          {
+            "column": 7,
+            "row": 4
           }
         ],
         "safeSpot": {

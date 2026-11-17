@@ -442,7 +442,7 @@ export const BOW = {
 export const STONES = {
   /** The red circle's size around each stone spot, in tiles (melon-sized stone, kid-sized circle). */
   radius: 0.9,
-  /** A short pause before the first wave and between drops, in seconds. */
+  /** The pause before a wave drops when its room file names none, in seconds. */
   gapSeconds: 1,
   /** How long a stumble holds the hero still, in seconds (stars, then on again). */
   stumbleSeconds: 0.8,
