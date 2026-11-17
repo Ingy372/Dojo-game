@@ -1986,3 +1986,10 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - The loadout's Seal line ends with "Stage N" and an evolved Seal card wears its rings; the Book's self-defense sheet says "<family> Seal: Stage N". The PB-05 no-digits test now allows the "Stage N" label.
 - PLACEHOLDERS: the words in `content/abilities/seal-evolution.json` (copied from the L8-C1 draft) and the code-drawn bronze rings (`art/stageRings.ts`, one ring per stage past 1, dark outline). `incoming-art/lock-stages-l8` waits for Jay's OK.
 - Fix (Manager, #544 review): a Seal with no slot picture yet (Escape) shows its first technique's Book icon as its medallion, on the evolution card and the loadout (`addSealMedallion`). The Book sheet's earned status ink is now `#8b4513` (5.6:1 on the cream paper, was 4.4:1).
+
+## L11-B1 — the seven belt Guardians (2026-11-17)
+- Each file copies the Hearth Cook's three attacks (same ticks, so every wind-up is at least MIN_WINDUP_TICKS) and its three phases, with the L11-SPEC section 3 move names. Base 495/17/30 like the Floor Keeper; R-BAL-12 found it in band at belts 4-10.
+- Each Guardian is checked in the bands test only at its own belt (new `toBelt`), because it only appears there. No Challenge exception was needed.
+- Names, colours, intro, "freed" and lore come from `drafts/content/bosses/` and the bestiary plan. The draft text about unbuilt moves (puddles, copying, gusts) was left out. Tells, sensei lines, tips and descriptions are PLACEHOLDER (said in each file's notes) until L11-C2.
+- Ember Knight keeps the draft colour #d9532b; the Artist's concept sheet asks whether to use #e8772e instead. It only shows before art lands.
+- A test makes sure each Guardian is used only in a boss room with `minBeltTier` equal to its belt. No room uses them yet.

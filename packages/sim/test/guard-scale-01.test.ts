@@ -31,12 +31,16 @@ describe('GUARD-SCALE-01: the factors are content data', () => {
   });
 
   it('every real Guardian is scaled by the data, and nothing else is', () => {
-    expect(guardians().map((d) => d.id).sort()).toEqual(['floor-keeper', 'hearth-cook']);
+    expect(guardians().map((d) => d.id).sort()).toEqual(
+      ['echo-mask', 'ember-knight', 'floor-keeper', 'hearth-cook', 'lost-lightbearer', 'river-watcher', 'root-keeper', 'stone-giant', 'storm-herald'],
+    );
+    const big: Record<string, number> = guardianScaleRaw.bigGuardians;
     for (const d of Object.values(content.enemies)) {
       const base = rawDef(d.id);
       if (d.boss) {
-        expect(d.scale, d.id).toBe(G);
-        expect(d.radius, d.id).toBeCloseTo(base.radius * G, 10);
+        const want = big[d.id] ?? G;
+        expect(d.scale, d.id).toBe(want);
+        expect(d.radius, d.id).toBeCloseTo(base.radius * want, 10);
       } else {
         expect(d.scale, d.id).toBe(1);
         expect(d, d.id).toEqual(base);
@@ -100,8 +104,9 @@ describe('GUARD-SCALE-01: hitbox and attack reach match the bigger body', () => 
   it('radius scales fully; danger circles by attackGrowth; reach and start range by the extra radius x reachGrowth', () => {
     for (const d of guardians()) {
       const base = rawDef(d.id);
-      const grow = base.radius * (G - 1) * RG;
-      const circle = 1 + (G - 1) * AG;
+      const g = d.scale;
+      const grow = base.radius * (g - 1) * RG;
+      const circle = 1 + (g - 1) * AG;
       const pairs: [EnemyAttackDef, EnemyAttackDef][] = allAttacks(base).map((a, i) => [a, allAttacks(d)[i]]);
       expect(pairs.length, d.id).toBeGreaterThan(0);
       for (const [a, b] of pairs) {

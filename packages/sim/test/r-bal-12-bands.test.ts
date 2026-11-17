@@ -17,7 +17,7 @@ const MID: Band = { hits: [5, 10], koMin: 8 };
 const HEAVY: Band = { hits: [10, 20], koMin: 5 };
 const BOSS: Band = { hits: [40, 80], koMin: 5 };
 /** Band and first belt for every live enemy. A new live enemy must be added here (see the last test). */
-const LIVE: Record<string, { band: Band; fromBelt: number }> = {
+const LIVE: Record<string, { band: Band; fromBelt: number; toBelt?: number }> = {
   swarmer: { band: SMALL, fromBelt: 1 },
   shield: { band: MID, fromBelt: 1 },
   bopper: { band: MID, fromBelt: 2 },
@@ -30,6 +30,14 @@ const LIVE: Record<string, { band: Band; fromBelt: number }> = {
   'ladle-lobber': { band: MID, fromBelt: 3 },
   'rolling-pin': { band: MID, fromBelt: 3 },
   'hearth-cook': { band: BOSS, fromBelt: 3 },
+  // L11-B1: one Guardian per belt 4-10, only ever met at its own belt (L11-SPEC section 3).
+  'stone-giant': { band: BOSS, fromBelt: 4, toBelt: 4 },
+  'river-watcher': { band: BOSS, fromBelt: 5, toBelt: 5 },
+  'ember-knight': { band: BOSS, fromBelt: 6, toBelt: 6 },
+  'echo-mask': { band: BOSS, fromBelt: 7, toBelt: 7 },
+  'root-keeper': { band: BOSS, fromBelt: 8, toBelt: 8 },
+  'storm-herald': { band: BOSS, fromBelt: 9, toBelt: 9 },
+  'lost-lightbearer': { band: BOSS, fromBelt: 10, toBelt: 10 },
 };
 
 /**
@@ -56,8 +64,8 @@ export function bandCheck(id: string, belt: number, student: string) {
 
 describe('R-BAL-12: live enemies stay in the #188 bands at every belt', () => {
   it('has one scale row per belt', () => expect(ENEMY_TRAINING_SCALE.length).toBe(10));
-  for (const [id, { band, fromBelt }] of Object.entries(LIVE)) {
-    for (let belt = fromBelt; belt <= 10; belt++) {
+  for (const [id, { band, fromBelt, toBelt = 10 }] of Object.entries(LIVE)) {
+    for (let belt = fromBelt; belt <= toBelt; belt++) {
       for (const student of Object.keys(ARTISTS)) {
         it(`${id} at belt ${belt} for ${student}`, () => {
           const r = bandCheck(id, belt, student);
