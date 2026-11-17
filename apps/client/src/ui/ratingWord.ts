@@ -10,11 +10,20 @@ type Box = { x0: number; x1: number; y0: number; y1: number };
 
 /**
  * The word's top edge: as near `prefTop` as possible, with the word (plus `drift` px above it, for the
- * fade-up) clear of every box and inside [minTop, maxBottom]. Falls back to `prefTop` when nothing fits.
+ * fade-up) clear of every box and inside [minTop, maxBottom]. `tiers` go from must-avoid ("!" cues) to
+ * nice-to-avoid; when no spot clears them all, the last tier is let go first. Falls back to `prefTop`.
  */
-export function ratingWordTop(prefTop: number, w: { x0: number; x1: number; h: number }, drift: number, boxes: Box[], minTop: number, maxBottom: number): number {
-  const clear = (top: number) =>
-    top - drift >= minTop && top + w.h <= maxBottom && boxes.every((b) => b.x1 < w.x0 || b.x0 > w.x1 || b.y1 < top - drift || b.y0 > top + w.h);
-  const tops = [prefTop, ...boxes.flatMap((b) => [b.y1 + 6 + drift, b.y0 - 6 - w.h])].sort((a, b) => Math.abs(a - prefTop) - Math.abs(b - prefTop));
-  return tops.find(clear) ?? prefTop;
+export function ratingWordTop(prefTop: number, w: { x0: number; x1: number; h: number }, drift: number, tiers: Box[][], minTop: number, maxBottom: number): number {
+  for (let n = tiers.length; n > 0; n--) {
+    const boxes = tiers.slice(0, n).flat();
+    const clear = (top: number) => top - drift >= minTop && top + w.h <= maxBottom && !boxes.some((b) => overlaps(b, { x0: w.x0, x1: w.x1, y0: top - drift, y1: top + w.h }));
+    const tops = [prefTop, ...boxes.flatMap((b) => [b.y1 + 6 + drift, b.y0 - 6 - w.h])].sort((a, b) => Math.abs(a - prefTop) - Math.abs(b - prefTop));
+    const top = tops.find(clear);
+    if (top !== undefined) return top;
+  }
+  return prefTop;
+}
+
+export function overlaps(a: Box, b: Box): boolean {
+  return !(a.x1 < b.x0 || a.x0 > b.x1 || a.y1 < b.y0 || a.y0 > b.y1);
 }

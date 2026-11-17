@@ -109,7 +109,7 @@ import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
 import { NAMED_PACK, NamedView } from '../game/named';
 import { reducedMotion } from '../game/motion';
-import { RATING, ratingWordTop } from '../ui/ratingWord';
+import { RATING, overlaps, ratingWordTop } from '../ui/ratingWord';
 import { THROWN_LOOK, getUpAngle, thrownPose } from '../ui/thrownPose';
 import { drawPatternTell } from '../game/patternTells';
 import { loadSave, writeSave } from '../game/save';
@@ -309,6 +309,8 @@ export class GameScene extends Phaser.Scene {
   private afterHelpUp: (() => void) | null = null;
   /** Live floating texts and pop words, cleared when the hero goes down (Q-PREM-F4). */
   private popups = new Set<Phaser.GameObjects.Text>();
+  /** FX-GREAT: popWord's words on screen; the praise ones hide while a "!" cue is under them. */
+  private words = new Set<Phaser.GameObjects.Text>();
   /** Tutorial floor (K24a): where the step flow is, the tip's Got it button, and the success line to lead the next tip. */
   private tflow: TutorialFlow | null = null;
   private gotItBtn: Phaser.GameObjects.Text | null = null;
@@ -545,6 +547,7 @@ export class GameScene extends Phaser.Scene {
       this.afterHelpUp?.();
     });
     this.popups.clear();
+    this.words.clear();
     this.heroPops = [];
     this.leaving = false;
     this.picker = null;
@@ -721,6 +724,7 @@ export class GameScene extends Phaser.Scene {
     this.frameBoss();
     this.syncEnemyViews();
     for (const e of this.world.enemies) this.drawEnemy(e, blend, now);
+    this.hideWordsOverCues();
     this.buttons.counterWindow(this.counterWindowOpen);
 
     this.buttons.update(p);
@@ -2667,18 +2671,34 @@ export class GameScene extends Phaser.Scene {
     }
     const c = this.room.chest;
     if (c && this.chestImgs[0]?.alpha) boxes.push(toScreen((c.x - 0.6) * TILE, (c.y - 0.7) * TILE, (c.x + 0.6) * TILE, (c.y + 0.6) * TILE));
-    // K24b: the wind-up cue ("!" in a ring) over an enemy about to attack.
-    for (const e of this.world.enemies) {
-      const v = e.mode === 'windup' ? this.enemyViews.get(e.id) : undefined;
-      if (!v) continue;
-      const at = this.windupCueSpot(v.container.x, v.container.y, v.top, e.def.radius * TILE);
-      boxes.push(toScreen(at.x - 22, at.y - 22, at.x + 22, at.y + 22));
-    }
+    boxes.push(...this.cueBoxes());
     if (withMessage && this.message.visible) {
       const m = this.message.getBounds();
       boxes.push({ x0: m.left, x1: m.right, y0: m.top, y1: m.bottom });
     }
     return boxes;
+  }
+
+  /** FX-GREAT: a "!" that turns up (or walks) under a praise word is never hidden; the word hides until it's clear. */
+  private hideWordsOverCues(): void {
+    if (this.words.size === 0) return;
+    const cues = this.cueBoxes();
+    for (const t of this.words) {
+      if (t.style.color !== RATING.color) continue;
+      const b = t.getBounds();
+      t.setVisible(!cues.some((c) => overlaps(c, { x0: b.left, x1: b.right, y0: b.top, y1: b.bottom })));
+    }
+  }
+
+  /** K24b: screen boxes of the wind-up cues ("!" in a ring) over enemies about to attack. */
+  private cueBoxes(): { x0: number; x1: number; y0: number; y1: number }[] {
+    return this.world.enemies.flatMap((e) => {
+      const v = e.mode === 'windup' ? this.enemyViews.get(e.id) : undefined;
+      if (!v) return [];
+      const at = this.windupCueSpot(v.container.x, v.container.y, v.top, e.def.radius * TILE);
+      const b = this.toScreen({ left: at.x - 22, right: at.x + 22, top: at.y - 22, bottom: at.y + 22 });
+      return [{ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom }];
+    });
   }
 
   /** Q-PREMIUM-2 M7: true when a door label's screen box touches a loot or decoration toast. */
@@ -3402,28 +3422,26 @@ export class GameScene extends Phaser.Scene {
       .setAlpha(rating ? RATING.alpha : 1);
     this.cameras.main.ignore(t);
     // K23c: keep off the doors, the chest, the centre message, Sensei's banner and the 'Room clear!' line.
-    // FX-GREAT: and off every enemy, "!" cue (protectedBoxes has the cues), the hero and the action buttons.
+    // FX-GREAT: and off, in this order of importance, every "!" cue, enemy, other word (e.g. "Wave 2"), the hero and buttons.
     const rm = reducedMotion();
     const drift = rm ? 0 : 20;
-    const boxes = this.protectedBoxes(true);
-    for (const b of [this.senseiText?.active ? this.senseiText.getBounds() : null, this.gradeLine?.active ? this.gradeLine.getBounds() : null])
-      if (b) boxes.push({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
-    for (const e of this.world.enemies) {
+    const box = (b: { left: number; right: number; top: number; bottom: number }) => ({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
+    const enemies = this.world.enemies.flatMap((e) => {
       const v = e.mode === 'defeated' ? undefined : this.enemyViews.get(e.id);
-      if (!v) continue;
-      const b = this.toScreen(v.container.getBounds());
-      boxes.push({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
-    }
-    const hero = this.playerOnScreen();
-    boxes.push({ x0: hero.left, x1: hero.right, y0: hero.top, y1: hero.bottom });
-    for (const c of this.buttons.objects) {
-      if (!c.visible) continue;
-      const b = c.getBounds();
-      boxes.push({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
-    }
-    const top = ratingWordTop(height * 0.3 - t.height / 2, { x0: width / 2 - t.width / 2, x1: width / 2 + t.width / 2, h: t.height }, drift, boxes, 4, height - 4);
+      return v ? [box(this.toScreen(v.container.getBounds()))] : [];
+    });
+    const mine = [box(this.playerOnScreen()), ...this.buttons.objects.filter((c) => c.visible).map((c) => box(c.getBounds()))];
+    // Full size and its fade-up path, even while it is still growing in.
+    const words = [...this.words].map((o) => ({ x0: o.x - o.width / 2, x1: o.x + o.width / 2, y0: o.y - o.height / 2 - drift, y1: o.y + o.height / 2 }));
+    const rest = this.protectedBoxes(true);
+    for (const b of [this.senseiText?.active ? this.senseiText.getBounds() : null, this.gradeLine?.active ? this.gradeLine.getBounds() : null]) if (b) rest.push(box(b));
+    const top = ratingWordTop(height * 0.3 - t.height / 2, { x0: width / 2 - t.width / 2, x1: width / 2 + t.width / 2, h: t.height }, drift, [this.cueBoxes(), enemies, words, mine, rest], 4, height - 4);
     t.setY(top + t.height / 2);
+    // Only when nothing else fits: an older word under this one makes way rather than the two piling up.
+    const mineBox = { x0: width / 2 - t.width / 2, x1: width / 2 + t.width / 2, y0: top - drift, y1: top + t.height };
+    [...this.words].forEach((o, i) => overlaps(words[i], mineBox) && this.dropPopup(o));
     this.popups.add(t);
+    this.words.add(t);
     if (!rm) {
       t.setScale(0.4);
       this.tweens.add({ targets: t, scale: 1, duration: 160, ease: 'Back.Out' });
@@ -3433,6 +3451,7 @@ export class GameScene extends Phaser.Scene {
 
   private dropPopup(t: Phaser.GameObjects.Text): void {
     this.popups.delete(t);
+    this.words.delete(t);
     this.tweens.killTweensOf(t);
     t.destroy();
   }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CUE_COLORS, RATING, ratingWordTop } from '../../../apps/client/src/ui/ratingWord';
+import { CUE_COLORS, RATING, overlaps, ratingWordTop } from '../../../apps/client/src/ui/ratingWord';
 
 const hue = (hex: string) => {
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
@@ -25,20 +25,28 @@ describe('FX-GREAT rating words', () => {
 
   const word = { x0: 280, x1: 380, h: 40 };
   it('stays at its spot when nothing is in the way', () => {
-    expect(ratingWordTop(100, word, 20, [{ x0: 0, x1: 100, y0: 90, y1: 150 }], 4, 371)).toBe(100);
+    expect(ratingWordTop(100, word, 20, [[{ x0: 0, x1: 100, y0: 90, y1: 150 }]], 4, 371)).toBe(100);
   });
 
   it('moves off an enemy or "!" box, to the nearest clear spot, drift included', () => {
     const enemy = { x0: 300, x1: 360, y0: 110, y1: 170 };
-    const top = ratingWordTop(100, word, 20, [enemy], 4, 371);
+    const top = ratingWordTop(100, word, 20, [[enemy]], 4, 371);
     expect(top + word.h < enemy.y0 || top - 20 > enemy.y1).toBe(true);
     expect(top).toBe(enemy.y0 - 6 - word.h);
   });
 
   it('keeps on screen, and stays put when no spot is clear', () => {
     const wall = { x0: 0, x1: 667, y0: 0, y1: 375 };
-    expect(ratingWordTop(100, word, 20, [wall], 4, 371)).toBe(100);
-    const top = ratingWordTop(20, word, 20, [{ x0: 300, x1: 360, y0: 10, y1: 80 }], 4, 371);
+    expect(ratingWordTop(100, word, 20, [[wall]], 4, 371)).toBe(100);
+    const top = ratingWordTop(20, word, 20, [[{ x0: 300, x1: 360, y0: 10, y1: 80 }]], 4, 371);
     expect(top - 20).toBeGreaterThanOrEqual(4);
+  });
+
+  it('#530 QA: when a banner leaves no fully clear spot, it still never lands on a "!" cue', () => {
+    const cue = { x0: 300, x1: 344, y0: 70, y1: 114 };
+    const banner = { x0: 0, x1: 667, y0: 0, y1: 60 };
+    const below = { x0: 0, x1: 667, y0: 120, y1: 371 };
+    const top = ratingWordTop(70, word, 20, [[cue], [], [banner, below]], 4, 371);
+    expect(overlaps(cue, { x0: word.x0, x1: word.x1, y0: top - 20, y1: top + word.h })).toBe(false);
   });
 });

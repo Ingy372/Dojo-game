@@ -59,7 +59,7 @@ const startRun = async (pg) => {
 
 // Puts the room's enemies where the test wants them (screen points), winding up, then fires a real
 // perfectCounter event and reads the GREAT! word, the enemies and the "!" cues back.
-const scenario = (pg, spots) => pg.evaluate(async (spots) => {
+const scenario = (pg, spots, banner) => pg.evaluate(async ([spots, banner]) => {
   const s = window.game.scene.getScene('Game');
   s.menuOpen = true;
   const cam = s.cameras.main;
@@ -76,6 +76,8 @@ const scenario = (pg, spots) => pg.evaluate(async (spots) => {
   });
   for (const t of [...s.popups]) s.dropPopup(t);
   await new Promise((r) => setTimeout(r, 250));
+  // #530 QA: the Wave banner up top, as at the start of a new wave.
+  if (banner) s.popWord('Wave 2', '#ff8a80', 40);
   s.playEvents([{ kind: 'perfectCounter', playerId: s.me, enemyId: live[0].id, chain: 1 }]);
   const word = () => [...s.popups].find((t) => t.text === 'GREAT!');
   const frames = [];
@@ -89,8 +91,10 @@ const scenario = (pg, spots) => pg.evaluate(async (spots) => {
   const hb = s.playerOnScreen();
   const hero = { x0: hb.left, x1: hb.right, y0: hb.top, y1: hb.bottom };
   const buttons = s.buttons.objects.filter((c) => c.visible).map((c) => { const b = c.getBounds(); return { x0: b.left, x1: b.right, y0: b.top, y1: b.bottom }; });
-  return { n: live.length, seen, hero, buttons, word: { x0: r.left, x1: r.right, y0: r.top, y1: r.bottom, color: t.style.color, size: t.style.fontSize, alpha: +t.alpha.toFixed(2) }, frames, enemies, cues, pref: s.scale.height * 0.3, blockers: s.protectedBoxes(true) };
-}, spots);
+  const ow = [...s.popups].find((o) => o.text === 'Wave 2');
+  const other = ow ? (() => { const b = ow.getBounds(); return { x0: b.left, x1: b.right, y0: b.top, y1: b.bottom }; })() : null;
+  return { n: live.length, seen, hero, buttons, other, word: { x0: r.left, x1: r.right, y0: r.top, y1: r.bottom, color: t.style.color, size: t.style.fontSize, alpha: +t.alpha.toFixed(2) }, frames, enemies, cues, pref: s.scale.height * 0.3, blockers: s.protectedBoxes(true) };
+}, [spots, banner]);
 const hits = (a, b) => !(a.x1 <= b.x0 || a.x0 >= b.x1 || a.y1 <= b.y0 || a.y0 >= b.y1);
 
 for (const [W, H] of sizes) for (const rm of ['1', '0']) for (const student of STUDENTS) {
@@ -104,10 +108,12 @@ for (const [W, H] of sizes) for (const rm of ['1', '0']) for (const student of S
     open: [[W * 0.2, H * 0.8]],
     'enemy-on-spot': [[W / 2, H * 0.3]],
     crowd: [[W / 2, H * 0.3], [W / 2 - 40, H * 0.5], [W / 2 + 50, H * 0.18]],
+    'wave-banner': [[W / 2, H * 0.3], [W / 2 - 60, H * 0.5], [W / 2 + 30, H * 0.12]],
+    'wave-banner-low': [[W / 2 + 10, H * 0.42], [W / 2 - 50, H * 0.62], [W / 2 + 60, H * 0.22]],
   };
   for (const [name, spots] of Object.entries(cases)) {
     const where = `${W}x${H} rm=${rm} ${student} ${name}`;
-    const r = await scenario(pg, spots);
+    const r = await scenario(pg, spots, name.startsWith('wave'));
     const shotAt = `${OUT}/${name}-${tag}.png`;
     await pg.screenshot({ path: shotAt });
     if (spots.length > r.n) check(where, `room has ${r.n} enemies, ${spots.length} wanted`, true, 'checked with what is there');
@@ -116,12 +122,47 @@ for (const [W, H] of sizes) for (const rm of ['1', '0']) for (const student of S
     check(where, 'GREAT! 34px, 75% see-through', r.word.size === '34px' && r.word.alpha === 0.75, `${r.word.size} ${r.word.alpha}`);
     check(where, 'GREAT! covers no enemy', r.enemies.every((e) => !hits(r.word, e)), JSON.stringify(r.word));
     check(where, 'GREAT! covers no "!" cue', r.cues.every((c) => !hits(r.word, c)));
-    check(where, 'GREAT! covers neither the hero nor a button', !hits(r.word, r.hero) && r.buttons.every((x) => !hits(r.word, x)));
+    // Nice-to-have, not a pass/fail: when the "!" cues and enemies leave no other spot, the word may sit on the hero.
+    if (hits(r.word, r.hero) || r.buttons.some((x) => hits(r.word, x))) rows.push(`NOTE  ${where}  GREAT! touches the hero or a button (no spot clear of cues, enemies and hero)`);
+    if (r.other) check(where, 'GREAT! clear of the Wave word', !hits(r.word, r.other), JSON.stringify(r.other));
     check(where, 'GREAT! on screen', r.word.y0 >= 0 && r.word.y1 <= H && r.word.x0 >= 0 && r.word.x1 <= W);
     if (rm === '1') check(where, 'Reduced motion: no grow, no drift', r.frames.every((f) => f && f.scale === 1 && f.y === r.frames[0].y), JSON.stringify(r.frames));
     else check(where, 'grows in', r.frames[0].scale < 1 && r.frames[2].scale === 1, JSON.stringify(r.frames));
     if (name === 'open') check(where, 'no enemy in the way: stays near its usual spot (it may step off the room name)', Math.abs((r.word.y0 + r.word.y1) / 2 - r.pref) < 30, `centre ${(r.word.y0 + r.word.y1) / 2} want ${r.pref}`);
   }
+  // #530 QA: a "!" that turns up under the word after it popped: the word hides until it's clear.
+  const late = await pg.evaluate(async () => {
+    const s = window.game.scene.getScene('Game');
+    for (const t of [...s.popups]) s.dropPopup(t);
+    const live = s.world.enemies.filter((e) => e.mode !== 'defeated');
+    live.forEach((e) => { e.mode = 'chase'; e.pos = { x: -50, y: -50 }; s.enemyViews.get(e.id).prev = { ...e.pos }; });
+    await new Promise((r) => setTimeout(r, 150));
+    s.playEvents([{ kind: 'perfectCounter', playerId: s.me, enemyId: live[0].id, chain: 1 }]);
+    await new Promise((r) => setTimeout(r, 120));
+    const t = [...s.popups].find((o) => o.text === 'GREAT!');
+    const before = t.visible;
+    const cam = s.cameras.main;
+    const z = (() => { const r = s.toScreen({ left: 0, right: 100, top: 0, bottom: 0 }); return (r.right - r.left) / 100; })();
+    const v0 = s.enemyViews.get(live[0].id).container;
+    const tile = 64;
+    const e = live[0];
+    const v = s.enemyViews.get(e.id);
+    // Put the enemy so its "!" sits right on the word.
+    for (let i = 0; i < 2; i++) {
+      const b = t.getBounds();
+      const at = s.windupCueSpot(0, 0, v.top, e.def.radius * tile);
+      const wx = cam.worldView.x + b.centerX / z - at.x, wy = cam.worldView.y + b.centerY / z - at.y;
+      const ratio = v.container.x / e.pos.x || tile;
+      e.pos = { x: wx / (Number.isFinite(ratio) && ratio > 0 ? ratio : tile), y: wy / (Number.isFinite(ratio) && ratio > 0 ? ratio : tile) };
+      e.mode = 'windup'; e.modeTicks = 40; e.windupTotal = 60; e.attackCenter = { ...e.pos }; v.prev = { ...e.pos };
+      await new Promise((r) => setTimeout(r, 60));
+    }
+    const wb = t.getBounds();
+    const over = s.cueBoxes().some((c) => !(c.x1 < wb.left || c.x0 > wb.right || c.y1 < wb.top || c.y0 > wb.bottom));
+    return { before, over, after: t.visible };
+  });
+  check(`${W}x${H} rm=${rm} ${student}`, 'a ! that turns up under GREAT! hides the word', late.before && (!late.over || !late.after), JSON.stringify(late));
+  await pg.screenshot({ path: `${OUT}/late-cue-${tag}.png` });
   // GREAT x3 chain line: same sky blue, see-through.
   const chain = await pg.evaluate(async () => { const s = window.game.scene.getScene('Game'); s.world.players[s.me].counterChain = 3; s.menuOpen = false; await new Promise((r) => setTimeout(r, 300)); s.menuOpen = true; const c = s.chainText; return { text: c.text, color: c.style.color, alpha: c.alpha, visible: c.visible }; });
   check(`${W}x${H} rm=${rm} ${student}`, 'GREAT xN line sky blue, 75%', chain.visible && chain.text === 'GREAT x3' && chain.color === '#7fd4ff' && chain.alpha === 0.75, JSON.stringify(chain));
