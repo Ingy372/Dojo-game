@@ -1,0 +1,341 @@
+{
+  "notes": "DRAFT for Jay's read and edit (L17-C, Jay t1031u Nov 16). Not for release until Jay approves. Same format as content/street-smarts/store-separated.json, so loadScenario reads it. Threats are implied, never shown: the stranger is an ordinary, friendly-looking grown-up who never touches, grabs or threatens. Every kid line is 8 words or fewer. Rewards: stars and the location badge only, no power and no fight bonus (Jay Q6a, Nov 14). Helpers, secret word and Mom/Dad follow J11.",
+  "status": "DRAFT",
+  "id": "park-treat",
+  "location": "park",
+  "ageBand": "6-9",
+  "topic": "A grown-up you don't know offers a treat at the park",
+  "priorities": [
+    "awareness",
+    "boundary",
+    "get-help"
+  ],
+  "characters": [
+    {
+      "id": "sensei",
+      "role": "Sensei",
+      "name": null,
+      "title": "Sensei"
+    },
+    {
+      "id": "stranger",
+      "role": "Grown-up at the park",
+      "name": null,
+      "title": null,
+      "note": "An ordinary adult the player doesn't know. Smiling, not scary or mean. Stays a few steps away. Never grabs, follows or threatens. Leaves quietly."
+    },
+    {
+      "id": "grownup",
+      "role": "Player's grown-up",
+      "name": null,
+      "title": null,
+      "note": "Mom or Dad (ui.json grownups). Calm, warm, never angry."
+    }
+  ],
+  "speakers": {
+    "stranger": "Grown-up",
+    "grownup": "{grownup}"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "kind": "story",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "{player} is at the park with {grownup}."
+        },
+        {
+          "speaker": "narrator",
+          "text": "{grownup} sits on a bench by the swings."
+        },
+        {
+          "speaker": "narrator",
+          "text": "{player} plays on the slide nearby."
+        },
+        {
+          "speaker": "narrator",
+          "text": "A grown-up {player} doesn't know walks over."
+        },
+        {
+          "speaker": "stranger",
+          "text": "Hi there! Want some candy?",
+          "expression": "happy"
+        },
+        {
+          "speaker": "sensei",
+          "text": "Take a big breath, {player}.",
+          "expression": "neutral",
+          "animation": "nod"
+        },
+        {
+          "speaker": "sensei",
+          "text": "You know what to do.",
+          "expression": "happy"
+        }
+      ]
+    },
+    {
+      "id": "treat",
+      "kind": "choice",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "What do you say?",
+          "id": "choice-treat",
+          "choices": [
+            {
+              "text": "No thank you.",
+              "stars": 1,
+              "next": "treat-good"
+            },
+            {
+              "text": "Yes please! Take the candy.",
+              "stars": 0,
+              "next": "treat-retry"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "treat-good": [
+          {
+            "speaker": "sensei",
+            "text": "Good. You can always say no thank you.",
+            "expression": "proud",
+            "animation": "nod"
+          }
+        ],
+        "treat-retry": [
+          {
+            "speaker": "sensei",
+            "text": "Let's see what could have gone differently.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Does {grownup} know this grown-up?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try again."
+          }
+        ]
+      }
+    },
+    {
+      "id": "move",
+      "kind": "choice",
+      "lines": [
+        {
+          "speaker": "stranger",
+          "text": "Come on, I have more over here.",
+          "expression": "neutral"
+        },
+        {
+          "speaker": "narrator",
+          "text": "What do you do now?",
+          "id": "choice-move",
+          "choices": [
+            {
+              "text": "Walk to {grownup} right away.",
+              "stars": 1,
+              "next": "move-good"
+            },
+            {
+              "text": "Stay and keep talking.",
+              "stars": 0,
+              "next": "move-retry-talk"
+            },
+            {
+              "text": "Go with them to see.",
+              "stars": 0,
+              "next": "move-retry-go"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "move-good": [
+          {
+            "speaker": "sensei",
+            "text": "Yes. Go to your safe grown-up.",
+            "expression": "proud"
+          },
+          {
+            "speaker": "narrator",
+            "text": "{player} walks fast to {grownup}'s bench."
+          }
+        ],
+        "move-retry-talk": [
+          {
+            "speaker": "sensei",
+            "text": "Let's see what could have gone differently.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Who is the safest person at the park?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try again."
+          }
+        ],
+        "move-retry-go": [
+          {
+            "speaker": "sensei",
+            "text": "Let's see what could have gone differently.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Where is {grownup} right now?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Only go places when {grownup} says yes.",
+            "expression": "neutral"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try again."
+          }
+        ]
+      }
+    },
+    {
+      "id": "tell",
+      "kind": "voice",
+      "lines": [
+        {
+          "speaker": "grownup",
+          "text": "Hi, sweetie. Is everything okay?",
+          "expression": "happy"
+        },
+        {
+          "speaker": "narrator",
+          "text": "What do you tell {grownup}?",
+          "id": "choice-tell",
+          "choices": [
+            {
+              "text": "A grown-up I don't know offered candy.",
+              "stars": 1,
+              "next": "tell-good"
+            },
+            {
+              "text": "Nothing. Let's keep playing.",
+              "stars": 0,
+              "next": "tell-retry"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "tell-good": [
+          {
+            "speaker": "grownup",
+            "text": "Thank you for telling me.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "grownup",
+            "text": "You can always tell me anything.",
+            "expression": "happy"
+          }
+        ],
+        "tell-retry": [
+          {
+            "speaker": "sensei",
+            "text": "Let's see what could have gone differently.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "How can {grownup} help if they don't know?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try again."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ending",
+      "kind": "story",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The grown-up with the candy walks away."
+        },
+        {
+          "speaker": "narrator",
+          "text": "{grownup} gives {player} a big hug."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Then they play catch together, smiling."
+        }
+      ]
+    },
+    {
+      "id": "sensei-reflect",
+      "kind": "reflection",
+      "lines": [
+        {
+          "speaker": "sensei",
+          "text": "What did you do that helped?",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "sensei",
+          "text": "You said no thank you.",
+          "expression": "proud"
+        },
+        {
+          "speaker": "sensei",
+          "text": "You went right to your safe grown-up.",
+          "expression": "proud"
+        },
+        {
+          "speaker": "sensei",
+          "text": "And you told them what happened.",
+          "expression": "proud"
+        },
+        {
+          "speaker": "sensei",
+          "text": "That is how you stay safe.",
+          "expression": "happy",
+          "animation": "bow"
+        }
+      ]
+    }
+  ],
+  "stars": {
+    "max": 3,
+    "rule": "Best choice on the first try at treat, move and tell earns 1 star each. A retry still finishes the scenario and can be replayed for all 3 stars.",
+    "note": "Street Smarts power is 0 (Jay Q6a). Stars and the badge are the reward."
+  },
+  "starChoices": [
+    "choice-treat",
+    "choice-move",
+    "choice-tell"
+  ],
+  "badge": {
+    "id": "badge-park",
+    "name": "Park Badge",
+    "earned": "You earned the Park Badge!",
+    "book": "Said no thanks, then told a grown-up.",
+    "rule": "Location set done: every scenario at this location with at least 2 stars (core-design section 12). Shows in the Book (L10)."
+  },
+  "townLight": {
+    "location": "park",
+    "line": "The park lights glow on the town map!",
+    "note": "Looks only. The Park spot on the town map lights up when the badge is earned. No power."
+  }
+}
