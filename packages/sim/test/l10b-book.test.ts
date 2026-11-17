@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { buildTraining, journalKinds, loadFeed, loadLessons, loadProfile, scrollLessons, type Now, type TrainingState } from '../src';
 import green from '../../../fixtures/4-green-belt.json';
 import lessonsData from '../../../content/tutorial/first-session-lessons.json';
-import { buildCubbies } from '../../../apps/client/src/ui/trophyCase';
+import { buildCubbies, shelfRows } from '../../../apps/client/src/ui/trophyCase';
 import { bookCubbies, tabCubbies } from '../../../apps/client/src/ui/book';
 import { testContent } from './load-content';
 
@@ -74,6 +74,14 @@ describe('L10-B the Book keeps an old save', () => {
       const c = monsters.find((m) => m.id === `trophy-${k.trophy.id}`)!;
       expect(c.earned).toBe(k.met);
     }
+  });
+
+  it('monster trophies start their own shelf row, and a wrapped row is marked so its label is not repeated', () => {
+    const rows = shelfRows(trophies, 4);
+    const first = rows.findIndex((r) => r.segments.some((sg) => sg.shelf === 'monsters'));
+    expect(rows[first].segments.map((sg) => sg.shelf)).toEqual(['monsters']);
+    for (const r of rows.slice(first + 1)) expect(r.segments.every((sg) => sg.shelf === 'monsters' && sg.cont)).toBe(true);
+    expect(rows[first].segments[0].cont).toBeUndefined();
   });
 
   it('nothing in the save changes', () => {

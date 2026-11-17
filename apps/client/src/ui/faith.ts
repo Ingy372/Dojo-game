@@ -41,13 +41,17 @@ export function drawBanner(scene: Phaser.Scene, add: Add, b: Box, t: TrainingSta
   add(g);
   const lit = bannerLetters(FAITH, t);
   const glyphs = FAITH.faithDoesBanner.acrostic.split('');
-  const cell = Math.min(24, (b.w - 12) / glyphs.length);
-  const x0 = b.x + (b.w - cell * glyphs.length) / 2 + cell / 2;
+  // A space takes half a cell; letters shrink with a narrow banner so they never touch.
+  const units = glyphs.reduce((n, ch) => n + (ch === ' ' ? 0.5 : 1), 0);
+  const cell = Math.min(24, (b.w - 12) / units);
+  const size = Math.min(20, Math.floor(cell * 1.2));
+  let cx = b.x + (b.w - cell * units) / 2;
   let li = 0;
-  glyphs.forEach((ch, i) => {
-    if (ch === ' ') return;
+  glyphs.forEach((ch) => {
+    if (ch === ' ') return void (cx += cell / 2);
     const on = lit[li++]?.lit;
-    text(scene, add, x0 + i * cell, b.y + b.h / 2 - 12, ch, 20, on ? GOLD : DIM, true, undefined, true).setName(`faith-letter-${ch}-${on ? 'lit' : 'dim'}`);
+    text(scene, add, cx + cell / 2, b.y + b.h / 2 - size * 0.6, ch, size, on ? GOLD : DIM, true, undefined, true).setName(`faith-letter-${ch}-${on ? 'lit' : 'dim'}`);
+    cx += cell;
   });
   const hit = scene.add.zone(b.x, b.y, b.w, Math.max(b.h, MIN_TAP)).setOrigin(0).setInteractive({ useHandCursor: true });
   hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, onTap);

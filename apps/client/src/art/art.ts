@@ -156,6 +156,21 @@ export function staticArt(scene: Phaser.Scene, pack: PackName, id: string): Stat
   return null;
 }
 
+/** The painted part of a static sprite's frame 0 (all layers, transparent edges trimmed), in frame pixels. */
+export function staticBounds(scene: Phaser.Scene, pack: PackName, id: string): { x: number; y: number; w: number; h: number } | null {
+  const data = register(scene, pack);
+  const s = staticArt(scene, pack, id);
+  if (!data || !s) return null;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const ids of Object.values(s.layers)) {
+    const f = data.frames[ids[0]];
+    if (!f) continue;
+    const [, , , w, h, tx, ty] = f;
+    x0 = Math.min(x0, tx); y0 = Math.min(y0, ty); x1 = Math.max(x1, tx + w); y1 = Math.max(y1, ty + h);
+  }
+  return x1 > x0 ? { x: x0, y: y0, w: x1 - x0, h: y1 - y0 } : null;
+}
+
 /** Every static sprite of a loaded pack, by id (empty until the pack is loaded). */
 export function staticSprites(scene: Phaser.Scene, pack: PackName): Record<string, StaticSprite> {
   const data = register(scene, pack);

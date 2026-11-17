@@ -45,6 +45,8 @@ export interface ShelfSegment {
   shelf: ShelfId;
   title: string;
   cubbies: Cubby[];
+  /** The shelf carries on from the row above (its label shows only at the top of a page). */
+  cont?: true;
 }
 
 /** A row of up to perRow cubbies; short shelves share a row, each with its own label. */
@@ -101,8 +103,11 @@ export function buildCubbies(t: TrophyInput): Cubby[] {
 
 /**
  * Pack cubbies into rows of perRow slots in shelf order. A short shelf shares its row with the
- * next shelf; a long one wraps to the next row (same title), so no slot is wasted.
+ * next shelf; a long one wraps to the next row (same title), so no slot is wasted. The Book's
+ * Lessons and Monsters shelves start their own row (L10-B).
  */
+const OWN_ROW: ReadonlySet<ShelfId> = new Set(['lessons', 'monsters']);
+
 export function shelfRows(cubbies: readonly Cubby[], perRow: number): ShelfRow[] {
   const rows: ShelfRow[] = [];
   let row: ShelfRow = { segments: [] };
@@ -111,13 +116,13 @@ export function shelfRows(cubbies: readonly Cubby[], perRow: number): ShelfRow[]
     const on = cubbies.filter((c) => c.shelf === s);
     let i = 0;
     while (i < on.length) {
-      if (used === perRow) {
+      if (used === perRow || (i === 0 && used > 0 && OWN_ROW.has(s))) {
         rows.push(row);
         row = { segments: [] };
         used = 0;
       }
       const take = on.slice(i, i + perRow - used);
-      row.segments.push({ shelf: s, title: words.shelves[s], cubbies: take });
+      row.segments.push({ shelf: s, title: words.shelves[s], cubbies: take, ...(i > 0 ? { cont: true } : {}) });
       used += take.length;
       i += take.length;
     }

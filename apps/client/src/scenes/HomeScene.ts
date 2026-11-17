@@ -57,7 +57,7 @@ import { KO, homePointer } from '../game/knockout';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { addSlotIcon, loadSlotIcons } from '../art/slotIcons';
-import { addStatic, loadArt, staticArt } from '../art/art';
+import { addStatic, loadArt, staticArt, staticBounds } from '../art/art';
 import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skinButton, woodSkin, HONEY_INK } from '../art/menu2';
 import { MENU2_PACK, artRarity } from '../art/menu2Frames';
 import { makeStandingCharacter } from '../art/player';
@@ -487,7 +487,9 @@ export class HomeScene extends Phaser.Scene {
     // Top bar: Dojo, Board, the title, and the student chip.
     const { bar } = L;
     // L10-B: Dojo, Board, Shop and Book, a little narrower so the banner keeps its room.
-    const bw = [PATH_BAR_W, PATH_BAR_W, SHOP_BUTTON_W, SHOP_BUTTON_W];
+    // On a small phone the buttons give the banner more room, so its letters stay clear.
+    const tight = bar.w < 760 ? 1 : 0;
+    const bw = [PATH_BAR_W - 12 * tight, PATH_BAR_W - 12 * tight, SHOP_BUTTON_W - 12 * tight, SHOP_BUTTON_W - 12 * tight];
     const bx = (i: number) => bar.x + bw.slice(0, i).reduce((a, w) => a + w + S2, 0);
     this.button(bx(0), bar.y, bw[0], bar.h, PW.back, 0x8a5a35, TYPE.body, () => this.backToDojo());
     this.button(bx(1), bar.y, bw[1], bar.h, PW.board, 0x3a3a4a, TYPE.body, () => this.setView('board'));
@@ -1673,12 +1675,12 @@ export class HomeScene extends Phaser.Scene {
     const nextId = cubbies.find((c) => !c.earned)?.id;
     let ry = top;
     if (cubbies.length === 0) this.text(x + w / 2, ry + S3, TROPHY_WORDS.empty, TYPE.body, '#f2e3c4', false, FONT, w).setOrigin(0.5, 0).setAlign('center');
-    for (const row of pages[this.page]) {
+    for (const [ri, row] of pages[this.page].entries()) {
       const cy = ry + TYPE.label + 4;
       const step = L.cubby + BOARD.cubby.gap;
       let slot = 0;
       for (const seg of row.segments) {
-        this.oneLine(this.text(sx + slot * step, ry, seg.title, TYPE.label, '#e8c48a', true), seg.cubbies.length * step - BOARD.cubby.gap, 10);
+        if (!seg.cont || ri === 0) this.oneLine(this.text(sx + slot * step, ry, seg.title, TYPE.label, '#e8c48a', true), seg.cubbies.length * step - BOARD.cubby.gap, 10);
         slot += seg.cubbies.length;
       }
       const rowCubbies = row.segments.flatMap((seg) => seg.cubbies);
@@ -1848,15 +1850,14 @@ export class HomeScene extends Phaser.Scene {
 
   /** L10-B: a monster trophy (or its silhouette) fitted into an s x s square, centred on x, y. */
   private cubbyArt(c: Cubby, x: number, y: number, s: number): Phaser.GameObjects.Container | null {
-    if (!c.art || !staticArt(this, c.art.pack, c.art.id)) return null;
-    const box = this.add.container(x, y);
+    const b = c.art && staticBounds(this, c.art.pack, c.art.id);
+    if (!c.art || !b) return null;
     const st = staticArt(this, c.art.pack, c.art.id)!;
-    // Small pixel art grows by a whole number to stay crisp; big art shrinks to fit.
-    const fit = Math.min(s / st.frameWidth, s / st.frameHeight);
-    const k = fit >= 1 ? Math.floor(fit) : fit;
-    // Bottom-centre anchored art: drop it so the picture's middle sits on y.
-    box.add(addStatic(this, c.art.pack, c.art.id, 0, (st.anchor[1] - st.frameHeight / 2) * k).map((p) => p.setScale(k)));
-    return box;
+    // Fit the painted part (not the whole frame, which has empty room above) into the square, centred on x, y.
+    const k = Math.min(s / b.w, s / b.h);
+    const ax = (st.anchor[0] - (b.x + b.w / 2)) * k;
+    const ay = (st.anchor[1] - (b.y + b.h / 2)) * k;
+    return this.add.container(x, y, addStatic(this, c.art.pack, c.art.id, ax, ay).map((p) => p.setScale(k)));
   }
 
   /** P-MENU2-i: plays an A-MENU2 overlay once (16 fps) over a cubby, centred. Skipped under Reduced motion. */

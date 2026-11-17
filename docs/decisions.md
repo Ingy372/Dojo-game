@@ -1963,3 +1963,4 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - Only buttons moved: the Dojo's Journal and Scroll buttons, the Board's Abilities tab and its Trophy Case / Fighting Style switch are gone. Saves are untouched, and Welcome Week still opens the lessons and the Journal at the same times. `l10b-book.test.ts` checks that an old save shows the same items.
 - Decisions row 9: the Board's "Last run" tab is now "Last climb" (`content/settings/last-run.json`).
 - Book words are in `content/settings/book.json`.
+- Review fixes (Manager, #541): monster trophies get their own shelf row with one label; their art is fitted by its painted part so it fills the cubby; on a small phone (Path bar under 760 wide) the four bar buttons are 12 px narrower and the banner letters size to their room, so FAITH DOES stays readable.

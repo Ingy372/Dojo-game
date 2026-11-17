@@ -1,11 +1,11 @@
 L10-B shots, Vite dev build, 844x390 and 667x375 (peek.mjs; FX=4-green-belt, lessons and two monster trophies set in the page for 03-07).
-PASS  both  Path bar: Dojo, Board, Shop, Book, FAITH DOES banner and the name chip all fit (the banner is narrower at 667)
+PASS  both  Path bar: Dojo, Board, Shop, Book, FAITH DOES banner and the name chip all fit; at 667 the 4 buttons are 12 px narrower so the banner letters stand apart (Manager, #541)
 PASS  both  Book: Back to Path plus 4 tabs (Moves, Monsters, Faith, Trophies), each 44+ tall
 PASS  both  Moves: Katas, Kicks, Self-defense shelves as in the old Trophy Case; Lessons shelf after them
 PASS  both  Lessons shelf: the 4 lessons seen, then Tutorial floor; its sheet has a Replay button
 PASS  both  Monsters: the Monster Journal drawn in the panel; page arrows 44 across; before it opens, one line says what it is for
 PASS  both  Faith: the FAITH DOES pages with paging arrows and dots
-PASS  both  Trophies: the Virtue stripes, then monster trophies (met with their trophy art, unmet as a silhouette with "Keep exploring!")
+PASS  both  Trophies: the Virtue stripes, then monster trophies on their own shelf with one label (met with their trophy art filling the cubby, unmet as a silhouette with "Keep exploring!")
 PASS  both  Training Board: Last climb / Gear / Fighting Style tabs; Fighting Style shows straight away (no part switch)
 PASS  667   Door arrow (TUT-B5) has a dark outline on the Keep floor; door-arrow.mjs 34/0
 PASS  both  no page errors
