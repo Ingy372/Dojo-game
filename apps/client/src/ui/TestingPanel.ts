@@ -17,8 +17,6 @@ const SOURCE_NAME: Record<PowerSource, string> = {
   virtues: 'Virtues',
   level: 'Level',
   gear: 'Gear',
-  streetSmarts: 'Street Smarts',
-  mastery: 'Mastery',
 };
 
 export interface TestingActions {
