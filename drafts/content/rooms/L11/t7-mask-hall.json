@@ -1,0 +1,62 @@
+{
+  "id": "t7-mask-hall",
+  "name": "The Echo Hall",
+  "kind": "boss",
+  "minBeltTier": 7,
+  "floorSet": "hall-of-echoes",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "##########D#########",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........C........#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "echo-mask",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 5,
+      "wave": 2
+    }
+  ],
+  "artProps": "Layout copied from keepers-hall. Theme and props from the hall-of-echoes draft room \"mask-hall\". A grand hall of mirrors and bells; a floating mask hangs in the middle, copying the student.",
+  "signs": [
+    "Be yourself. Be kind.",
+    "Say a kind word to the mask."
+  ]
+}

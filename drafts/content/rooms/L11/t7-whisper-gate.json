@@ -1,0 +1,61 @@
+{
+  "id": "t7-whisper-gate",
+  "name": "Whisper Gate",
+  "kind": "battle",
+  "minBeltTier": 7,
+  "floorSet": "hall-of-echoes",
+  "mix": "Two shields: Focus runs out, so win with Great Counters, not just Strikes. L11 swap: one Shield -> Brute.",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#....#........#....#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#....#........#....#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "earliestRoom": 5,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "brute",
+      "column": 6,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 13,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 10,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "shield",
+      "column": 6,
+      "row": 5,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 13,
+      "row": 5,
+      "wave": 3
+    }
+  ],
+  "artProps": "Layout copied from twin-shields. Theme and props from the hall-of-echoes draft room \"whisper-gate\". A tall arched gate with a stone ear on each side; soft sound-wave rings on the floor.",
+  "signs": [
+    "Say something kind. Hear it come back."
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "id": "t5-ferry-landing",
+  "name": "Ferry Landing",
+  "kind": "battle",
+  "minBeltTier": 5,
+  "floorSet": "quiet-river",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..######..######..#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "earliestRoom": 3,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "ladle-lobber",
+      "column": 9,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 6,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 6,
+      "wave": 1
+    },
+    {
+      "enemy": "dough-blob",
+      "column": 10,
+      "row": 6,
+      "wave": 2
+    },
+    {
+      "enemy": "ladle-lobber",
+      "column": 15,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 4,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 9,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 6,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 6,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 9,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 6,
+      "wave": 4
+    },
+    {
+      "enemy": "rolling-pin",
+      "column": 14,
+      "row": 6,
+      "wave": 4
+    }
+  ],
+  "artProps": "Layout copied from long-table-hall. Theme and props from the quiet-river draft room \"ferry-landing\". Wooden dock posts and a tied-up rowboat; flat stepping stones on the floor.",
+  "signs": [
+    "Wade in slowly. The water is kind."
+  ]
+}

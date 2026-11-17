@@ -1,0 +1,23 @@
+{
+  "id": "t8-story-shelf",
+  "name": "Story Shelf",
+  "kind": "treasure",
+  "minBeltTier": 8,
+  "floorSet": "root-library",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#.#.......#.#",
+    "#.....C.....#",
+    "#.#.......#.#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from treasure-vault. Theme and props from the root-library draft room \"story-shelf\". A shelf of helper stories; the chest is a thick old book with a clasp.",
+  "signs": [
+    "The last page is for you."
+  ]
+}
