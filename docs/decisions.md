@@ -810,6 +810,7 @@ Jay's Decisions A and C and the Manager's Decision B, from the R-BAL-12 doc:
 - **A (Jay):** training gives 40–60% of a typical student's power. The sim gives 51–54% at every belt.
 - **B (Manager):** one enemy multiplier per belt (`ENEMY_TRAINING_SCALE`, internal), and every stat a kid sees is a whole number. Content files keep BASE numbers. A run scales Health and Power with `Math.round`; Guard and timings never scale.
 - **C (Jay):** a class-only kid being a little weaker is OK. No nag or guilt messages; training only adds, never takes away. No timers, streaks or decay.
+  - *Clarified (L20-D, Nov 2026):* the Blessing now counts runs, not hours, and shows no countdown (OV-B5). The aura reads the best streak ever, which never goes down (LP-B3). So nothing ticks away or is lost.
 
 What is in the code:
 - `TRAINING_STATS` per belt: a sign-off adds Power + Health, a Training Point adds Health (counted up to 28 × tier), a stripe adds Guard. A piece keeps the value of the belt it was earned at.
@@ -1894,3 +1895,21 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Manager call (Jay asked for a slower tutorial):** core-design section 7's "under two minutes to the first Perfect Counter" is now **under five minutes**. "Under one minute to the first action" stays.
 - **Tutorial text:** every kid line is 8 words or fewer (TUT-L1, #519).
 - **Falling stones** follow the 5 TUT-L1 rules (#519), written into `drafts/planning/TUT-P1.md`: melon-size cartoon stones with a soft thump, framed as practice, the circle always fills first, slower help after 2 misses and done after 3, and a kind stumble line.
+## L20-D: docs now match Jay's Nov 14 answers (review 8.1)
+
+Jay's answers to the Fable review's questions (Nov 14, board section 000) applied to the docs. Status of each row in review section 8.1:
+
+| # | Row | Status |
+|---|---|---|
+| 1 | Real-training share | **Fixed.** About 60% everywhere (Q10 A): `CLAUDE.md` rule 10, core-design 3 and 12, framework, the redesign draft. The `config.ts` comment and staff report change in L16 (Programmer). |
+| 2 | Power Rating can't be full | **Fixed in docs.** Street Smarts and Mastery rows dropped, with five rows left (Q6 A). Code (`power.ts`) follows in L16. |
+| 3 | Self-defense count | **Fixed.** Stops at #40 (Q5 A). `curriculum.md` updated; Brown/Black → Black gets Review Trials (L9). |
+| 4 | Launch date | **Fixed.** Early April 2027 (Q4); the beta plan's "date is open" is struck. |
+| 5 | Bestiary | **Fixed.** The Monster Journal is the launch Bestiary; a bigger one is after launch (`CLAUDE.md`, core-design 13). |
+| 6 | When Insights unlock | **Fixed.** Core-design 13 lists Insights in the first session, as the game does. |
+| 7 | Catch-up items | **Open: needs a Manager call.** The fix (a move unlocks with the belt for effort promotions; catch-up shows only on the Path) changes game behavior, so it's a build item, not a doc edit. |
+| 8 | Kata | **Fixed.** Kata give their own kata power; stances are separate sign-offs (Q1 B). Core-design, framework and `curriculum.md` updated. |
+| 9 | Four "scrolls" | **Partly.** Names are now: Lesson Scroll (lessons, built; moves into the Book in L10), Sensei's Scrolls (quiz, after launch). Renaming the last-run screen and merging into the Book is L10 build work. |
+| 10 | Rooted/Flowing names | **Open: waits on Jay** (L14 rename words). |
+| 11 | Timers and streaks | **Fixed.** Decision C clarified: the Blessing counts runs (OV-B5) and the aura reads the best streak ever (LP-B3), so nothing ticks down. Framework's 48-hour line updated. |
+| 12 | Training Point ceiling | **Fixed in docs.** One number: 28 per belt (as the stats use). The staff report's 4-per-requirement count changes in L16. |
