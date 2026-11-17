@@ -1,0 +1,113 @@
+{
+  "id": "storm-herald",
+  "name": "The Storm Herald",
+  "notes": "L11-B1 (drafts/planning/L11-SPEC.md section 3): belt 9 Guardian, built only from Hearth Cook parts (two counterable circles, one dash-only lane, two helpers at two-thirds health). Base 495/17/30 like the Floor Keeper. Name, intro, freed and lore come from drafts/content/bosses/storm-herald.json and bestiary-plan.json. PLACEHOLDER: the phase tells, sensei lines, attack note, tip and description wait for L11-C2.",
+  "color": "#6c7fb8",
+  "boss": true,
+  "guardian": true,
+  "tier": "brown-black",
+  "band": "F5",
+  "maxHealth": 495,
+  "power": 17,
+  "guard": 30,
+  "radius": 0.85,
+  "moveSpeedTilesPerSecond": 1.6,
+  "sightRange": 20,
+  "attacks": [
+    {
+      "name": "thunder clap",
+      "strength": 1.0,
+      "startRange": 1.9,
+      "reach": 1.1,
+      "areaRadius": 1.3,
+      "telegraphTicks": 20,
+      "recoverTicks": 22
+    },
+    {
+      "name": "gust",
+      "strength": 0.8,
+      "startRange": 6.0,
+      "reach": 5.0,
+      "areaRadius": 0.9,
+      "telegraphTicks": 22,
+      "recoverTicks": 26,
+      "note": "Reach circle (PLACEHOLDER text until L11-C2)."
+    },
+    {
+      "name": "bolt",
+      "strength": 1.2,
+      "startRange": 6.0,
+      "reach": 6.0,
+      "areaRadius": 0.6,
+      "telegraphTicks": 26,
+      "recoverTicks": 30,
+      "dashOnly": true,
+      "shape": "lane",
+      "shapeCue": "lane",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": true
+    }
+  ],
+  "signature": "Bolt",
+  "phases": [
+    {
+      "id": "first",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "thunder clap",
+        "bolt"
+      ],
+      "tell": "Red circle. Get ready.",
+      "counterplay": "COUNTER the red circle.",
+      "senseiLine": "Red circle? COUNTER."
+    },
+    {
+      "id": "helpers",
+      "atHealthFraction": 0.66,
+      "attacks": [
+        "thunder clap",
+        "gust",
+        "bolt"
+      ],
+      "tell": "Little helpers join in.",
+      "counterplay": "Calm the little ones first.",
+      "senseiLine": "Little ones first."
+    },
+    {
+      "id": "last",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "gust",
+        "bolt",
+        "thunder clap",
+        "bolt"
+      ],
+      "tell": "A striped lane and double marks.",
+      "counterplay": "DASH out of the lane.",
+      "senseiLine": "Stripes coming. DASH."
+    }
+  ],
+  "parSeconds": 25,
+  "lines": {
+    "intro": "The storm is so loud. Can you hear the calm?",
+    "freed": "The wind is still. Listen. Someone is calling from the top.",
+    "senseiAfter": "You stayed steady inside the storm."
+  },
+  "description": "The Storm Herald makes red circles, calls swarmers, then sends a striped lane.",
+  "bestiary": {
+    "tip": "Counter the circles. Dash the stripes.",
+    "lore": {
+      "brown-black": "A tall figure of wind and lightning. It shouts the storm louder so no one hears the calm. Free it, and its light comes home."
+    }
+  },
+  "faithOverlayKey": "storm-herald",
+  "summon": {
+    "enemy": "swarmer",
+    "count": 2,
+    "atHealthFraction": 0.66
+  },
+  "lidWhileHelpers": true
+}

@@ -54,12 +54,14 @@ describe('R-CHALLENGE P3: SIM_VIEW is the smallest client view', () => {
 });
 
 describe('R-CHALLENGE P3: loader', () => {
-  it('loads noOverlapWithRedCircle on the Rolling Pin roll and the Hearth Cook lane only', () => {
+  it('loads noOverlapWithRedCircle on the Rolling Pin roll and the Guardian lanes only (Hearth Cook, plus the L11-B1 copies)', () => {
     expect(loadEnemy(rollingPinData).attacks[0].noOverlapWithRedCircle).toBe(true);
     const cook = loadEnemy(hearthCookData);
     expect(cook.attacks.filter((a) => a.noOverlapWithRedCircle).map((a) => a.counterable)).toEqual([false]);
     expect('noOverlapWithRedCircle' in loadEnemy(bruteData).attacks[0]).toBe(false);
-    expect(Object.values(testContent().enemies).flatMap((d) => d.attacks.filter((a) => a.noOverlapWithRedCircle)).length).toBe(2);
+    const flagged = Object.values(testContent().enemies).flatMap((d) => d.attacks.filter((a) => a.noOverlapWithRedCircle).map((a) => ({ d, a })));
+    expect(flagged.length).toBe(9);
+    for (const { d, a } of flagged) expect(d.id === 'rolling-pin' || (d.boss && a.counterable === false), d.id).toBe(true);
   });
 });
 

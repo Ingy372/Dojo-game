@@ -1297,3 +1297,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## L8-B3 — Seal stages (2026-11-17)
 - Seals now have stages (1 to 4 at ranks 1, 3, 6, 9). A new stage plays one evolution card after the sign-offs; a returning student sees the evolved Seals on the welcome card. The Fighting Style and the Book show each Seal's stage. Words and rings are marked placeholders.
 - Proof: `l8-b3-stages.test.ts`; `docs/shots/l8-b3/stages.mjs` 52/0 at 844x390 and 667x375, Reduced motion on and off.
+
+## L11-B1 — the seven belt Guardians (2026-11-17)
+- Enemy files for the Stone Giant, River Watcher, Ember Knight, Echo Mask, Root Keeper, Storm Herald and Lost Lightbearer (base 495/17/30, two counter circles, one dash-only lane, two helpers at two-thirds health). No room uses them yet, so play is unchanged until L11-B2. Fight text is a marked placeholder until L11-C2.
+- Proof: `r-bal-12-bands.test.ts` (each at its own belt), `l11-b1-guardians.test.ts`, `guard-scale-01.test.ts`.
