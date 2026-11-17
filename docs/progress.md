@@ -1241,3 +1241,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - VIRTUE shows only at full Focus, in its usual spot, with a short calm grow (none with Reduced motion). A white belt sees at most 4 buttons (3 until Virtue is ready).
 - New first-time line "Your Focus is full. Tap VIRTUE!" (`lesson-virtue-ready`), once ever, counted as the session's new thing, not on the Scroll.
 - Tests: `lp-b5-virtue-lesson` (3), `lessons` updated. Phone check `docs/shots/lp-b5/buttons-verify.mjs` at 667x375 and 932x430, Reduced motion on and off, four student profiles.
+
+## FX-GREAT — the GREAT! pop no longer hides the "!" (2026-11-16)
+- Jay: the big GREAT was the same yellow as the "!" warning and solid, so it blocked the view.
+- Rating words (GREAT!, GREAT xN, a Virtue or Insight name, big hit numbers) are sky blue (`apps/client/src/ui/ratingWord.ts`), never the cue's gold or red, at 75% opacity with a thinner outline. GREAT! is 34 px (was 54).
+- The pop picks the nearest clear spot to its usual place, off every enemy, "!" cue, the hero and the action buttons (as well as the doors, chest, Sensei's banner and room name it already avoided). Reduced motion: no grow and no drift, just a fade.
+- Tests: `fx-great` (5). Phone check `docs/shots/fx-great/great-verify.mjs` at 667x375 and 932x430, Reduced motion on and off, a White and an Orange profile, with an enemy on the usual spot and a crowd of three winding up (224 pass, 0 fail).

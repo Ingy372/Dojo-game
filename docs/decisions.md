@@ -1918,3 +1918,8 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 | 10 | Rooted/Flowing names | **Open: waits on Jay** (L14 rename words). |
 | 11 | Timers and streaks | **Fixed.** Decision C clarified: the Blessing counts runs (OV-B5) and the aura reads the best streak ever (LP-B3), so nothing ticks down. Framework's 48-hour line updated. |
 | 12 | Training Point ceiling | **Fixed in docs.** One number: 28 per belt (as the stats use). The staff report's 4-per-requirement count changes in L16. |
+
+## FX-GREAT: rating words are sky blue and step off enemies (2026-11-16)
+- Gold and red now mean only "an attack is coming" (the "!" cue). Every praise word uses one sky blue (#7fd4ff), at least 90 degrees of hue away from both, at 75% opacity so the arena shows through but it stays readable (Manager, Nov 16).
+- Big (heavy) hit numbers moved from gold to the same sky blue, for the same reason.
+- Placement: nearest clear spot to 30% height, above or below; if nothing on screen is clear it stays at its usual spot. The hero and the action buttons count as things to avoid.

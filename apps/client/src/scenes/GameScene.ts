@@ -109,6 +109,7 @@ import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
 import { NAMED_PACK, NamedView } from '../game/named';
 import { reducedMotion } from '../game/motion';
+import { RATING, ratingWordTop } from '../ui/ratingWord';
 import { THROWN_LOOK, getUpAngle, thrownPose } from '../ui/thrownPose';
 import { drawPatternTell } from '../game/patternTells';
 import { loadSave, writeSave } from '../game/save';
@@ -1068,8 +1069,8 @@ export class GameScene extends Phaser.Scene {
       if (chain >= 2) {
         // Brighter glow as the chain grows (it stops growing at x5).
         const glow = Math.min(chain, 5);
-        this.chainText.setText(`GREAT x${chain}`).setShadow(0, 0, '#ffd166', 4 + glow * 4, true, true);
-        this.chainText.setColor(glow >= 4 ? '#fff6d5' : '#ffd166');
+        this.chainText.setText(`GREAT x${chain}`).setShadow(0, 0, RATING.color, 4 + glow * 4, true, true);
+        this.chainText.setColor(glow >= 4 ? RATING.bright : RATING.color);
         if (grew) {
           this.tweens.killTweensOf(this.chainText);
           this.chainText.setScale(1.4);
@@ -1217,9 +1218,10 @@ export class GameScene extends Phaser.Scene {
       .setResolution(res)
       .setVisible(false);
     this.chainText = this.add
-      .text(0, 68, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166', stroke: '#14121c', strokeThickness: 5 })
+      .text(0, 68, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '20px', color: RATING.color, stroke: '#14121c', strokeThickness: 5 })
       .setOrigin(0.5, 0)
       .setResolution(res)
+      .setAlpha(RATING.alpha)
       .setVisible(false);
     this.message = this.add
       .text(0, 0, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 6, align: 'center' })
@@ -1383,7 +1385,7 @@ export class GameScene extends Phaser.Scene {
           const heavy = ev.move !== 'basic';
           this.sparks(e.pos, heavy ? 12 : 5, heavy ? COLORS.gold : 0xffffff);
           if (ev.playerId === this.me && this.shopFx.hit) playFx(this, this.shopFx.hit, e.pos.x * TILE, e.pos.y * TILE, this.fxPlace());
-          this.floatText(e.pos, `${ev.damage}`, heavy ? '#ffd166' : '#ffffff', heavy ? 30 : 22);
+          this.floatText(e.pos, `${ev.damage}`, heavy ? RATING.color : '#ffffff', heavy ? 30 : 22);
           // The character punches (the automatic jab only when standing, so walking stays smooth).
           if (ev.move === 'basic' && !this.world.players[ev.playerId].moving && !this.heroAction) this.heroDo('jab');
           else if (ev.move === 'strike') {
@@ -1422,7 +1424,7 @@ export class GameScene extends Phaser.Scene {
           this.impact(FEEL.perfect);
           this.flashScreen(0xffffff, 0.55, 220);
           this.ring(p.pos, COLORS.gold, 2.2);
-          this.popWord('GREAT!', '#ffd166', 54);
+          this.popWord('GREAT!', RATING.color, RATING.great);
           if (ev.playerId === this.me && !this.world.guide) this.lesson('firstPerfectUnaided');
           break;
         }
@@ -1551,7 +1553,7 @@ export class GameScene extends Phaser.Scene {
           sfx.stripe();
           this.flashScreen(0xffd166, 0.35, 260);
           this.ring(p.pos, COLORS.gold, 2.4);
-          this.popWord(p.virtue?.name ?? 'Virtue', '#ffd166', 40);
+          this.popWord(p.virtue?.name ?? 'Virtue', RATING.color, RATING.name);
           if (ev.healed > 0) this.floatText(p.pos, `+${ev.healed}`, '#5cd65c', 26, 1.2);
           break;
         }
@@ -1829,7 +1831,7 @@ export class GameScene extends Phaser.Scene {
           sfx.insight();
           // Sensei's banner first, so the pop-up can keep clear of it (K23c).
           this.tutorialTip('tutorial-insight');
-          this.popWord(name, '#ffd166', 34);
+          this.popWord(name, RATING.color, RATING.name);
           break;
         }
         case 'insightChoice':
@@ -1871,7 +1873,7 @@ export class GameScene extends Phaser.Scene {
       this.controls.reset();
       this.buttons.reset();
       const name = defs.find((d) => d.id === id)?.name ?? '';
-      this.popWord(name, '#ffd166', 34);
+      this.popWord(name, RATING.color, RATING.name);
     });
     this.cameras.main.ignore(this.picker.container);
   }
@@ -3392,27 +3394,41 @@ export class GameScene extends Phaser.Scene {
   private popWord(text: string, color: string, size: number): void {
     if (this.downed) return;
     const { width, height } = view(this);
+    const rating = color === RATING.color;
     const t = this.add
-      .text(width / 2, height * 0.3, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#14121c', strokeThickness: 8 })
+      .text(width / 2, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#14121c', strokeThickness: rating ? RATING.stroke : 8 })
       .setOrigin(0.5)
       .setResolution(window.devicePixelRatio || 1)
-      .setScale(0.4);
+      .setAlpha(rating ? RATING.alpha : 1);
     this.cameras.main.ignore(t);
-    // K23c: keep off the doors, the chest, the centre message, Sensei's banner and the 'Room clear!' line; it drifts up 20 px as it fades.
-    let top = t.y - t.height / 2 - 20;
-    const sb = this.senseiText?.active ? this.senseiText.getBounds() : null;
+    // K23c: keep off the doors, the chest, the centre message, Sensei's banner and the 'Room clear!' line.
+    // FX-GREAT: and off every enemy, "!" cue (protectedBoxes has the cues), the hero and the action buttons.
+    const rm = reducedMotion();
+    const drift = rm ? 0 : 20;
     const boxes = this.protectedBoxes(true);
-    const gl = this.gradeLine?.active ? this.gradeLine.getBounds() : null;
-    for (const b of [sb, gl]) if (b) boxes.push({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
-    for (let pass = 0; pass < 2; pass++)
-      for (const b of boxes) {
-        if (b.x1 < width / 2 - t.width / 2 || b.x0 > width / 2 + t.width / 2 || b.y1 < top || b.y0 > top + t.height + 20) continue;
-        top = Math.max(top, b.y1 + 6);
-      }
-    t.setY(top + 20 + t.height / 2);
-    this.tweens.add({ targets: t, scale: 1, duration: 160, ease: 'Back.Out' });
+    for (const b of [this.senseiText?.active ? this.senseiText.getBounds() : null, this.gradeLine?.active ? this.gradeLine.getBounds() : null])
+      if (b) boxes.push({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
+    for (const e of this.world.enemies) {
+      const v = e.mode === 'defeated' ? undefined : this.enemyViews.get(e.id);
+      if (!v) continue;
+      const b = this.toScreen(v.container.getBounds());
+      boxes.push({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
+    }
+    const hero = this.playerOnScreen();
+    boxes.push({ x0: hero.left, x1: hero.right, y0: hero.top, y1: hero.bottom });
+    for (const c of this.buttons.objects) {
+      if (!c.visible) continue;
+      const b = c.getBounds();
+      boxes.push({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
+    }
+    const top = ratingWordTop(height * 0.3 - t.height / 2, { x0: width / 2 - t.width / 2, x1: width / 2 + t.width / 2, h: t.height }, drift, boxes, 4, height - 4);
+    t.setY(top + t.height / 2);
     this.popups.add(t);
-    this.tweens.add({ targets: t, alpha: 0, y: t.y - 20, delay: 450, duration: 300, onComplete: () => this.dropPopup(t) });
+    if (!rm) {
+      t.setScale(0.4);
+      this.tweens.add({ targets: t, scale: 1, duration: 160, ease: 'Back.Out' });
+    }
+    this.tweens.add({ targets: t, alpha: 0, y: t.y - drift, delay: 450, duration: 300, onComplete: () => this.dropPopup(t) });
   }
 
   private dropPopup(t: Phaser.GameObjects.Text): void {

@@ -72,7 +72,7 @@ export class ActionButtons {
     scene.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown, this);
   }
 
-  get objects(): Phaser.GameObjects.GameObject[] {
+  get objects(): Phaser.GameObjects.Container[] {
     return this.all().map((b) => b.container);
   }
 
