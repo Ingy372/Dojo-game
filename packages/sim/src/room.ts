@@ -2,8 +2,8 @@
 // Positions are measured in tiles: the top-left corner of the room is (0, 0)
 // and the center of tile (column 3, row 2) is (3.5, 2.5).
 
-import { secondsToTicks } from './config';
-import type { Vec2 } from './math';
+import { MOVEMENT, STONES, secondsToTicks } from './config';
+import { distance, type Vec2 } from './math';
 
 const WALL = '#';
 const FLOOR = '.';
@@ -74,6 +74,8 @@ export interface Room {
 export interface StoneWave {
   spots: Vec2[];
   fillTicks: number;
+  /** TUT-B3: where Sensei points once help is on, picked in the room file (clear of scenery). Null: the nearest clear tile. */
+  safeSpot: Vec2 | null;
 }
 
 export interface EnemySpawn {
@@ -263,7 +265,7 @@ function loadEnemySpawns(id: string, data: unknown, walls: boolean[][], width: n
   });
 }
 
-/** TUT-B1: reads the optional "hazards": { "stones": [{ "fillSeconds": 1.5, "spots": [{ "column", "row" }] }] }. */
+/** TUT-B1: reads the optional "hazards": { "stones": [{ "fillSeconds": 1.5, "spots": [{ "column", "row" }], "safeSpot"?: { "column", "row" } }] }. */
 function loadStoneWaves(id: string, data: unknown, walls: boolean[][], width: number, height: number): StoneWave[] {
   if (data === undefined) return [];
   const stones = (data as Record<string, unknown> | null)?.stones;
@@ -275,15 +277,20 @@ function loadStoneWaves(id: string, data: unknown, walls: boolean[][], width: nu
       throw new RoomError(id, `stone wave ${n} needs "fillSeconds" above 0 (the red circle always fills first)`);
     }
     if (!Array.isArray(w.spots) || w.spots.length === 0) throw new RoomError(id, `stone wave ${n} needs a list of "spots"`);
-    const spots = w.spots.map((sp: Record<string, unknown>) => {
+    const tile = (sp: Record<string, unknown> | undefined, what: string): Vec2 => {
       const col = sp?.column;
       const row = sp?.row;
       if (typeof col !== 'number' || typeof row !== 'number' || !Number.isInteger(col) || !Number.isInteger(row) || col < 1 || row < 1 || col > width || row > height || walls[row - 1][col - 1]) {
-        throw new RoomError(id, `stone wave ${n}: each spot needs a whole-number "column" and "row" on a floor tile`);
+        throw new RoomError(id, `stone wave ${n}: ${what} needs a whole-number "column" and "row" on a floor tile`);
       }
       return { x: col - 0.5, y: row - 0.5 };
-    });
-    return { spots, fillTicks: secondsToTicks(w.fillSeconds) };
+    };
+    const spots = w.spots.map((sp: Record<string, unknown>) => tile(sp, 'each spot'));
+    const safeSpot = w.safeSpot === undefined ? null : tile(w.safeSpot as Record<string, unknown>, '"safeSpot"');
+    if (safeSpot && spots.some((sp) => distance(sp, safeSpot) <= STONES.radius + MOVEMENT.playerRadius)) {
+      throw new RoomError(id, `stone wave ${n}: "safeSpot" must be clear of every red circle`);
+    }
+    return { spots, fillTicks: secondsToTicks(w.fillSeconds), safeSpot };
   });
 }
 

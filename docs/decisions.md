@@ -1941,3 +1941,4 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - Sensei "walking ahead" is shown as the glowing safe spot and arrow; there is no Sensei sprite yet.
 - STRIKE glows gold and pulses only while the STRIKE step is waiting and focus is full.
 - Art: the TUT-A1 `tutorial-path` pack, named by the Manager for this item. Dummies use still frames through `staticCharacter`.
+- Review fixes (Manager, #536): a stone wave may name its own `"safeSpot"` in the room file (the loader refuses one inside a red circle); the Tower Path uses an open path tile two rows below the steps and lamps. Sensei's banner treats that spot and its arrow like a button, so it never covers them. The Tower door has no room-type word, practice dummies stand solid from the start, and the tutorial's last room shows no "Room clear!" stats line, only Sensei's close.

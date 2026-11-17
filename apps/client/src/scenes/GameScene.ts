@@ -81,6 +81,7 @@ import {
   firstPatternSight,
   guardianLine,
   STONES,
+  TUTORIAL_FLOOR,
 } from '@dojo/sim';
 import { FAITH } from '../ui/faith';
 import bruteData from '../../../../content/enemies/brute.json';
@@ -882,7 +883,8 @@ export class GameScene extends Phaser.Scene {
     } else if (e.mode === 'waiting') {
       s.container.setScale(e.def.scale);
       (s.container.list[0] as Phaser.GameObjects.Ellipse | undefined)?.setAlpha(1);
-      alpha = 1 - (e.modeTicks / COMBAT.enemySpawnWaitTicks) * 0.8;
+      // TUT-B3: a practice dummy is just standing there, so it stands solid.
+      alpha = e.def.passive ? 1 : 1 - (e.modeTicks / COMBAT.enemySpawnWaitTicks) * 0.8;
       s.play('idle');
     } else if (e.mode === 'windup' && e.attackCenter) {
       // The telegraph: the danger area fills up to "nearly full", then holds nearly full
@@ -2531,8 +2533,9 @@ export class GameScene extends Phaser.Scene {
         const images = tower ? [] : addStatic(this, this.towerPack, art, at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.6));
         const glow = kind === 'boss' ? addStatic(this, this.towerPack, 'door-boss-glow', at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.61)) : [];
         const look = DOOR_LOOK[kind];
+        // TUT-B3: the Tower itself is the door, so it carries no room-type word.
         const label = this.add
-          .text(at.x * TILE, (at.y + 0.55) * TILE, look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#14121c', strokeThickness: 4 })
+          .text(at.x * TILE, (at.y + 0.55) * TILE, tower ? '' : look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#14121c', strokeThickness: 4 })
           .setOrigin(0.5, 0)
           .setResolution(crisp())
           .setDepth(6);
@@ -2770,6 +2773,15 @@ export class GameScene extends Phaser.Scene {
     if (free) t.setPosition(free.x - w / 2, free.y);
   }
 
+  /** A tile-sized screen box around a world spot, tall enough for the arrow above it. */
+  private screenBox(at: Vec2): Box {
+    const cam = this.cameras.main;
+    const k = TILE * (cam.zoom / DPR);
+    const x = (at.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
+    const y = (at.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
+    return { x0: x - k, x1: x + k, y0: y - 1.8 * k, y1: y + k };
+  }
+
   private placeSensei(): void {
     const t = this.senseiText;
     if (!t?.active) return;
@@ -2809,13 +2821,7 @@ export class GameScene extends Phaser.Scene {
         ...boxes,
         { x0: px - k, x1: px + k, y0: py - 1.8 * k, y1: py + 0.8 * k },
         // The boss too, so "A big one!" doesn't hide it (Q5 B1).
-        ...this.world.enemies
-          .filter((e) => e.def.boss && e.mode !== 'defeated')
-          .map((e) => {
-            const ex = (e.pos.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
-            const ey = (e.pos.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
-            return { x0: ex - 1.5 * k, x1: ex + 1.5 * k, y0: ey - 3 * k, y1: ey + k };
-          }),
+        ...tutorialExtra,
         ...this.buttons.objects.map((o) => {
           const r = (o as Phaser.GameObjects.Container).getBounds();
           return { x0: r.left - 8, x1: r.right + 8, y0: r.top - 8, y1: r.bottom + 8 }; // + the gold ring
@@ -3010,6 +3016,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   private showGrade(grade: 'S' | 'A' | 'B', perfects: number, damage: number, ticks: number, inTime: boolean | null): void {
+    // TUT-B3: the tutorial's last room ends on Sensei's close line alone.
+    if (this.run?.tutorial && this.room.id === TUTORIAL_FLOOR.rooms[TUTORIAL_FLOOR.rooms.length - 1].id) return;
     const { width, height } = view(this);
     // Q-PREM-GRADE: the big letter and its sound are Challenge only; the Room clear! line always shows.
     const graded = showGrades(this.world.difficulty);
@@ -3244,6 +3252,9 @@ export class GameScene extends Phaser.Scene {
    * arena (clear of the buttons only), never over a button.
    */
   private placeOffPlayers(t: Phaser.GameObjects.Text, below = 0, extra: Box[] = []): void {
+    // TUT-B3: the safe spot Sensei points at is a hard keep-out, like a button; the banner may sit over the hero instead.
+    const safe = this.stoneWarn?.safe;
+    const hard = safe ? [this.screenBox(safe)] : [];
     const ask = (): BannerAsk => {
       const { width, height } = view(this);
       return {
@@ -3256,7 +3267,7 @@ export class GameScene extends Phaser.Scene {
         x: t.x,
         y: t.y,
         players: this.playerScreenBoxes(),
-        buttons: this.buttonKeepOut(),
+        buttons: [...this.buttonKeepOut(), ...hard],
         others: [...this.protectedBoxes(true), ...extra],
       };
     };

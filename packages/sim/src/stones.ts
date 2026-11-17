@@ -45,7 +45,7 @@ export function stepStones(world: WorldState, room: Room, ids: PlayerId[]): void
     if (--st.gapTicks > 0) return;
     const help = st.misses >= STONES.helpAfterMisses;
     st.fillLeft = help ? Math.round(wave.fillTicks * STONES.helpFillScale) : wave.fillTicks;
-    st.safeSpot = help ? safeSpot(world, room, wave.spots, ids) : null;
+    st.safeSpot = help ? (wave.safeSpot ? { ...wave.safeSpot } : safeSpot(world, room, wave.spots, ids)) : null;
     world.events.push({ kind: 'stoneWarn', wave: st.wave + 1, spots: wave.spots.map((s) => ({ ...s })), ticks: st.fillLeft, safeSpot: st.safeSpot });
     return;
   }
