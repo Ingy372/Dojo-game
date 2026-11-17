@@ -1953,3 +1953,7 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - Rows 1, 2 and 12 above are now in code. `POWER.shares` in `config.ts` has 5 rows: sign-offs 40, Training Points 10, virtues 10, level 25 and gear 15, which is about 60% from real training. Street Smarts and Mastery are gone.
 - The Training Points row now fills against 28 per belt so far (`TRAINING_POINTS_PER_BELT`), the same ceiling the stats use.
 - The report is staff-only (`powerRating` is read only by the Testing screen), so a player's real power does not change. The golden `playRun` test (4 students, 3 seeds) still matches.
+
+## TUT-B5 — arrow to the HOME door after the tutorial close (2026-11-17)
+- TUT-Q1 (#539) found the Keep's HOME door above the screen after the close on every run. In tutorial rooms only, once the doors open, an open door the camera can't see gets a small gold arrow (the stones help arrow's shape) at the nearest screen edge, under the health bars and the door line. It bobs, holds still with Reduced motion on, and goes once the door is in view (Manager, Nov 17).
+- It stays up under the close card's Got it, since that card says the door home is open; it hides under menus. Normal floors are unchanged.

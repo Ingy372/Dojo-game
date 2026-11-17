@@ -1,0 +1,72 @@
+PASS  844x390  a new student starts on the Tower Path  (tutorial-path)
+PASS  844x390  story card 1 shows  (COUNTER | STRIKE | DASH | Long ago, a great light shone. | Tap to go on)
+PASS  844x390  story card words on screen
+PASS  844x390  path tip after the cards, Sensei line first  (Sensei: The Tower is waking up. Come with me.
+Tap to walk, or use the stick.)
+PASS  844x390  no stones before the glowing spot
+PASS  844x390  stones tip after the spot  (Sensei: Red circle on the ground? Step out!)
+PASS  844x390  stumble says the retry line  (Sensei: Oops! Dust off. The stones come again.)
+PASS  844x390  help arrow after 2 misses  ({"wave":0,"fill":65,"safe":{"x":5.5,"y":4.5},"done":false})
+PASS  844x390  help line shows
+PASS  844x390  bow prompt after the stones  (COUNTER | STRIKE | DASH | Sensei: Quick feet! You stayed safe. | Bow | Bow at the door to show respect.)
+PASS  844x390  door open after the bow  ({"room":"tutorial-path","step":null,"index":3,"phase":"ready","menu":false,"focus":15,"enemies":[],"goal":{"pos":{"x":6.5,"y":2.5},"reached":true},"stones":{"wave":6,"fill":0,"safe":null,"done":true},"cleared":true,"doorsOpen":true,"gotIt":false,"sensei":"Sensei: Nice bow. Let's go in.","doors":[{"x":6.5,"y":0.5}],"chest":null,"words":[],"chestShown":false,"chestOpened":false,"combo":false})
+PASS  844x390  Training Hall dummies tip  (Sensei: Walk close. You strike on your own!)
+PASS  844x390  the dummies success line shows alone  (Sensei: Every hit fills your Focus!)
+PASS  844x390  no wave words in the tutorial
+PASS  844x390  STRIKE tip with the big dummy  (Sensei: Focus is full! Tap the glowing STRIKE!)
+PASS  844x390  STRIKE well done  (Sensei: What a STRIKE!)
+PASS  844x390  Swarmers tip  (Sensei: Shadows! Walk close, just like the dummies.)
+PASS  844x390  Training Hall cleared
+PASS  844x390  no combo count in the Training Hall
+PASS  844x390  Shadows! tip gone after the clear  (Sensei: The shadows ran away!)
+PASS  844x390  no room word on the Training Hall door
+PASS  844x390  First Steps Hall next
+PASS  844x390  the Brute waits under its tip  (Sensei: Red circle again! This time, tap COUNTER!)
+PASS  844x390  First Steps Hall cleared
+PASS  844x390  vault chest shows with its tip, door shut  ({"room":"tutorial-vault","step":null,"index":9,"phase":"tip","menu":true,"focus":0,"enemies":[],"goal":null,"stones":null,"cleared":false,"doorsOpen":false,"gotIt":true,"sensei":"Sensei: A treasure chest! Walk up to open it.","doors":[{"x":7.5,"y":0.5}],"chest":{"x":6.5,"y":3.5},"words":["BOSS"],"chestShown":true,"chestOpened":false,"combo":false})
+PASS  844x390  the chest step counts the moment it opens  (index 10)
+PASS  844x390  the vault was seen and its chest opened
+PASS  844x390  the close line on the last door  (tutorial-keep: Sensei: The door home is open.
+Train in class. Your belt opens the Gate.)
+PASS  844x390  door off-screen with the close card up, arrow shows  (door y -106)
+PASS  844x390  arrow still shows after Got it  (door y -106)
+PASS  844x390  arrow bobs with Reduced motion off
+PASS  844x390  arrow holds still with Reduced motion on
+PASS  844x390  arrow goes once the door is in view  (door y 65)
+PASS  844x390  no page errors
+PASS  667x375  a new student starts on the Tower Path  (tutorial-path)
+PASS  667x375  story card 1 shows  (COUNTER | STRIKE | DASH | Long ago, a great light shone. | Tap to go on)
+PASS  667x375  story card words on screen
+PASS  667x375  path tip after the cards, Sensei line first  (Sensei: The Tower is waking up. Come with me.
+Tap to walk, or use the stick.)
+PASS  667x375  no stones before the glowing spot
+PASS  667x375  stones tip after the spot  (Sensei: Red circle on the ground? Step out!)
+PASS  667x375  stumble says the retry line  (Sensei: Oops! Dust off. The stones come again.)
+PASS  667x375  help arrow after 2 misses  ({"wave":0,"fill":66,"safe":{"x":5.5,"y":4.5},"done":false})
+PASS  667x375  help line shows
+PASS  667x375  bow prompt after the stones  (COUNTER | STRIKE | DASH | Sensei: Quick feet! You stayed safe. | Bow | Bow at the door to show respect.)
+PASS  667x375  door open after the bow  ({"room":"tutorial-path","step":null,"index":3,"phase":"ready","menu":false,"focus":15,"enemies":[],"goal":{"pos":{"x":6.5,"y":2.5},"reached":true},"stones":{"wave":6,"fill":0,"safe":null,"done":true},"cleared":true,"doorsOpen":true,"gotIt":false,"sensei":"Sensei: Nice bow. Let's go in.","doors":[{"x":6.5,"y":0.5}],"chest":null,"words":[],"chestShown":false,"chestOpened":false,"combo":false})
+PASS  667x375  Training Hall dummies tip  (Sensei: Walk close. You strike on your own!)
+PASS  667x375  the dummies success line shows alone  (Sensei: Every hit fills your Focus!)
+PASS  667x375  no wave words in the tutorial
+PASS  667x375  STRIKE tip with the big dummy  (Sensei: Focus is full! Tap the glowing STRIKE!)
+PASS  667x375  STRIKE well done  (Sensei: What a STRIKE!)
+PASS  667x375  Swarmers tip  (Sensei: Shadows! Walk close, just like the dummies.)
+PASS  667x375  Training Hall cleared
+PASS  667x375  no combo count in the Training Hall
+PASS  667x375  Shadows! tip gone after the clear  (Sensei: The shadows ran away!)
+PASS  667x375  no room word on the Training Hall door
+PASS  667x375  First Steps Hall next
+PASS  667x375  the Brute waits under its tip  (Sensei: Red circle again! This time, tap COUNTER!)
+PASS  667x375  First Steps Hall cleared
+PASS  667x375  vault chest shows with its tip, door shut  ({"room":"tutorial-vault","step":null,"index":9,"phase":"tip","menu":true,"focus":0,"enemies":[],"goal":null,"stones":null,"cleared":false,"doorsOpen":false,"gotIt":true,"sensei":"Sensei: A treasure chest! Walk up to open it.","doors":[{"x":7.5,"y":0.5}],"chest":{"x":6.5,"y":3.5},"words":["BOSS"],"chestShown":true,"chestOpened":false,"combo":false})
+PASS  667x375  the chest step counts the moment it opens  (index 10)
+PASS  667x375  the vault was seen and its chest opened
+PASS  667x375  the close line on the last door  (tutorial-keep: Sensei: The door home is open.
+Train in class. Your belt opens the Gate.)
+PASS  667x375  door off-screen with the close card up, arrow shows  (door y -102)
+PASS  667x375  arrow still shows after Got it  (door y -102)
+PASS  667x375  arrow bobs with Reduced motion off
+PASS  667x375  arrow holds still with Reduced motion on
+PASS  667x375  arrow goes once the door is in view  (door y 63)
+PASS  667x375  no page errors

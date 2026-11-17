@@ -465,6 +465,8 @@ export class GameScene extends Phaser.Scene {
   /** G2B12-FIXES: "Pick one" stays put in the top strip while the doors are open (it used to fade over the HP bars). */
   private doorHint!: Phaser.GameObjects.Text;
   private doorHintOn = false;
+  /** TUT-B5: in a tutorial room, a small gold arrow at the screen edge points at an open door that is off-screen. */
+  private doorArrow!: Phaser.GameObjects.Graphics;
   private senseiText: Phaser.GameObjects.Text | null = null;
   /** The 'Room clear!' line under the grade, while it shows (K23c: the ability pop-up keeps off it). */
   private gradeLine: Phaser.GameObjects.Text | null = null;
@@ -750,6 +752,7 @@ export class GameScene extends Phaser.Scene {
     this.syncEnemyViews();
     for (const e of this.world.enemies) this.drawEnemy(e, blend, now);
     this.drawStones(now);
+    this.drawDoorArrow(now);
     this.hideWordsOverCues();
     this.buttons.counterWindow(this.counterWindowOpen);
 
@@ -1297,6 +1300,7 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(0.5, 0)
       .setResolution(res)
       .setVisible(false);
+    this.doorArrow = this.add.graphics();
     this.screenFlash = this.add.rectangle(0, 0, 10, 10, 0xffffff).setOrigin(0).setAlpha(0);
     const small = { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 };
     this.roomLabel = this.add.text(0, 14, '', small).setOrigin(1, 0).setResolution(crisp());
@@ -1333,7 +1337,7 @@ export class GameScene extends Phaser.Scene {
     const calm = this.add.text(16, 55, 'Calm Mind', { ...small, fontSize: '12px', color: '#bff5ec' }).setResolution(crisp()).setVisible(!!this.run?.calmMind);
     this.cameras.main.ignore(calm);
     this.lidIcon = this.makeLidIcon();
-    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.doorHint, this.screenFlash, this.roomLabel, this.timerText, this.bossName, ...(this.lidIcon ? [this.lidIcon] : [])]);
+    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.doorHint, this.doorArrow, this.screenFlash, this.roomLabel, this.timerText, this.bossName, ...(this.lidIcon ? [this.lidIcon] : [])]);
   }
 
   /** The main camera's zoom and limits, including the Guardian room's held zoom and the boss intro's pull-back (`bossZoom`). */
@@ -2134,6 +2138,37 @@ export class GameScene extends Phaser.Scene {
       g.fillStyle(COLORS.gold, 1).fillTriangle(x - 14, y - TILE * 0.9 - bob, x + 14, y - TILE * 0.9 - bob, x, y - TILE * 0.55 - bob);
       g.fillRect(x - 5, y - TILE * 1.35 - bob, 10, TILE * 0.47);
     }
+  }
+
+  /**
+   * TUT-B5: once the doors open in a tutorial room, an open door the camera can't see gets a small gold
+   * arrow (the stones help arrow's shape) at the nearest screen edge, pointing at it. It goes when the door is in view.
+   */
+  private drawDoorArrow(now: number): void {
+    const g = this.doorArrow;
+    g.clear();
+    // It stays up under a Got it tip (the close card says the door home is open), not under a menu.
+    if (!this.run?.tutorial || !this.doorHintOn || (this.menuOpen && !this.gotItBtn?.active) || this.leaving) return;
+    const { width, height } = view(this);
+    const cam = this.cameras.main;
+    const k = cam.zoom / DPR;
+    const door = this.doorViews
+      .map((d) => ({ x: (d.at.x * TILE - cam.worldView.x) * k, y: (d.at.y * TILE - cam.worldView.y) * k }))
+      .find((d) => d.x < 0 || d.x > width || d.y < 0 || d.y > height);
+    if (!door) return;
+    const bob = reducedMotion() ? 0 : Math.abs(Math.sin(now / 200)) * 6;
+    const m = 24;
+    const top = Math.max(HUD_BOTTOM, DOOR_HINT_TOP + this.doorHint.height) + 6;
+    // Tip, then the arrow pointing that way (dx, dy): the head is 22 px wide and 14 tall, the shaft 8 by 14.
+    const [tx, ty, dx, dy] =
+      door.y < 0 ? [Phaser.Math.Clamp(door.x, m, width - m), top - bob, 0, -1]
+      : door.y > height ? [Phaser.Math.Clamp(door.x, m, width - m), height - 6 + bob, 0, 1]
+      : door.x < 0 ? [6 - bob, Phaser.Math.Clamp(door.y, top, height - m), -1, 0]
+      : [width - 6 + bob, Phaser.Math.Clamp(door.y, top, height - m), 1, 0];
+    const bx = tx - dx * 14;
+    const by = ty - dy * 14;
+    g.fillStyle(COLORS.gold, 1).fillTriangle(tx, ty, bx + dy * 11, by - dx * 11, bx - dy * 11, by + dx * 11);
+    g.fillRect(Math.min(bx, bx - dx * 14) - Math.abs(dy) * 4, Math.min(by, by - dy * 14) - Math.abs(dx) * 4, dx ? 14 : 8, dy ? 14 : 8);
   }
 
   /** A looping tutorial-pack animation on images made by tutorialStatic. */
