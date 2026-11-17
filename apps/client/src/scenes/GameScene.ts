@@ -598,7 +598,7 @@ export class GameScene extends Phaser.Scene {
     for (const e of this.world.enemies) this.makeEnemy(e);
 
     const p0 = this.world.players[this.me];
-    this.buttons = new ActionButtons(this, () => sfx.unlock(), { stances: p0.stances.length > 1, virtue: !!p0.virtue });
+    this.buttons = new ActionButtons(this, () => sfx.unlock(), { virtue: !!p0.virtue }, () => this.virtueReadyLine());
     this.controls = new TouchControls(
       this,
       cam,
@@ -1561,7 +1561,8 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.denied();
           this.buttons.refuse('virtue');
-          this.floatText(p.pos, p.virtueTicks > 0 ? 'Already active' : 'Fill your Focus first', '#f2e9d8', 18);
+          // L7: VIRTUE only shows at full Focus, so "Fill your Focus first" is gone.
+          if (p.virtueTicks > 0) this.floatText(p.pos, 'Already active', '#f2e9d8', 18);
           break;
         }
         case 'shieldSoak': {
@@ -2232,10 +2233,23 @@ export class GameScene extends Phaser.Scene {
    * Sensei's Lessons (M7-P5): a game event happened; show its lesson if the session and room
    * limits allow it. The tutorial floor teaches on its own guide path instead.
    */
-  private lesson(triggerKey: string): void {
-    if (this.run?.tutorial) return;
+  private lesson(triggerKey: string): boolean {
+    if (this.run?.tutorial) return false;
     const l = takeLesson(triggerKey, this.roomTag());
     if (l) this.senseiSay(l.practice ? [...l.screens, l.practice] : l.screens, 1600);
+    return !!l;
+  }
+
+  /** L7: the first time VIRTUE appears, its one line; it goes away on its own so it never sits over the fight. */
+  private virtueReadyLine(): void {
+    if (!this.lesson('firstVirtueReady')) return;
+    const t = this.senseiText;
+    this.time.delayedCall(3000, () => {
+      if (t && t === this.senseiText) {
+        t.destroy();
+        this.senseiText = null;
+      }
+    });
   }
 
   /** Tutorial boss room: teach Strike the first time Focus fills (Manager call, M7-P2). */
@@ -2625,7 +2639,7 @@ export class GameScene extends Phaser.Scene {
     }
     t.setY(top);
     // Q-VIRTUE-BANNER: every Sensei line (New move!, lessons, Counter tip, twists, tutorial) goes through the one
-    // rule, so none covers VIRTUE, STRIKE, Stance or any action button (#295: nor a player when there is room).
+    // rule, so none covers VIRTUE, STRIKE or any action button (#295: nor a player when there is room).
     this.placeOffPlayers(t, btn ? btn.height + 8 : 0, tutorialExtra);
     btn?.setPosition(t.x, t.y + t.height + 8);
     this.placeDecoToasts();
@@ -3013,7 +3027,7 @@ export class GameScene extends Phaser.Scene {
    * Keeps a banner off the heroes and, always, off the action buttons (Q-STANCE-BANNER), under the top bar.
    * One search (ui/senseiPlace.ts pickBannerSpot): clear of everything, else clear of heroes and buttons (the free
    * space above the bottom button row). No room: the small-phone text size, then again. Still none: over the
-   * arena (clear of the buttons only), never over Stance or another button.
+   * arena (clear of the buttons only), never over a button.
    */
   private placeOffPlayers(t: Phaser.GameObjects.Text, below = 0, extra: Box[] = []): void {
     const ask = (): BannerAsk => {
@@ -3053,7 +3067,7 @@ export class GameScene extends Phaser.Scene {
     t.setPosition(spot.x, spot.y);
   }
 
-  /** Q-STANCE-BANNER: the action buttons (Stance and its name included) plus 8 px, kept clear of Sensei's banner. */
+  /** Q-STANCE-BANNER: the action buttons (VIRTUE's spot too, even while hidden) plus 8 px, kept clear of Sensei's banner. */
   buttonKeepOut(): Box[] {
     return this.buttons.objects.map((o) => {
       const r = (o as Phaser.GameObjects.Container).getBounds();
@@ -3203,7 +3217,7 @@ export class GameScene extends Phaser.Scene {
       const b = t.getBounds();
       avoid.push({ left: b.left, right: b.right, top: b.top, bottom: b.bottom });
     }
-    // C430: the action buttons (Virtue, Strike, Dash, Counter, Stance) are HUD boxes too; the tag keeps clear of them.
+    // C430: the action buttons (Virtue, Strike, Dash, Counter) are HUD boxes too; the tag keeps clear of them.
     for (const b of this.buttonKeepOut()) avoid.push({ left: b.x0, right: b.x1, top: b.y0, bottom: b.y1 });
     const barHalf = (v.hpBack.width * k) / 2;
     const halfW = Math.max(this.bossName.width / 2, barHalf);

@@ -1,6 +1,6 @@
 import { reducedMotion } from '../game/motion';
 import Phaser from 'phaser';
-import { COMBAT, activeStance, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
+import { COMBAT, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
 import { view, DPR } from '../ui/theme';
 import { ACTION_COLORS as AC, ACTION_LABEL, GREEN } from '../ui/tokens';
 
@@ -11,7 +11,6 @@ const COUNTER_RADIUS = 48;
 const STRIKE_RADIUS = 38;
 const DASH_RADIUS = 32;
 const VIRTUE_RADIUS = 30;
-const STANCE_RADIUS = 26;
 const MARGIN = 26;
 
 interface Button {
@@ -24,8 +23,9 @@ interface Button {
 
 /**
  * The Strike, Counter and Dash buttons in the bottom-right corner, plus Virtue (once a
- * stripe is earned) and Stance (once a kata is signed off). A button acts the moment a
- * finger touches it (not on release), so Counter timing is exact.
+ * stripe is earned), which shows only while Focus is full (L7). The Stance is picked before
+ * the run, so there is no Stance button. A button acts the moment a finger touches it (not on
+ * release), so Counter timing is exact.
  */
 export class ActionButtons {
   private pending: PlayerAction | null = null;
@@ -42,17 +42,16 @@ export class ActionButtons {
   /** Ring around Strike showing Focus filling toward the Strike cost. */
   private readonly strikeRing: Phaser.GameObjects.Graphics;
   private readonly virtue: Button | null = null;
-  /** Ring around Virtue showing Focus filling toward full. */
-  private readonly virtueRing: Phaser.GameObjects.Graphics | null = null;
-  private readonly stance: Button | null = null;
-  /** The active Stance's name, under the Stance button. */
-  private readonly stanceName: Phaser.GameObjects.Text | null = null;
+  /** L7: Virtue is on screen (Focus full and not already active). */
+  private virtueShown = false;
 
   constructor(
     private readonly scene: Phaser.Scene,
     /** Called on every button touch (used to switch on sound). */
     private readonly onTouch: () => void,
-    has: { stances: boolean; virtue: boolean } = { stances: false, virtue: false },
+    has: { virtue: boolean } = { virtue: false },
+    /** Called each time Virtue appears (Focus just became full). */
+    private readonly onVirtueReady: () => void = () => {},
   ) {
     this.counter = this.makeButton('counter', 'COUNTER', COUNTER_RADIUS, AC.counter.ready);
     this.counterRing = scene.add.graphics();
@@ -65,16 +64,9 @@ export class ActionButtons {
     this.dash.container.add(this.dashRing);
     if (has.virtue) {
       this.virtue = this.makeButton('virtue', 'VIRTUE', VIRTUE_RADIUS, AC.virtue.ready);
-      this.virtueRing = scene.add.graphics();
-      this.virtue.container.add(this.virtueRing);
-    }
-    if (has.stances) {
-      this.stance = this.makeButton('stance', 'STANCE', STANCE_RADIUS, AC.stance.ready);
-      this.stanceName = scene.add
-        .text(0, STANCE_RADIUS + 10, '', { fontFamily: 'system-ui, sans-serif', fontSize: '12px', color: '#9ad1ff', stroke: '#14121c', strokeThickness: 3 })
-        .setOrigin(0.5, 0)
-        .setResolution(window.devicePixelRatio || 1);
-      this.stance.container.add(this.stanceName);
+      this.virtue.face.setStrokeStyle(4, 0xffffff, 0.8);
+      labelColor(this.virtue, ACTION_LABEL.dark);
+      this.virtue.container.setVisible(false);
     }
     this.layout();
     scene.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown, this);
@@ -98,7 +90,6 @@ export class ActionButtons {
     this.strike.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS - 22, cy - 34);
     this.dash.container.setPosition(cx + 6, cy - COUNTER_RADIUS - DASH_RADIUS - 24);
     this.virtue?.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS - 30, cy - 34 - STRIKE_RADIUS - VIRTUE_RADIUS - 18);
-    this.stance?.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS * 2 - STANCE_RADIUS - 46, cy - 6);
   }
 
   /** The button pressed since the last tick, if any (sent once). */
@@ -123,7 +114,8 @@ export class ActionButtons {
   enable(): void {
     this.off = false;
     this.pending = null;
-    for (const b of this.all()) b.container.setVisible(true);
+    this.virtueShown = false;
+    for (const b of this.all()) b.container.setVisible(b !== this.virtue);
   }
 
   /** Makes Counter pulse for Sensei's guide (0 none, 1 small, 2 big, 3 nudge, 4 L-PREMIUM-b Counter tip: a pulse, or a still outline with Reduced motion). */
@@ -215,27 +207,22 @@ export class ActionButtons {
     if (strikeGold) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
     else this.strike.container.setScale(1);
 
-    if (this.virtue && this.virtueRing) {
-      const full = alive && p.focus >= COMBAT.focus.max && p.virtueTicks === 0;
-      this.virtue.container.setAlpha(1);
-      this.virtue.face.setFillStyle(full ? AC.virtue.ready : AC.virtue.dim, FACE_ALPHA);
-      this.virtue.face.setStrokeStyle(4, 0xffffff, full ? 0.8 : 0.35);
-      labelColor(this.virtue, full ? ACTION_LABEL.dark : ACTION_LABEL.dim);
-      this.virtueRing.clear();
-      this.virtueRing.lineStyle(4, full ? 0xffffff : 0xffd166, 0.85);
-      this.virtueRing.beginPath();
-      this.virtueRing.arc(0, 0, VIRTUE_RADIUS + 4, -Math.PI / 2, -Math.PI / 2 + Math.min(1, p.focus / COMBAT.focus.max) * Math.PI * 2);
-      this.virtueRing.strokePath();
-      this.virtue.container.setScale(full ? 1 + Math.sin(this.scene.time.now / 120) * 0.07 : 1);
+    if (this.virtue) this.showVirtue(alive && p.focus >= COMBAT.focus.max && p.virtueTicks === 0);
+  }
+
+  /** L7: Virtue appears in its one spot when Focus is full, with a short calm grow (none with Reduced motion). */
+  private showVirtue(full: boolean): void {
+    const v = this.virtue!.container;
+    if (this.off || full === this.virtueShown) return;
+    this.virtueShown = full;
+    this.scene.tweens.killTweensOf(v);
+    v.setVisible(full).setAlpha(1).setScale(1);
+    if (!full) return;
+    if (!reducedMotion()) {
+      v.setAlpha(0).setScale(0.8);
+      this.scene.tweens.add({ targets: v, alpha: 1, scale: 1, duration: 200, ease: 'Quad.easeOut' });
     }
-    if (this.stance && this.stanceName) {
-      const stanceReady = alive && p.stanceCooldown === 0;
-      this.stance.container.setAlpha(1);
-      this.stance.face.setFillStyle(stanceReady ? AC.stance.ready : AC.stance.dim, FACE_ALPHA);
-      this.stance.face.setStrokeStyle(4, 0xffffff, stanceReady ? 0.8 : 0.35);
-      labelColor(this.stance, stanceReady ? ACTION_LABEL.light : ACTION_LABEL.dim);
-      this.stanceName.setText(activeStance(p).name);
-    }
+    this.onVirtueReady();
   }
 
   /** A little shake when a press is refused (for example, not enough Focus). */
@@ -256,12 +243,12 @@ export class ActionButtons {
   }
 
   private all(): Button[] {
-    return [this.counter, this.strike, this.dash, this.virtue, this.stance].filter((b): b is Button => b !== null);
+    return [this.counter, this.strike, this.dash, this.virtue].filter((b): b is Button => b !== null);
   }
 
   private hit(b: Button, x: number, y: number): boolean {
-    // A little larger than drawn, so small fingers don't miss.
-    return Phaser.Math.Distance.Between(x, y, b.container.x, b.container.y) <= b.radius + 12;
+    // A little larger than drawn, so small fingers don't miss. A hidden button can't be pressed.
+    return b.container.visible && Phaser.Math.Distance.Between(x, y, b.container.x, b.container.y) <= b.radius + 12;
   }
 
   private onDown(pointer: Phaser.Input.Pointer): void {

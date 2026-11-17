@@ -207,6 +207,19 @@
       "ignoresSessionLimit": true,
       "fadingFollowUp": true,
       "scroll": false
+    },
+    {
+      "id": "lesson-virtue-ready",
+      "triggerKey": "firstVirtueReady",
+      "order": 15,
+      "trigger": "LP-B5 (L7): the first time the VIRTUE button appears (Focus full). Words from drafts/learning/LP-L1-path-and-buttons-review.md (L7). Counts as that session's one new thing; not on the Scroll (no practice room), like lesson-sensei-pick.",
+      "screens": [
+        "Your Focus is full. Tap VIRTUE!"
+      ],
+      "earliestSession": 1,
+      "ignoresSessionLimit": false,
+      "fadingFollowUp": false,
+      "scroll": false
     }
   ],
   "maxNewLessonsPerRoom": 1,
