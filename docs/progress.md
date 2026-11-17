@@ -1250,6 +1250,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - QA fix (#530, Tester: with the Wave 2 banner up GREAT! could sit on a "!"): placement now lets go of things in order of importance (doors and banners first, then the hero and buttons, then other words, then enemies) and never of the "!" cues. A "!" that turns up under the word later hides the word until it's clear. An older word like "Wave 2" makes way if the two would pile up. Shot check adds Wave-banner and late-"!" cases (329 pass, 0 fail; a NOTE line marks crowded cases where GREAT! touches the hero).
 - Manager rule after QA: GREAT! never covers a "!". If no spot clears every cue, the rating word is skipped that time (other words, like "Wave 2", still show).
 
+## TUT-B2 — passive practice dummies (2026-11-17)
+- Plan: `drafts/planning/TUT-P1.md` beats 4-5. Rules and enemy files only; the dummies show up in a real room in TUT-B3.
+- An enemy file can say `"passive": true`: it never moves, never attacks and needs no attack list, but takes hits and gives the normal Focus per hit. A passive file that lists an attack, a speed, or any fight extra (boss, shield, summon and so on) is refused. The loader also refuses a passive enemy in any room that isn't `"tutorial": true`.
+- Two dummies: `practice-dummy` (40 Health, about 9 hits for a new hero) and `big-practice-dummy` (120 Health). A brand-new hero's plain attacks fill Focus to the STRIKE cost with the big dummy still at about 92 of 120, and STRIKE leaves it standing at about 57, so the kid finishes it with a few more hits. Colours are placeholders until art.
+- Tests: `tut-b2-dummies` (5), including the Manager's extra test (Focus reaches STRIKE before the big dummy falls).
+
 ## TUT-B1 — falling stones in the rules (2026-11-17)
 - Plan: `drafts/planning/TUT-P1.md` beat 2, stone rules (a)–(e) from TUT-L1. Rules only; the stones aren't in a real room or on screen until TUT-B3.
 - A tutorial room can list stone waves under `"hazards": { "stones": [...] }`, each with its spots and `fillSeconds` (the playtest setting: 1.5 s, then 1.2 s). The loader refuses stones in any room that isn't `"tutorial": true`.

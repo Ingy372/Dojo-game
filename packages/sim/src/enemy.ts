@@ -134,6 +134,8 @@ export interface EnemyDef {
   stationary?: boolean;
   /** C430: a no-damage push (Bellows Puff). Its swing slides you away instead of hurting you. */
   push?: EnemyPushDef;
+  /** TUT-B2: a practice dummy. Never moves, never attacks (no attacks at all); takes hits and gives Focus. Tutorial rooms only. */
+  passive?: boolean;
   /** G2B-04: a Perfect Counter with Outside Reap (#11) can throw it down (brutes and swarmers). Never a Guardian. */
   throwable?: boolean;
   sightRange: number;
@@ -237,8 +239,19 @@ export function loadEnemy(data: unknown): EnemyDef {
   if (!boss && radius >= 0.5) throw new EnemyError(id, '"radius" must be under 0.5 so it fits through one-tile gaps');
   if (boss && radius >= 1) throw new EnemyError(id, '"radius" must be under 1');
 
+  // TUT-B2: a passive practice dummy has no attacks and none of the fighting extras. Every other enemy
+  // still needs a warned attack (MIN_WINDUP_TICKS).
+  if (raw.passive !== undefined && typeof raw.passive !== 'boolean') throw new EnemyError(id, '"passive" must be true or false when given');
+  const passive = raw.passive === true;
+  if (passive) {
+    for (const k of ['attack', 'attacks', 'boss', 'shield', 'summon', 'throwable', 'push', 'phases', 'split', 'winded', 'weapon', 'challenge', 'moveSpeedTilesPerSecond']) {
+      if (raw[k] !== undefined) throw new EnemyError(id, `a passive dummy can't have "${k}"`);
+    }
+  }
   let attacks: EnemyAttackDef[];
-  if (Array.isArray(raw.attacks)) {
+  if (passive) {
+    attacks = [];
+  } else if (Array.isArray(raw.attacks)) {
     if (raw.attacks.length === 0) throw new EnemyError(id, '"attacks" must list at least one attack');
     attacks = raw.attacks.map((a, i) => loadAttack(a, id, `attacks[${i + 1}]`));
   } else if (raw.attack !== undefined) {
@@ -302,7 +315,7 @@ export function loadEnemy(data: unknown): EnemyDef {
 
   // C430: a "stationary" enemy has a true speed of 0; every other enemy still needs a speed above 0.
   if (raw.stationary !== undefined && typeof raw.stationary !== 'boolean') throw new EnemyError(id, '"stationary" must be true or false when given');
-  const stationary = raw.stationary === true;
+  const stationary = raw.stationary === true || passive;
   let speed: number;
   if (stationary) {
     speed = raw.moveSpeedTilesPerSecond === undefined ? 0 : nonNegative(raw, 'moveSpeedTilesPerSecond', id);
@@ -339,6 +352,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     ...(stationary ? { stationary: true } : {}),
     ...(push ? { push } : {}),
     ...(throwable ? { throwable: true } : {}),
+    ...(passive ? { passive: true } : {}),
     sightRange: positiveNumber(raw, 'sightRange', id),
     attacks,
     shield,

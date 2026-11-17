@@ -1281,7 +1281,8 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
       }
       return;
     case 'chase': {
-      chase(world, e, room);
+      // TUT-B2: a practice dummy just stands there.
+      if (!e.def.passive) chase(world, e, room);
       return;
     }
   }

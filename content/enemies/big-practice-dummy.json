@@ -1,0 +1,13 @@
+{
+  "id": "big-practice-dummy",
+  "name": "Big Practice Dummy",
+  "notes": "TUT-B2 (TUT-P1 beat 5): the big straw dummy. Passive like the small one, with enough health that a starting hero's auto-attack fills Focus for STRIKE before it falls. Tutorial rooms only.",
+  "color": "#b8903f",
+  "passive": true,
+  "maxHealth": 120,
+  "power": 1,
+  "guard": 0,
+  "radius": 0.45,
+  "sightRange": 12,
+  "parSeconds": 8
+}
