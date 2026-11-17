@@ -360,6 +360,10 @@ def stars():
         o = put(f"{lay}_s{i}", star_bm(0.125 if i != 1 else 0.115, 0.47), M(cols[i]), lay, outline=True, parent=e)
         o.location = e.location.copy()
         o.rotation_euler = (math.radians(-35), 0, 0)
+        rr = 0.125 if i != 1 else 0.115   # a dark star just behind it = a solid outline that reads at 1x
+        bk = put(f"{lay}_bk{i}", star_bm(rr + 0.035, 0.5), M("#14121c", True), lay, outline=False, parent=e)
+        bk.location = e.location.copy() + Vector((0, math.cos(math.radians(35)), -math.sin(math.radians(35)))) * 0.02
+        bk.rotation_euler = (math.radians(-35), 0, 0)
     ring.rotation_euler = (0, 0, 0); ring.keyframe_insert("rotation_euler", frame=70)
     ring.rotation_euler = (0, 0, math.tau * 11 / 12); ring.keyframe_insert("rotation_euler", frame=81)
     for fc in ring.animation_data.action.fcurves:
