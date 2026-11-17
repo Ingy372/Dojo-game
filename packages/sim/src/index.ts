@@ -45,3 +45,4 @@ export * from './bossTag';
 export * from './beltEntry';
 export * from './safety';
 export * from './shop';
+export * from './stones';

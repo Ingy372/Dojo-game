@@ -119,6 +119,7 @@ export function loadInsideRoom(data: unknown): InsideRoom {
     floorSet: null,
     goal: null,
     tutorial: false,
+    stoneWaves: [],
   };
   return { room, spawn, exit, spots, foregroundSprites };
 }
@@ -230,6 +231,7 @@ export function loadOutsideRoom(data: unknown): OutsideRoom {
     floorSet: null,
     goal: null,
     tutorial: false,
+    stoneWaves: [],
   };
   return { room, spawnFromTown, spawnFromInside, frontDoor: { tapRect, approachTile, approachFacing: facing(doorRaw.approachFacing, 'frontDoor.approachFacing'), enterRect }, exits };
 }

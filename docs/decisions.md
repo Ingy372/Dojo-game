@@ -1923,3 +1923,9 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - Gold and red now mean only "an attack is coming" (the "!" cue). Every praise word uses one sky blue (#7fd4ff), at least 90 degrees of hue away from both, at 75% opacity so the arena shows through but it stays readable (Manager, Nov 16).
 - Big (heavy) hit numbers moved from gold to the same sky blue, for the same reason.
 - Placement: nearest clear spot to 30% height, above or below. Must-avoid order: "!" cues (never let go), enemies, other words, the hero and buttons, then doors and banners. It may overlap an enemy or a banner when nothing is clear, but never a "!": if no spot clears every cue, the word is skipped that time, and it hides while any "!" turns up under it later (Manager, after QA on #530). An older word it would pile onto is dropped.
+
+## TUT-B1: falling stones never hurt and never trap a kid (2026-11-17)
+- Stones do no damage. A landing on the hero is a 0.8 s stumble (no moving or buttons), and that wave drops again.
+- "Never stuck": after 2 misses the circle fills 1.5x slower and the rules name the nearest safe floor tile for an arrow; after 3 misses the wave counts as done. Manager go, Nov 17.
+- The room isn't done until every stone wave is done, so the tutorial step can't be skipped by walking out.
+- Fill times sit in the room file as playtest settings (TUT-Q1 tunes them); the rest (circle size, gap, stumble, help) are in `STONES`. No balance numbers changed.

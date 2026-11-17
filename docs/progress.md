@@ -1249,3 +1249,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Tests: `fx-great` (5). Phone check `docs/shots/fx-great/great-verify.mjs` at 667x375 and 932x430, Reduced motion on and off, a White and an Orange profile, with an enemy on the usual spot and a crowd of three winding up (224 pass, 0 fail).
 - QA fix (#530, Tester: with the Wave 2 banner up GREAT! could sit on a "!"): placement now lets go of things in order of importance (doors and banners first, then the hero and buttons, then other words, then enemies) and never of the "!" cues. A "!" that turns up under the word later hides the word until it's clear. An older word like "Wave 2" makes way if the two would pile up. Shot check adds Wave-banner and late-"!" cases (329 pass, 0 fail; a NOTE line marks crowded cases where GREAT! touches the hero).
 - Manager rule after QA: GREAT! never covers a "!". If no spot clears every cue, the rating word is skipped that time (other words, like "Wave 2", still show).
+
+## TUT-B1 — falling stones in the rules (2026-11-17)
+- Plan: `drafts/planning/TUT-P1.md` beat 2, stone rules (a)–(e) from TUT-L1. Rules only; the stones aren't in a real room or on screen until TUT-B3.
+- A tutorial room can list stone waves under `"hazards": { "stones": [...] }`, each with its spots and `fillSeconds` (the playtest setting: 1.5 s, then 1.2 s). The loader refuses stones in any room that isn't `"tutorial": true`.
+- Each drop: the red circle fills first (`stoneWarn`), then the stones land (`stoneLand`). A hero still inside stumbles for 0.8 s (`stumble`, can't move, no health change) and that wave drops again. After 2 misses the circle fills 1.5x slower and gives a safe spot to stand; the 3rd miss passes the wave anyway. After the last wave, `stonesDone`, and only then does the room count as done. Other numbers live in `STONES` (`packages/sim/src/config.ts`).
+- Tests: `tut-b1-stones` (5).
