@@ -1,0 +1,151 @@
+{
+  "id": "t8-great-reading-room",
+  "name": "The Reading Room",
+  "kind": "challenge",
+  "minBeltTier": 8,
+  "floorSet": "root-library",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "challenge": {
+    "seconds": 120,
+    "text": "Finish in 2 minutes for a better chest!",
+    "inTimeText": "In time!",
+    "outOfTimeText": "Tall shelves! You still earned a chest.",
+    "outOfTimeShort": "Time's up!"
+  },
+  "tiles": [
+    "#####D#####D#####D####",
+    "#....................#",
+    "#..........C.........#",
+    "#....................#",
+    "#..##............##..#",
+    "#....................#",
+    "#..##............##..#",
+    "#....................#",
+    "#....................#",
+    "#..........P.........#",
+    "#....................#",
+    "######################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "mix": "L11 swap: every Swarmers -> Spark Sprites.",
+  "enemies": [
+    {
+      "enemy": "spark-sprite",
+      "column": 4,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 16,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 10,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "brute",
+      "column": 4,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "shield",
+      "column": 16,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 10,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 16,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "shield",
+      "column": 5,
+      "row": 4,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 10,
+      "row": 4,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 16,
+      "row": 4,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 8,
+      "row": 6,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 13,
+      "row": 6,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 6,
+      "row": 8,
+      "wave": 3
+    },
+    {
+      "enemy": "brute",
+      "column": 4,
+      "row": 3,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 10,
+      "row": 4,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 16,
+      "row": 4,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 8,
+      "row": 6,
+      "wave": 4
+    }
+  ],
+  "artProps": "Layout copied from gauntlet. Theme and props from the root-library draft room \"great-reading-room\". A round reading room with a glowing lamp over the door; tall stacks in each corner.",
+  "signs": [
+    "Every story needs a reader."
+  ]
+}

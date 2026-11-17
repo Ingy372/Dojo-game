@@ -1,0 +1,23 @@
+{
+  "id": "t4-water-jar-landing",
+  "name": "Water Jar Landing",
+  "kind": "treasure",
+  "minBeltTier": 4,
+  "floorSet": "giants-steps",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#.#.......#.#",
+    "#.....C.....#",
+    "#.#.......#.#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from treasure-vault. Theme and props from the giants-steps draft room \"water-jar-landing\". Big clay water jars in a row; the chest is the oldest jar, with a wooden lid.",
+  "signs": [
+    "Thank the helpers who came before."
+  ]
+}

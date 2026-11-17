@@ -1,0 +1,23 @@
+{
+  "id": "t5-oar-locker",
+  "name": "Oar Locker",
+  "kind": "treasure",
+  "minBeltTier": 5,
+  "floorSet": "quiet-river",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#.#.......#.#",
+    "#.....C.....#",
+    "#.#.......#.#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from treasure-vault. Theme and props from the quiet-river draft room \"oar-locker\". A wall rack of worn oars; the chest is an old boat locker with a brass latch.",
+  "signs": [
+    "Many hands rowed here before you."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "t9-dry-alcove",
+  "name": "Dry Alcove",
+  "kind": "rest",
+  "minBeltTier": 9,
+  "floorSet": "storm-stair",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#..#.....#..#",
+    "#.....S.....#",
+    "#..#.....#..#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from quiet-shrine. Theme and props from the storm-stair draft room \"dry-alcove\". A snug stone alcove with a roof, two cushions and a warm lamp.",
+  "signs": [
+    "Rest out of the rain."
+  ]
+}

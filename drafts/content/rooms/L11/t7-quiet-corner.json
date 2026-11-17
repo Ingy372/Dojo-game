@@ -1,0 +1,23 @@
+{
+  "id": "t7-quiet-corner",
+  "name": "Quiet Corner",
+  "kind": "rest",
+  "minBeltTier": 7,
+  "floorSet": "hall-of-echoes",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#..#.....#..#",
+    "#.....S.....#",
+    "#..#.....#..#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from quiet-shrine. Theme and props from the hall-of-echoes draft room \"quiet-corner\". Thick soft rugs that hush every sound, two cushions and a single candle.",
+  "signs": [
+    "No echo here. Just rest."
+  ]
+}

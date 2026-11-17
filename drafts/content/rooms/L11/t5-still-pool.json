@@ -1,0 +1,23 @@
+{
+  "id": "t5-still-pool",
+  "name": "Still Pool",
+  "kind": "rest",
+  "minBeltTier": 5,
+  "floorSet": "quiet-river",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#..#.....#..#",
+    "#.....S.....#",
+    "#..#.....#..#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Layout copied from quiet-shrine. Theme and props from the quiet-river draft room \"still-pool\". A round pool as flat as glass, with two cushions and a hanging lantern.",
+  "signs": [
+    "Rest by the water. You are welcome."
+  ]
+}
