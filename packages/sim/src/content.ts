@@ -68,6 +68,7 @@ export function loadContent(raw: RawContent): Content {
     ids.add(r.id);
     for (const s of r.enemySpawns) {
       if (!enemies[s.enemy]) throw new Error(`Room "${r.id}" uses enemy "${s.enemy}", which doesn't exist`);
+      if (enemies[s.enemy].passive && !r.tutorial) throw new Error(`Room "${r.id}" uses practice dummy "${s.enemy}", but only tutorial rooms can`);
     }
   }
   for (const kind of ['battle', 'challenge', 'treasure', 'rest', 'boss'] as RoomKind[]) {

@@ -170,6 +170,7 @@ function stillOn(w: WorldState, id: string): boolean {
 function patterned(): ReturnType<typeof testContent> {
   const content = testContent();
   return { ...content, enemies: Object.fromEntries(Object.entries(content.enemies).map(([id, def], k): [string, EnemyDef] => {
+    if (def.passive) return [id, def]; // tutorial practice dummies have no attacks
     const base = def.attacks[0];
     const extra: EnemyAttackDef = { ...base, name: 'p3-extra', telegraphTicks: Math.max(base.telegraphTicks, 22), strength: Math.min(1, base.strength), reach: base.reach + (k % 3), challenge: true, ...(k % 2 === 0 ? { followUp: { strength: 0.6, gapTicks: Math.max(base.recoverTicks, 20) } } : {}) };
     return [id, { ...def, challenge: { fromBelt: 4, fromRoom: 1, attacks: [extra], pattern: [0, def.attacks.length, def.attacks.length], phases: null } }];

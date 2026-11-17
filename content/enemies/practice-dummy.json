@@ -1,0 +1,13 @@
+{
+  "id": "practice-dummy",
+  "name": "Practice Dummy",
+  "notes": "TUT-B2 (TUT-P1 beat 4): a straw practice dummy for the tutorial Training Hall. Passive: it never moves and never attacks, but takes hits and gives the normal Focus per hit. Tutorial rooms only (the loader refuses it anywhere else).",
+  "color": "#c8a85a",
+  "passive": true,
+  "maxHealth": 40,
+  "power": 1,
+  "guard": 0,
+  "radius": 0.35,
+  "sightRange": 12,
+  "parSeconds": 3
+}

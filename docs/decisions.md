@@ -1929,3 +1929,8 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - "Never stuck": after 2 misses the circle fills 1.5x slower and the rules name the nearest safe floor tile for an arrow; after 3 misses the wave counts as done. Manager go, Nov 17.
 - The room isn't done until every stone wave is done, so the tutorial step can't be skipped by walking out.
 - Fill times sit in the room file as playtest settings (TUT-Q1 tunes them); the rest (circle size, gap, stumble, help) are in `STONES`. No balance numbers changed.
+
+## TUT-B2: practice dummies are passive and tutorial-only (2026-11-17)
+- `"passive": true` on an enemy means no moving and no attacks at all, so a passive file can't carry an attack, a speed, or a boss, shield, summon or other fight extra. That keeps "it can't hurt you" true by construction, not by tuning.
+- Passive enemies are allowed only in tutorial rooms; the loader refuses them anywhere else, so a dummy can't leak into Tower floors.
+- Health 40 and 120 are first-pass numbers (Manager to confirm). The rule they must keep: a starting hero reaches the STRIKE cost on the big dummy before it falls (tested).

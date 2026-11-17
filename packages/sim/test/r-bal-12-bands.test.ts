@@ -71,5 +71,6 @@ describe('R-BAL-12: live enemies stay in the #188 bands at every belt', () => {
       }
     }
   }
-  it('covers every live enemy file', () => expect(Object.keys(content.enemies).sort()).toEqual(Object.keys(LIVE).sort()));
+  it('covers every live enemy file (tutorial practice dummies are not live)', () =>
+    expect(Object.keys(content.enemies).filter((id) => !content.enemies[id].passive).sort()).toEqual(Object.keys(LIVE).sort()));
 });
