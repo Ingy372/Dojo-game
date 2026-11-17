@@ -17,6 +17,7 @@ export type EffectType =
   | 'strikeCost'
   | 'staggerTicks'
   | 'dashOnBlock'
+  | 'counterLock'
   | 'blockCut'
   | 'counterWindow'
   | 'disarm'
@@ -87,6 +88,8 @@ export interface PlayerMods {
   staggerTicks: number;
   /** A Block recharges Dash right away. */
   dashOnBlock: boolean;
+  /** L8-B2: a Perfect Counter that staggers also holds (Lock #17 and #32). */
+  counterLock: boolean;
   /** Blocks take this much less of the hit (0.1 = 50% becomes 40%). */
   blockCut: number;
   /** Extra Perfect Counter window ticks. */
@@ -134,6 +137,7 @@ export function noMods(): PlayerMods {
     strikeCostCut: 0,
     staggerTicks: 0,
     dashOnBlock: false,
+    counterLock: false,
     blockCut: 0,
     counterWindow: 0,
     disarm: 0,
@@ -202,6 +206,9 @@ export function modsFrom(effects: readonly Effect[], ticksPerSecond: number): Pl
       case 'dashOnBlock':
         m.dashOnBlock = true;
         break;
+      case 'counterLock':
+        m.counterLock = true;
+        break;
       case 'blockCut':
         m.blockCut += e.amount;
         break;
@@ -256,6 +263,7 @@ const TYPES: readonly EffectType[] = [
   'strikeCost',
   'staggerTicks',
   'dashOnBlock',
+  'counterLock',
   'blockCut',
   'counterWindow',
   'disarm',
@@ -276,7 +284,7 @@ const TYPES: readonly EffectType[] = [
 export const PASSIVE_EFFECTS: readonly EffectType[] = ['powerScale', 'attackSpeed', 'blockCut', 'focusGain', 'startFocus', 'strikeCost', 'counterWindow'];
 
 /** Effects that are simply on or off (no amount needed). */
-const SWITCHES: readonly EffectType[] = ['shieldBreaker', 'dashOnBlock'];
+const SWITCHES: readonly EffectType[] = ['shieldBreaker', 'dashOnBlock', 'counterLock'];
 
 /** Checks an effect from a data file. `fail` throws the caller's own error type. */
 export function loadEffect(data: unknown, fail: (problem: string) => never): Effect {

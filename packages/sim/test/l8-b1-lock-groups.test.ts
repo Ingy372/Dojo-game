@@ -1,4 +1,4 @@
-// L8-B1 (L8-SPEC sections 1, 3 and 6): Lock is two groups, arm and wrist, both off until the hold
+// L8-B1 (L8-SPEC sections 1, 3 and 6): Lock is two groups, arm and wrist, live since the hold
 // (L8-B2). No Lock rank grows a capped number, and an old save with `lock` equipped still loads.
 import { describe, expect, it } from 'vitest';
 import { buildTraining, COMBAT, loadFeed, loadProfile, normalizeLoadout, type Now } from '../src';
@@ -10,15 +10,16 @@ const families = content.abilities.families;
 const lockGroups = families.filter((f) => f.id.startsWith('lock'));
 
 describe('L8-B1 the two Lock groups', () => {
-  it('replaces `lock` with lock-arm and lock-wrist, ranked as section 3 says, both off', () => {
+  it('replaces `lock` with lock-arm and lock-wrist, ranked as section 3 says, both live with the hold', () => {
     expect(families.find((f) => f.id === ('lock' as string))).toBeUndefined();
     expect(lockGroups.map((f) => [f.id, f.live, f.ranks.map((r) => r.technique)])).toEqual([
-      ['lock-arm', false, [17, 28, 31, 36]],
-      ['lock-wrist', false, [32, 33, 35, 39]],
+      ['lock-arm', true, [17, 28, 31, 36]],
+      ['lock-wrist', true, [32, 33, 35, 39]],
     ]);
     const effects = (id: string) => lockGroups.find((f) => f.id === id)!.ranks.map((r) => r.effects);
-    expect(effects('lock-arm')).toEqual([[], [{ type: 'dashOnBlock', amount: 0 }], [], []]);
-    expect(effects('lock-wrist')).toEqual([[], [{ type: 'healOnPerfect', amount: 2 }], [], []]);
+    const hold = [{ type: 'counterLock', amount: 0 }];
+    expect(effects('lock-arm')).toEqual([hold, [{ type: 'dashOnBlock', amount: 0 }], [], []]);
+    expect(effects('lock-wrist')).toEqual([hold, [{ type: 'healOnPerfect', amount: 2 }], [], []]);
   });
 
   it('no Lock rank carries a capped number or grows the Perfect Counter package', () => {

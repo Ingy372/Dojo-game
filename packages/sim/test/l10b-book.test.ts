@@ -5,7 +5,7 @@ import { buildTraining, journalKinds, loadFeed, loadLessons, loadProfile, scroll
 import green from '../../../fixtures/4-green-belt.json';
 import lessonsData from '../../../content/tutorial/first-session-lessons.json';
 import { buildCubbies, shelfRows } from '../../../apps/client/src/ui/trophyCase';
-import { bookCubbies, tabCubbies } from '../../../apps/client/src/ui/book';
+import { BOOK_TABS, boardTab, bookCubbies, tabCubbies } from '../../../apps/client/src/ui/book';
 import { testContent } from './load-content';
 
 const content = testContent();
@@ -87,5 +87,12 @@ describe('L10-B the Book keeps an old save', () => {
   it('nothing in the save changes', () => {
     expect(JSON.stringify(oldSave)).toBe(saved);
     expect(loadProfile(JSON.parse(saved))).toEqual(profile);
+  });
+});
+
+describe('L8-B2 the Board after the Book', () => {
+  it('opening the Board from any Book tab goes to Last climb; Board tabs stay where they were', () => {
+    for (const tab of BOOK_TABS) expect(boardTab(tab)).toBe('run');
+    for (const tab of ['run', 'gear', 'style'] as const) expect(boardTab(tab)).toBe(tab);
   });
 });

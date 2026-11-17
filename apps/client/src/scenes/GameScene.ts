@@ -82,6 +82,7 @@ import {
   guardianLine,
   STONES,
   TUTORIAL_FLOOR,
+  isHeld,
 } from '@dojo/sim';
 import { FAITH } from '../ui/faith';
 import bruteData from '../../../../content/enemies/brute.json';
@@ -192,6 +193,9 @@ const FEEL = {
   hurt: { stopMs: 90, shakeMs: 170, shake: 0.01 },
   enemyDown: { stopMs: 120, shakeMs: 200, shake: 0.009 },
 };
+
+/** L8-B2: placeholder hold-ring bronze until Jay OKs the Artist's ring. */
+const HOLD_RING_PLACEHOLDER = 0xc07a2c;
 
 const COLORS = {
   floorA: 0x2a2536,
@@ -938,6 +942,7 @@ export class GameScene extends Phaser.Scene {
       telegraph = s.art.animations[anim].telegraphIntensity?.[s.frame] ?? 0;
     } else if (e.mode === 'stagger' || e.mode === 'thrown') {
       s.play(this.enemyAnim(s, 'stagger', 'idle'));
+      if (isHeld(e)) this.drawHoldRing(x * TILE, y * TILE, e.def.radius * TILE, now);
     } else if (e.mode === 'winded') {
       // Out of breath: pale, slumped, and breathing hard.
       s.play(this.enemyAnim(s, 'winded', this.enemyAnim(s, 'stagger', 'idle')));
@@ -1496,6 +1501,9 @@ export class GameScene extends Phaser.Scene {
           if (ev.playerId === this.me && !this.world.guide) this.lesson('firstPerfectUnaided');
           break;
         }
+        case 'held':
+          sfx.guard();
+          break;
         case 'block': {
           // A Counter that wasn't perfect still counts as trying it (no pressure).
           if (ev.playerId === this.me) this.tutorialDid('counter');
@@ -3456,6 +3464,16 @@ export class GameScene extends Phaser.Scene {
    * K27 fix 2: where a wind-up cue goes. Above the enemy when that clears the boss bar and every
    * door label; otherwise beside it (right, then left), then lower beside it. Never on the body.
    */
+  /**
+   * L8-B2: the Lock hold ring around a held enemy's feet. PLACEHOLDER bronze until Jay OKs the Artist's ring; never the
+   * ! yellow. It breathes gently, and holds still with Reduced motion on.
+   */
+  private drawHoldRing(cx: number, cy: number, r: number, now: number): void {
+    const size = r + 8 + (reducedMotion() ? 0 : 2 * Math.sin(now / 160));
+    this.danger.lineStyle(7, 0x14121c, 0.9).strokeCircle(cx, cy, size);
+    this.danger.lineStyle(4, HOLD_RING_PLACEHOLDER, 1).strokeCircle(cx, cy, size);
+  }
+
   private windupCueSpot(x: number, y: number, top: number, radius: number): { x: number; y: number } {
     const R = 21;
     const minY = this.belowBossBar() + R;

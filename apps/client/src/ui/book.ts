@@ -10,6 +10,11 @@ export const BOOK_WORDS = words;
 export type BookTab = 'moves' | 'monsters' | 'faith' | 'trophies';
 export const BOOK_TABS: readonly BookTab[] = ['moves', 'monsters', 'faith', 'trophies'];
 
+/** L8-B2 (Tester's #541 note): the Board has no Book tabs, so coming from the Book it opens on Last climb. */
+export function boardTab<T extends string>(tab: T | BookTab): T | 'run' {
+  return (BOOK_TABS as readonly string[]).includes(tab) ? 'run' : (tab as T);
+}
+
 const SHELVES: Record<'moves' | 'trophies', readonly ShelfId[]> = {
   moves: ['katas', 'kicks', 'selfDefense', 'lessons'],
   trophies: ['stripes', 'monsters'],
