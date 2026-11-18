@@ -13,7 +13,7 @@ import { Capacitor } from '@capacitor/core';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { music } from './audio/Music';
 import { sfx } from './audio/Sfx';
-import { DEVICE_DPR, hiDpi, setScreenSize } from './ui/theme';
+import { DEVICE_DPR, DPR, hiDpi, setScreenSize } from './ui/theme';
 import { finishPendingWipe } from './game/beta';
 import { seedLoadout } from './game/student';
 
@@ -64,8 +64,12 @@ game.events.once(Phaser.Core.Events.READY, () => {
 // Keep the canvas matched to the screen when the phone turns or the window changes.
 const fit = () => {
   const { width, height } = screenSize();
-  // A new layout scale re-zooms every running scene's camera before the scenes lay themselves out again.
-  if (setScreenSize(width, height)) for (const s of game.scene.getScenes(true)) hiDpi(s.cameras.main);
+  // A new layout scale re-zooms every screen-space camera (the ones hiDpi set to the old scale) before the
+  // scenes lay themselves out again. World cameras (the fight's) set their own zoom in their layout.
+  const oldDpr = DPR;
+  if (setScreenSize(width, height)) {
+    for (const s of game.scene.getScenes(true)) for (const cam of s.cameras.cameras) if (Math.abs(cam.zoom - oldDpr) < 1e-6) hiDpi(cam);
+  }
   game.scale.resize(Math.round(width * DEVICE_DPR), Math.round(height * DEVICE_DPR));
 };
 window.addEventListener('resize', fit);
