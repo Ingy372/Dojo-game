@@ -127,17 +127,6 @@
         }
       ]
     },
-    "chest": {
-      "target": -24,
-      "variants": [
-        {
-          "file": "audio/sfx/kenney-jingles/jingles_PIZZI07.ogg",
-          "meanDb": -17.3,
-          "peakDb": -5.7,
-          "gainDb": -6.7
-        }
-      ]
-    },
     "loot0": {
       "target": -25,
       "variants": [

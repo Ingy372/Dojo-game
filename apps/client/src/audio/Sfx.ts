@@ -164,11 +164,37 @@ class SoundMaker {
     this.tone(top / 2, top, 0.25, 'triangle', 0.18);
   }
 
-  /** A chest opens. */
+  /**
+   * A chest opens (Jay, Nov 18: the plucked jingle was off-putting). Made in code: a soft wooden thump,
+   * a quick sparkly harp run up, then a warm bell chord that rings out. Bright and magical, never harsh.
+   */
   chest(): void {
-    if (this.playFile('chest')) return;
-    this.noise(0.15, 0.3, 600);
-    [392, 523, 659].forEach((f, i) => this.tone(f, f, 0.14, 'square', 0.08, 0.05 + i * 0.06));
+    this.noise(0.12, 0.35, 380);
+    this.tone(140, 90, 0.16, 'sine', 0.22);
+    [784, 988, 1175, 1568, 1976, 2349].forEach((f, i) => this.bell(f, 0.5, 0.05, 0.04 + i * 0.035));
+    [523, 659, 784, 1047].forEach((f) => this.bell(f, 1.3, 0.07, 0.26));
+    this.bell(2093, 1.0, 0.025, 0.3);
+  }
+
+  /** A soft bell: a sine with a gentle attack, a quiet octave shimmer and a long ring-out. */
+  private bell(freq: number, seconds: number, volume: number, delay = 0): void {
+    if (!this.ctx || !this.master) return;
+    const t = this.ctx.currentTime + delay;
+    const gain = this.ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(volume, t + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + seconds);
+    gain.connect(this.master);
+    for (const [mult, share] of [[1, 1], [2.001, 0.25]] as const) {
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq * mult, t);
+      g.gain.value = share;
+      osc.connect(g).connect(gain);
+      osc.start(t);
+      osc.stop(t + seconds + 0.02);
+    }
   }
 
   /** An item drops: rarer items get a longer, higher chime. */

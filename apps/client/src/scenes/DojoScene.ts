@@ -100,10 +100,10 @@ const TRAY = 70;
 /** How many tiles tall the view is (the camera follows the character, like in the Tower). */
 const VIEW_ROWS = 6.5;
 /**
- * Nov 18: walking around, the view fits the whole room under the top bar (the room is 10 rows), so the
- * training station in the top-right corner is always in sight. Decorating keeps the close view.
+ * Walking around, the view is this many rows tall under the top bar and follows the hero. Nov 18 it fitted
+ * the whole room (10.1); Jay's playtest the same day: "zoomed back in some", so details read better.
  */
-const PLAY_FIT_ROWS = 10.1;
+const PLAY_FIT_ROWS = 7.6;
 /** The training station (tiles), in the top-right corner (Jay, Nov 18): its middle, its base row, and its left edge. */
 const STATION = { x: 13, footY: 3, left: 12 } as const;
 /** A tap this close (tiles) to a decoration picks it, for big fingers. */

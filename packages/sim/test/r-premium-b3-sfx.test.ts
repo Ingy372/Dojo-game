@@ -45,7 +45,7 @@ describe('R-PREMIUM-b3 sound files', () => {
   it('every event in sfx.json is played by Sfx.ts, and falls back to the sound made in code', () => {
     for (const id of Object.keys(events)) expect(sfxSrc, id).toContain(`'${id}'`);
     const plays = sfxSrc.match(/if \(this\.playFile\(.*\)\) return;/g) ?? [];
-    expect(plays.length).toBe(11); // 13 entries: loot picks one of three
+    expect(plays.length).toBe(10); // 12 entries: loot picks one of three (the chest is made in code since Nov 18)
   });
 
   it('the picks: STEEL00 level up, STEEL04 promotion, click_001 tap, wood block, cloth whoosh, PIZZI by rank', () => {

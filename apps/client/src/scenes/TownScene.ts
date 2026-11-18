@@ -43,8 +43,8 @@ export class TownScene extends WalkScene {
   }
 
   protected viewRows(): number {
-    // The town is wider and busier than a room: show more of it (it is 10.75 tiles tall).
-    return 9;
+    // Jay, Nov 18: zoomed in closer so details read and the street scrolls sideways (it is 10.75 tiles tall).
+    return 7;
   }
 
   protected spawn(data: unknown): { pos: Vec2; facing: Facing } {

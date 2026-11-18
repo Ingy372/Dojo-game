@@ -951,8 +951,12 @@ export class GameScene extends Phaser.Scene {
       if (inWindow) this.counterWindowOpen = true;
       // T5 (fix C): the enemy's own body warms up as it winds up, and turns gold in the Counter window.
       tint = inWindow ? 0xffe08a : progress > 0.35 ? 0xffb0a0 : tint;
-      const at = this.windupCueSpot(x * TILE, y * TILE, v.top, e.def.radius * TILE);
-      this.drawWindupCue(at.x, at.y, elapsed / e.windupTotal, inWindow, now);
+      // Jay, Nov 18: the "!" badge is an Easy (Guided) help only, plus the tutorial floor that teaches it.
+      // Standard and Challenge read the enemy's body, the glow and the red circle instead.
+      if (this.world.difficulty === 'guided' || this.run?.tutorial) {
+        const at = this.windupCueSpot(x * TILE, y * TILE, v.top, e.def.radius * TILE);
+        this.drawWindupCue(at.x, at.y, elapsed / e.windupTotal, inWindow, now);
+      }
     } else if (e.mode === 'recover') {
       // The attack itself (it lands on its first frame), then catching its breath.
       const anim = v.pushing ? this.enemyAnim(s, 'pushpaw', 'attack') : this.enemyAnim(s, v.attack, 'attack');
