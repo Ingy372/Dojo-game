@@ -2220,6 +2220,7 @@ export class GameScene extends Phaser.Scene {
             this.tweens.killTweensOf(mat);
             this.tweens.add({ targets: mat, alpha: 0, scale: 2, duration: 400, onComplete: () => mat.destroy() });
           }
+          this.world.doorHold = false;
           if (this.tflow && currentStep(this.tflow) === 'tutorial-bow') gotIt(this.tflow, TUTORIAL);
           this.tutorialDid('bow');
         } else this.introduceRoom();
@@ -2323,6 +2324,8 @@ export class GameScene extends Phaser.Scene {
       this.tutorialTick();
     };
     if (this.room.id !== 'tutorial-path') return start();
+    // TUT-T3: the Tower door opens after the stones, but lets the hero in only after the bow.
+    this.world.doorHold = true;
     this.showStory(() => {
       this.tutorialLead = STORY.opening.sensei;
       start();
@@ -2533,7 +2536,7 @@ export class GameScene extends Phaser.Scene {
     const from = this.room.goal ?? this.world.players[this.me].pos;
     const door = this.room.doors.reduce((a, b) => (Math.hypot(b.x - from.x, b.y - from.y) < Math.hypot(a.x - from.x, a.y - from.y) ? b : a));
     const at = { x: door.x, y: this.room.goal ? this.room.goal.y : door.y + 2 };
-    const view = this.add.ellipse(at.x * TILE, at.y * TILE, TILE * 1.3, TILE * 0.7, COLORS.gold, 0.35).setStrokeStyle(3, COLORS.gold, 0.95).setDepth(1);
+    const view = this.add.ellipse(at.x * TILE, at.y * TILE, TILE * 1.4, TILE * 0.75, 0xfff1b8, 0.55).setStrokeStyle(4, COLORS.gold, 1).setDepth(1);
     this.uiCamera.ignore(view);
     if (!reducedMotion()) this.tweens.add({ targets: view, scale: 1.15, alpha: 0.6, duration: 700, yoyo: true, repeat: -1 });
     this.bowMat = { at, door, view };

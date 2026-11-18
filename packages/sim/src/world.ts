@@ -299,6 +299,8 @@ export interface WorldState {
   stones: StoneState | null;
   /** Tutorial floor (K24a): the enemies stand still until Sensei's step lets them go. */
   enemyHold: boolean;
+  /** TUT-T3: while true, open doors can't be walked through yet (the Tower Path waits for the bow). */
+  doorHold: boolean;
   /** B-T3-TUNE-2c: ticks left in a boss phase pause (0 = none). Like the guide hold, nothing moves. */
   phaseHoldTicks: number;
   /** Tutorial floor (K24a): later waves come only through releaseWave, never on their own. */
@@ -569,6 +571,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     goal: room.goal ? { pos: { ...room.goal }, reached: false } : null,
     stones: newStones(room),
     enemyHold: false,
+    doorHold: false,
     phaseHoldTicks: 0,
     waveHold: false,
     seeAll: false,
@@ -1879,7 +1882,7 @@ function updateProgress(world: WorldState, room: Room, ids: PlayerId[]): void {
     prog.doorsOpen = true;
     world.events.push({ kind: 'doorsOpen' });
   }
-  if (prog.doorsOpen) {
+  if (prog.doorsOpen && !world.doorHold) {
     const slots = activeDoorSlots(room, prog.doorCount);
     for (const p of players) {
       const door = slots.findIndex((slot) => distance(p.pos, room.doors[slot]) <= TOUCH);
