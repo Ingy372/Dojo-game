@@ -38,6 +38,25 @@ Last updated: 2026-11-18 by Claude Code.
 | N5 | Full playtest; yellow-! notes and weak spots, to discuss. | Notes ready: `docs/reviews/playtest-notes-2026-11-18.md` |
 | N6 | Art clean-up of the weakest art. | Station art approved and in the game (top-right corner); tatami turned down |
 
+## 2b. Jay's tutorial playtest (Nov 18)
+
+| ID | What | Status |
+|---|---|---|
+| T1 | Story reason for the falling stones. | Building |
+| T2 | Stones: 5 waves (1, 3, 3, 4, 5), one always on the player. | Building |
+| T3 | The bow happens on a mat at the Tower door, facing it. | Building |
+| T5 | The Opening (fix A) and a small "!" (fix C). Then Jay playtests again; monster wind-up animations may need a redesign after. | Building |
+| T6 | Full tutorial from start to finish, Home Tour, First Week: `docs/tutorial-design.md`. | Draft, waits on Jay's OK |
+
+## 2c. PINNED: Blender art upgrades for later (Jay, Nov 18)
+
+Jay has a few more visuals to list here.
+
+| ID | What | Status |
+|---|---|---|
+| ART-CHEST | Treasure chest: redo in Blender so it feels special (Jay: "bland and boring"). The chest's code effects stay as they are until then. | Later |
+
+
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 
 | ID | What | Waits on |
