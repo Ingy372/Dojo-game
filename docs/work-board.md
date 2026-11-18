@@ -36,7 +36,7 @@ Last updated: 2026-11-18 by Claude Code.
 | N3 | Premium Equipment screen. | Done |
 | N4 | Desktop (Windows) and tablet support. | Done |
 | N5 | Full playtest; yellow-! notes and weak spots, to discuss. | Notes ready: `docs/reviews/playtest-notes-2026-11-18.md` |
-| N6 | Art clean-up of the weakest art. | In progress |
+| N6 | Art clean-up of the weakest art. | Draft ready for Jay: `incoming-art/claude-dojo-v2/` (tatami floor, modelled training station) |
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 
