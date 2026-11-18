@@ -4,7 +4,7 @@
 
 ## 1. The look in one sentence
 
-Friendly, low-poly 3D models with flat cel shading and a soft dark outline, rendered from one fixed top-down three-quarter camera into crisp transparent sprites. Warm wood and calm stone for places; clear, bright colours for things you need to notice. Kid-friendly for ages 6 and up: nothing gory, sharp or truly scary, and moves that look like real, clean martial arts.
+Friendly, low-poly 3D models with flat cel shading and a soft dark outline, rendered from one fixed top-down three-quarter camera into crisp transparent sprites. Warm wood and calm stone for places; clear, bright colours for things you need to notice. Kid-friendly for ages 6 and up: nothing gory or truly scary (sharp spikes, horns and crystals are allowed on monsters, Jay 2026-11-18), and moves that look like real, clean martial arts.
 
 ## 2. Camera and sizes
 
@@ -171,7 +171,7 @@ The game uses the system font today, and the title uses Georgia. For a kid-frien
 
 ## 10. Kid-appropriateness checklist (every asset)
 
-- Ages 6+: no blood, teeth, claws, weapons with edges, or realistic people as enemies.
+- Ages 6+: no blood, teeth, claws, weapons with edges, or realistic people as enemies. Sharp spikes, horns and crystals on monsters are allowed (Jay, 2026-11-18), for example when a Guardian gets serious.
 - Shadow creatures are a little spooky but cute: soft round shapes, big glowing eyes, never frightening.
 - Defeats are "set free": the creatures dissolve into light and sparkles, never death. Nothing is evil forever.
 - Martial arts moves use real, clean technique: guard up, balanced stances, no locked joints, bows done properly.

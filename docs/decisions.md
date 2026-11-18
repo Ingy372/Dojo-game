@@ -2024,3 +2024,10 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - **The station stands in the room's top-right corner** (Jay): 2x2 floor tiles at columns 13-14, rows 2-3 (1-based), solid. Walking up to it (below it or to its left) or tapping it opens the Training Board. Wall decorations can't go on the wall behind it.
 - **Walking around, the dojo view fits the whole room** under the top bar, so the corner station is always in sight (the close view at 8.6 rows hid the top of the room under the buttons). Decorating keeps the close view.
 - The station art is in the dojo pack (`tools/art-import/approved.json`, source `incoming-art/claude-dojo-v2/sprites/`). The import tool now only replaces a pack's own numbered pages (it used to delete `dojo-az-*` when importing `dojo`).
+
+## Art review answers (Jay, 2026-11-18)
+
+- **Order of the art work:** (1) the hero's run animation draft, (2) a character screen mockup, (3) the Hearth Cook as the first two-phase boss, (4) town upgrades. One per session; Jay approves each before it goes in the game.
+- **Sharp spikes, horns and crystals are allowed on monsters** (Jay: "spikes can be sharp, change that rule"). `docs/style-guide.md` updated. Still no blood, teeth, claws or edged weapons.
+- **Guardians get two phases, with a big visual change at half health** ("gets serious"): a short transformation the boss can't be hurt in and can't hurt in, then new attacks in phase 2, each still telegraphed. Each Guardian gets its own change (steam, spikes, size and muscle, armor glow...) plus shared signs (aura, eye colour, bar colour). The transformation stays smaller than a real promotion celebration. **The final boss keeps its three forms** (J16).
+- **Gear looks (recommendation, not yet decided):** a Wardrobe that keeps every look found; wear the best stats and show any found look; dyes earned (Guardians, Journal) or bought with earned coins. Fits L15 after the beta.
