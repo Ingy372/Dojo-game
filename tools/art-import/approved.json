@@ -580,6 +580,12 @@
           "id": "dojo",
           "type": "static",
           "json": "incoming-art/home-dojo/sprites/static.json"
+        },
+        {
+          "id": "dojo-station",
+          "type": "static",
+          "json": "incoming-art/claude-dojo-v2/sprites/static.json",
+          "note": "The training station (Claude Code; Jay approved Nov 18)."
         }
       ]
     },
@@ -616,7 +622,9 @@
           "id": "powerups",
           "type": "static",
           "json": "incoming-art/powerups/sprites/static.json",
-          "onlyLayers": ["1x"]
+          "onlyLayers": [
+            "1x"
+          ]
         }
       ]
     },

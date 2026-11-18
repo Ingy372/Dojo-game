@@ -278,7 +278,9 @@ def main() -> None:
         pages = packer.pack()
         names = []
         for old in os.listdir(out_dir):
-            if old.startswith(pack_name + '-') and old.endswith(('.png', '.webp')):
+            # Only this pack's own pages (<pack>-<number>): "dojo" must never remove "dojo-az-inside-0".
+            stem = old.rsplit('.', 1)[0]
+            if stem.startswith(pack_name + '-') and stem[len(pack_name) + 1:].isdigit() and old.endswith(('.png', '.webp')):
                 os.remove(os.path.join(out_dir, old))
         for i, page in enumerate(pages):
             # Lossless WebP by default: exact pixels, about 40% smaller than PNG.

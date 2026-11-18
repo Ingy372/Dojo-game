@@ -99,10 +99,13 @@ const ROW2_Y = 60;
 const TRAY = 70;
 /** How many tiles tall the view is (the camera follows the character, like in the Tower). */
 const VIEW_ROWS = 6.5;
-/** Nov 17: walking around, the view shows more of the room, so the training station is in sight. Decorating keeps the close view. */
-const PLAY_VIEW_ROWS = 8.6;
-/** The training station (tiles): its middle, its base and top rows, and how far right of it counts as beside it. */
-const STATION = { x: 2, footY: 6, top: 4, reachX: 3.85 } as const;
+/**
+ * Nov 18: walking around, the view fits the whole room under the top bar (the room is 10 rows), so the
+ * training station in the top-right corner is always in sight. Decorating keeps the close view.
+ */
+const PLAY_FIT_ROWS = 10.1;
+/** The training station (tiles), in the top-right corner (Jay, Nov 18): its middle, its base row, and its left edge. */
+const STATION = { x: 13, footY: 3, left: 12 } as const;
 /** A tap this close (tiles) to a decoration picks it, for big fingers. */
 const PICK_SLACK = 0.7;
 /** Arrow buttons for moving the selected decoration. */
@@ -240,8 +243,8 @@ export class DojoScene extends Phaser.Scene {
     this.selectGfx = this.add.graphics();
     this.player = this.makePlayer();
     this.standLayer.add(this.player);
-    // Nov 17: the training station against the left wall (its 2x2 floor tiles are solid).
-    this.standLayer.add(drawTrainingStation(this, STATION.x * TILE, (STATION.footY - 0.08) * TILE, TILE, PW.dojoWallLabel));
+    // Nov 18: the training station in the top-right corner (its 2x2 floor tiles are solid). Jay approved its art.
+    this.standLayer.add(drawTrainingStation(this, STATION.x * TILE, STATION.footY * TILE, TILE, PW.dojoWallLabel));
     // Bottom to top: the floor and back wall, mats, the mess on the floor, standing things
     // and the character, then the front wall (the character walks behind it), outlines and labels.
     this.worldLayer.add([...room.back, this.decoLayer, this.spotLayer, this.standLayer, ...room.front, this.selectGfx, ...room.labels]);
@@ -494,10 +497,10 @@ export class DojoScene extends Phaser.Scene {
 
     const door = CONTENT.dojo.room.doors[0];
     const dDoor = Math.hypot(p.pos.x - door.x, p.pos.y - door.y);
-    // Next to the station (it is solid, so the hero stops beside or below it).
-    const atStation = p.pos.x < STATION.reachX && p.pos.y > STATION.top - 0.6 && p.pos.y < STATION.footY + 0.75;
+    // Next to the station (it is solid, so the hero stops below it or to its left).
+    const atStation = p.pos.x > STATION.left - 0.85 && p.pos.y < STATION.footY + 0.85;
     if (dDoor > 2.1) this.doorArmed = true;
-    if (p.pos.x > STATION.reachX + 0.9 || p.pos.y > STATION.footY + 1.4) this.boardArmed = true;
+    if (p.pos.x < STATION.left - 1.7 || p.pos.y > STATION.footY + 1.8) this.boardArmed = true;
     // The doorway: the last row before the door, anywhere across the door's width (a tap on the door
     // stops the hero a little short of it, so a tight distance missed it).
     const inDoorway = Math.abs(p.pos.x - door.x) < 0.9 && door.y - p.pos.y < 1.6;
@@ -1579,7 +1582,7 @@ export class DojoScene extends Phaser.Scene {
   /** Zooms in so the view is VIEW_ROWS tiles tall, like the Tower. */
   private layout(): void {
     const { width, height } = view(this);
-    this.zoom = height / ((this.mode === 'decorate' ? VIEW_ROWS : PLAY_VIEW_ROWS) * TILE);
+    this.zoom = this.mode === 'decorate' ? height / (VIEW_ROWS * TILE) : (height - TOP) / (PLAY_FIT_ROWS * TILE);
     this.worldLayer.setScale(this.zoom);
     this.choreButton.setPosition(width - CHORE_RADIUS - 24, height - CHORE_RADIUS - 24);
     this.controls.layout();
@@ -1622,7 +1625,7 @@ export class DojoScene extends Phaser.Scene {
   private toTile(x: number, y: number): Vec2 {
     const t = this.rawTile(x, y);
     // A tap on the training station walks up beside it.
-    if (this.onStation(t)) return { x: STATION.reachX - 0.3, y: STATION.footY - 0.6 };
+    if (this.onStation(t)) return { x: STATION.x, y: STATION.footY + 0.5 };
     return t;
   }
 
@@ -1632,7 +1635,7 @@ export class DojoScene extends Phaser.Scene {
 
   /** True for a room point (tiles) on the training station or its label. */
   private onStation(t: Vec2): boolean {
-    return this.mode === 'play' && t.x > 0.5 && t.x < STATION.reachX - 0.4 && t.y > STATION.top - 1.9 && t.y < STATION.footY + 0.2;
+    return this.mode === 'play' && t.x > STATION.left - 0.3 && t.x < STATION.left + 2.3 && t.y > -1 && t.y < STATION.footY + 0.2;
   }
 
   private puff(s: MessSpot): void {

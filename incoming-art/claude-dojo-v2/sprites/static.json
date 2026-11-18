@@ -7,54 +7,6 @@
   },
   "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
   "sprites": {
-    "room": {
-      "size": [
-        1200,
-        824
-      ],
-      "layers": [
-        "floor",
-        "notice-board",
-        "wall-front"
-      ],
-      "files": {
-        "floor": "room_floor.png",
-        "notice-board": "room_notice-board.png",
-        "wall-front": "room_wall-front.png"
-      },
-      "groundRect": {
-        "col0": 0,
-        "row0": 0,
-        "col1": 15,
-        "row1": 10,
-        "note": "the image's ground area in tiles"
-      },
-      "topExtraTiles": 0.3,
-      "anchorPx": [
-        0,
-        24.0
-      ],
-      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "the whole room: draw floor at depth 0 (under everything), notice-board on top of it, wall-front ABOVE the characters and decorations. anchorPx = the grid's top-left corner (tile 0,0)",
-      "info": {
-        "tiles": [
-          "###############",
-          "#.............#",
-          "#.............#",
-          "#.............#",
-          "#.............#",
-          "#.............#",
-          "#.............#",
-          "#.............#",
-          "#......P......#",
-          "#######D#######"
-        ],
-        "board": {
-          "column": 8,
-          "row": 1
-        }
-      }
-    },
     "training-station": {
       "size": [
         200,

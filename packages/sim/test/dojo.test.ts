@@ -198,9 +198,10 @@ describe('decorating', () => {
     const ids = addDecorations(dojo, ['stone-lantern', 'stone-lantern', 'stone-lantern']);
     const start = { col: Math.floor(dc.room.playerStart.x), row: Math.floor(dc.room.playerStart.y) };
     expect(canPlace(dojo, dc, ids[0].uid, start.col, start.row)).toBe(false);
-    // Boxing in the corner (13, 1)... placing lanterns at (12,1) and (13,2) would seal it.
-    expect(placeItem(dojo, dc, ids[0].uid, 12, 1)).toBe(true);
-    expect(canPlace(dojo, dc, ids[1].uid, 13, 2)).toBe(false);
+    // Boxing in the corner (1, 8)... placing lanterns at (2,8) and (1,7) would seal it.
+    // (The top-right corner holds the training station since Nov 18.)
+    expect(placeItem(dojo, dc, ids[0].uid, 2, 8)).toBe(true);
+    expect(canPlace(dojo, dc, ids[1].uid, 1, 7)).toBe(false);
   });
 
   it('dust under a moved decoration moves out from under it', () => {

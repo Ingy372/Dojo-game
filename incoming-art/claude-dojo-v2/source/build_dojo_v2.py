@@ -1,6 +1,6 @@
 """
-Dojo Ascent - Home Dojo v2 (Claude Code, Nov 18): the Art Director bot's Batch 3 script, with a tatami
-training floor and the new training station. Original: incoming-art/home-dojo/source/build_home_dojo.py.
+Dojo Ascent - Home Dojo v2 (Claude Code, Nov 18): the Art Director bot's Batch 3 script plus the training
+station (Jay approved the station Nov 18; the tatami floor was turned down, so the floor is the original). Original: incoming-art/home-dojo/source/build_home_dojo.py.
 
 Dojo Ascent - Home Dojo room, decorations and mess (Art Director bot), Batch 3.
 
@@ -89,7 +89,7 @@ def target(name, layers, rect, top, anchor="bottom-center", **kw):
 WOOD = ["#c99a62", "#c19159", "#d2a56d", "#c7965d"]
 H_WALL = 1.3 / math.cos(math.radians(35))       # the back wall fills the top wall row + 0.3 tile above it
 cols, rows = len(ROOM["tiles"][0]), len(ROOM["tiles"])          # 15 x 10
-# floor v2 (Nov 18): wooden planks around the edge, and a tatami training floor in the middle.
+# floor: a dark base, then planks running left-right (half-tile rows), random lengths
 gbox("floor", "floor_base", 0, 0, cols, rows, -0.06, -0.01, "#7b5434", outline=False)
 for j in range(2, 2 * (rows - 1)):
     c = 1.0 - random.random() * 2
@@ -99,44 +99,6 @@ for j in range(2, 2 * (rows - 1)):
         gbox("floor", f"plank_{j}_{c:.1f}", max(c, 1) + 0.012, j / 2 + 0.012, c1 - 0.012, (j + 1) / 2 - 0.012, -0.01, 0.0,
              random.choice(WOOD), outline=False)
         c = c1
-# Tatami: columns 4..11, rows 2..8 (tiles), in the classic pattern of 2x1 mats turned this way and that.
-# Each mat: a woven straw face (two close greens/tans), a dark cloth edge (heri) on its long sides.
-T0C, T1C, T0R, T1R = 4, 12, 2, 8
-gbox("floor", "tatami_frame", T0C - 0.1, T0R - 0.1, T1C + 0.1, T1R + 0.1, 0.0, 0.012, "#5f3f26", outline=False)
-STRAW = ["#cdbf7a", "#c6b872", "#d2c582", "#c9bb76"]
-HERI = "#2f4a3a"
-def tatami(name, c0, r0, c1, r1, vertical):
-    gbox("floor", name, c0 + 0.02, r0 + 0.02, c1 - 0.02, r1 - 0.02, 0.012, 0.03, random.choice(STRAW), outline=False)
-    # weave lines across the mat's short way
-    n = 9
-    for k in range(1, n):
-        if vertical:
-            y = r0 + (r1 - r0) * k / n
-            gbox("floor", f"{name}_w{k}", c0 + 0.08, y - 0.006, c1 - 0.08, y + 0.006, 0.03, 0.032, "#b5a765", outline=False)
-        else:
-            x = c0 + (c1 - c0) * k / n
-            gbox("floor", f"{name}_w{k}", x - 0.006, r0 + 0.08, x + 0.006, r1 - 0.08, 0.03, 0.032, "#b5a765", outline=False)
-    if vertical:   # heri along the long (vertical) sides
-        gbox("floor", f"{name}_hl", c0 + 0.02, r0 + 0.02, c0 + 0.09, r1 - 0.02, 0.03, 0.036, HERI, outline=False)
-        gbox("floor", f"{name}_hr", c1 - 0.09, r0 + 0.02, c1 - 0.02, r1 - 0.02, 0.03, 0.036, HERI, outline=False)
-    else:
-        gbox("floor", f"{name}_ht", c0 + 0.02, r0 + 0.02, c1 - 0.02, r0 + 0.09, 0.03, 0.036, HERI, outline=False)
-        gbox("floor", f"{name}_hb", c0 + 0.02, r1 - 0.09, c1 - 0.02, r1 - 0.02, 0.03, 0.036, HERI, outline=False)
-k = 0
-for r in range(T0R, T1R, 2):
-    for c in range(T0C, T1C, 2):
-        # alternate: a 2x2 block is either two side-by-side vertical mats or two stacked horizontal mats
-        if ((r - T0R) // 2 + (c - T0C) // 2) % 2 == 0:
-            tatami(f"tat{k}a", c, r, c + 1, r + 2, True); tatami(f"tat{k}b", c + 1, r, c + 2, r + 2, True)
-        else:
-            tatami(f"tat{k}a", c, r, c + 2, r + 1, False); tatami(f"tat{k}b", c, r + 1, c + 2, r + 2, False)
-        k += 1
-# A red line marks where students bow in, along the front edge of the tatami.
-gbox("floor", "bow_line", T0C + 3.4, T1R - 0.22, T1C - 3.4, T1R - 0.14, 0.036, 0.04, "#b5462f", outline=False)
-# Soft shade along the walls (a few dark strips, very faint), so the room has depth.
-for i, a in enumerate((0.16, 0.10, 0.05)):
-    sh = M("#3a2616", flat=True)
-gbox("floor", "shade_top", 1, 1.0, cols - 1, 1.35, 0.001, 0.002, "#a57a4c", outline=False)
 # back wall (top row): dark wainscot, plaster panels between posts, a top beam
 WF = 1.0                                           # the wall's front face stands on the line between rows 0 and 1
 def wall_part(name, c0, c1, z0, z1, color, dy=0.0, outline=False):
@@ -417,7 +379,7 @@ for nm, fn, sd, what in LITTER:
                        note=f"mess: {what}, centred on the spot (anchorPx = cell centre). Replaces the fallen leaves: draw for the game's 'leaf' floor spots (pick one of footprints-1, footprints-2, towel, water-bottle). Clean = not drawn")
 
 # ============================================================ TRAINING STATION (Nov 18, Claude Code)
-# 2 x 2 floor tiles against the left wall (columns 2-3, rows 5-6 counting from 1). A wooden stand with a
+# 2 x 2 floor tiles in the room's top-right corner (columns 13-14, rows 2-3 counting from 1; Jay, Nov 18). A wooden stand with a
 # tiled roof, a scroll board showing a gold fist emblem (training), hand wraps hanging from pegs and a small
 # chest of gear at its foot. anchorPx = the bottom-centre of the footprint, like the other floor pieces.
 def station(lay, w, h):
@@ -451,7 +413,7 @@ def station(lay, w, h):
     obox(lay, f"{lay}_clasp", Vector((w / 2 - 0.3, yb - 0.36, 0.24)), (0.08, 0.02, 0.1), "#d9a02b", outline=False)
 station("training-station", 2, 2)
 target("training-station", ["training-station"], [-0.25, 0, 2.25, 2.12], 1.9, anchor=[1, 2], footprint=[2, 2], place="floor",
-       note="the Home Dojo's training station (Nov 18): stands on columns 2-3, rows 5-6 (1-based); anchorPx = bottom-centre of the footprint")
+       note="the Home Dojo's training station (Nov 18): stands on columns 13-14, rows 2-3 (1-based); anchorPx = bottom-centre of the footprint")
 
 scene.frame_set(1)
 scene["static_targets"] = json.dumps(TARGETS)

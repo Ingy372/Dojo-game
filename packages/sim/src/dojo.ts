@@ -201,7 +201,7 @@ export function loadDojoContent(roomData: unknown, decorationsData: unknown): Do
   const b = raw.board as Record<string, unknown> | undefined;
   if (!b || typeof b.column !== 'number' || typeof b.row !== 'number' || b.row !== 1) throw new DojoError('"board" needs a "column" and "row": 1 (the top wall)');
   const board = { col: b.column - 1, row: 0 };
-  // Nov 17: the training station stands against the left wall, mid-room (STATION_TILES). It is solid,
+  // Nov 18: the training station stands in the room's top-right corner (STATION_TILES). It is solid,
   // so nothing is placed there and the hero walks up to it, not through it.
   for (const t of STATION_TILES) if (room.walls[t.row]?.[t.col] === false) room.walls[t.row][t.col] = true;
 
@@ -446,6 +446,8 @@ export function canPlace(dojo: DojoState, content: DojoContent, uid: string, col
     // Along the top wall, clear of the corners, the board, and other wall decorations.
     if (row !== 0 || col < 1 || col + def.width > room.width - 1) return false;
     if (tiles.some((t) => t.col === content.board.col)) return false;
+    // ...and not on the wall behind the training station, where it would be hidden.
+    if (tiles.some((t) => STATION_TILES.some((s) => s.col === t.col))) return false;
     return !placed(dojo).some((o) => o.uid !== uid && decorationDef(content, o.id).place === 'wall' && overlaps(tiles, footprint(o.col!, o.row!, decorationDef(content, o.id))));
   }
   if (tiles.some((t) => room.walls[t.row]?.[t.col] !== false)) return false;
@@ -516,12 +518,12 @@ export function findSpot(dojo: DojoState, content: DojoContent, uid: string): { 
 }
 
 /** The dojo room with solid decorations counted as walls, for walking around in. */
-/** The floor tiles the Home Dojo's training station stands on: 2x2 against the left wall, mid-room. */
+/** The floor tiles the Home Dojo's training station stands on: 2x2 in the top-right corner (Jay, Nov 18). */
 export const STATION_TILES: readonly { col: number; row: number }[] = [
-  { col: 1, row: 4 },
-  { col: 2, row: 4 },
-  { col: 1, row: 5 },
-  { col: 2, row: 5 },
+  { col: 12, row: 1 },
+  { col: 13, row: 1 },
+  { col: 12, row: 2 },
+  { col: 13, row: 2 },
 ];
 
 export function dojoRoom(dojo: DojoState, content: DojoContent): Room {

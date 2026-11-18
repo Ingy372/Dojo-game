@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { addStatic, staticArt, staticBounds } from '../art/art';
 import { reducedMotion } from '../game/motion';
 import { FONT, crisp } from './theme';
 
@@ -9,6 +10,21 @@ import { FONT, crisp } from './theme';
  * Drawn in code until there is art for it. (cx, footY) is the middle of its base, in world pixels.
  */
 export function drawTrainingStation(scene: Phaser.Scene, cx: number, footY: number, tile: number, label: string): Phaser.GameObjects.Container {
+  // Nov 18: Jay approved the Blender station ('training-station' in the dojo pack). The code drawing
+  // below is only a fallback for when that art isn't loaded.
+  const art = addStatic(scene, 'dojo', 'training-station', 0, 0);
+  if (art.length > 0) {
+    // The label sits just above the painted top of the art (its roof).
+    const b = staticBounds(scene, 'dojo', 'training-station');
+    const sprite = staticArt(scene, 'dojo', 'training-station');
+    const anchorTop = b && sprite ? b.y - sprite.anchor[1] : -tile * 1.75;
+    const glow = scene.add.ellipse(0, tile * 0.25, tile * 2.2, tile * 0.6, 0xffd166, 0.22);
+    const text = stationLabel(scene, anchorTop - 4, label);
+    const chevron = stationChevron(scene, anchorTop - 30);
+    const c = scene.add.container(cx, footY, [glow, ...art, text, chevron]);
+    bob(scene, chevron, glow, anchorTop - 24);
+    return c;
+  }
   const w = tile * 2.3;
   const h = tile * 1.75;
   const g = scene.add.graphics();
@@ -49,8 +65,16 @@ export function drawTrainingStation(scene: Phaser.Scene, cx: number, footY: numb
   g.fillStyle(0xcfe3ff).fillRect(bx + bw - 14 - tile * 0.32, by + 16, tile * 0.32, tile * 0.24);
   g.fillStyle(0xb5462f).fillCircle(bx + 14 + tile * 0.16, by + 15, 2.5).fillCircle(bx + bw - 14 - tile * 0.16, by + 17, 2.5);
 
-  const text = scene.add
-    .text(0, top - 4, label, {
+  const text = stationLabel(scene, top - 4, label);
+  const chevron = stationChevron(scene, top - 30);
+  const c = scene.add.container(cx, footY, [glow, g, text, chevron]);
+  bob(scene, chevron, glow, top - 24);
+  return c;
+}
+
+function stationLabel(scene: Phaser.Scene, y: number, label: string): Phaser.GameObjects.Text {
+  return scene.add
+    .text(0, y, label, {
       fontFamily: FONT,
       fontStyle: 'bold',
       fontSize: '14px',
@@ -62,18 +86,21 @@ export function drawTrainingStation(scene: Phaser.Scene, cx: number, footY: numb
     })
     .setOrigin(0.5, 1)
     .setResolution(crisp() * 2);
+}
 
-  // A small gold chevron that bobs above the label (still with reduced motion).
+/** A small gold chevron above the label, pointing down at the station. */
+function stationChevron(scene: Phaser.Scene, y: number): Phaser.GameObjects.Graphics {
   const chevron = scene.add.graphics();
   chevron.fillStyle(0xffd166, 1);
   chevron.fillTriangle(-8, 0, 8, 0, 0, 9);
   chevron.lineStyle(2, 0x14121c, 1).strokeTriangle(-8, 0, 8, 0, 0, 9);
-  chevron.setPosition(0, top - 30);
+  chevron.setPosition(0, y);
+  return chevron;
+}
 
-  const c = scene.add.container(cx, footY, [glow, g, text, chevron]);
-  if (!reducedMotion()) {
-    scene.tweens.add({ targets: chevron, y: top - 24, duration: 650, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
-    scene.tweens.add({ targets: glow, alpha: 0.38, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
-  }
-  return c;
+/** The chevron bobs and the floor glow breathes (both still with reduced motion). */
+function bob(scene: Phaser.Scene, chevron: Phaser.GameObjects.Graphics, glow: Phaser.GameObjects.Ellipse, toY: number): void {
+  if (reducedMotion()) return;
+  scene.tweens.add({ targets: chevron, y: toY, duration: 650, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+  scene.tweens.add({ targets: glow, alpha: 0.38, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
 }

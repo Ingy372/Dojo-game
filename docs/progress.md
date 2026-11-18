@@ -1324,3 +1324,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - 1,620 tests pass; type checks and both builds pass. Copied onto `main` (the live link) with Jay's OK ("copy everything to the live link when finished").
 - **Next:** talk through the playtest notes with Jay and pick the combat fixes; art clean-up (see below).
 - **Art draft (not in the game):** Home Dojo v2 in `incoming-art/claude-dojo-v2/`, made in Blender 5.3 with the Art Director bot's script and style: a tatami training floor and a modelled training station. Waiting on Jay's OK before import. The bot's script needed one small fix for Blender 5 (noted in the copy).
+
+## Training station in the top-right corner (2026-11-18)
+
+- Jay's OK on the station art; tatami turned down. The station art replaces the code drawing and stands in the top-right corner; the dojo shows the whole room while walking.
+- Fixed the art import tool deleting other packs' pages. 1,620 tests pass.

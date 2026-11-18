@@ -1,6 +1,6 @@
 # Home Dojo v2 (Claude Code, Nov 18) — draft, waiting on Jay
 
-**Status: not approved, not in the game.** Made after Jay asked Claude to "try your hand" at the weakest art.
+**Status (Nov 18): the training station is approved and in the game (top-right corner). The tatami floor was turned down and removed from this script.**
 
 The Home Dojo became the main hub on Nov 18, and it was the weakest-looking piece: a big plain plank floor, and a
 training station drawn in code. This draft keeps the Art Director bot's exact style, camera and grid (its Batch 3
