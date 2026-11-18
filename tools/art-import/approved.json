@@ -563,9 +563,20 @@
     "tower-t1": {
       "sources": [
         {
+          "id": "chest-v2",
+          "type": "static",
+          "json": "incoming-art/claude-chest/sprites/static.json",
+          "note": "Treasure chest v2 (Claude Code, Nov 18; Jay asked for the chest redo). Replaces the bot's chest in every Tower pack."
+        },
+        {
           "id": "tower",
           "type": "static",
-          "json": "incoming-art/tower-rooms/sprites/static.json"
+          "json": "incoming-art/tower-rooms/sprites/static.json",
+          "except": [
+            "chest-closed",
+            "chest-open",
+            "chest-opened"
+          ]
         },
         {
           "id": "boss-door",
@@ -603,9 +614,20 @@
       "note": "Yellow belt Tower kit (Sunrise Garden). Same sprite ids as tower-t1, plus optional decor.",
       "sources": [
         {
+          "id": "chest-v2",
+          "type": "static",
+          "json": "incoming-art/claude-chest/sprites/static.json",
+          "note": "Treasure chest v2 (Claude Code, Nov 18; Jay asked for the chest redo). Replaces the bot's chest in every Tower pack."
+        },
+        {
           "id": "tower",
           "type": "static",
-          "json": "incoming-art/tower-rooms-t2/sprites/static.json"
+          "json": "incoming-art/tower-rooms-t2/sprites/static.json",
+          "except": [
+            "chest-closed",
+            "chest-open",
+            "chest-opened"
+          ]
         }
       ]
     },
@@ -702,9 +724,20 @@
       "note": "Orange belt Tower kit (Ember Kitchens, B-T3; Jay approved #244/#247/#248). Same sprite ids as tower-t1, plus kitchen decor.",
       "sources": [
         {
+          "id": "chest-v2",
+          "type": "static",
+          "json": "incoming-art/claude-chest/sprites/static.json",
+          "note": "Treasure chest v2 (Claude Code, Nov 18; Jay asked for the chest redo). Replaces the bot's chest in every Tower pack."
+        },
+        {
           "id": "tower",
           "type": "static",
-          "json": "incoming-art/tier3-ember-kitchens/sprites/static.json"
+          "json": "incoming-art/tier3-ember-kitchens/sprites/static.json",
+          "except": [
+            "chest-closed",
+            "chest-open",
+            "chest-opened"
+          ]
         }
       ]
     },

@@ -1,0 +1,122 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "chest-closed": {
+      "size": [
+        152,
+        180
+      ],
+      "layers": [
+        "chest",
+        "chest-glow",
+        "chest-fx"
+      ],
+      "files": {
+        "chest": "chest-closed_chest.png",
+        "chest-glow": "chest-closed_chest-glow.png",
+        "chest-fx": "chest-closed_chest-fx.png"
+      },
+      "groundRect": {
+        "col0": -0.45,
+        "row0": 0,
+        "col1": 1.45,
+        "row1": 1.35,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.9,
+      "anchorPx": [
+        76.0,
+        152.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 12,
+      "frameWidth": 152,
+      "fps": 12,
+      "loop": true,
+      "note": "v2 closed chest idle loop (1 s at 12 fps): a gentle bob, a glint down a gold band, the jewel twinkles. Layers: chest, chest-glow, chest-fx"
+    },
+    "chest-open": {
+      "size": [
+        224,
+        300
+      ],
+      "layers": [
+        "chest",
+        "chest-glow",
+        "chest-fx"
+      ],
+      "files": {
+        "chest": "chest-open_chest.png",
+        "chest-glow": "chest-open_chest-glow.png",
+        "chest-fx": "chest-open_chest-fx.png"
+      },
+      "groundRect": {
+        "col0": -0.9,
+        "row0": 0,
+        "col1": 1.9,
+        "row1": 1.35,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 2.4,
+      "anchorPx": [
+        112.0,
+        272.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 30,
+      "frameWidth": 224,
+      "fps": 12,
+      "loop": false,
+      "note": "v2 opening, once (2.5 s at 12 fps), then chest-opened. 0-11 bigger and bigger shakes and hops with light leaking out, 12 the lid bursts open: beam, stars, sparkles and gold coins fly out",
+      "keyFrames": {
+        "anticipation": "0-11",
+        "lidBurst": 12,
+        "beamPeak": 14,
+        "starsRise": "13-29",
+        "coinsFly": "12-28",
+        "glowPulse": 16,
+        "settled": 29
+      }
+    },
+    "chest-opened": {
+      "size": [
+        224,
+        300
+      ],
+      "layers": [
+        "chest",
+        "chest-glow",
+        "chest-fx"
+      ],
+      "files": {
+        "chest": "chest-opened_chest.png",
+        "chest-glow": "chest-opened_chest-glow.png",
+        "chest-fx": "chest-opened_chest-fx.png"
+      },
+      "groundRect": {
+        "col0": -0.9,
+        "row0": 0,
+        "col1": 1.9,
+        "row1": 1.35,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 2.4,
+      "anchorPx": [
+        112.0,
+        272.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 12,
+      "frameWidth": 224,
+      "fps": 12,
+      "loop": true,
+      "note": "v2 open chest idle loop (1 s at 12 fps): breathing glow and twinkles. Same size and anchor as chest-open"
+    }
+  }
+}

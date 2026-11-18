@@ -181,7 +181,7 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
 
 
 def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | None, inline: dict | None = None,
-                only_layers: list[str] | None = None) -> dict:
+                only_layers: list[str] | None = None, skip: list[str] | None = None) -> dict:
     # A source may list its sprites inline (B-T3-TUNE-2b: the lid icon came as plain PNGs, no static.json);
     # then "json" is the folder the files are in.
     d = {'sprites': inline} if inline else json.load(open(json_path))
@@ -189,6 +189,9 @@ def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | 
     sprites = {}
     for name, s in d['sprites'].items():
         if only and name not in only:
+            continue
+        # A source may leave some sprites out ("except"), e.g. the old chest once the v2 chest replaces it.
+        if skip and name in skip:
             continue
         frames = s.get('frames', 1)
         # Some packs (M7-N1 named-monster) give "frameSize" instead of "size", and no "layers" list
@@ -274,7 +277,7 @@ def main() -> None:
             elif src['type'] == 'ui':
                 entries[src['id']] = load_ui(packer, path, src.get('only'), [rel(p) for p in src.get('mergeSprites', [])])
             else:
-                entries[src['id']] = load_static(packer, path, scale, src.get('only'), src.get('sprites'), src.get('onlyLayers'))
+                entries[src['id']] = load_static(packer, path, scale, src.get('only'), src.get('sprites'), src.get('onlyLayers'), src.get('except'))
         pages = packer.pack()
         names = []
         for old in os.listdir(out_dir):
