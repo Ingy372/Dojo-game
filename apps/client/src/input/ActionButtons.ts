@@ -101,7 +101,7 @@ export class ActionButtons {
     if (this.off || !b || !b.container.visible) return;
     this.onTouch();
     this.pending = b.action;
-    this.scene.tweens.add({ targets: b.face, scale: 0.88, duration: 50, yoyo: true });
+    this.pressFx(b);
   }
 
   get objects(): Phaser.GameObjects.Container[] {
@@ -275,13 +275,29 @@ export class ActionButtons {
   }
 
   private makeButton(action: Button['action'], text: string, radius: number, color: number): Button {
+    // Glossy buttons (Jay, Nov 18): a soft shadow and a dark rim under the face so it looks raised,
+    // and a glossy shine on its top half. The face's colour still changes with ready / not ready.
+    const shadow = this.scene.add.circle(0, 5, radius + 2, 0x08060e, 0.4);
+    const rim = this.scene.add.circle(0, 3, radius + 1, 0x14121c, 0.75);
     const face = this.scene.add.circle(0, 0, radius, color, FACE_ALPHA).setStrokeStyle(4, 0xffffff, 0.8);
+    const gloss = this.scene.add.ellipse(0, -radius * 0.42, radius * 1.45, radius * 0.85, 0xffffff, 0.22);
+    const spark = this.scene.add.ellipse(-radius * 0.38, -radius * 0.52, radius * 0.32, radius * 0.18, 0xffffff, 0.5).setAngle(-25);
     const label = this.scene.add
-      .text(0, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${Math.max(12, Math.round(radius * 0.36))}px`, color: '#ffffff' })
+      .text(0, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${Math.max(12, Math.round(radius * 0.36))}px`, color: '#ffffff', stroke: '#14121c', strokeThickness: 2 })
       .setOrigin(0.5)
       .setResolution(crisp());
-    const container = this.scene.add.container(0, 0, [face, label]);
+    const container = this.scene.add.container(0, 0, [shadow, rim, face, gloss, spark, label]);
     return { action, radius, container, face, label };
+  }
+
+  /** The press: face, shine and label sink 3 points onto the dark rim and shrink a little, then spring back. */
+  private pressFx(b: Button): void {
+    const parts = b.container.list.slice(2) as unknown as Phaser.GameObjects.Components.Transform[];
+    this.scene.tweens.killTweensOf(parts);
+    parts.forEach((o) => o.setScale(1));
+    this.scene.tweens.add({ targets: parts, scale: 0.9, duration: 55, yoyo: true, ease: 'Quad.Out' });
+    const ys = parts.map((o) => o.y);
+    parts.forEach((o, i) => this.scene.tweens.add({ targets: o, y: ys[i] + 3, duration: 55, yoyo: true, ease: 'Quad.Out' }));
   }
 
   private all(): Button[] {
@@ -299,7 +315,7 @@ export class ActionButtons {
       if (this.hit(b, (pointer.x / DPR), (pointer.y / DPR))) {
         this.onTouch();
         this.pending = b.action;
-        this.scene.tweens.add({ targets: b.face, scale: 0.88, duration: 50, yoyo: true });
+        this.pressFx(b);
         return;
       }
     }
