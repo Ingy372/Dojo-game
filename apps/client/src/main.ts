@@ -13,7 +13,7 @@ import { Capacitor } from '@capacitor/core';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { music } from './audio/Music';
 import { sfx } from './audio/Sfx';
-import { DPR } from './ui/theme';
+import { DEVICE_DPR, hiDpi, setScreenSize } from './ui/theme';
 import { finishPendingWipe } from './game/beta';
 import { seedLoadout } from './game/student';
 
@@ -27,6 +27,8 @@ function screenSize(): { width: number; height: number } {
   return { width: el?.clientWidth || window.innerWidth, height: el?.clientHeight || window.innerHeight };
 }
 
+setScreenSize(screenSize().width, screenSize().height);
+
 const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
@@ -35,10 +37,12 @@ const game = new Phaser.Game({
     // Fill the safe area of the screen, whatever the phone's size, at full ("retina")
     // sharpness: the canvas has DPR real pixels per screen point and is shown at
     // 1/DPR size. Layout code works in screen points via view() (K24c).
+    // Nov 17: on a computer or tablet the layout points are larger than CSS pixels (UI_SCALE), but the
+    // canvas always has one real pixel per device pixel, so it stays sharp.
     mode: Phaser.Scale.NONE,
-    width: screenSize().width * DPR,
-    height: screenSize().height * DPR,
-    zoom: 1 / DPR,
+    width: screenSize().width * DEVICE_DPR,
+    height: screenSize().height * DEVICE_DPR,
+    zoom: 1 / DEVICE_DPR,
   },
   // Touch first. The mouse also works so previews can be clicked on a computer;
   // Phaser blocks the browser's copy-of-a-tap mouse events, so a phone tap counts once.
@@ -49,6 +53,9 @@ const game = new Phaser.Game({
   scene: [TitleScene, CreateScene, DojoScene, HomeScene, GameScene, StreetSmartsScene, InsideScene, OutsideScene, TownScene],
 });
 
+// Nov 17 (desktop): a right click never opens the browser's menu over the game.
+game.events.once(Phaser.Core.Events.READY, () => game.input.mouse?.disableContextMenu());
+
 // Music (M7-P8): each screen that opens picks its track from content/settings/audio.json.
 game.events.once(Phaser.Core.Events.READY, () => {
   for (const s of game.scene.scenes) s.events.on(Phaser.Scenes.Events.CREATE, () => music.setScene(s.scene.key));
@@ -57,7 +64,9 @@ game.events.once(Phaser.Core.Events.READY, () => {
 // Keep the canvas matched to the screen when the phone turns or the window changes.
 const fit = () => {
   const { width, height } = screenSize();
-  game.scale.resize(Math.round(width * DPR), Math.round(height * DPR));
+  // A new layout scale re-zooms every running scene's camera before the scenes lay themselves out again.
+  if (setScreenSize(width, height)) for (const s of game.scene.getScenes(true)) hiDpi(s.cameras.main);
+  game.scale.resize(Math.round(width * DEVICE_DPR), Math.round(height * DEVICE_DPR));
 };
 window.addEventListener('resize', fit);
 window.addEventListener('orientationchange', fit);

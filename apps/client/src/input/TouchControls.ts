@@ -22,6 +22,8 @@ export class TouchControls {
   private readonly base: Phaser.GameObjects.Arc;
   private readonly knob: Phaser.GameObjects.Arc;
   private readonly hint: Phaser.GameObjects.Arc;
+  /** Nov 17 (desktop): arrow keys and WASD move the hero like the stick. */
+  private readonly keys: Record<'up' | 'down' | 'left' | 'right' | 'w' | 'a' | 's' | 'd', Phaser.Input.Keyboard.Key> | null;
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -44,7 +46,22 @@ export class TouchControls {
     // Faint ring showing where the stick lives when not in use.
     this.hint = scene.add.circle(0, 0, STICK_RADIUS, 0xffffff, 0.05).setStrokeStyle(2, 0xffffff, 0.12);
     this.showStick(false);
+    // On a computer with no touch screen, the resting stick ring would only confuse: keys and clicks move.
+    if (!hasTouch()) this.hint.setAlpha(0);
     this.layout();
+    const kb = scene.input.keyboard;
+    this.keys = kb
+      ? {
+          up: kb.addKey('UP'),
+          down: kb.addKey('DOWN'),
+          left: kb.addKey('LEFT'),
+          right: kb.addKey('RIGHT'),
+          w: kb.addKey('W', false),
+          a: kb.addKey('A', false),
+          s: kb.addKey('S', false),
+          d: kb.addKey('D', false),
+        }
+      : null;
 
     scene.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown, this);
     scene.input.on(Phaser.Input.Events.POINTER_MOVE, this.onMove, this);
@@ -68,12 +85,30 @@ export class TouchControls {
     if (this.stickPointer !== null) {
       return { kind: 'stick', x: this.stickVector.x, y: this.stickVector.y };
     }
+    const key = this.keyVector();
+    if (key) {
+      this.pendingTap = null;
+      return { kind: 'stick', x: key.x, y: key.y };
+    }
     if (this.pendingTap) {
       const tap = this.pendingTap;
       this.pendingTap = null;
       return { kind: 'moveTo', x: tap.x, y: tap.y };
     }
     return { kind: 'none' };
+  }
+
+  /** The arrow keys / WASD as a stick push (full speed, diagonals normalised), or null when none are held. */
+  private keyVector(): { x: number; y: number } | null {
+    const k = this.keys;
+    if (!k || this.off) return null;
+    const x = (k.right.isDown || k.d.isDown ? 1 : 0) - (k.left.isDown || k.a.isDown ? 1 : 0);
+    const y = (k.down.isDown || k.s.isDown ? 1 : 0) - (k.up.isDown || k.w.isDown ? 1 : 0);
+    if (x === 0 && y === 0) return null;
+    // Menus and cards that block taps (they report every point as a button) block the keys too.
+    if (this.isButton(-1e6, -1e6)) return null;
+    const len = Math.hypot(x, y);
+    return { x: x / len, y: y / len };
   }
 
   /** Lets go of everything (for example when the app goes to the background). */
@@ -159,4 +194,9 @@ export class TouchControls {
     this.knob.setVisible(active);
     this.hint.setVisible(!active);
   }
+}
+
+/** True on phones and tablets (and touch-screen computers). */
+export function hasTouch(): boolean {
+  return typeof navigator !== 'undefined' && (navigator.maxTouchPoints ?? 0) > 0;
 }

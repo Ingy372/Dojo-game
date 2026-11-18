@@ -1872,7 +1872,7 @@ export class GameScene extends Phaser.Scene {
               .text(width / 2, banner ? banner.bottom + ROAR_GAP_PX : 72, 'ROAR!', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#ffb627', stroke: '#2a1408', strokeThickness: 5 })
               .setOrigin(0.5, 0)
               .setDepth(60)
-              .setResolution(window.devicePixelRatio || 1);
+              .setResolution(crisp());
             this.cameras.main.ignore(roar);
             this.roarText?.destroy();
             this.helpText?.destroy();
@@ -1888,7 +1888,7 @@ export class GameScene extends Phaser.Scene {
                 .text(ex, headY, 'Help me!', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166', stroke: '#2a1408', strokeThickness: 4 })
                 .setOrigin(0.5, 0)
                 .setDepth(60)
-                .setResolution(window.devicePixelRatio || 1);
+                .setResolution(crisp());
               this.cameras.main.ignore(help);
               this.helpText = help;
               const minTop = banner ? banner.bottom + ROAR_GAP_PX : 0;
@@ -2475,7 +2475,7 @@ export class GameScene extends Phaser.Scene {
         padding: { x: 30, y: 12 },
       })
       .setOrigin(0.5, 0)
-      .setResolution(window.devicePixelRatio || 1)
+      .setResolution(crisp())
       .setInteractive({ useHandCursor: true });
     this.cameras.main.ignore(btn);
     this.gotItBtn = btn;
@@ -2797,7 +2797,7 @@ export class GameScene extends Phaser.Scene {
         wordWrap: { width: Math.min(width * 0.4, 300), useAdvancedWrap: true },
       })
       .setDepth(60)
-      .setResolution(window.devicePixelRatio || 1);
+      .setResolution(crisp());
     this.cameras.main.ignore(t);
     this.counterTip = t;
     this.buttons.pulseCounter(4);
@@ -3404,7 +3404,7 @@ export class GameScene extends Phaser.Scene {
       this.add
         .text(at.x * TILE, (at.y - 1.3) * TILE, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '24px', color: '#cfeaff', stroke: '#14121c', strokeThickness: 6 })
         .setOrigin(0.5)
-        .setResolution(window.devicePixelRatio || 1)
+        .setResolution(crisp())
         .setDepth(12)
         .setScale(0.5),
     );
@@ -3437,7 +3437,7 @@ export class GameScene extends Phaser.Scene {
           strokeThickness: 5,
         })
         .setOrigin(0.5)
-        .setResolution(window.devicePixelRatio || 1)
+        .setResolution(crisp())
         .setDepth(11),
     );
     this.popups.add(t);
@@ -3670,7 +3670,7 @@ export class GameScene extends Phaser.Scene {
         wordWrap: { width: Math.min(width - (this.run?.tutorial ? 260 : 48), 640), useAdvancedWrap: true },
       })
       .setOrigin(0.5, 0)
-      .setResolution(window.devicePixelRatio || 1);
+      .setResolution(crisp());
     this.cameras.main.ignore(t);
     this.senseiText = t;
     // The first line shows straight away, so its size is known (K12: labels keep clear of it).
@@ -3711,7 +3711,7 @@ export class GameScene extends Phaser.Scene {
     const t = this.add
       .text(width / 2, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#14121c', strokeThickness: rating ? RATING.stroke : 8 })
       .setOrigin(0.5)
-      .setResolution(window.devicePixelRatio || 1)
+      .setResolution(crisp())
       .setAlpha(rating ? RATING.alpha : 1);
     this.cameras.main.ignore(t);
     // K23c: keep off the doors, the chest, the centre message, Sensei's banner and the 'Room clear!' line.

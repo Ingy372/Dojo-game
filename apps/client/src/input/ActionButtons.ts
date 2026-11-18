@@ -1,7 +1,8 @@
 import { reducedMotion } from '../game/motion';
 import Phaser from 'phaser';
 import { COMBAT, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
-import { view, DPR } from '../ui/theme';
+import { crisp, view, DPR } from '../ui/theme';
+import { hasTouch } from './TouchControls';
 import { ACTION_COLORS as AC, ACTION_LABEL, GREEN } from '../ui/tokens';
 
 /** Q-PREM-COLOR: button faces are solid so white labels keep their contrast over any floor (were 0.9, letting the floor tint through). */
@@ -70,6 +71,37 @@ export class ActionButtons {
     }
     this.layout();
     scene.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown, this);
+    // Nov 17 (desktop): keys for the buttons. Space or K = Counter, J = Strike, L or Shift = Dash, E = Virtue.
+    const kb = scene.input.keyboard;
+    if (kb) {
+      const bind = (codes: string[], b: () => Button | null) =>
+        codes.forEach((c) => kb.addKey(c, c === 'SPACE' || c === 'SHIFT').on('down', () => this.pressKey(b())));
+      bind(['SPACE', 'K'], () => this.counter);
+      bind(['J'], () => this.strike);
+      bind(['L', 'SHIFT'], () => this.dash);
+      bind(['E'], () => this.virtue);
+      scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => kb.removeAllKeys(false));
+    }
+    if (!hasTouch()) {
+      // On a computer, each button shows its key underneath.
+      const hint: [Button | null, string][] = [[this.counter, 'Space'], [this.strike, 'J'], [this.dash, 'L'], [this.virtue, 'E']];
+      for (const [b, k] of hint) {
+        if (!b) continue;
+        const t = scene.add
+          .text(0, b.radius + 4, k, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '11px', color: '#fff6e0', backgroundColor: 'rgba(20,18,28,0.7)', padding: { x: 4, y: 1 } })
+          .setOrigin(0.5, 0)
+          .setResolution(crisp());
+        b.container.add(t);
+      }
+    }
+  }
+
+  /** A key press acts like touching the button (only while it's on screen and the buttons are on). */
+  private pressKey(b: Button | null): void {
+    if (this.off || !b || !b.container.visible) return;
+    this.onTouch();
+    this.pending = b.action;
+    this.scene.tweens.add({ targets: b.face, scale: 0.88, duration: 50, yoyo: true });
   }
 
   get objects(): Phaser.GameObjects.Container[] {
@@ -244,7 +276,7 @@ export class ActionButtons {
     const label = this.scene.add
       .text(0, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${Math.max(12, Math.round(radius * 0.36))}px`, color: '#ffffff' })
       .setOrigin(0.5)
-      .setResolution(window.devicePixelRatio || 1);
+      .setResolution(crisp());
     const container = this.scene.add.container(0, 0, [face, label]);
     return { action, radius, container, face, label };
   }
