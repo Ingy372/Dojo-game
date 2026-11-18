@@ -55,9 +55,20 @@ body {
 }
 
 /* The game is landscape only. A phone browser can't force sideways mode,
-   so in portrait we show a friendly message instead. */
-@media (orientation: portrait) {
+   so on a touch screen held upright we show a friendly message instead. */
+@media (orientation: portrait) and (pointer: coarse) {
   #rotate {
     display: flex;
+  }
+}
+
+/* Nov 18 (Jay): a computer window that is taller than it is wide (a narrow or half-screen window, a
+   turned monitor) must never be blocked. The game plays in a wide 16:9 box in the middle instead. */
+@media (orientation: portrait) and (not (pointer: coarse)) {
+  #game {
+    top: 50%;
+    bottom: auto;
+    height: calc(100vw * 9 / 16);
+    transform: translateY(-50%);
   }
 }

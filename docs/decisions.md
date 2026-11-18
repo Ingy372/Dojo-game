@@ -2036,3 +2036,4 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 
 - **Jay approved Claude's run draft** ("yes put the new run in"). It replaces the hero's `walk` animation for both bodies, everywhere he moves (Tower, dojo, town): 12 frames at 36 fps, the same 1.5 tiles per loop, so the feet stay planted. The approved `player_custom_a|b.blend` now hold the run (the old walk is kept in them as `walk_before_claude_run`). The player packs grew by about 0.3 MB.
 - **Character from a photo: not now (Jay).** Possible later on-device only with a parent check; Jay will revisit it once everything else is built.
+- **Computers are never blocked by "Turn your phone sideways" (Jay, Nov 18: he couldn't get past it on his desktop).** The message shows only on touch screens held upright (`pointer: coarse`). On a computer, a window taller than it is wide plays the game in a 16:9 box in the middle (`style.css`).
