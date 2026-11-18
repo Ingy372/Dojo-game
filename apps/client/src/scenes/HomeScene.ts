@@ -73,6 +73,7 @@ import { NAMED_PACK } from '../game/named';
 import { openShop, type ShopScreen } from '../ui/shop';
 import { SHOP_WORDS, wornShop } from '../game/shop';
 import { playFx } from '../fx/shopFx';
+import { EquipmentScreen } from '../ui/equipment';
 import { PATH_LABEL, PATH_LOCK_R, PATH_WORDS as PW, clampStart, fill, pathLayout, towerStart, type Box } from '../ui/pathScreen';
 import { LESSONS, lessonTitle, takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
@@ -202,6 +203,7 @@ export class HomeScene extends Phaser.Scene {
   private titleTaps: number[] = [];
   /** Came here straight from a run (the XP bar fills from what it last showed). */
   private fromRun = false;
+  private equipment: EquipmentScreen | null = null;
   private openOn: 'path' | 'board' | null = null;
   private knockout: HomeSceneData['knockout'] | null = null;
   private firstFloorDone = false;
@@ -1334,12 +1336,8 @@ export class HomeScene extends Phaser.Scene {
   /** A found tile: an item still in the bag opens its Gear sheet; anything else opens a small sheet here. */
   openFound(f: FoundTile): void {
     if (f.kind === 'item' && this.profile.inventory.some((it) => it.uid === f.item.uid)) {
-      this.tab = 'gear';
-      this.selected = f.item.uid;
-      this.sheetOpening = true;
-      this.confirmLetGo = false;
-      this.renderTabs(true);
-      this.renderPanel('tab');
+      // Nov 17: items open the Equipment screen, with this item's card up.
+      this.openEquipment(f.item.uid);
       return;
     }
     if (f.kind === 'item') this.openRunSheet(f.item.name, [[`${rarityName(f.item.rarity)} ${SLOT_NAME[f.item.slot]}`, css(RARITY_COLOR[f.item.rarity]), true], [describeItem(f.item), '#5a3e28', false], [LASTRUN_WORDS.notInBag, '#7a5a3a', false]]);
@@ -2507,6 +2505,8 @@ export class HomeScene extends Phaser.Scene {
   }
 
   private setTab(tab: Tab): void {
+    // Nov 17: Gear opens the full-screen Equipment view (ui/equipment.ts) over the board.
+    if (tab === 'gear') return this.openEquipment();
     this.tab = tab;
     this.selected = null;
     this.page = 0;
@@ -2517,6 +2517,23 @@ export class HomeScene extends Phaser.Scene {
     }
     this.renderTabs(true);
     this.renderPanel('tab');
+  }
+
+  /** Nov 17: the full-screen Equipment view. `uid` opens that item's card straight away. */
+  private openEquipment(uid?: string): void {
+    if (this.celebrating || this.equipment) return;
+    sfx.unlock();
+    this.equipment = new EquipmentScreen(this, {
+      profile: this.profile,
+      training: this.training,
+      onClose: () => {
+        this.equipment = null;
+        this.renderTabs(false); // the Gear (n) count may have changed
+        this.renderPanel('none');
+      },
+    });
+    const item = uid ? this.profile.inventory.find((it) => it.uid === uid) : undefined;
+    if (item) this.equipment.showItem(item);
   }
 
   private turn(by: number): void {
