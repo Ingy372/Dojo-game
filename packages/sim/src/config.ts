@@ -104,6 +104,23 @@ export const COMBAT = {
     recoveryTicks: 8,
   },
 
+  /**
+   * T5 (fix A, Jay Nov 18): the Opening. After a Perfect Counter the enemy is dizzy and STRIKE glows gold;
+   * a Strike in that time is a free finisher that knocks the enemy back, hitting any enemy it bumps into.
+   */
+  opening: {
+    /** How long the Opening lasts (ticks; 1 second, the same as the stagger). */
+    ticks: 20,
+    /** The finisher's move strength (a normal Strike is 2.5; it costs no Focus). */
+    strength: 1.5,
+    /** How far the finisher can reach (gap between bodies, lunge included). */
+    reach: 1.6,
+    /** How far the enemy is knocked back (tiles). Bosses stay put. */
+    knockTiles: 0.8,
+    /** Strength of the bump on an enemy the knocked-back one runs into. */
+    bumpStrength: 1,
+  },
+
   counter: {
     /** B-MASHER-2 (E3): Mash guard stops for the rest of a room once this many Perfect Counters land in it. */
     mashGuardPerfects: 3,

@@ -212,11 +212,13 @@ export class ActionButtons {
     this.counter.container.setScale(1 + Math.abs(Math.sin(this.scene.time.now / 140)) * pulse);
 
     const cost = strikeCost(p);
-    const strikeReady = alive && p.focus >= cost;
+    // T5 (fix A): during the Opening after a Great Counter, STRIKE is free and glows gold.
+    const opening = alive && p.opening !== null;
+    const strikeReady = alive && (p.focus >= cost || opening);
     this.strike.container.setAlpha(1);
-    this.strike.face.setFillStyle(strikeReady ? AC.strike.ready : AC.strike.dim, FACE_ALPHA);
-    this.strike.face.setStrokeStyle(4, 0xffffff, strikeReady ? 0.8 : 0.35);
-    labelColor(this.strike, strikeReady ? ACTION_LABEL.light : ACTION_LABEL.dim);
+    this.strike.face.setFillStyle(opening ? 0xffd166 : strikeReady ? AC.strike.ready : AC.strike.dim, FACE_ALPHA);
+    this.strike.face.setStrokeStyle(opening ? 6 : 4, 0xffffff, strikeReady ? (opening ? 1 : 0.8) : 0.35);
+    labelColor(this.strike, opening ? ACTION_LABEL.dark : strikeReady ? ACTION_LABEL.light : ACTION_LABEL.dim);
     const fill = Math.min(1, p.focus / cost);
     this.strikeRing.clear();
     // L-PREMIUM-b QA: while the Counter tip shows, STRIKE's ring stays blue and still, so the only gold on screen is COUNTER.
@@ -242,7 +244,8 @@ export class ActionButtons {
       this.dashRing.strokePath();
     }
     this.dash.container.setScale(this.dashPulse ? 1 + Math.abs(Math.sin(this.scene.time.now / 140)) * 0.14 : 1);
-    if (strikeGold && this.strikePulse) this.strike.container.setScale(1 + Math.abs(Math.sin(this.scene.time.now / 140)) * 0.14);
+    if (opening) this.strike.container.setScale(reducedMotion() ? 1.12 : 1.12 + Math.abs(Math.sin(this.scene.time.now / 70)) * 0.12);
+    else if (strikeGold && this.strikePulse) this.strike.container.setScale(1 + Math.abs(Math.sin(this.scene.time.now / 140)) * 0.14);
     else if (strikeGold) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
     else this.strike.container.setScale(1);
 

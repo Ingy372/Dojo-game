@@ -57,6 +57,8 @@ export interface PlayerState {
   guardTicks: number;
   /** Ticks before Counter can be pressed again after a guard that countered nothing. */
   counterLockout: number;
+  /** T5: the Opening after a Perfect Counter (a free finisher on that enemy), or null. */
+  opening: { enemyId: EnemyId; ticks: number } | null;
   /** Extra Perfect Counter window ticks (the Rooted Stance adds some later). */
   counterBonusTicks: number;
   /** Ticks of dash movement left (0 = not dashing). */
@@ -206,6 +208,10 @@ export type CombatEvent =
   | { kind: 'guideCancel'; step: number }
   | { kind: 'enemySwing'; enemyId: EnemyId }
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
+  /** T5: an Opening started (STRIKE glows gold). */
+  | { kind: 'openingReady'; playerId: PlayerId; enemyId: EnemyId }
+  /** T5: the Opening finisher landed; `bumped` are the enemies the knocked-back one ran into. */
+  | { kind: 'openingFinisher'; playerId: PlayerId; enemyId: EnemyId; bumped: EnemyId[] }
   | { kind: 'thrown'; playerId: PlayerId; enemyId: EnemyId }
   /** L8-B2: a Perfect Counter's stagger is also a Lock hold. */
   | { kind: 'held'; playerId: PlayerId; enemyId: EnemyId }
@@ -479,6 +485,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       counterPressedTick: -1,
       guardTicks: 0,
       counterLockout: 0,
+      opening: null,
       counterBonusTicks: 0,
       dashTicks: 0,
       dashDir: { x: 0, y: 1 },
@@ -845,6 +852,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
 
   if (p.attackCooldown > 0) p.attackCooldown--;
   if (p.strikeRecovery > 0) p.strikeRecovery--;
+  if (p.opening && --p.opening.ticks <= 0) p.opening = null;
   landPendingStrikeHits(world, p);
   if (p.counterLockout > 0) p.counterLockout--;
   if (p.dashCooldown > 0) p.dashCooldown--;
@@ -967,6 +975,7 @@ function useVirtue(world: WorldState, p: PlayerState): void {
 }
 
 function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
+  if (p.opening && tryFinisher(world, p, room)) return;
   const s = p.strike;
   const cost = strikeCost(p);
   if (p.focus < cost) {
@@ -998,6 +1007,47 @@ function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
   if (p.mods.strikeExtraHit > 0 && isEnemyPresent(target)) {
     landHit(world, p, target, 'chain', s.hits[0].strength * p.mods.strikeExtraHit, COMBAT.focus.perHit);
   }
+}
+
+/**
+ * T5: the Opening finisher. Free (no Focus), on the enemy the Perfect Counter staggered, if it's in reach:
+ * a lunge, a hit, and a knock-back (bosses stay put) that bumps any enemy it runs into.
+ */
+function tryFinisher(world: WorldState, p: PlayerState, room: Room): boolean {
+  const o = COMBAT.opening;
+  const target = world.enemies.find((e) => e.id === p.opening!.enemyId);
+  p.opening = null;
+  if (!target || !isEnemyPresent(target)) return false;
+  const gap = bodyGap(p.pos, R, target.pos, target.def.radius);
+  if (gap > o.reach) return false;
+  const dir = directionTo(p.pos, target.pos);
+  const lunge = Math.min(p.strike.lungeTiles, Math.max(0, gap - 0.05));
+  p.pos.x += dir.x * lunge;
+  p.pos.y += dir.y * lunge;
+  pushOutOfWalls(room, p.pos, R);
+  p.path = null;
+  p.facing = { ...dir };
+  p.strikeRecovery = p.strike.recoveryTicks;
+  p.attackCooldown = Math.max(p.attackCooldown, p.strike.recoveryTicks);
+  landHit(world, p, target, 'strike', o.strength, COMBAT.focus.perHit);
+  const bumped: EnemyId[] = [];
+  if (isEnemyPresent(target) && !target.def.boss) {
+    // Slide back in small steps and stop at a wall, so nobody is knocked through one.
+    const steps = Math.round(o.knockTiles / 0.1);
+    for (let i = 0; i < steps; i++) {
+      const next = { x: target.pos.x + dir.x * 0.1, y: target.pos.y + dir.y * 0.1 };
+      if (circleHitsWall(room, next, target.def.radius)) break;
+      target.pos = next;
+    }
+    for (const other of world.enemies) {
+      if (other === target || !isEnemyPresent(other)) continue;
+      if (bodyGap(target.pos, target.def.radius, other.pos, other.def.radius) > 0.15) continue;
+      bumped.push(other.id);
+      landHit(world, p, other, 'chain', o.bumpStrength, 0);
+    }
+  }
+  world.events.push({ kind: 'openingFinisher', playerId: p.id, enemyId: target.id, bumped });
+  return true;
 }
 
 /** PB-03: counts down the Strike hits still to land and lands the ones that are due, on the enemy they were aimed at. */
@@ -1446,6 +1496,12 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
         e.mode = 'stagger';
         // G2B-04 Lock cap: the hold (stagger + Counter #6 + any Lock rank) never passes holdCapTicks.
         e.modeTicks = Math.min(COMBAT.counter.holdCapTicks, COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks);
+        // T5: the Opening: STRIKE glows gold for a free finisher on this enemy. Not after a ground slam
+        // (a landing circle), whose best answer stays "move out of the red".
+        if (!a.landing) {
+          p.opening = { enemyId: e.id, ticks: COMBAT.opening.ticks };
+          world.events.push({ kind: 'openingReady', playerId: p.id, enemyId: e.id });
+        }
         // L8-B2 Lock: the same stagger also holds the attacker (never a Guardian, boss or elite).
         e.held = p.mods.counterLock && canHold(e);
         if (e.held) world.events.push({ kind: 'held', playerId: p.id, enemyId: e.id });

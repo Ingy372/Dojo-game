@@ -156,6 +156,9 @@ const NO_DEFEAT_FADE_MS = 600;
 const SUCCESS_ALONE_MS = 1500;
 /** TUT-T3: how close (in tiles) the hero must stand to the bow mat's middle. */
 const BOW_MAT_REACH = 0.7;
+/** T5 (fix C): the wind-up "!" badge's size (1 = the old big badge); Guided keeps it a little bigger. */
+const CUE_SCALE = 0.6;
+const CUE_SCALE_GUIDED = 0.75;
 /** TUT-T3: the bow button's line on the Tower Path (8 words or fewer). */
 const BOW_AT_DOOR_LINE = 'Bow at the door to show respect.';
 /** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
@@ -820,14 +823,17 @@ export class GameScene extends Phaser.Scene {
    */
   private drawWindupCue(x: number, y: number, fill: number, inWindow: boolean, now: number): void {
     const g = this.cues;
-    const pulse = inWindow && !reducedMotion() ? 1 + 0.15 * Math.abs(Math.sin(now / 90)) : 1;
+    // T5 (fix C, Jay Nov 18): a small "!" so kids watch the enemy's body (wind-up pose, glow, red circle), not the badge.
+    // Guided keeps it a little bigger; the tutorial's big floating "!" still teaches it once.
+    const size = this.world.difficulty === 'guided' ? CUE_SCALE_GUIDED : CUE_SCALE;
+    const pulse = (inWindow && !reducedMotion() ? 1 + 0.15 * Math.abs(Math.sin(now / 90)) : 1) * size;
     const r = 15 * pulse;
     // K27 fix 2: always full strength (opaque disc, solid colors) so it never reads faint over art.
     const color = inWindow ? 0xffd166 : 0xff5a4f;
-    g.fillStyle(0x1b1530, 1).fillCircle(x, y, r + 4);
-    g.lineStyle(2, 0xffffff, 1).strokeCircle(x, y, r + 4);
-    g.lineStyle(4, 0x4a4060, 1).strokeCircle(x, y, r);
-    g.lineStyle(5, color, 1).beginPath();
+    g.fillStyle(0x1b1530, 1).fillCircle(x, y, r + 4 * size);
+    g.lineStyle(2, 0xffffff, 1).strokeCircle(x, y, r + 4 * size);
+    g.lineStyle(4 * size, 0x4a4060, 1).strokeCircle(x, y, r);
+    g.lineStyle(5 * size, color, 1).beginPath();
     g.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Phaser.Math.Clamp(inWindow ? 1 : fill, 0.02, 1), false);
     g.strokePath();
     // The "!": a rounded bar and a dot.
@@ -943,6 +949,8 @@ export class GameScene extends Phaser.Scene {
       this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
       if (inWindow) this.counterWindowOpen = true;
+      // T5 (fix C): the enemy's own body warms up as it winds up, and turns gold in the Counter window.
+      tint = inWindow ? 0xffe08a : progress > 0.35 ? 0xffb0a0 : tint;
       const at = this.windupCueSpot(x * TILE, y * TILE, v.top, e.def.radius * TILE);
       this.drawWindupCue(at.x, at.y, elapsed / e.windupTotal, inWindow, now);
     } else if (e.mode === 'recover') {
@@ -1513,6 +1521,29 @@ export class GameScene extends Phaser.Scene {
           if (ev.playerId === this.me && !this.world.guide) this.lesson('firstPerfectUnaided');
           break;
         }
+        case 'openingReady':
+          // T5 (fix A): the Opening. STRIKE glows gold (ActionButtons); a short sky-blue word says so.
+          if (ev.playerId === this.me) {
+            const e = this.enemy(ev.enemyId);
+            if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.5 }, 'OPENING!', RATING.color, 20, 0.6);
+          }
+          break;
+        case 'openingFinisher': {
+          // T5: the finisher: a big hit, a gold burst, and a bump spark on every enemy it ran into.
+          const e = this.enemy(ev.enemyId);
+          this.heroDo('strike');
+          this.impact(FEEL.perfect);
+          if (e) {
+            this.ring(e.pos, COLORS.gold, 1.8);
+            this.sparks(e.pos, 14, COLORS.gold);
+          }
+          for (const id of ev.bumped) {
+            const b = this.enemy(id);
+            if (b) this.sparks(b.pos, 8, 0xffffff);
+          }
+          this.popWord(ev.bumped.length > 0 ? 'KNOCKOUT!' : 'FINISHER!', RATING.color, RATING.great);
+          break;
+        }
         case 'held':
           sfx.guard();
           break;
@@ -1596,7 +1627,8 @@ export class GameScene extends Phaser.Scene {
           if (se && currentAttack(se).counterable === false && !this.guidedWindupLive()) this.clearGuideCue();
           sfx.windup(ticksToRealMs(ev.ticks) / 1000);
           if (e) this.patternTellStart(e);
-          if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.3 }, '!', '#ff3b30', 40, 0.4);
+          // T5 (fix C): the big floating "!" only on the tutorial floor, where the warning is first taught.
+          if (e && this.run?.tutorial) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.3 }, '!', '#ff3b30', 40, 0.4);
           // Sensei's Lessons: a second warning while another is still filling is two attacks at once.
           const now = this.time.now;
           if ([...this.warnings].some(([id, w]) => id !== ev.enemyId && w.until > now)) this.lesson('twoAttacksAtOnce');
