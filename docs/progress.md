@@ -1336,3 +1336,14 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - **New run in the game (Jay's OK):** `incoming-art/claude-run/`, a real run on the same Blender model (lean, arm pump, knee drive, flight), 12 frames at 36 fps, both bodies, swapped into `player-custom` and re-packed. 1,620 tests pass; type checks and both builds pass.
 - **Next (Jay's order):** character screen mockup, then the Hearth Cook as the first two-phase Guardian, then the town.
 - Character from a photo: possible later; Jay will revisit after everything else is built.
+
+## Jay's tutorial playtest fixes and visual overhaul, part 1 (2026-11-18, branch `claude/tutorial-playtest`)
+
+- **Tutorial:** Sensei explains the stones ("The Shadow feels you coming. It shakes the Tower!"); stones come in 5 waves (1, 3, 3, 4, 5), one always where the hero stands; the bow happens on a glowing mat in front of the Tower door, facing it, and the door only lets you in after the bow.
+- **Fights:** the Opening (fix A): after a Great Counter, STRIKE glows gold for 1 s, a free finisher that knocks the enemy back (not through walls) and bumps others. Not after a ground slam. A smaller "!" (fix C); the big floating "!" only on the tutorial floor; enemies warm up in colour as they wind up.
+- **Chest v2:** new Blender chest (`incoming-art/claude-chest/`, same kit and camera), coins fly out; in code a charge ring, a flash and a centre reveal card with rays and confetti ("NEW GEAR!" for plain prizes).
+- **Glossy buttons** everywhere (menus and fight buttons). **Character creation redesign** (stage, tabs per part, Surprise me!).
+- **Design draft:** `docs/tutorial-design.md` (full tutorial, Home Tour, First Week): waits on Jay's OK.
+- 1,627 tests pass; type checks pass. Not yet on `main`.
+- **Next:** restyle the remaining menus (Book, Board, Shop backgrounds and the wood frame, `woodFrame` and `WOOD` in HomeScene/theme; `p-prog-g-style-screen.test.ts` pins a WOOD contrast) to match Equipment; Jay playtests; then build the Home Tour once the design is approved.
+- A stray folder `C:\incoming-art` (temporary render files from one wrong path) can be deleted by Jay.
