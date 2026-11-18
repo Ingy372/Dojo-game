@@ -583,6 +583,15 @@ export function bowIn(world: WorldState, playerId: PlayerId): void {
   if (p) p.focus = Math.min(COMBAT.focus.max, p.focus + BOW.focus);
 }
 
+/** TUT-T3: turns a standing player to face `dir` (for the bow at the Tower door) and stops any tap-to-walk. */
+export function facePlayer(world: WorldState, playerId: PlayerId, dir: Vec2): void {
+  const p = world.players[playerId];
+  if (!p) return;
+  const len = Math.hypot(dir.x, dir.y) || 1;
+  p.facing = { x: dir.x / len, y: dir.y / len };
+  p.path = null;
+}
+
 /** Changes a player's Insight and charm effects (for example after picking an Insight). */
 export function setPlayerMods(p: PlayerState, mods: PlayerMods): void {
   p.mods = { ...mods };

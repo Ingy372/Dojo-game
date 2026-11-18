@@ -90,7 +90,7 @@ describe('tutorial floor (M7-P2)', () => {
       expect(first.id).toBe('tutorial-path');
       expect(first.goal).not.toBeNull();
       expect(first.enemySpawns).toEqual([]);
-      expect(first.stoneWaves.map((w) => w.spots.length)).toEqual([1, 1, 2, 2, 3, 3]);
+      expect(first.stoneWaves.map((w) => w.spots.length + (w.onPlayer ? 1 : 0) + w.aroundPlayer.length)).toEqual([1, 3, 3, 4, 5]);
       const hall = content.rooms.find((r) => r.id === 'training-hall')!;
       expect(hall.enemySpawns.map((s) => `${s.wave}:${s.enemy}`)).toEqual([
         '1:practice-dummy', '1:practice-dummy', '1:practice-dummy',

@@ -34,6 +34,7 @@ import {
   beatNamed,
   meetNamed,
   bowIn,
+  facePlayer,
   decorationDef,
   chooseInsight,
   createRunWorld,
@@ -153,6 +154,10 @@ const TILE = 48;
 const NO_DEFEAT_FADE_MS = 600;
 /** TUT-B4: how long a tutorial success line shows alone before the next tip. */
 const SUCCESS_ALONE_MS = 1500;
+/** TUT-T3: how close (in tiles) the hero must stand to the bow mat's middle. */
+const BOW_MAT_REACH = 0.7;
+/** TUT-T3: the bow button's line on the Tower Path (8 words or fewer). */
+const BOW_AT_DOOR_LINE = 'Bow at the door to show respect.';
 /** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
 const HUD_TOP_PX = 56;
 /** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 36, 20 px bold, bottom ~64) and an 8 px gap. */
@@ -481,6 +486,9 @@ export class GameScene extends Phaser.Scene {
 
   /** Tutorial floor (M7-P2): the glowing spot. */
   private goalView: Phaser.GameObjects.Arc | null = null;
+  /** TUT-T3: the glowing mat in front of the Tower door; standing on it brings the bow, facing the door. */
+  private bowMat: { at: Vec2; door: Vec2; view: Phaser.GameObjects.Ellipse } | null = null;
+  private bowAsked = false;
   /** TUT-B3: the big dummy has been let in (the STRIKE step), the falling stones' look, and the stumble stars. */
   private strikeWave = false;
   private stoneWarn: { spots: Vec2[]; ticks: number; safe: Vec2 | null } | null = null;
@@ -596,6 +604,8 @@ export class GameScene extends Phaser.Scene {
     this.chestOpenAt = null;
     this.strikeWave = false;
     this.stoneWarn = null;
+    this.bowMat = null;
+    this.bowAsked = false;
     this.fallingStones = [];
     this.stumbleStars = null;
     this.runTag ||= `run-${Date.now()}`;
@@ -2194,7 +2204,7 @@ export class GameScene extends Phaser.Scene {
     this.menuOpen = true;
     this.enemiesAt = null;
     const tutorial = this.run?.tutorial ?? false;
-    const prompt = bowPrompt(this, tutorial ? TUTORIAL['tutorial-bow'].screens[0] : 'Bow to begin the floor', () => {
+    const prompt = bowPrompt(this, tutorial ? BOW_AT_DOOR_LINE : 'Bow to begin the floor', () => {
       this.heroDo('bow');
       playBow(this, this.player, () => {
         if (!this.run) return;
@@ -2205,6 +2215,11 @@ export class GameScene extends Phaser.Scene {
         this.buttons.reset();
         this.floatText(this.world.players[this.me].pos, '+Focus', '#9ad1ff', 18);
         if (tutorial) {
+          const mat = this.bowMat?.view;
+          if (mat) {
+            this.tweens.killTweensOf(mat);
+            this.tweens.add({ targets: mat, alpha: 0, scale: 2, duration: 400, onComplete: () => mat.destroy() });
+          }
           if (this.tflow && currentStep(this.tflow) === 'tutorial-bow') gotIt(this.tflow, TUTORIAL);
           this.tutorialDid('bow');
         } else this.introduceRoom();
@@ -2372,9 +2387,10 @@ export class GameScene extends Phaser.Scene {
         this.tutorialTip(id);
         break;
       case 'tutorial-bow':
-        // The bow prompt is the bow step's tip; bowing is its try.
-        showTip(f, id);
-        this.askForBow();
+        // TUT-T3 (Jay, Nov 18): the tip sends the hero to a glowing mat in front of the door;
+        // standing on it brings the bow, facing the door (checkTutorialTry).
+        this.showBowMat();
+        this.tutorialTip(id);
         break;
       case 'tutorial-strike': {
         // The big dummy comes in, and the tip waits until Focus is full (if it falls first, the step ends quietly).
@@ -2410,6 +2426,17 @@ export class GameScene extends Phaser.Scene {
     if (!f || f.phase !== 'trying') return;
     const alive = (kind?: string) => this.world.enemies.some((e) => e.mode !== 'defeated' && (!kind || e.def.id === kind));
     const id = currentStep(f);
+    if (id === 'tutorial-bow') {
+      const mat = this.bowMat;
+      const p = this.world.players[this.me];
+      if (mat && p && !this.bowAsked && !this.menuOpen && Math.hypot(p.pos.x - mat.at.x, p.pos.y - mat.at.y) <= BOW_MAT_REACH) {
+        this.bowAsked = true;
+        facePlayer(this.world, this.me, { x: mat.door.x - p.pos.x, y: mat.door.y - p.pos.y });
+        this.controls.reset();
+        this.askForBow();
+      }
+      return;
+    }
     if (id === 'tutorial-dummies' && !alive('practice-dummy')) this.tutorialDid('defeatDummies');
     else if (id === 'tutorial-swarmers' && !alive('swarmer')) this.tutorialDid('defeatSwarmers');
     else if ((id === 'tutorial-strike' || id === 'tutorial-dash') && !alive()) {
@@ -2498,6 +2525,18 @@ export class GameScene extends Phaser.Scene {
       }
       this.tutorialTick();
     });
+  }
+
+  /** TUT-T3: the glowing mat on the path in front of the Tower door nearest the glowing spot. */
+  private showBowMat(): void {
+    if (this.bowMat || this.room.doors.length === 0) return;
+    const from = this.room.goal ?? this.world.players[this.me].pos;
+    const door = this.room.doors.reduce((a, b) => (Math.hypot(b.x - from.x, b.y - from.y) < Math.hypot(a.x - from.x, a.y - from.y) ? b : a));
+    const at = { x: door.x, y: this.room.goal ? this.room.goal.y : door.y + 2 };
+    const view = this.add.ellipse(at.x * TILE, at.y * TILE, TILE * 1.3, TILE * 0.7, COLORS.gold, 0.35).setStrokeStyle(3, COLORS.gold, 0.95).setDepth(1);
+    this.uiCamera.ignore(view);
+    if (!reducedMotion()) this.tweens.add({ targets: view, scale: 1.15, alpha: 0.6, duration: 700, yoyo: true, repeat: -1 });
+    this.bowMat = { at, door, view };
   }
 
   /** After Got it on a move step: let in what the player is to try against. */

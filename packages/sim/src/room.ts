@@ -78,6 +78,10 @@ export interface StoneWave {
   safeSpot: Vec2 | null;
   /** TUT-B4: the calm pause before this wave drops (and before each retry of it). */
   pauseTicks: number;
+  /** TUT-T2 (Jay, Nov 18): one stone always lands where the hero stands when the circle appears. */
+  onPlayer: boolean;
+  /** TUT-T2: more stones placed around the hero, as offsets in tiles from where they stand (off-floor ones are skipped). */
+  aroundPlayer: Vec2[];
 }
 
 export interface EnemySpawn {
@@ -267,7 +271,7 @@ function loadEnemySpawns(id: string, data: unknown, walls: boolean[][], width: n
   });
 }
 
-/** TUT-B1: reads the optional "hazards": { "stones": [{ "fillSeconds": 1.5, "spots": [{ "column", "row" }], "safeSpot"?: { "column", "row" }, "pauseSeconds"?: 3 }] }. */
+/** TUT-B1: reads the optional "hazards": { "stones": [{ "fillSeconds": 1.5, "spots": [{ "column", "row" }], "safeSpot"?: { "column", "row" }, "pauseSeconds"?: 3, "onPlayer"?: true, "aroundPlayer"?: [{ "dx", "dy" }] }] }. */
 function loadStoneWaves(id: string, data: unknown, walls: boolean[][], width: number, height: number): StoneWave[] {
   if (data === undefined) return [];
   const stones = (data as Record<string, unknown> | null)?.stones;
@@ -278,7 +282,15 @@ function loadStoneWaves(id: string, data: unknown, walls: boolean[][], width: nu
     if (typeof w !== 'object' || w === null || typeof w.fillSeconds !== 'number' || !(w.fillSeconds > 0)) {
       throw new RoomError(id, `stone wave ${n} needs "fillSeconds" above 0 (the red circle always fills first)`);
     }
-    if (!Array.isArray(w.spots) || w.spots.length === 0) throw new RoomError(id, `stone wave ${n} needs a list of "spots"`);
+    if (w.onPlayer !== undefined && typeof w.onPlayer !== 'boolean') throw new RoomError(id, `stone wave ${n}: "onPlayer" must be true or false`);
+    const onPlayer = w.onPlayer === true;
+    const around = w.aroundPlayer ?? [];
+    if (!Array.isArray(around) || around.some((o: Record<string, unknown>) => typeof o?.dx !== 'number' || typeof o?.dy !== 'number' || Math.hypot(o.dx as number, o.dy as number) <= STONES.radius * 2)) {
+      throw new RoomError(id, `stone wave ${n}: "aroundPlayer" must be a list of { "dx", "dy" } more than one circle away from the hero`);
+    }
+    if (around.length > 0 && !onPlayer) throw new RoomError(id, `stone wave ${n}: "aroundPlayer" needs "onPlayer": true`);
+    const spotList = w.spots ?? [];
+    if (!Array.isArray(spotList) || (spotList.length === 0 && !onPlayer)) throw new RoomError(id, `stone wave ${n} needs a list of "spots" (or "onPlayer": true)`);
     const tile = (sp: Record<string, unknown> | undefined, what: string): Vec2 => {
       const col = sp?.column;
       const row = sp?.row;
@@ -287,8 +299,9 @@ function loadStoneWaves(id: string, data: unknown, walls: boolean[][], width: nu
       }
       return { x: col - 0.5, y: row - 0.5 };
     };
-    const spots = w.spots.map((sp: Record<string, unknown>) => tile(sp, 'each spot'));
+    const spots = spotList.map((sp: Record<string, unknown>) => tile(sp, 'each spot'));
     const safeSpot = w.safeSpot === undefined ? null : tile(w.safeSpot as Record<string, unknown>, '"safeSpot"');
+    if (safeSpot && onPlayer) throw new RoomError(id, `stone wave ${n}: a wave that follows the hero finds its own "safeSpot"`);
     if (safeSpot && spots.some((sp) => distance(sp, safeSpot) <= STONES.radius + MOVEMENT.playerRadius)) {
       throw new RoomError(id, `stone wave ${n}: "safeSpot" must be clear of every red circle`);
     }
@@ -296,7 +309,8 @@ function loadStoneWaves(id: string, data: unknown, walls: boolean[][], width: nu
       throw new RoomError(id, `stone wave ${n}: "pauseSeconds" must be above 0`);
     }
     const pauseTicks = secondsToTicks(typeof w.pauseSeconds === 'number' ? w.pauseSeconds : STONES.gapSeconds);
-    return { spots, fillTicks: secondsToTicks(w.fillSeconds), safeSpot, pauseTicks };
+    const aroundPlayer = (around as { dx: number; dy: number }[]).map((o) => ({ x: o.dx, y: o.dy }));
+    return { spots, fillTicks: secondsToTicks(w.fillSeconds), safeSpot, pauseTicks, onPlayer, aroundPlayer };
   });
 }
 

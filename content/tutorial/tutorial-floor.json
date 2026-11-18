@@ -8,7 +8,7 @@
       "screens": [
         "Tap to walk, or use the stick."
       ],
-      "success": "Good steps! Stay close to me.",
+      "success": "The Shadow feels you coming.",
       "earliestRun": 1,
       "advance": "move",
       "waitFor": "reachPathEnd",
@@ -16,11 +16,12 @@
     },
     {
       "id": "tutorial-stones",
-      "trigger": "The Tower rumbles; stones fall, a red circle shows first (3 waves)",
+      "trigger": "The Shadow shakes the Tower; stones fall in 5 waves, one always where the hero stands (TUT-T2)",
       "screens": [
+        "It shakes the Tower! Stones are falling!",
         "Red circle on the ground? Step out!"
       ],
-      "success": "Quick feet! You stayed safe.",
+      "success": "It can't stop you. Bow at the door.",
       "earliestRun": 1,
       "advance": "move",
       "waitFor": "dodgeStones",
@@ -30,9 +31,9 @@
     },
     {
       "id": "tutorial-bow",
-      "trigger": "At the Tower door: bow",
+      "trigger": "A glowing mat in front of the Tower door; standing on it brings the bow, facing the door (TUT-T3)",
       "screens": [
-        "Bow at the door to show respect."
+        "Stand on the glowing mat by the door."
       ],
       "success": "Nice bow. Let's go in.",
       "earliestRun": 1,

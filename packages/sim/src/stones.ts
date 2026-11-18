@@ -16,6 +16,8 @@ export interface StoneState {
   gapTicks: number;
   /** Ticks until the stones land (0 = no circle showing). */
   fillLeft: number;
+  /** Where this drop's stones land, fixed when the circles appear (TUT-T2: some follow the hero). */
+  spots: Vec2[];
   /** Where to stand, shown once help is on (null otherwise). */
   safeSpot: Vec2 | null;
   /** Ticks of stumble left per player. */
@@ -25,7 +27,7 @@ export interface StoneState {
 
 export function newStones(room: Room): StoneState | null {
   if (room.stoneWaves.length === 0) return null;
-  return { wave: 0, misses: 0, gapTicks: room.stoneWaves[0].pauseTicks, fillLeft: 0, safeSpot: null, stumble: {}, done: false };
+  return { wave: 0, misses: 0, gapTicks: room.stoneWaves[0].pauseTicks, fillLeft: 0, spots: [], safeSpot: null, stumble: {}, done: false };
 }
 
 /** True while this player is stumbling and can't move or act. */
@@ -45,13 +47,14 @@ export function stepStones(world: WorldState, room: Room, ids: PlayerId[]): void
     if (--st.gapTicks > 0) return;
     const help = st.misses >= STONES.helpAfterMisses;
     st.fillLeft = help ? Math.round(wave.fillTicks * STONES.helpFillScale) : wave.fillTicks;
-    st.safeSpot = help ? (wave.safeSpot ? { ...wave.safeSpot } : safeSpot(world, room, wave.spots, ids)) : null;
-    world.events.push({ kind: 'stoneWarn', wave: st.wave + 1, spots: wave.spots.map((s) => ({ ...s })), ticks: st.fillLeft, safeSpot: st.safeSpot });
+    st.spots = dropSpots(world, room, wave, ids);
+    st.safeSpot = help ? (wave.safeSpot ? { ...wave.safeSpot } : safeSpot(world, room, st.spots, ids)) : null;
+    world.events.push({ kind: 'stoneWarn', wave: st.wave + 1, spots: st.spots.map((s) => ({ ...s })), ticks: st.fillLeft, safeSpot: st.safeSpot });
     return;
   }
   if (--st.fillLeft > 0) return;
-  world.events.push({ kind: 'stoneLand', wave: st.wave + 1, spots: wave.spots.map((s) => ({ ...s })) });
-  const hit = ids.filter((id) => wave.spots.some((s) => distance(world.players[id].pos, s) <= STONES.radius));
+  world.events.push({ kind: 'stoneLand', wave: st.wave + 1, spots: st.spots.map((s) => ({ ...s })) });
+  const hit = ids.filter((id) => st.spots.some((s) => distance(world.players[id].pos, s) <= STONES.radius));
   for (const id of hit) {
     st.stumble[id] = secondsToTicks(STONES.stumbleSeconds);
     world.events.push({ kind: 'stumble', playerId: id });
@@ -69,6 +72,27 @@ export function stepStones(world: WorldState, room: Room, ids: PlayerId[]): void
   } else {
     st.gapTicks = room.stoneWaves[st.wave].pauseTicks;
   }
+}
+
+/**
+ * TUT-T2: the room's fixed spots, plus (for a wave that follows the hero) one where the first
+ * player stands and the "aroundPlayer" ones near them. A spot off the floor is skipped.
+ */
+function dropSpots(world: WorldState, room: Room, wave: Room['stoneWaves'][number], ids: PlayerId[]): Vec2[] {
+  const out = wave.spots.map((s) => ({ ...s }));
+  const at = world.players[ids[0]]?.pos;
+  if (!wave.onPlayer || !at) return out;
+  const onFloor = (p: Vec2) => {
+    const x = Math.floor(p.x);
+    const y = Math.floor(p.y);
+    return y >= 0 && y < room.height && x >= 0 && x < room.width && !room.walls[y][x];
+  };
+  out.push({ x: at.x, y: at.y });
+  for (const o of wave.aroundPlayer) {
+    const p = { x: at.x + o.x, y: at.y + o.y };
+    if (onFloor(p)) out.push(p);
+  }
+  return out;
 }
 
 /** The floor tile centre nearest the first player that is clear of every circle (with room for the body). */

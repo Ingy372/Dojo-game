@@ -4,7 +4,7 @@
   "kind": "battle",
   "tutorial": true,
   "legend": "# = hedge, . = grass or path, P = player start, D = the Tower door, G = the glowing spot at the end of the path (tutorial only)",
-  "notes": "TUT-B3, tutorial room 1 (TUT-P1 beats 1-3): walk the path to the glowing spot by the Tower door, then the stones fall in 6 waves (1, 1, 2, 2, 3, 3 spots; a calm 3.2 s pause before each, and the red circle fills first), about 30 s when every wave is dodged (TUT-B4). The stones wait until the glowing spot is reached. When they are done the door opens and Sensei asks for the bow. No enemies, no grade. The client draws grass, the path, hedges and the Tower foot (TUT-A1 art). Each wave's safeSpot is an open path tile well clear of the Tower steps and lamps.",
+  "notes": "TUT-B3, tutorial room 1 (TUT-P1 beats 1-3): walk the path to the glowing spot by the Tower door; Sensei says the Shadow shakes the Tower, then the stones fall in 5 waves of 1, 3, 3, 4 and 5 stones (Jay, Nov 18, TUT-T2). One stone always lands where the hero stands when the circle appears and the rest land around them, so the kid keeps moving; short pauses give a feeling of growing chaos. The red circle always fills first, stones never hurt (a stumble only), and help after misses still applies. The stones wait until the glowing spot is reached. When they are done the door opens and the hero bows on the glowing mat in front of it. No enemies, no grade.",
   "tiles": [
     "##D###D###D##",
     "#...........#",
@@ -23,112 +23,82 @@
   "hazards": {
     "stones": [
       {
-        "pauseSeconds": 3.2,
+        "pauseSeconds": 1.5,
         "fillSeconds": 2.2,
-        "spots": [
-          {
-            "column": 7,
-            "row": 3
-          }
-        ],
-        "safeSpot": {
-          "column": 6,
-          "row": 5
-        }
+        "onPlayer": true,
+        "aroundPlayer": []
       },
       {
-        "pauseSeconds": 3.2,
+        "pauseSeconds": 1.0,
         "fillSeconds": 2.0,
-        "spots": [
+        "onPlayer": true,
+        "aroundPlayer": [
           {
-            "column": 6,
-            "row": 3
-          }
-        ],
-        "safeSpot": {
-          "column": 6,
-          "row": 5
-        }
-      },
-      {
-        "pauseSeconds": 3.2,
-        "fillSeconds": 2.0,
-        "spots": [
-          {
-            "column": 6,
-            "row": 3
+            "dx": 2,
+            "dy": 1
           },
           {
-            "column": 8,
-            "row": 4
+            "dx": -2,
+            "dy": -1
           }
-        ],
-        "safeSpot": {
-          "column": 6,
-          "row": 5
-        }
+        ]
       },
       {
-        "pauseSeconds": 3.2,
+        "pauseSeconds": 0.9,
+        "fillSeconds": 1.9,
+        "onPlayer": true,
+        "aroundPlayer": [
+          {
+            "dx": -2,
+            "dy": 1
+          },
+          {
+            "dx": 2,
+            "dy": -1
+          }
+        ]
+      },
+      {
+        "pauseSeconds": 0.8,
         "fillSeconds": 1.8,
-        "spots": [
+        "onPlayer": true,
+        "aroundPlayer": [
           {
-            "column": 7,
-            "row": 3
+            "dx": 2,
+            "dy": 0
           },
           {
-            "column": 5,
-            "row": 4
+            "dx": -2,
+            "dy": 0
+          },
+          {
+            "dx": 0,
+            "dy": -2
           }
-        ],
-        "safeSpot": {
-          "column": 6,
-          "row": 5
-        }
+        ]
       },
       {
-        "pauseSeconds": 3.2,
+        "pauseSeconds": 0.8,
         "fillSeconds": 1.8,
-        "spots": [
+        "onPlayer": true,
+        "aroundPlayer": [
           {
-            "column": 5,
-            "row": 3
+            "dx": 2,
+            "dy": 1
           },
           {
-            "column": 7,
-            "row": 4
+            "dx": -2,
+            "dy": 1
           },
           {
-            "column": 9,
-            "row": 3
+            "dx": 1.5,
+            "dy": -2
+          },
+          {
+            "dx": -1.5,
+            "dy": -2
           }
-        ],
-        "safeSpot": {
-          "column": 6,
-          "row": 5
-        }
-      },
-      {
-        "pauseSeconds": 3.2,
-        "fillSeconds": 1.6,
-        "spots": [
-          {
-            "column": 6,
-            "row": 3
-          },
-          {
-            "column": 8,
-            "row": 3
-          },
-          {
-            "column": 7,
-            "row": 4
-          }
-        ],
-        "safeSpot": {
-          "column": 6,
-          "row": 5
-        }
+        ]
       }
     ]
   }
