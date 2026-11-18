@@ -1347,3 +1347,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - 1,627 tests pass; type checks pass. Not yet on `main`.
 - **Next:** restyle the remaining menus (Book, Board, Shop backgrounds and the wood frame, `woodFrame` and `WOOD` in HomeScene/theme; `p-prog-g-style-screen.test.ts` pins a WOOD contrast) to match Equipment; Jay playtests; then build the Home Tour once the design is approved.
 - A stray folder `C:\incoming-art` (temporary render files from one wrong path) can be deleted by Jay.
+
+## Jay's playtest round 2 and the Training Board overhaul (2026-11-18, branch `claude/tutorial-playtest`)
+
+- Faster stone waves; the tutorial boss now leads to the Home Dojo and a short **Home Tour** (dojo, town, back to the Training Station); closer dojo and town cameras; the "!" badge only on Easy; a new sparkly chest sound.
+- **Training Board overhaul** to the Equipment screen's violet glass look.
+- **Art audit** with scores and a 10-item rework list: `docs/reviews/art-audit-2026-11-18.md`.
+- 1,627 tests pass; type checks pass. Not on `main` yet.
+- **Next:** Jay plays the tour and the new board on the preview; OK (or new words) for the tour lines; pick the first art rework (recommended: the tier-1 enemies).
