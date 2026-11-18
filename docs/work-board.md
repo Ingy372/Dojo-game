@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-11-17 by Claude Code.
+Last updated: 2026-11-18 by Claude Code.
 
 **What this file is:** the one list of open work. Each item has an ID, an owner and what it waits on. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
 
@@ -26,6 +26,17 @@ Last updated: 2026-11-17 by Claude Code.
 | CW-2 | CLAUDE.md, this board, decisions and progress updated for the hand-over. | Done |
 | CW-3 | Full hands-on playthrough on small and large phone sizes (new student, White, Yellow, Orange profiles); list every bug and rough spot. | Next |
 | CW-4 | Measure the download and what loads at start; load art per belt if it isn't already. | Next |
+
+## 2a. Jay's overnight list (Nov 17-18)
+
+| ID | What | Status |
+|---|---|---|
+| N1 | Dojo as the main hub; training station for run stats, gear and style. | Done |
+| N2 | Walk south out of the dojo into a walkable town, and back. | Done |
+| N3 | Premium Equipment screen. | Done |
+| N4 | Desktop (Windows) and tablet support. | Done |
+| N5 | Full playtest; yellow-! notes and weak spots, to discuss. | Notes ready: `docs/reviews/playtest-notes-2026-11-18.md` |
+| N6 | Art clean-up of the weakest art. | In progress |
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 

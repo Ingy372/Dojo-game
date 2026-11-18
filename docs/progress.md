@@ -1313,3 +1313,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - CLAUDE.md, the work board and decisions updated for the hand-over.
 - 1,615 tests pass; type checks and both builds pass.
 - Next: CW-3 hands-on playthrough at phone sizes, CW-4 download size. Jay creates the Apple and Google accounts.
+
+## Jay's overnight list (2026-11-18, Claude Code)
+
+- **Dojo hub:** training station in the Home Dojo opens the Training Board (gear, style, last climb, Enter the Tower); back returns to the dojo.
+- **Town:** walk out the dojo's south door and come out of your own dojo (the grey house) in a walkable town; walk back in to go home, or into the Action Zone.
+- **Equipment screen:** full-screen redesign (hero with three big slots, rarity-framed scrolling bag, item cards, Wear best).
+- **Desktop:** keyboard controls with key hints, layout scales up on big screens, right-click menu off, resizing mid-fight fixed.
+- **Playtest notes** for Jay: `docs/reviews/playtest-notes-2026-11-18.md` (the yellow-! problem with seven ranked fixes, and 11 other weak spots). Fixed two text overlaps found on the way.
+- 1,620 tests pass; type checks and both builds pass. Copied onto `main` (the live link) with Jay's OK ("copy everything to the live link when finished").
+- **Next:** talk through the playtest notes with Jay and pick the combat fixes; art clean-up (see below).

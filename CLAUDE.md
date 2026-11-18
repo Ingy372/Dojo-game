@@ -52,7 +52,7 @@ If the docs conflict, **core-design section 9 ("Lining up the two journeys") win
 **The finished game is an iPhone and Android app**, published on the App Store and Google Play. Most families don't have a computer, but every family has a phone. Everything is designed for phones first.
 
 - One codebase: the Phaser game is wrapped into native iOS and Android apps with **Capacitor**. The same game can also run in a browser (for testing during development and the Visitor's Pass) and inside the DojoForge student app.
-- **Landscape orientation**, touch controls only. Nothing may depend on a mouse, keyboard, or hover.
+- **Landscape orientation**, touch first. Since Nov 18 (Jay) the game also runs on Windows computers: the mouse and keyboard work too (arrow keys/WASD, Space/J/L/E), and the layout scales up on big screens. Nothing may depend on hover, and everything must still work by touch alone.
 - Respect the phone's safe areas (notches, rounded corners, home bars) so no button sits under them.
 - Pause automatically when the app goes to the background or a call comes in, and resume cleanly.
 - Keep the download small and battery use low. Load art per tier rather than all at once.
