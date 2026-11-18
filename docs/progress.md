@@ -1329,3 +1329,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 - Jay's OK on the station art; tatami turned down. The station art replaces the code drawing and stands in the top-right corner; the dojo shows the whole room while walking.
 - Fixed the art import tool deleting other packs' pages. 1,620 tests pass.
+
+## Art review and run draft (2026-11-18)
+
+- Reviewed the character screen, town, Guardians and the hero's run with Jay; his answers are in decisions.md (sharp spikes OK, two-phase Guardians with a big visual change, final boss keeps three forms; order: run, character screen, Hearth Cook, town).
+- **Run draft (not in the game):** `incoming-art/claude-run/`, a real run on the same Blender model (lean, arm pump, knee drive, flight), 12 frames at 36 fps. Waiting on Jay's OK; then render body B and import.
+- Open question from Jay: making the character from a photo (answered in chat; nothing built).
