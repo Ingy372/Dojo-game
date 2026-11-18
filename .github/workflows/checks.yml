@@ -1,0 +1,33 @@
+# Runs on every change pushed to GitHub and on every pull request:
+# the rules tests, the type checks, and both builds (the live link and the beta build).
+# A red X on GitHub means something broke; nothing should be merged until it's green.
+name: Checks
+
+on:
+  push:
+    branches: [main, 'claude/**']
+  pull_request:
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Rules tests
+        run: npm test
+      - name: Type checks
+        run: npm run typecheck
+      - name: Build (live link)
+        run: npm run build
+      - name: Build (beta)
+        run: npm run build:beta
