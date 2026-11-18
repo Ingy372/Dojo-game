@@ -2,6 +2,12 @@
 // 30 minutes: "Choose a look in under a minute"). Shown the first time a student plays,
 // and from the Home Dojo's "Look" button any time after. Every basic option is open to
 // everyone. The belt always shows the real rank and can't be changed here.
+//
+// Nov 18 redesign (Jay: "make it beautiful and fun to create your character"): the hero stands
+// on a glowing pedestal under a spotlight, with sparkles drifting up a bright night sky. The
+// choices sit in one glass panel with a tab per part (Body, Eyes, Hair, Skin, Hair colour, Gi),
+// so each part gets big, finger-sized options. Every change pops sparkles around the hero, and
+// "Surprise me!" shuffles a whole new look.
 
 import SCREENS from '../../../../content/settings/screens.json';
 import Phaser from 'phaser';
@@ -10,28 +16,50 @@ import { characterArt, loadArt } from '../art/art';
 import { type StandingCharacter, makeStandingCharacter } from '../art/player';
 import { sfx } from '../audio/Sfx';
 import { FACES, HAIRS, SWATCHES, type PlayerLook, loadLook, saveLook } from '../game/look';
+import { reducedMotion } from '../game/motion';
 import { loadSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
 import { FONT, crisp, view, hiDpi } from '../ui/theme';
 import { button } from '../ui/button';
-import { GREEN, MIN_TAP, RADIUS, S1, S2 } from '../ui/tokens';
+import { GREEN, MIN_TAP, S2 } from '../ui/tokens';
 
 export interface CreateSceneData {
   /** True the first time: a welcome, and no way back until the character is made. */
   first?: boolean;
 }
 
-const PANEL = 0x221d2e;
+const SKY_TOP = 0x3a2a78;
+const SKY_BOTTOM = 0x140d2b;
+const PANEL = 0x1b1626;
+const PANEL_EDGE = 0x4a3f6e;
 const GOLD = 0xffd166;
+const INK = '#f6efe2';
+const SOFT = '#c9bfe0';
+/** The drifting sparkles' colours: gold, pink, sky blue and mint. */
+const BOKEH = [0xffd166, 0xff8ad8, 0x7fd4ff, 0x8af0c0];
+
+type Tab = 'body' | 'face' | 'hair' | 'skin' | 'hairColor' | 'gi';
+const TABS: { id: Tab; icon: string; label: string }[] = [
+  { id: 'body', icon: '🧒', label: 'Body' },
+  { id: 'face', icon: '👀', label: 'Eyes' },
+  { id: 'hair', icon: '💇', label: 'Hairstyle' },
+  { id: 'skin', icon: '✋', label: 'Skin' },
+  { id: 'hairColor', icon: '🎨', label: 'Hair colour' },
+  { id: 'gi', icon: '🥋', label: 'Gi' },
+];
 
 export class CreateScene extends Phaser.Scene {
   private first = false;
   private look!: PlayerLook;
   private training!: TrainingState;
+  private bg!: Phaser.GameObjects.Container;
   private ui!: Phaser.GameObjects.Container;
   private character: StandingCharacter | null = null;
+  private heroAt = { x: 0, y: 0, r: 0 };
+  private tab: Tab = 'body';
   private leaving = false;
+  private shuffling = false;
 
   constructor() {
     super('Create');
@@ -53,139 +81,268 @@ export class CreateScene extends Phaser.Scene {
     this.look = { ...loadLook(), dye: undefined };
     this.training = currentTraining();
     this.leaving = false;
+    this.shuffling = false;
+    this.tab = 'body';
+    this.bg = this.add.container(0, 0);
     this.ui = this.add.container(0, 0);
-    this.render();
+    this.layout();
     this.cameras.main.fadeIn(300, 10, 8, 16);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.render, this);
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.render, this));
+    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this));
   }
 
-  /** Draws the whole screen again (after any change, or when the screen turns or resizes). */
+  /** The sky and stage (drawn once per screen size), then the rest. */
+  private layout(): void {
+    this.drawSky();
+    this.render();
+  }
+
+  /** A bright night sky with sparkles drifting up, a spotlight and the glowing pedestal. */
+  private drawSky(): void {
+    this.tweens.killTweensOf(this.bg.list);
+    this.bg.removeAll(true);
+    const { width, height } = view(this);
+    const leftW = this.leftWidth(width);
+    const sky = this.add.graphics();
+    sky.fillGradientStyle(SKY_TOP, SKY_TOP, SKY_BOTTOM, SKY_BOTTOM, 1).fillRect(0, 0, width, height);
+    this.bg.add(sky);
+    const still = reducedMotion();
+    // Drifting sparkles of light (big soft ones and small bright ones).
+    for (let i = 0; i < 22; i++) {
+      const big = i % 3 === 0;
+      const x = ((i * 97) % 100) / 100 * width;
+      const y = ((i * 61) % 100) / 100 * height;
+      const dot = this.add.circle(x, y, big ? 10 + (i % 4) * 4 : 2 + (i % 2), BOKEH[i % BOKEH.length], big ? 0.12 : 0.7);
+      this.bg.add(dot);
+      if (still) continue;
+      this.tweens.add({ targets: dot, y: y - height * 0.5, duration: 9000 + (i % 5) * 2200, repeat: -1 });
+      if (!big) this.tweens.add({ targets: dot, alpha: 0.15, duration: 700 + (i % 4) * 300, yoyo: true, repeat: -1 });
+    }
+    // The stage: a soft spotlight from above onto a glowing pedestal.
+    const r = Math.min(height * 0.19, leftW * 0.22);
+    const cx = leftW / 2;
+    const cy = height * 0.52;
+    this.heroAt = { x: cx, y: cy, r };
+    const light = this.add.graphics();
+    light.fillStyle(0xfff3c4, 0.07).fillTriangle(cx - r * 0.5, 0, cx + r * 0.5, 0, cx + r * 2.2, cy + r * 1.2);
+    light.fillStyle(0xfff3c4, 0.07).fillTriangle(cx - r * 0.5, 0, cx - r * 2.2, cy + r * 1.2, cx + r * 2.2, cy + r * 1.2);
+    this.bg.add(light);
+    for (let i = 4; i >= 1; i--) this.bg.add(this.add.circle(cx, cy - r * 0.4, r * (0.9 + i * 0.4), 0xb9a6ff, 0.04));
+    const footY = cy + r * 1.22;
+    this.bg.add(this.add.ellipse(cx, footY + r * 0.16, r * 3.3, r * 0.95, 0x0c0818, 0.55));
+    this.bg.add(this.add.ellipse(cx, footY + r * 0.08, r * 3.1, r * 0.86, 0x8a6418, 1));
+    this.bg.add(this.add.ellipse(cx, footY, r * 3.1, r * 0.86, 0x2c2350, 1).setStrokeStyle(3, GOLD, 0.9));
+    const ring = this.add.ellipse(cx, footY, r * 2.4, r * 0.62, GOLD, 0.0).setStrokeStyle(3, GOLD, 0.6);
+    this.bg.add(ring);
+    if (!still) this.tweens.add({ targets: ring, scaleX: 1.22, scaleY: 1.22, alpha: 0, duration: 1600, repeat: -1 });
+  }
+
+  private leftWidth(width: number): number {
+    return Math.round(width * 0.42);
+  }
+
+  /** Draws the hero, the words and the choices again (after any change). */
   private render(): void {
     this.ui.removeAll(true);
     const { width, height } = view(this);
     const pad = 14;
-    const leftW = Math.round(width * 0.4);
+    const leftW = this.leftWidth(width);
 
-    // ---- left: the welcome and the character
+    // ---- left: the welcome, the hero and the big buttons
     const firstName = this.training.firstName;
     const title = this.first ? `Welcome, ${firstName}!` : 'Your look';
-    this.text(leftW / 2, pad, title, 22, '#ffd166', true, 'Georgia, serif').setOrigin(0.5, 0);
+    this.text(leftW / 2, pad - 2, title, 24, '#ffd166', true, 'Georgia, serif').setOrigin(0.5, 0).setStroke('#140d2b', 5);
     const sub = this.first ? SCREENS.createLine.replace('{belt}', this.training.belt.name) : 'Change your look any time.';
-    this.text(leftW / 2, pad + 30, sub, 13, '#f2e9d8').setOrigin(0.5, 0).setAlign('center').setWordWrapWidth(leftW - 24, true);
+    this.text(leftW / 2, pad + 30, sub, 13, INK).setOrigin(0.5, 0).setAlign('center').setWordWrapWidth(leftW - 24, true);
 
-    const r = Math.min(height * 0.16, leftW * 0.2);
-    const cy = height * 0.5;
-    this.ui.add(this.add.ellipse(leftW / 2, cy + r * 1.25, r * 3, r * 0.9, GOLD, 0.12));
-    this.character = makeStandingCharacter(this, leftW / 2, cy, r, this.training.belt, this.training.stripesThisBelt, this.look);
+    const { x: cx, y: cy, r } = this.heroAt;
+    this.character = makeStandingCharacter(this, cx, cy, r, this.training.belt, this.training.stripesThisBelt, this.look);
     this.ui.add(this.character.container);
-    // Q-PREMIUM-2 M3: the big buttons now sit under the character, so the right panel
-    // keeps the whole height for finger-sized colour swatches.
+    // Name plate: a little banner on the pedestal's front.
+    const plate = `${this.training.displayName}  ·  ${this.training.belt.name}`;
     const by = height - pad - MIN_TAP;
-    this.text(leftW / 2, by - 14, `${this.training.displayName}  ·  ${this.training.belt.name}`, 13, '#b9ad99').setOrigin(0.5);
-    const doneW = this.first ? leftW - 2 * pad : (leftW - 2 * pad - S2) / 2;
-    this.button(pad + (this.first ? 0 : doneW + S2), by, doneW, MIN_TAP, this.first ? "Let's go!" : 'Done', GREEN, 18, () => this.finish(true));
-    if (!this.first) this.button(pad, by, doneW, MIN_TAP, '◀ Back', 0x5b4a3c, 15, () => this.finish(false));
+    const plateT = this.text(cx, by - 16, plate, 13, INK, true).setOrigin(0.5);
+    const plateBg = this.add.graphics();
+    plateBg.fillStyle(0x140d2b, 0.75).fillRoundedRect(cx - plateT.width / 2 - 12, plateT.y - 11, plateT.width + 24, 22, 11);
+    plateBg.lineStyle(1.5, GOLD, 0.6).strokeRoundedRect(cx - plateT.width / 2 - 12, plateT.y - 11, plateT.width + 24, 22, 11);
+    this.ui.addAt(plateBg, this.ui.getIndex(plateT));
 
-    // ---- right: the choices
-    const x0 = leftW + 8;
+    // Surprise me, plus Let's go (first time) or Back and Done (later).
+    const row = leftW - 2 * pad;
+    if (this.first) {
+      const sw = Math.round(row * 0.4);
+      this.button(pad, by, sw, MIN_TAP, '🎲 Surprise me!', 0x7a4fd1, 15, () => this.surprise());
+      this.button(pad + sw + S2, by, row - sw - S2, MIN_TAP, "Let's go!", GREEN, 19, () => this.finish(true));
+    } else {
+      const bw = (row - 2 * S2) / 3;
+      this.button(pad, by, bw, MIN_TAP, '◀ Back', 0x5b4a3c, 15, () => this.finish(false));
+      this.button(pad + bw + S2, by, bw, MIN_TAP, '🎲 Surprise', 0x7a4fd1, 14, () => this.surprise());
+      this.button(pad + 2 * (bw + S2), by, bw, MIN_TAP, 'Done', GREEN, 18, () => this.finish(true));
+    }
+
+    // ---- right: a glass panel with a tab per part and big options for the open tab
+    const x0 = leftW + 6;
+    const top = height < 350 ? 8 : 12;
     const w = width - x0 - pad;
-    const labelW = Math.min(96, w * 0.24);
-    const top = height < 350 ? 6 : Math.min(pad, 10);
-    // P-MENU-e: Body, Eyes and Hairstyle rows hold 44 pt buttons. Q-PREMIUM-2 M3: the three colour
-    // rows share the rest of the panel, each as two rows of five swatches (30 to 40 px, whole cell taps).
-    const btnRowH = MIN_TAP + 2;
     const panelH = height - 2 * top;
-    const dotRowH = Math.min(100, (panelH - 12 - 3 * btnRowH) / 3);
     const panel = this.add.graphics();
-    panel.fillStyle(PANEL, 0.9).fillRoundedRect(x0 - 6, top - 6, w + 12, panelH, RADIUS.panel);
-    panel.lineStyle(2, GOLD, 0.25).strokeRoundedRect(x0 - 6, top - 6, w + 12, panelH, RADIUS.panel);
+    panel.fillStyle(PANEL, 0.9).fillRoundedRect(x0, top, w, panelH, 16);
+    panel.lineStyle(2, PANEL_EDGE, 1).strokeRoundedRect(x0, top, w, panelH, 16);
+    panel.lineStyle(1, 0xffffff, 0.08).strokeRoundedRect(x0 + 3, top + 3, w - 6, panelH - 6, 13);
     this.ui.add(panel);
-    let y = top;
-    let rowH = btnRowH;
-    const row = (label: string) => {
-      this.text(x0 + 6, y + rowH / 2, label, 14, '#f2e9d8', true).setOrigin(0, 0.5);
-      const at = { x: x0 + labelW, y, w: w - labelW, h: rowH };
-      y += rowH;
-      return at;
-    };
-
-    // Boy / Girl.
-    const body = row('Body');
-    const half = (body.w - 8) / 2;
-    (['a', 'b'] as const).forEach((b, i) => {
-      const on = this.look.body === b;
-      this.button(body.x + i * (half + 8), body.y + S1 / 2, half, MIN_TAP, b === 'a' ? 'Boy' : 'Girl', on ? 0x3a7bd5 : 0x3a3448, 15, () => this.change({ body: b }), on);
-    });
-
-    // Eyes and hairstyle: arrows either side of the option's number.
-    this.stepper(row('Eyes'), rowH, 'Eyes', FACES, this.look.face, (face) => this.change({ face }));
-    this.stepper(row('Hairstyle'), rowH, 'Hairstyle', HAIRS, this.look.hair, (hair) => this.change({ hair }));
-
-    // Colours: tap a swatch.
-    rowH = dotRowH;
+    const tabH = Math.max(MIN_TAP + 8, Math.min(60, panelH * 0.2));
+    this.drawTabs(x0 + 8, top + 8, w - 16, tabH);
+    const area = { x: x0 + 14, y: top + 8 + tabH + 10, w: w - 28, h: panelH - tabH - 26 };
+    const t = TABS.find((x) => x.id === this.tab)!;
+    this.text(area.x, area.y, t.label, 16, INK, true, 'Georgia, serif');
+    const opt = { x: area.x, y: area.y + 26, w: area.w, h: area.h - 26 };
     const pal = characterArt(this, `player-${this.look.body}-big`, 'player')?.palettes ?? {};
-    this.swatches(row('Skin'), rowH, pal.skin ?? [], this.look.skin, (skin) => this.change({ skin }));
-    this.swatches(row('Hair colour'), rowH, pal.hair ?? [], this.look.hairColor, (hairColor) => this.change({ hairColor }));
-    this.swatches(row('Gi'), rowH, pal.gi ?? [], this.look.gi, (gi) => this.change({ gi }));
+    if (this.tab === 'body') this.bodyChoice(opt);
+    else if (this.tab === 'face') this.stepper(opt, FACES, this.look.face, (face) => this.change({ face }));
+    else if (this.tab === 'hair') this.stepper(opt, HAIRS, this.look.hair, (hair) => this.change({ hair }));
+    else if (this.tab === 'skin') this.swatches(opt, pal.skin ?? [], this.look.skin, (skin) => this.change({ skin }));
+    else if (this.tab === 'hairColor') this.swatches(opt, pal.hair ?? [], this.look.hairColor, (hairColor) => this.change({ hairColor }));
+    else this.swatches(opt, pal.gi ?? [], this.look.gi, (gi) => this.change({ gi }));
   }
 
-  private change(part: Partial<PlayerLook>): void {
+  /** Six tab chips: an icon and a short word each; the open one glows gold. */
+  private drawTabs(x: number, y: number, w: number, h: number): void {
+    const gap = 6;
+    const cw = (w - gap * (TABS.length - 1)) / TABS.length;
+    TABS.forEach((t, i) => {
+      const on = t.id === this.tab;
+      const tx = x + i * (cw + gap);
+      const g = this.add.graphics();
+      g.fillStyle(on ? 0x4a3a86 : 0x2a2240, 1).fillRoundedRect(tx, y, cw, h, 12);
+      if (on) g.fillStyle(0xffffff, 0.1).fillRoundedRect(tx + 2, y + 2, cw - 4, h * 0.45, 10);
+      g.lineStyle(on ? 3 : 1.5, on ? GOLD : PANEL_EDGE, on ? 1 : 0.9).strokeRoundedRect(tx, y, cw, h, 12);
+      this.ui.add(g);
+      this.text(tx + cw / 2, y + h * 0.38, t.icon, Math.round(h * 0.36), '#ffffff').setOrigin(0.5);
+      this.text(tx + cw / 2, y + h * 0.78, t.label, cw < 64 ? 9 : 11, on ? '#ffd166' : SOFT, true).setOrigin(0.5).setWordWrapWidth(cw - 4, true).setAlign('center');
+      const hit = this.add.zone(tx + cw / 2, y + h / 2, cw, Math.max(h, MIN_TAP)).setInteractive({ useHandCursor: true });
+      hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        if (this.tab === t.id || this.shuffling) return;
+        sfx.unlock();
+        sfx.tap();
+        this.tab = t.id;
+        this.render();
+      });
+      this.ui.add(hit);
+    });
+  }
+
+  /** Two big cards: Boy and Girl. */
+  private bodyChoice(at: { x: number; y: number; w: number; h: number }): void {
+    const half = (at.w - 12) / 2;
+    const h = Math.max(MIN_TAP, Math.min(at.h * 0.55, 96));
+    (['a', 'b'] as const).forEach((b, i) => {
+      const on = this.look.body === b;
+      this.button(at.x + i * (half + 12), at.y + (at.h - h) / 2, half, h, b === 'a' ? 'Boy' : 'Girl', on ? 0x3a7bd5 : 0x3a3448, 20, () => this.change({ body: b }), on);
+    });
+  }
+
+  private change(part: Partial<PlayerLook>, quiet = false): void {
     if (this.leaving) return;
-    sfx.place(true);
+    if (!quiet) sfx.place(true);
     this.look = { ...this.look, ...part };
     this.render();
-    // A small hop so the change is noticed.
+    if (!quiet) this.celebrate();
+  }
+
+  /** A hop and a ring of sparkles around the hero, so every change feels good. */
+  private celebrate(): void {
     const c = this.character?.container;
-    if (c) {
-      const s = c.scale;
-      this.tweens.add({ targets: c, scale: s * 1.06, duration: 90, yoyo: true, ease: 'Sine.Out' });
+    if (!c || reducedMotion()) return;
+    const s = c.scale;
+    this.tweens.add({ targets: c, scale: s * 1.08, y: c.y - 6, duration: 110, yoyo: true, ease: 'Sine.Out' });
+    const { x, y, r } = this.heroAt;
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * Math.PI * 2;
+      const star = this.add.star(x, y - r * 0.4, 5, 3, 7, BOKEH[i % BOKEH.length]).setAlpha(0.95);
+      this.ui.add(star);
+      this.tweens.add({
+        targets: star,
+        x: x + Math.cos(a) * r * 1.7,
+        y: y - r * 0.4 + Math.sin(a) * r * 1.5,
+        angle: 180,
+        alpha: 0,
+        scale: 0.4,
+        duration: 520,
+        ease: 'Cubic.Out',
+        onComplete: () => star.destroy(),
+      });
     }
   }
 
-  /** ◀ "Eyes 3" ▶ */
-  private stepper(at: { x: number; y: number; w: number }, rowH: number, name: string, list: string[], cur: string, pick: (v: string) => void): void {
+  /** "Surprise me!": a quick shuffle through looks that lands on a new one. */
+  private surprise(): void {
+    if (this.leaving || this.shuffling) return;
+    this.shuffling = true;
+    const pal = characterArt(this, `player-${this.look.body}-big`, 'player')?.palettes ?? {};
+    const pick = <T>(list: readonly T[]): T => list[Math.floor(Math.random() * list.length)];
+    const count = (list: unknown[] | undefined) => Array.from({ length: Math.min(SWATCHES, list?.length ?? SWATCHES) }, (_, i) => i);
+    const roll = (): Partial<PlayerLook> => ({ face: pick(FACES), hair: pick(HAIRS), skin: pick(count(pal.skin)), hairColor: pick(count(pal.hair)), gi: pick(count(pal.gi)) });
+    const steps = reducedMotion() ? 1 : 6;
+    for (let i = 0; i < steps; i++) {
+      this.time.delayedCall(i * 85, () => {
+        const last = i === steps - 1;
+        if (!last) sfx.tap();
+        this.change(roll(), !last);
+        if (last) this.shuffling = false;
+      });
+    }
+  }
+
+  /** ◀ dots ▶ with big arrows: one dot per option, the chosen one big and gold. */
+  private stepper(at: { x: number; y: number; w: number; h: number }, list: string[], cur: string, pick: (v: string) => void): void {
     const i = list.indexOf(cur);
-    const bw = Math.max(MIN_TAP, Math.min(56, at.w * 0.25));
-    const h = MIN_TAP;
+    const bw = Math.max(MIN_TAP, Math.min(64, at.w * 0.2));
+    const h = Math.max(MIN_TAP, Math.min(64, at.h * 0.5));
+    const y = at.y + (at.h - h) / 2;
     const go = (d: number) => () => pick(list[(i + d + list.length) % list.length]);
-    this.button(at.x, at.y + (rowH - h) / 2, bw, h, '◀', 0x4a3f63, 20, go(-1));
-    this.button(at.x + at.w - bw, at.y + (rowH - h) / 2, bw, h, '▶', 0x4a3f63, 20, go(1));
-    // No words or numbers to read: one dot per option, the chosen one big and gold.
+    this.button(at.x, y, bw, h, '◀', 0x5a4a8a, 24, go(-1));
+    this.button(at.x + at.w - bw, y, bw, h, '▶', 0x5a4a8a, 24, go(1));
     const n = list.length;
-    const gap = Math.min(18, (at.w - 2 * bw - 16) / n);
+    const gap = Math.min(24, (at.w - 2 * bw - 24) / n);
     const g = this.add.graphics();
     for (let k = 0; k < n; k++) {
       const dx = at.x + at.w / 2 + (k - (n - 1) / 2) * gap;
-      if (k === i) g.fillStyle(GOLD, 1).fillCircle(dx, at.y + rowH / 2, 7);
-      else g.fillStyle(0xf2e9d8, 0.45).fillCircle(dx, at.y + rowH / 2, 4);
+      if (k === i) {
+        g.fillStyle(GOLD, 0.3).fillCircle(dx, y + h / 2, 12);
+        g.fillStyle(GOLD, 1).fillCircle(dx, y + h / 2, 8);
+      } else g.fillStyle(0xf2e9d8, 0.45).fillCircle(dx, y + h / 2, 4.5);
     }
     this.ui.add(g);
-    void name;
+    this.text(at.x + at.w / 2, y + h + 10, `${i + 1} of ${n}`, 13, SOFT, true).setOrigin(0.5, 0);
   }
 
-  /** Ten colour circles in two rows of five; the chosen one has a gold ring. */
-  private swatches(at: { x: number; y: number; w: number }, rowH: number, colors: string[], cur: number, pick: (i: number) => void): void {
+  /** Ten big glossy colour drops in two rows of five; the chosen one has a gold ring and a tick. */
+  private swatches(at: { x: number; y: number; w: number; h: number }, colors: string[], cur: number, pick: (i: number) => void): void {
     const n = Math.min(SWATCHES, colors.length);
     const perRow = Math.ceil(n / 2);
     const cell = at.w / perRow;
-    const cellH = rowH / 2;
-    const rad = Math.min(20, cell * 0.36, (cellH - 3) / 2);
+    const cellH = Math.min(at.h / 2, 84);
+    const y0 = at.y + (at.h - cellH * 2) / 2;
+    const rad = Math.min(28, cell * 0.36, (cellH - 6) / 2);
     colors.slice(0, n).forEach((hex, i) => {
       const cx = at.x + cell * ((i % perRow) + 0.5);
-      const cy = at.y + cellH * (Math.floor(i / perRow) + 0.5);
+      const cy = y0 + cellH * (Math.floor(i / perRow) + 0.5);
       const on = i === cur;
-      // A light rim so dark swatches show on the dark panel (A7): thicker and solid on the dark ones.
       const c = Phaser.Display.Color.HexStringToColor(hex);
-      const dark = (0.2126 * c.red + 0.7152 * c.green + 0.0722 * c.blue) / 255 < 0.35;
-      const dot = this.add.circle(cx, cy, rad - 2, c.color).setStrokeStyle(on ? 4 : dark ? 3 : 2, on ? GOLD : 0xf2e9d8, on || dark ? 1 : 0.6);
+      if (on) this.ui.add(this.add.circle(cx, cy, rad + 7, GOLD, 0.25));
+      this.ui.add(this.add.circle(cx, cy + 3, rad, 0x08060e, 0.45));
+      // A light rim so dark swatches show on the dark panel (A7).
+      const dot = this.add.circle(cx, cy, rad, c.color).setStrokeStyle(on ? 4 : 2, on ? GOLD : 0xf2e9d8, on ? 1 : 0.7);
+      this.ui.add(dot);
+      this.ui.add(this.add.ellipse(cx - rad * 0.3, cy - rad * 0.38, rad * 0.7, rad * 0.4, 0xffffff, 0.35).setAngle(-20));
+      if (on) this.text(cx, cy, '✓', Math.round(rad * 0.9), '#ffffff', true).setOrigin(0.5).setStroke('#14121c', 4);
       // The whole cell is the tap target, so small fingers don't miss.
-      dot.setInteractive(new Phaser.Geom.Rectangle(rad - 2 - cell / 2, rad - 2 - cellH / 2, cell, cellH), Phaser.Geom.Rectangle.Contains);
+      dot.setInteractive(new Phaser.Geom.Rectangle(rad - cell / 2, rad - cellH / 2, cell, cellH), Phaser.Geom.Rectangle.Contains);
       dot.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        if (this.shuffling) return;
         sfx.unlock();
         pick(i);
       });
-      this.ui.add(dot);
     });
   }
 

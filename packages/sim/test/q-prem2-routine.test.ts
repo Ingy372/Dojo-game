@@ -13,10 +13,10 @@ const read = (name: string): string => {
 
 describe('Q-PREMIUM-2 M3 character creation swatches', () => {
   const s = read('scenes/CreateScene.ts');
-  it('colours are two rows of five, with a swatch at least 30 px and the whole cell tapping', () => {
+  it('colours are two rows of five, with big swatches and the whole cell tapping (Nov 18 redesign: one tab per part)', () => {
     expect(s).toMatch(/perRow = Math\.ceil\(n \/ 2\)/);
-    expect(s).toMatch(/const rad = Math\.min\(20, cell \* 0\.36, \(cellH - 3\) \/ 2\)/);
-    expect(s).toMatch(/new Phaser\.Geom\.Rectangle\(rad - 2 - cell \/ 2, rad - 2 - cellH \/ 2, cell, cellH\)/);
+    expect(s).toMatch(/const rad = Math\.min\(28, cell \* 0\.36, \(cellH - 6\) \/ 2\)/);
+    expect(s).toMatch(/new Phaser\.Geom\.Rectangle\(rad - cell \/ 2, rad - cellH \/ 2, cell, cellH\)/);
   });
   it('the Done / Back buttons moved under the character so the swatches get the full height', () => {
     expect(s).toMatch(/const by = height - pad - MIN_TAP;/);
