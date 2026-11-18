@@ -50,6 +50,7 @@ import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type 
 import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, gearSheetBox, slotEmptyLine, tileBox, toggleFilter, bagScreenLayout, bagTileBox, BAG_SCREEN, bagPageCount, turnBagPage, sheetAtTop } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
+import { TOUR, senseiBubble } from '../ui/homeTour';
 import { currentTraining, seedLoadout, selectProfile, shortDate } from '../game/student';
 import { hex } from '../ui/belt';
 import { startTowerRun } from '../game/tower';
@@ -88,6 +89,8 @@ export interface HomeSceneData {
   /** Nov 17: which screen to open on (the Dojo's training board opens 'board', My Path opens 'path'). */
   view?: 'path' | 'board';
   fromRun?: boolean;
+  /** Home Tour (Jay, Nov 18): opened from the tour's last stop; Sensei says one last line. */
+  tourEnd?: boolean;
   /** B-MASHER-d1: home after a knock-out ('run') or when play time ended ('rested'): Screen 3's welcome shows. */
   knockout?: 'run' | 'rested';
 }
@@ -203,6 +206,7 @@ export class HomeScene extends Phaser.Scene {
   private titleTaps: number[] = [];
   /** Came here straight from a run (the XP bar fills from what it last showed). */
   private fromRun = false;
+  private tourEnd = false;
   private equipment: EquipmentScreen | null = null;
   private openOn: 'path' | 'board' | null = null;
   private knockout: HomeSceneData['knockout'] | null = null;
@@ -223,6 +227,7 @@ export class HomeScene extends Phaser.Scene {
 
   init(data: HomeSceneData): void {
     this.fromRun = data?.fromRun === true;
+    this.tourEnd = data?.tourEnd === true;
     this.openOn = data?.view ?? null;
     this.knockout = data?.knockout ?? null;
     this.firstFloorDone = false;
@@ -259,6 +264,14 @@ export class HomeScene extends Phaser.Scene {
     this.winBurst();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.render, this);
     this.listenPanelScroll();
+    if (this.tourEnd) {
+      // Sensei's last tour line, once any celebrations are done.
+      const wait = this.time.addEvent({ delay: 300, loop: true, callback: () => {
+        if (this.celebrating) return;
+        wait.remove();
+        senseiBubble(this, TOUR.boardOpen, () => {}, TOUR.ok);
+      } });
+    }
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.render, this));
   }
 

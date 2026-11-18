@@ -49,6 +49,10 @@ export abstract class WalkScene extends Phaser.Scene {
   private zoom = 1;
   private elapsed = 0;
   protected leaving = false;
+  /** While true (a Sensei bubble with a Next button is up), presses don't walk the hero. */
+  protected paused = false;
+  /** While set, the camera looks here (tiles) instead of at the hero (a Home Tour stop showing a place). */
+  protected lookAt: Vec2 | null = null;
   private armed = new Map<string, boolean>();
   private trail: TrailEmitter | null = null;
 
@@ -80,6 +84,8 @@ export abstract class WalkScene extends Phaser.Scene {
   create(data?: unknown): void {
     hiDpi(this.cameras.main);
     this.leaving = false;
+    this.paused = false;
+    this.lookAt = null;
     this.elapsed = 0;
     this.armed.clear();
 
@@ -99,7 +105,7 @@ export abstract class WalkScene extends Phaser.Scene {
     const trail = wornShop().fx.trail;
     this.trail = trail ? new TrailEmitter(this, trail, { tile: TILE, depth: 0, add: (g) => this.worldLayer.add(g) }) : null;
 
-    this.controls = new TouchControls(this, this.cameras.main, (x, y) => this.toTile(x, y), () => this.leaving, (x, y) => this.isTapTarget(this.rawTile(x, y)));
+    this.controls = new TouchControls(this, this.cameras.main, (x, y) => this.toTile(x, y), () => this.leaving || this.paused, (x, y) => this.isTapTarget(this.rawTile(x, y)));
     this.layout();
 
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
@@ -214,8 +220,8 @@ export abstract class WalkScene extends Phaser.Scene {
     const viewW = width / t;
     const viewH = height / t;
     const clamp = (v: number, lo: number, hi: number) => (lo > hi ? (lo + hi) / 2 : Math.max(lo, Math.min(hi, v)));
-    const target = this.world.players.p1.pos;
-    const k = snap ? 1 : 0.15;
+    const target = this.lookAt ?? this.world.players.p1.pos;
+    const k = snap ? 1 : this.lookAt ? 0.08 : 0.15;
     const tx = clamp(target.x, x0 + viewW / 2, x1 - viewW / 2);
     const ty = clamp(target.y, y0 + viewH / 2, y1 - viewH / 2);
     this.cam = { x: this.cam.x + (tx - this.cam.x) * k, y: this.cam.y + (ty - this.cam.y) * k };

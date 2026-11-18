@@ -121,7 +121,7 @@ import { streakAura } from '../ui/classChest';
 import { loadLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
-import { homeDojo } from '../game/dojo';
+import { homeDojo, setBowDue } from '../game/dojo';
 import { NAMED_PACK, NamedView } from '../game/named';
 import { reducedMotion } from '../game/motion';
 import { RATING, overlaps, ratingWordTop } from '../ui/ratingWord';
@@ -2122,16 +2122,26 @@ export class GameScene extends Phaser.Scene {
       }
       return;
     }
+    // Home Tour (Jay, Nov 18): the first tutorial floor clear goes to the Home Dojo, where Sensei walks the
+    // student round the dojo and the town before the Training Board. A replay from the Book goes home as before.
+    const tour = this.run.tutorial && status === 'cleared' && !profile.homeTourDone;
+    if (tour) {
+      profile.homeTour = 'dojo';
+      profile.homeTourDone = true;
+      writeSave(profile);
+      setBowDue(true);
+    }
+    const winHome = (): void => (tour ? leave('Dojo') : leave('Home', { fromRun: true }));
     // Q-PREM-BOSSWIN: the first real Floor Keeper clear gets its one big moment, saved so it plays once.
     const bossId = this.room.enemySpawns.map((sp) => sp.enemy).find((id) => CONTENT.enemies[id]?.boss);
     if (keeperWin(profile, this.run, status, bossId)) {
       writeSave(profile);
-      this.showKeeperWin(() => leave('Home', { fromRun: true }));
+      this.showKeeperWin(winHome);
       return;
     }
     sfx.floorClear();
     this.message.setText(LAST_RUN.cleared).setVisible(true);
-    this.time.delayedCall(200, () => leave('Home', { fromRun: true }));
+    this.time.delayedCall(200, winHome);
   }
 
   /** Q-PREM-BOSSWIN: 'Floor Keeper defeated!' over the room, then onDone (home). */

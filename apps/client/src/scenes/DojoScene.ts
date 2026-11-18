@@ -51,6 +51,7 @@ import { CONTENT } from '../game/content';
 import { wornShop } from '../game/shop';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
+import { TOUR, senseiBubble, tourGlow, tourLine } from '../ui/homeTour';
 import { DIFFICULTY_TEXT, ensureDifficulty } from '../game/difficulty';
 import { PLAY_TIME_TEXT, touchPlayClock } from '../game/playTime';
 import { bankRun, savedRun } from '../game/runSave';
@@ -62,7 +63,7 @@ import BELT_TEXT from '../../../../content/settings/belt-entry.json';
 import { applyBeltEntry, entryRank, feedEntry, fixBeltEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
 import { button as roundButton } from '../ui/button';
 import { GREEN, MIN_TAP, RADIUS } from '../ui/tokens';
-import { addDevDays, devDayOffset, localDay, takeLesson } from '../game/lessons';
+import { addDevDays, devDayOffset, localDay, noteLessonSeen, takeLesson } from '../game/lessons';
 import { TouchControls } from '../input/TouchControls';
 import { addStatic, addTinted, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
@@ -194,6 +195,12 @@ export class DojoScene extends Phaser.Scene {
 
   /** Set when the Tower was asked for after today's play time ran out: the dojo says it's resting. */
   private restingOnArrival = false;
+  /** Home Tour (Jay, Nov 18): the glowing spot and Sensei's bubble of the current stop. */
+  private tourBits: Phaser.GameObjects.GameObject[] = [];
+  private tourStarted = false;
+  /** While set, the camera looks here (tiles) instead of at the hero: a tour stop showing something. */
+  private tourLook: Vec2 | null = null;
+  private tourDoorWait = false;
 
   init(data?: { resting?: boolean; from?: string }): void {
     this.restingOnArrival = data?.resting === true;
@@ -285,7 +292,12 @@ export class DojoScene extends Phaser.Scene {
     this.cardsOpen = 0;
     this.arriving = false;
     this.arrived = false;
+    this.tourBits = [];
+    this.tourStarted = false;
+    this.tourLook = null;
+    this.tourDoorWait = false;
     if (this.restingOnArrival) this.time.delayedCall(500, () => this.showResting());
+    if (!bowIsDue() && this.profile.homeTour) this.time.delayedCall(450, () => this.runTour());
     if (!bowIsDue()) this.offerResume();
     if (bowIsDue()) {
       this.bowHoursAway = hoursAway;
@@ -340,6 +352,12 @@ export class DojoScene extends Phaser.Scene {
       while (this.elapsed >= TICK_MS && this.mode === 'play' && !this.leaving) {
         this.prevPos = { ...this.world.players.p1.pos };
         const input: PlayerInput = this.controls.takeInput();
+        // Home Tour door stop: the hero arrived standing in the doorway, so a push (or tap) toward the
+        // door goes through it straight away.
+        if (this.tourDoorWait) {
+          const p = this.world.players.p1.pos;
+          if ((input.kind === 'stick' && input.y > 0.3) || (input.kind === 'moveTo' && input.y > p.y + 0.3)) this.doorArmed = true;
+        }
         stepWorld(this.world, this.room, { p1: input });
         this.elapsed -= TICK_MS;
         this.afterTick(time);
@@ -371,7 +389,19 @@ export class DojoScene extends Phaser.Scene {
     const chores = choresLeft(this.dojo);
     const steps: Array<() => void> = [];
     const firstVisit = !this.dojo.welcomed;
-    if (firstVisit) {
+    if (this.profile.homeTour === 'dojo') {
+      // Home Tour: the tutorial floor's result first; Sensei's welcome comes as the tour's first stop.
+      const s = this.profile.lastRun?.summary;
+      const deco = [...(s?.decorations ?? []), ...(this.profile.lastRun?.earned ?? [])][0];
+      const best = s?.items[0];
+      const reward = best ? `You found: ${best.name}` : deco ? `For your dojo: ${decorationDef(CONTENT.dojo, deco).name}` : '';
+      steps.push(() => this.card(TOUR.floorCleared, reward ? [reward] : ['Well done!'], 'Continue', next));
+      // The old first-visit card and Sensei's "Welcome home" line are covered by the tour.
+      noteLessonSeen('line-welcome-home', null);
+      this.profile.lessons = loadSave().lessons;
+      this.dojo.welcomed = true;
+      writeSave(this.profile);
+    } else if (firstVisit) {
       steps.push(() =>
         this.card('Your Home Dojo', [
           'This space is yours. Bow when you enter, keep it clean, and make it your own.',
@@ -440,6 +470,7 @@ export class DojoScene extends Phaser.Scene {
         this.arriving = false;
         this.renderUi();
         this.tryBow();
+        this.runTour();
       }
     };
     next();
@@ -576,12 +607,75 @@ export class DojoScene extends Phaser.Scene {
 
   /** Nov 17 (Jay): the south door leads out into town, where the hero comes out of their own dojo's front door. */
   private goTown(): void {
+    if (this.profile.homeTour === 'dojo') {
+      if (!this.tourStarted) return;
+      this.profile.homeTour = 'town';
+    }
     this.leaveTo('ActionZoneTown', { from: 'home' });
   }
 
   /** Nov 17 (Jay): the board on the wall is the training station: last climb, gear, fighting style and the Tower. */
   private goBoard(): void {
+    const tour = this.profile.homeTour;
+    // Mid-tour (dojo and town stops), the station waits for the tour's last stop.
+    if (tour === 'dojo' || tour === 'town') return;
+    if (tour === 'board') {
+      this.profile.homeTour = null;
+      return this.leaveTo('Home', { view: 'board', tourEnd: true });
+    }
     this.leaveTo('Home', { view: 'board' });
+  }
+
+  // ---------------------------------------------------------------- Home Tour
+
+  /**
+   * Home Tour (Jay, Nov 18). Dojo stop: Sensei's welcome, the training station glows, then the door glows
+   * ("Come, let's see the town"). Board stop (back from the town): the station glows and walking up to it
+   * opens the Training Board. Lines are in content/dojo/action-zone/home-tour.json.
+   */
+  private runTour(): void {
+    const stop = this.profile.homeTour;
+    if (!stop || this.tourStarted || this.mode !== 'play' || this.leaving) return;
+    this.tourStarted = true;
+    const station = () => this.tourGlowAt(STATION.left - 0.35, STATION.footY + 0.45);
+    if (stop === 'board') {
+      station();
+      this.tourBits.push(senseiBubble(this, TOUR.toStation, undefined, TOUR.next, 'bottom'));
+      return;
+    }
+    if (stop !== 'dojo') return;
+    const name = this.training.displayName.split(' ')[0];
+    const lines = TOUR.dojo.map((l) => tourLine(l, { player: name }));
+    const say = (i: number): void => {
+      this.mode = 'arriving';
+      if (i < lines.length) {
+        senseiBubble(this, lines[i], () => say(i + 1));
+        return;
+      }
+      const glow = station();
+      this.tourLook = { x: STATION.x, y: STATION.footY };
+      senseiBubble(this, TOUR.station, () => {
+        glow.destroy();
+        this.tourLook = null;
+        const door = CONTENT.dojo.room.doors[0];
+        this.tourGlowAt(door.x, door.y - 0.45);
+        this.tourDoorWait = true;
+        this.tourBits.push(senseiBubble(this, TOUR.toTown));
+        this.controls.reset();
+        this.quietUntil = this.time.now + ARRIVAL_QUIET_MS;
+        this.mode = 'play';
+        this.renderUi();
+      }, TOUR.next, 'bottom');
+    };
+    say(0);
+  }
+
+  /** A glowing "walk here" spot on the dojo floor (tiles). */
+  private tourGlowAt(x: number, y: number): Phaser.GameObjects.Container {
+    const g = tourGlow(this, x * TILE, y * TILE, TILE * 0.6);
+    this.worldLayer.add(g);
+    this.tourBits.push(g);
+    return g;
   }
 
   /** The My Path button: the Gate, the next class step, the Shop and the Book. */
@@ -1598,7 +1692,7 @@ export class DojoScene extends Phaser.Scene {
     const room = CONTENT.dojo.room;
     const t = TILE * this.zoom;
     let target: Vec2 = this.cam;
-    if (this.mode !== 'decorate') target = this.world.players.p1.pos;
+    if (this.mode !== 'decorate') target = this.tourLook ?? this.world.players.p1.pos;
     else if (!this.panned && this.selected) {
       const it = this.dojo.items.find((x) => x.uid === this.selected);
       if (it && it.col !== null && it.row !== null) {

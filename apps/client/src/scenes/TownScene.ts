@@ -1,9 +1,11 @@
 import Phaser from 'phaser';
-import { loadRoom, type Room, type Vec2 } from '@dojo/sim';
+import { loadRoom, type MoveInput, type Room, type Vec2 } from '@dojo/sim';
 import { TOWN, TOWN_PACK } from '../game/actionZone';
 import { addStatic } from '../art/art';
 import { addExitCue } from '../ui/exitCue';
 import { FONT, crisp } from '../ui/theme';
+import { TOUR, senseiBubble, tourGlow, tourLine } from '../ui/homeTour';
+import { loadSave, writeSave } from '../game/save';
 import { TILE, WalkScene, inRect, type Facing, type TileRect } from './WalkScene';
 import townWalk from '../../../../content/dojo/action-zone/town-walk.json';
 
@@ -36,6 +38,55 @@ export class TownScene extends WalkScene {
 
   protected room(): Room {
     return ROOM;
+  }
+
+  /** Home Tour "go home" stop: a push toward the home door goes in, even from where the hero came out. */
+  private tourHomeWait = false;
+
+  protected onInput(input: MoveInput, pos: Vec2): void {
+    if (!this.tourHomeWait || !inRect(pos, [WALK.homeDoor.enterRect[0] - 0.6, WALK.homeDoor.enterRect[1] + 0.6, WALK.homeDoor.enterRect[2], WALK.homeDoor.enterRect[3] + 1.2])) return;
+    if ((input.kind === 'stick' && input.y < -0.3) || (input.kind === 'moveTo' && input.y < pos.y - 0.2)) this.arm('home-door');
+  }
+
+  create(data?: unknown): void {
+    this.tourHomeWait = false;
+    super.create(data);
+    this.tourStop((data as TownSceneData | undefined)?.from);
+  }
+
+  /**
+   * Home Tour, town stop (Jay, Nov 18): "This is our town", the real dojo's door glows, then the way home.
+   * Back out of the real dojo mid-tour, Sensei only points home.
+   */
+  private tourStop(from: TownSceneData['from']): void {
+    if (loadSave().homeTour !== 'town') return;
+    const glowAt = (door: TownDoor) => {
+      const g = tourGlow(this, door.cue[0] * TILE, (door.cue[1] + 0.2) * TILE, TILE * 0.7);
+      this.worldLayer.add(g);
+      return g;
+    };
+    const goHome = () => {
+      this.paused = false;
+      this.tourHomeWait = true;
+      this.lookAt = null;
+      glowAt(WALK.homeDoor);
+      senseiBubble(this, TOUR.goHome, undefined, TOUR.next, 'bottom');
+    };
+    if (from === 'outside') return goHome();
+    this.paused = true;
+    // The whole street first (the camera drifts to the middle of the town), then the real dojo's door.
+    const [x0, x1, y0, y1] = this.bounds;
+    this.lookAt = { x: (x0 + x1) / 2, y: (y0 + y1) / 2 };
+    this.time.delayedCall(this.fade(450), () =>
+      senseiBubble(this, TOUR.town, () => {
+        const glow = glowAt(WALK.dojoDoor);
+        this.lookAt = { x: WALK.dojoDoor.cue[0], y: WALK.dojoDoor.cue[1] };
+        senseiBubble(this, tourLine(TOUR.realDojo, { dojo: WALK.dojoDoor.label }), () => {
+          glow.destroy();
+          goHome();
+        }, TOUR.next, 'bottom');
+      }, TOUR.next, 'bottom'),
+    );
   }
 
   protected roomPacks(): string[] {
@@ -94,6 +145,12 @@ export class TownScene extends WalkScene {
 
   protected afterTick(p: Vec2): void {
     if (this.entered('home-door', WALK.homeDoor.enterRect, p)) {
+      // Home Tour: back home, Sensei's last stop is the training station.
+      const save = loadSave();
+      if (save.homeTour === 'town') {
+        save.homeTour = 'board';
+        writeSave(save);
+      }
       this.leave('Dojo', { from: 'town' });
       return;
     }

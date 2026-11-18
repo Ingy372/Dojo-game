@@ -1,0 +1,18 @@
+{
+  "about": "The Home Tour (Jay, Nov 18): after the tutorial floor's Floor Keeper, Sensei walks the student round their Home Dojo, out into the town and back to the training station. One sentence a line. DRAFT words (from docs/tutorial-design.md part C), placeholders until Jay approves them. {player} = first name, {dojo} = the real dojo's door label in the town.",
+  "placeholder": true,
+  "floorCleared": "Floor cleared!",
+  "dojo": [
+    "Welcome home, {player}! This dojo is yours.",
+    "Keep it clean and make it your own. You'll earn things to decorate it."
+  ],
+  "station": "This is your Training Station. It takes you back to the Tower.",
+  "toTown": "Come, let's see the town. Walk out the door.",
+  "town": "This is our town.",
+  "realDojo": "That's {dojo}, our real dojo. Train there and you grow strong here too!",
+  "goHome": "Let's go home. Walk to your door.",
+  "toStation": "Ready? Walk to your Training Station.",
+  "boardOpen": "Climb whenever you like. I'm proud of you!",
+  "next": "Next",
+  "ok": "Okay!"
+}
