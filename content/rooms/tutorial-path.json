@@ -29,38 +29,38 @@
         "aroundPlayer": []
       },
       {
-        "pauseSeconds": 1.0,
-        "fillSeconds": 2.0,
-        "onPlayer": true,
-        "aroundPlayer": [
-          {
-            "dx": 2,
-            "dy": 1
-          },
-          {
-            "dx": -2,
-            "dy": -1
-          }
-        ]
-      },
-      {
-        "pauseSeconds": 0.9,
-        "fillSeconds": 1.9,
-        "onPlayer": true,
-        "aroundPlayer": [
-          {
-            "dx": -2,
-            "dy": 1
-          },
-          {
-            "dx": 2,
-            "dy": -1
-          }
-        ]
-      },
-      {
-        "pauseSeconds": 0.8,
+        "pauseSeconds": 0.3,
         "fillSeconds": 1.8,
+        "onPlayer": true,
+        "aroundPlayer": [
+          {
+            "dx": 2,
+            "dy": 1
+          },
+          {
+            "dx": -2,
+            "dy": -1
+          }
+        ]
+      },
+      {
+        "pauseSeconds": 0.3,
+        "fillSeconds": 1.7,
+        "onPlayer": true,
+        "aroundPlayer": [
+          {
+            "dx": -2,
+            "dy": 1
+          },
+          {
+            "dx": 2,
+            "dy": -1
+          }
+        ]
+      },
+      {
+        "pauseSeconds": 0.3,
+        "fillSeconds": 1.6,
         "onPlayer": true,
         "aroundPlayer": [
           {
@@ -78,8 +78,8 @@
         ]
       },
       {
-        "pauseSeconds": 0.8,
-        "fillSeconds": 1.8,
+        "pauseSeconds": 0.3,
+        "fillSeconds": 1.6,
         "onPlayer": true,
         "aroundPlayer": [
           {
