@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { reducedMotion } from '../game/motion';
 
-export type CueDirection = 'down' | 'left' | 'right';
+export type CueDirection = 'down' | 'up' | 'left' | 'right';
 
 /** A soft gold colour, nothing red: the cue is gentle and has no words. */
 const GOLD = 0xffd166;
@@ -14,12 +14,12 @@ const GOLD = 0xffd166;
 export function addExitCue(scene: Phaser.Scene, cx: number, cy: number, w: number, h: number, dir: CueDirection, arrowMin = 0): Phaser.GameObjects.Container {
   const glow = scene.add.image(0, 0, bakeGlow(scene, w, h)).setScale(1 / BAKE);
   const arrow = scene.add.image(0, 0, bakeArrow(scene, Math.max(arrowMin, Math.min(w, h) * 0.3))).setScale(1 / BAKE);
-  arrow.setRotation(dir === 'down' ? 0 : dir === 'left' ? Math.PI / 2 : -Math.PI / 2);
+  arrow.setRotation(dir === 'down' ? 0 : dir === 'up' ? Math.PI : dir === 'left' ? Math.PI / 2 : -Math.PI / 2);
 
   const cue = scene.add.container(cx, cy, [glow, arrow]);
   if (!reducedMotion()) {
     scene.tweens.add({ targets: glow, alpha: { from: 0.7, to: 1 }, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    const bob = { down: [0, 5], left: [-5, 0], right: [5, 0] }[dir];
+    const bob = { down: [0, 5], up: [0, -5], left: [-5, 0], right: [5, 0] }[dir];
     // Q-PREMIUM-2 L4: a short size pulse on top of the bob, so the way out is easy to spot (still when reduced motion is on).
     scene.tweens.add({ targets: arrow, scale: { from: 1 / BAKE, to: 1.3 / BAKE }, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     scene.tweens.add({ targets: arrow, x: bob[0], y: bob[1], duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });

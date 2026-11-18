@@ -1,84 +1,105 @@
 import Phaser from 'phaser';
-import { sfx } from '../audio/Sfx';
+import { loadRoom, type Room, type Vec2 } from '@dojo/sim';
 import { TOWN, TOWN_PACK } from '../game/actionZone';
-import { reducedMotion } from '../game/motion';
-import { touchPlayClock } from '../game/playTime';
-import { addStatic, loadArt } from '../art/art';
-import { button } from '../ui/button';
+import { addStatic } from '../art/art';
 import { addExitCue } from '../ui/exitCue';
-import { MIN_TAP } from '../ui/tokens';
-import { hiDpi, view } from '../ui/theme';
+import { FONT, crisp } from '../ui/theme';
+import { TILE, WalkScene, inRect, type Facing, type TileRect } from './WalkScene';
+import townWalk from '../../../../content/dojo/action-zone/town-walk.json';
 
-const FADE = [10, 8, 16] as const;
+interface TownDoor {
+  label: string;
+  enterRect: TileRect;
+  spawn: [number, number];
+  cue: [number, number];
+}
+
+const WALK = townWalk as unknown as { pictureTile: number; homeDoor: TownDoor; dojoDoor: TownDoor };
+const ROOM: Room = loadRoom(townWalk);
+
+/** Where the hero came from: out of their own dojo (home), or out of the Action Zone (outside). */
+export interface TownSceneData {
+  from?: 'home' | 'outside';
+}
 
 /**
- * The town (A4-DOJO-ii), as one still picture: the one Jay confirmed, with the Action Zone building
- * in its slot. There is no layered town art or walk grid yet, so the hero does not walk here:
- * tap the Action Zone building to walk up to it, or Home to go back to the Home Dojo. A bobbing
- * arrow over the roof shows what to tap (still when reduced motion is on).
+ * The town square you walk in (Nov 17, Jay: "walk south out of the bottom of their personal dojo and
+ * pop out in town"). The town is the confirmed town picture with a walk grid laid over it
+ * (content/dojo/action-zone/town-walk.json). The grey house is the student's own dojo: walking out
+ * of the Home Dojo's south door brings you out of its front door, and walking back in takes you home.
+ * The Action Zone building's door goes to the real dojo's entrance.
  */
-export class TownScene extends Phaser.Scene {
-  private ui!: Phaser.GameObjects.Container;
-  private leaving = false;
-
+export class TownScene extends WalkScene {
   constructor() {
     super('ActionZoneTown');
   }
 
-  preload(): void {
-    loadArt(this, [TOWN_PACK]);
+  protected room(): Room {
+    return ROOM;
   }
 
-  create(): void {
-    hiDpi(this.cameras.main);
-    this.leaving = false;
-    this.ui = this.add.container(0, 0);
-    this.render();
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.render, this);
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.render, this));
-    this.cameras.main.fadeIn(reducedMotion() ? 0 : 400, ...FADE);
-    touchPlayClock();
-    this.time.addEvent({ delay: 5000, loop: true, callback: () => touchPlayClock() });
+  protected roomPacks(): string[] {
+    return [TOWN_PACK];
   }
 
-  private render(): void {
-    this.ui.removeAll(true);
-    const { width, height } = view(this);
-    this.add.existing(this.ui);
+  protected viewRows(): number {
+    // The town is wider and busier than a room: show more of it (it is 10.75 tiles tall).
+    return 9;
+  }
+
+  protected spawn(data: unknown): { pos: Vec2; facing: Facing } {
+    const from = (data as TownSceneData | undefined)?.from;
+    const door = from === 'outside' ? WALK.dojoDoor : WALK.homeDoor;
+    return { pos: { x: door.spawn[0], y: door.spawn[1] }, facing: 'south' };
+  }
+
+  protected drawRoom(): void {
     const [pw, ph] = TOWN.pictureSize;
-    // The whole picture shows, centred; bars of the backdrop colour fill what is left over.
-    const s = Math.min(width / pw, height / ph);
-    const ox = (width - pw * s) / 2;
-    const oy = (height - ph * s) / 2;
-    this.cameras.main.setBackgroundColor(0x14121c);
-
+    const scale = TILE / WALK.pictureTile;
+    this.bounds = [0, pw / WALK.pictureTile, 0, ph / WALK.pictureTile];
     const [picture] = addStatic(this, TOWN_PACK, 'town-day', 0, 0);
-    if (picture) {
-      // The art is the picture at 2x, packed at 0.6: scale it to the picture's size, then fit.
-      picture.setOrigin(0, 0).setPosition(ox, oy).setDisplaySize(pw * s, ph * s);
-      this.ui.add(picture);
+    if (picture) picture.setOrigin(0, 0).setPosition(0, 0).setDisplaySize(pw * scale, ph * scale);
+
+    const marks: Phaser.GameObjects.GameObject[] = [];
+    for (const door of [WALK.homeDoor, WALK.dojoDoor]) {
+      const [cx, cy] = door.cue;
+      marks.push(addExitCue(this, cx * TILE, cy * TILE, TILE * 1.3, TILE * 0.8, 'up'));
+      marks.push(
+        this.add
+          .text(cx * TILE, (cy - 1.15) * TILE, door.label, {
+            fontFamily: FONT,
+            fontStyle: 'bold',
+            fontSize: '15px',
+            color: '#fff6e0',
+            stroke: '#14121c',
+            strokeThickness: 4,
+            backgroundColor: 'rgba(20,18,28,0.6)',
+            padding: { x: 7, y: 2 },
+          })
+          .setOrigin(0.5, 1)
+          .setResolution(crisp() * 2),
+      );
     }
-
-    const [x0, y0, x1, y1] = TOWN.dojo.tapRect;
-    const zone = this.add.zone(ox + x0 * s, oy + y0 * s, (x1 - x0) * s, (y1 - y0) * s).setOrigin(0, 0).setInteractive({ useHandCursor: true });
-    zone.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.goToDojo());
-    this.ui.add(zone);
-
-    const cx = ox + ((x0 + x1) / 2) * s;
-    this.ui.add(addExitCue(this, cx, oy + (y0 - 24) * s, 64 * s, 36 * s, 'down'));
-
-    button(this, { x: 12, y: 12, w: 96, h: MIN_TAP, label: 'Home', color: 0x3d6a99, size: 18, onTap: () => this.leave('Dojo', false) }, this.ui);
+    this.worldLayer.add([picture, ...marks, this.standLayer].filter(Boolean) as Phaser.GameObjects.GameObject[]);
   }
 
-  private goToDojo(): void {
-    this.leave('ActionZoneOutside', true);
+  /** A tap on a door walks to the spot in front of it (inside its doorway). */
+  protected tapTile(tile: Vec2): Vec2 {
+    for (const door of [WALK.homeDoor, WALK.dojoDoor]) {
+      const [x0, x1, , y1] = door.enterRect;
+      if (tile.x >= x0 - 0.3 && tile.x <= x1 + 0.3 && tile.y >= 3.5 && tile.y <= y1) return { x: (x0 + x1) / 2, y: y1 - 0.3 };
+    }
+    return tile;
   }
 
-  private leave(to: string, door: boolean): void {
-    if (this.leaving) return;
-    this.leaving = true;
-    if (door) sfx.doors();
-    this.cameras.main.fadeOut(reducedMotion() ? 0 : 300, ...FADE);
-    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(to, to === 'ActionZoneOutside' ? { from: 'town' } : undefined));
+  protected afterTick(p: Vec2): void {
+    if (this.entered('home-door', WALK.homeDoor.enterRect, p)) {
+      this.leave('Dojo', { from: 'town' });
+      return;
+    }
+    if (this.entered('dojo-door', WALK.dojoDoor.enterRect, p)) this.leave('ActionZoneOutside', { from: 'town' });
   }
 }
+
+/** For tests: true when `p` (tiles) is inside the home door. */
+export const inHomeDoor = (p: Vec2): boolean => inRect(p, WALK.homeDoor.enterRect);

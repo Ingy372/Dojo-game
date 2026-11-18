@@ -84,6 +84,8 @@ import type { GameSceneData } from './GameScene';
 
 /** How Home was opened: after a run (cleared, lost, or rested at the play limit) the next goals may show. */
 export interface HomeSceneData {
+  /** Nov 17: which screen to open on (the Dojo's training board opens 'board', My Path opens 'path'). */
+  view?: 'path' | 'board';
   fromRun?: boolean;
   /** B-MASHER-d1: home after a knock-out ('run') or when play time ended ('rested'): Screen 3's welcome shows. */
   knockout?: 'run' | 'rested';
@@ -200,6 +202,7 @@ export class HomeScene extends Phaser.Scene {
   private titleTaps: number[] = [];
   /** Came here straight from a run (the XP bar fills from what it last showed). */
   private fromRun = false;
+  private openOn: 'path' | 'board' | null = null;
   private knockout: HomeSceneData['knockout'] | null = null;
   private firstFloorDone = false;
   /** P-MENU2-g: the Found strip's page, and whether this view counted up (test hook). */
@@ -218,6 +221,7 @@ export class HomeScene extends Phaser.Scene {
 
   init(data: HomeSceneData): void {
     this.fromRun = data?.fromRun === true;
+    this.openOn = data?.view ?? null;
     this.knockout = data?.knockout ?? null;
     this.firstFloorDone = false;
   }
@@ -226,7 +230,7 @@ export class HomeScene extends Phaser.Scene {
     hiDpi(this.cameras.main);
     this.profile = loadSave();
     this.tab = 'run';
-    this.view = this.fromRun || this.knockout ? 'board' : 'path';
+    this.view = this.openOn ?? (this.fromRun || this.knockout ? 'board' : 'path');
     this.towerFrom = null;
     this.faithPage = 0;
     this.shop = null;
@@ -772,7 +776,8 @@ export class HomeScene extends Phaser.Scene {
     // Header: the title and ◀ Dojo on one 44 pt row.
     const title = this.text(pad, pad + 22, 'Training Board', TYPE.heading, '#f2e9d8', true, 'Georgia, serif').setOrigin(0, 0.5);
     title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
-    this.button(pad + leftW - 96, pad, 96, 44, PW.boardBack, 0x8a5a35, TYPE.body, () => this.setView('path'));
+    // Nov 17: the board is a station in the Dojo, so its way back is the Dojo.
+    this.button(pad + leftW - 96, pad, 96, 44, PW.back, 0x8a5a35, TYPE.body, () => this.backToDojo());
 
     // Character block: a 64 pt row; name and belt stacked 4 pt apart, centred on the avatar.
     const rowTop = pad + 44 + S2;
@@ -2412,13 +2417,13 @@ export class HomeScene extends Phaser.Scene {
 
   /** The tutorial floor again, from the Book's Moves tab. */
   private replayTutorial(): void {
-    if (isPlayTimeUp(this.profile)) return this.goTo('Dojo', {});
+    if (isPlayTimeUp(this.profile)) return this.goTo('Dojo', { resting: true });
     this.goTo('Game', { run: startTowerRun(this.profile, this.training, { replayTutorial: true }) });
   }
 
   private enterTower(): void {
     // Today's play time is used up: back to the dojo, whose door says it's resting (M7-P9).
-    if (isPlayTimeUp(this.profile)) return this.goTo('Dojo', {});
+    if (isPlayTimeUp(this.profile)) return this.goTo('Dojo', { resting: true });
     this.goTo('Game', { run: startTowerRun(this.profile, this.training) });
   }
 
@@ -2494,7 +2499,7 @@ export class HomeScene extends Phaser.Scene {
     this.testing = null;
   }
 
-  private goTo(scene: string, data: GameSceneData): void {
+  private goTo(scene: string, data: GameSceneData | { resting?: boolean }): void {
     sfx.unlock();
     this.input.enabled = false;
     this.cameras.main.fadeOut(300, 10, 8, 16);

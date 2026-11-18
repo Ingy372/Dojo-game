@@ -101,7 +101,8 @@ describe('LP-B1: kid words and the old screens', () => {
   });
   it('Home opens on the Path; the Gate tab and goals card are gone', () => {
     const home = raw('/scenes/HomeScene.ts') as string;
-    expect(home).toMatch(/this\.view = this\.fromRun \|\| this\.knockout \? 'board' : 'path';/);
+    // Nov 17: the Dojo says which screen to open (its training board opens the board); a run comes back to the board.
+    expect(home).toMatch(/this\.view = this\.openOn \?\? \(this\.fromRun \|\| this\.knockout \? 'board' : 'path'\);/);
     expect(home).not.toMatch(/'gate'|renderGate\(|GoalsCard|nextGoals|renderPath\(/);
     expect(raw('/ui/GoalsCard.ts')).toBeUndefined();
   });

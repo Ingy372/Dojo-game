@@ -1,7 +1,7 @@
 {
   "id": "home-dojo",
   "name": "Home Dojo",
-  "legend": "# = wall, . = floor, P = where the player enters, D = the door to the Tower. The top wall holds wall decorations (banners, scrolls) and the notice board.",
+  "legend": "# = wall, . = floor, P = where the player enters, D = the front door out to town (Nov 17). The top wall holds wall decorations (banners, scrolls) and the notice board.",
   "tiles": [
     "###############",
     "#.............#",

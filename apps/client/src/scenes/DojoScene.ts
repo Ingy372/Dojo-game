@@ -52,7 +52,7 @@ import { wornShop } from '../game/shop';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
 import { DIFFICULTY_TEXT, ensureDifficulty } from '../game/difficulty';
-import { PLAY_TIME_TEXT, isPlayTimeUp, touchPlayClock } from '../game/playTime';
+import { PLAY_TIME_TEXT, touchPlayClock } from '../game/playTime';
 import { bankRun, savedRun } from '../game/runSave';
 import RESUME_TEXT from '../../../../content/settings/run-resume.json';
 import MOTION_TEXT from '../../../../content/settings/motion.json';
@@ -62,7 +62,6 @@ import BELT_TEXT from '../../../../content/settings/belt-entry.json';
 import { applyBeltEntry, entryRank, feedEntry, fixBeltEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
 import { button as roundButton } from '../ui/button';
 import { GREEN, MIN_TAP, RADIUS } from '../ui/tokens';
-import { startTowerRun } from '../game/tower';
 import { addDevDays, devDayOffset, localDay, takeLesson } from '../game/lessons';
 import { TouchControls } from '../input/TouchControls';
 import { addStatic, addTinted, loadArt } from '../art/art';
@@ -79,6 +78,7 @@ import SAFE_TEXT from '../../../../content/settings/safety.json';
 import { NAMED_PACK } from '../game/named';
 import { isOpen, systemForToday } from '../game/unlocks';
 import { PATH_WORDS as PW, fill } from '../ui/pathScreen';
+import { drawTrainingStation } from '../ui/trainingStation';
 import { CHEST_WORDS as CW, chestIcon, streakAura } from '../ui/classChest';
 
 /** Pixels per tile in the room (before it's scaled to fit the screen). */
@@ -99,6 +99,10 @@ const ROW2_Y = 60;
 const TRAY = 70;
 /** How many tiles tall the view is (the camera follows the character, like in the Tower). */
 const VIEW_ROWS = 6.5;
+/** Nov 17: walking around, the view shows more of the room, so the training station is in sight. Decorating keeps the close view. */
+const PLAY_VIEW_ROWS = 8.6;
+/** The training station (tiles): its middle, its base and top rows, and how far right of it counts as beside it. */
+const STATION = { x: 2, footY: 6, top: 4, reachX: 3.85 } as const;
 /** A tap this close (tiles) to a decoration picks it, for big fingers. */
 const PICK_SLACK = 0.7;
 /** Arrow buttons for moving the selected decoration. */
@@ -185,6 +189,13 @@ export class DojoScene extends Phaser.Scene {
     super('Dojo');
   }
 
+  /** Set when the Tower was asked for after today's play time ran out: the dojo says it's resting. */
+  private restingOnArrival = false;
+
+  init(data?: { resting?: boolean; from?: string }): void {
+    this.restingOnArrival = data?.resting === true;
+  }
+
   preload(): void {
     loadArt(this, [...playerPacks(), 'dojo', NAMED_PACK, ...new Set(CONTENT.dojo.decorations.flatMap((d) => (d.art ? [d.art] : [])))]);
   }
@@ -229,6 +240,8 @@ export class DojoScene extends Phaser.Scene {
     this.selectGfx = this.add.graphics();
     this.player = this.makePlayer();
     this.standLayer.add(this.player);
+    // Nov 17: the training station against the left wall (its 2x2 floor tiles are solid).
+    this.standLayer.add(drawTrainingStation(this, STATION.x * TILE, (STATION.footY - 0.08) * TILE, TILE, PW.dojoWallLabel));
     // Bottom to top: the floor and back wall, mats, the mess on the floor, standing things
     // and the character, then the front wall (the character walks behind it), outlines and labels.
     this.worldLayer.add([...room.back, this.decoLayer, this.spotLayer, this.standLayer, ...room.front, this.selectGfx, ...room.labels]);
@@ -240,6 +253,8 @@ export class DojoScene extends Phaser.Scene {
       this.cameras.main,
       (x, y) => this.toTile(x, y),
       (x, y) => this.mode !== 'play' || this.time.now < this.quietUntil || this.onUi(x, y),
+      // The training station sits in the stick's corner: a press on it is a tap that walks there.
+      (x, y) => this.onStation(this.rawTile(x, y)),
     );
     this.ui = this.add.container(0, 0).setDepth(20);
     this.makeChoreButton();
@@ -267,6 +282,7 @@ export class DojoScene extends Phaser.Scene {
     this.cardsOpen = 0;
     this.arriving = false;
     this.arrived = false;
+    if (this.restingOnArrival) this.time.delayedCall(500, () => this.showResting());
     if (!bowIsDue()) this.offerResume();
     if (bowIsDue()) {
       this.bowHoursAway = hoursAway;
@@ -477,13 +493,16 @@ export class DojoScene extends Phaser.Scene {
     }
 
     const door = CONTENT.dojo.room.doors[0];
-    const board = { x: CONTENT.dojo.board.col + 0.5, y: 0.5 };
     const dDoor = Math.hypot(p.pos.x - door.x, p.pos.y - door.y);
-    const dBoard = Math.hypot(p.pos.x - board.x, p.pos.y - board.y);
-    if (dDoor > 1.7) this.doorArmed = true;
-    if (dBoard > 1.7) this.boardArmed = true;
-    if (this.doorArmed && dDoor < 1.1) this.goTower();
-    else if (this.boardArmed && dBoard < 1.1) this.goBoard();
+    // Next to the station (it is solid, so the hero stops beside or below it).
+    const atStation = p.pos.x < STATION.reachX && p.pos.y > STATION.top - 0.6 && p.pos.y < STATION.footY + 0.75;
+    if (dDoor > 2.1) this.doorArmed = true;
+    if (p.pos.x > STATION.reachX + 0.9 || p.pos.y > STATION.footY + 1.4) this.boardArmed = true;
+    // The doorway: the last row before the door, anywhere across the door's width (a tap on the door
+    // stops the hero a little short of it, so a tight distance missed it).
+    const inDoorway = Math.abs(p.pos.x - door.x) < 0.9 && door.y - p.pos.y < 1.6;
+    if (this.doorArmed && inDoorway) this.goTown();
+    else if (this.boardArmed && atStation) this.goBoard();
   }
 
   private doChore(): void {
@@ -510,7 +529,7 @@ export class DojoScene extends Phaser.Scene {
     if (result.calmMind) this.celebrateCalm();
   }
 
-  /** "Your dojo is resting for today" at the Tower door, when today's play time is up. */
+  /** "Your dojo is resting for today", when the Tower was asked for after today's play time ran out. */
   private showResting(): void {
     if (this.restingNote?.active) return;
     const { width, height } = view(this);
@@ -552,16 +571,19 @@ export class DojoScene extends Phaser.Scene {
     this.renderUi();
   }
 
-  private goTower(): void {
-    if (this.leaving) return;
-    // Today's play time is used up: the door kindly stays shut until midnight (M7-P9).
-    if (isPlayTimeUp(this.profile)) return this.showResting();
-    const run = startTowerRun(this.profile, this.training);
-    this.leaveTo('Game', { run });
+  /** Nov 17 (Jay): the south door leads out into town, where the hero comes out of their own dojo's front door. */
+  private goTown(): void {
+    this.leaveTo('ActionZoneTown', { from: 'home' });
   }
 
+  /** Nov 17 (Jay): the board on the wall is the training station: last climb, gear, fighting style and the Tower. */
   private goBoard(): void {
-    this.leaveTo('Home');
+    this.leaveTo('Home', { view: 'board' });
+  }
+
+  /** The My Path button: the Gate, the next class step, the Shop and the Book. */
+  private goPath(): void {
+    this.leaveTo('Home', { view: 'path' });
   }
 
   private leaveTo(scene: string, data?: object): void {
@@ -803,7 +825,6 @@ export class DojoScene extends Phaser.Scene {
     const room = CONTENT.dojo.room;
     const [floor, board, front] = addStatic(this, 'dojo', 'room', 0, 0);
     const door = room.doors[0];
-    const b = CONTENT.dojo.board;
     const label = (x: number, y: number, text: string, size: number) =>
       this.add
         .text(x, y, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color: '#fff6e0', stroke: '#14121c', strokeThickness: 3, backgroundColor: 'rgba(20,18,28,0.72)', padding: { x: 6, y: 1 } })
@@ -812,7 +833,7 @@ export class DojoScene extends Phaser.Scene {
     return {
       back: [floor, this.wallPaint(), board].filter((o): o is Phaser.GameObjects.Image | Phaser.GameObjects.Graphics => !!o),
       front: [front].filter(Boolean),
-      labels: [label(door.x * TILE, (door.y - 0.2) * TILE, 'TOWER', LABEL_PX), label(b.col * TILE + TILE / 2, TILE + 2, PW.dojoWallLabel, LABEL_PX)],
+      labels: [label(door.x * TILE, (door.y - 0.2) * TILE, PW.dojoDoorLabel, LABEL_PX)],
     };
   }
 
@@ -970,7 +991,7 @@ export class DojoScene extends Phaser.Scene {
       hintText.setBackgroundColor('#14121c').setPadding(12, 6, 12, 6).setAlpha(1);
       this.renderTray(width, height);
     } else if (this.mode === 'play') {
-      this.button(width - pad - 80, 8, 80, 32, PW.dojoButton, 0x4a3f63, 14, () => this.goBoard());
+      this.button(width - pad - 80, 8, 80, 32, PW.dojoButton, 0x4a3f63, 14, () => this.goPath());
       this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
       this.button(width - pad - 80 - 8 - 100 - 8 - 70, 8, 70, 32, 'Look', 0x3a6ea5, 14, () => this.changeLook());
       this.button(width - pad - 80 - 8 - 100 - 8 - 70 - 8 - 90, 8, 90, 32, DIFFICULTY_TEXT.button, 0x3a3a4a, 14, () => this.openDifficulty());
@@ -986,9 +1007,6 @@ export class DojoScene extends Phaser.Scene {
       const street = streetSmartsOpen(this.training.tier, streetUi.unlockTier) && isOpen(this.profile, this.training, 'street-smarts');
       if (street) this.button(width - pad - 130, ROW2_Y, 130, MIN_TAP, streetUi.button, GREEN, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
       // L10-B: the Monster Journal and Sensei's Scroll moved into the Book (Home's Path screen).
-      // PLACEHOLDER (A4-DOJO-ii): a temporary way out to the town, and from there to the Action Zone.
-      // The Home Dojo has no town door yet; a later step replaces this button with a real door.
-      this.button(width - pad - 130, ROW2_Y + MIN_TAP + 8, 130, MIN_TAP, 'Town', 0x3d6a99, 14, () => this.leaveTo('ActionZoneTown', { from: 'home' }));
     }
   }
 
@@ -1561,7 +1579,7 @@ export class DojoScene extends Phaser.Scene {
   /** Zooms in so the view is VIEW_ROWS tiles tall, like the Tower. */
   private layout(): void {
     const { width, height } = view(this);
-    this.zoom = height / (VIEW_ROWS * TILE);
+    this.zoom = height / ((this.mode === 'decorate' ? VIEW_ROWS : PLAY_VIEW_ROWS) * TILE);
     this.worldLayer.setScale(this.zoom);
     this.choreButton.setPosition(width - CHORE_RADIUS - 24, height - CHORE_RADIUS - 24);
     this.controls.layout();
@@ -1602,7 +1620,19 @@ export class DojoScene extends Phaser.Scene {
 
   /** Screen point to room tiles. */
   private toTile(x: number, y: number): Vec2 {
+    const t = this.rawTile(x, y);
+    // A tap on the training station walks up beside it.
+    if (this.onStation(t)) return { x: STATION.reachX - 0.3, y: STATION.footY - 0.6 };
+    return t;
+  }
+
+  private rawTile(x: number, y: number): Vec2 {
     return { x: (x - this.offX) / this.zoom / TILE, y: (y - this.offY) / this.zoom / TILE };
+  }
+
+  /** True for a room point (tiles) on the training station or its label. */
+  private onStation(t: Vec2): boolean {
+    return this.mode === 'play' && t.x > 0.5 && t.x < STATION.reachX - 0.4 && t.y > STATION.top - 1.9 && t.y < STATION.footY + 0.2;
   }
 
   private puff(s: MessSpot): void {

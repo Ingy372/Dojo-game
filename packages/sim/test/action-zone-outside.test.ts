@@ -249,10 +249,10 @@ describe('Action Zone outside', () => {
     expect(src('scenes/WalkScene.ts')).toContain('this.isTapTarget(this.rawTile(x, y))');
   });
 
-  it('the Home Dojo Town button is marked PLACEHOLDER in the code, as a temporary way out', () => {
+  it('Nov 17: the Home Dojo has no Town button; its south door leads to the town', () => {
     const dojo = Object.entries(import.meta.glob('../../../apps/client/src/scenes/DojoScene.ts', { query: '?raw', import: 'default', eager: true }))[0][1] as string;
-    const at = dojo.indexOf("'Town'");
-    expect(at).toBeGreaterThan(0);
-    expect(dojo.slice(Math.max(0, at - 400), at)).toContain('PLACEHOLDER');
+    expect(dojo).not.toContain("'Town'");
+    expect(dojo).toMatch(/this\.doorArmed && inDoorway\) this\.goTown\(\)/);
+    expect(dojo).toMatch(/leaveTo\('ActionZoneTown', \{ from: 'home' \}\)/);
   });
 });

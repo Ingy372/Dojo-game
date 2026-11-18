@@ -201,6 +201,9 @@ export function loadDojoContent(roomData: unknown, decorationsData: unknown): Do
   const b = raw.board as Record<string, unknown> | undefined;
   if (!b || typeof b.column !== 'number' || typeof b.row !== 'number' || b.row !== 1) throw new DojoError('"board" needs a "column" and "row": 1 (the top wall)');
   const board = { col: b.column - 1, row: 0 };
+  // Nov 17: the training station stands against the left wall, mid-room (STATION_TILES). It is solid,
+  // so nothing is placed there and the hero walks up to it, not through it.
+  for (const t of STATION_TILES) if (room.walls[t.row]?.[t.col] === false) room.walls[t.row][t.col] = true;
 
   const dropChance = (d.dropChance ?? {}) as Partial<Record<RoomKind, number>>;
   for (const [k, v] of Object.entries(dropChance)) {
@@ -256,7 +259,9 @@ export function loadDojo(data: unknown, content: DojoContent): DojoState | null 
   const d = data as DojoState;
   if (!d || typeof d !== 'object' || d.version !== 1 || !Array.isArray(d.items) || !Array.isArray(d.spots) || !d.rng) return null;
   const known = new Set(content.decorations.map((x) => x.id));
-  const dojo: DojoState = { ...d, items: d.items.filter((it) => known.has(it.id)).map((it) => ({ ...it })), spots: d.spots.map((s) => ({ ...s })), rng: { ...d.rng } };
+  // Dust on a tile that is now solid (the training station, Nov 17) is dropped: it could never be swept.
+  const spots = d.spots.filter((s) => content.room.walls[s.row]?.[s.col] === false).map((s) => ({ ...s }));
+  const dojo: DojoState = { ...d, items: d.items.filter((it) => known.has(it.id)).map((it) => ({ ...it })), spots, rng: { ...d.rng } };
   // Anything that no longer fits (for example after a room change) goes to storage.
   for (const it of dojo.items) {
     if (it.col === null || it.row === null) continue;
@@ -511,6 +516,14 @@ export function findSpot(dojo: DojoState, content: DojoContent, uid: string): { 
 }
 
 /** The dojo room with solid decorations counted as walls, for walking around in. */
+/** The floor tiles the Home Dojo's training station stands on: 2x2 against the left wall, mid-room. */
+export const STATION_TILES: readonly { col: number; row: number }[] = [
+  { col: 1, row: 4 },
+  { col: 2, row: 4 },
+  { col: 1, row: 5 },
+  { col: 2, row: 5 },
+];
+
 export function dojoRoom(dojo: DojoState, content: DojoContent): Room {
   const blocked = solidTiles(dojo, content);
   const walls = content.room.walls.map((r, row) => r.map((w, col) => w || blocked.has(key(col, row))));

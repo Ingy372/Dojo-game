@@ -192,10 +192,15 @@ export abstract class WalkScene extends Phaser.Scene {
   /** Each frame, with the hero's row: the place to show or hide pieces by where the hero stands. */
   protected onDraw(_heroRow: number): void {}
 
+  /** How many tiles tall the view is (a bigger place like the town can show more). */
+  protected viewRows(): number {
+    return VIEW_ROWS;
+  }
+
   /** Zooms in so the view is VIEW_ROWS tiles tall, like the Home Dojo and the Tower. */
   private layout(): void {
     const { height } = view(this);
-    this.zoom = height / (VIEW_ROWS * TILE);
+    this.zoom = height / (this.viewRows() * TILE);
     this.worldLayer.setScale(this.zoom);
     this.controls.layout();
     this.updateCamera(true);
