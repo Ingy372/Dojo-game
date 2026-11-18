@@ -1333,5 +1333,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## Art review and run draft (2026-11-18)
 
 - Reviewed the character screen, town, Guardians and the hero's run with Jay; his answers are in decisions.md (sharp spikes OK, two-phase Guardians with a big visual change, final boss keeps three forms; order: run, character screen, Hearth Cook, town).
-- **Run draft (not in the game):** `incoming-art/claude-run/`, a real run on the same Blender model (lean, arm pump, knee drive, flight), 12 frames at 36 fps. Waiting on Jay's OK; then render body B and import.
-- Open question from Jay: making the character from a photo (answered in chat; nothing built).
+- **New run in the game (Jay's OK):** `incoming-art/claude-run/`, a real run on the same Blender model (lean, arm pump, knee drive, flight), 12 frames at 36 fps, both bodies, swapped into `player-custom` and re-packed. 1,620 tests pass; type checks and both builds pass.
+- **Next (Jay's order):** character screen mockup, then the Hearth Cook as the first two-phase Guardian, then the town.
+- Character from a photo: possible later; Jay will revisit after everything else is built.

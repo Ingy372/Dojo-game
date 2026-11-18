@@ -2031,3 +2031,8 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - **Sharp spikes, horns and crystals are allowed on monsters** (Jay: "spikes can be sharp, change that rule"). `docs/style-guide.md` updated. Still no blood, teeth, claws or edged weapons.
 - **Guardians get two phases, with a big visual change at half health** ("gets serious"): a short transformation the boss can't be hurt in and can't hurt in, then new attacks in phase 2, each still telegraphed. Each Guardian gets its own change (steam, spikes, size and muscle, armor glow...) plus shared signs (aura, eye colour, bar colour). The transformation stays smaller than a real promotion celebration. **The final boss keeps its three forms** (J16).
 - **Gear looks (recommendation, not yet decided):** a Wardrobe that keeps every look found; wear the best stats and show any found look; dyes earned (Guardians, Journal) or bought with earned coins. Fits L15 after the beta.
+
+## The new run is in (Jay, 2026-11-18)
+
+- **Jay approved Claude's run draft** ("yes put the new run in"). It replaces the hero's `walk` animation for both bodies, everywhere he moves (Tower, dojo, town): 12 frames at 36 fps, the same 1.5 tiles per loop, so the feet stay planted. The approved `player_custom_a|b.blend` now hold the run (the old walk is kept in them as `walk_before_claude_run`). The player packs grew by about 0.3 MB.
+- **Character from a photo: not now (Jay).** Possible later on-device only with a parent check; Jay will revisit it once everything else is built.

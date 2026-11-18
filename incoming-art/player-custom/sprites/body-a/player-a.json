@@ -314,8 +314,8 @@
       }
     },
     "walk": {
-      "frames": 10,
-      "fps": 30,
+      "frames": 12,
+      "fps": 36,
       "durationSec": 0.3333,
       "loop": true,
       "tags": {},
@@ -357,7 +357,7 @@
         "strideTilesPerLoop": 1.5,
         "stridePxPerLoop": 120.0,
         "designSpeedTilesPerSec": 4.5,
-        "fpsPerTilePerSec": 6.6667,
+        "fpsPerTilePerSec": 8.0,
         "note": "planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above"
       }
     },
