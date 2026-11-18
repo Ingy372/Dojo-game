@@ -1305,3 +1305,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## L11-B2a — the floor-set switch (2026-11-17)
 - New `content/settings/floor-sets.json` turns each own-room floor set on or off. White Dojo and Ember Kitchens are on; the seven tier 4-10 sets are off, so play is unchanged. No rooms moved.
 - Proof: `l11-b2a-floor-switch.test.ts` adds the 56 L11-C1 draft rooms in test content only: with every tier off no floor changes; turning one set on gives that tier only its 8 rooms and its Guardian and leaves every other tier alone. The golden run tests are unchanged.
+
+## Hand-over and first-week fixes (2026-11-17, Claude Code)
+
+- Jay handed the whole project to Claude Code. Audit of everything the bot team built: `docs/reviews/claude-overhaul-audit-2026-11-17.md` (good foundation; holes listed with status).
+- Fixed: Windows line endings (16 checks failed on Windows only), the type-check error, automatic checks on GitHub, and the Class Chest gear flood (at most 5 gear pieces per visit).
+- CLAUDE.md, the work board and decisions updated for the hand-over.
+- 1,615 tests pass; type checks and both builds pass.
+- Next: CW-3 hands-on playthrough at phone sizes, CW-4 download size. Jay creates the Apple and Google accounts.

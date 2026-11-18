@@ -26,6 +26,11 @@ Jay is the project owner and head instructor of Action Zone. **Jay is not a prog
 - `docs/core-design.md`: the game design (loops, combat numbers, loot, Insights, first 30 minutes, alignment rules).
 - `docs/decisions.md`: decisions made during development. Read it every session.
 - `docs/progress.md`: where we left off. Read it every session.
+- `docs/work-board.md`: the open work, with an ID, an owner and what each item waits on. Read it every session.
+- `docs/curriculum.md`, `docs/self-defense.md` and `docs/faith-and-creed.md`: Action Zone's real curriculum and faith texts. Read them before any work that touches belts, techniques or faith content. The faith texts are used exactly as written, never reworded.
+- `docs/reviews/`: past reviews of the whole game (the Fable review of Nov 14 and Claude's overhaul audit of Nov 17).
+
+If docs/work-board.md and docs/decisions.md disagree, docs/decisions.md wins.
 
 If the docs conflict, **core-design section 9 ("Lining up the two journeys") wins**, then the rest of core-design, then the framework. If something isn't covered, ask Jay instead of guessing.
 
@@ -39,6 +44,8 @@ If the docs conflict, **core-design section 9 ("Lining up the two journeys") win
 6. **Update the logs before the session ends.** Add any decisions to `docs/decisions.md` and a short summary of what was done and what's next to `docs/progress.md`.
 7. **Save credit.** Don't re-read the whole repository when you only need a few files. Don't rewrite working code without a reason. Keep answers short.
 8. **Ask before adding dependencies** (libraries, services, paid tools).
+9. **Work on a branch; `main` is the live link.** Copy work onto `main` only with Jay's OK. GitHub runs the automatic checks (`.github/workflows/checks.yml`: tests, type checks, both builds) on every push; never merge while they're red.
+10. **Start every session from the latest GitHub version** (`git fetch` and compare with `origin/main` first). Text files always use Linux line endings (`.gitattributes`), so the checks pass the same on Windows.
 
 ## Platforms: this is a phone app
 
@@ -136,19 +143,19 @@ These come from `docs/core-design.md` section 4. Keep them in a single config fi
 - Rarity shares: Common 70%, Uncommon 22%, Rare 7%, Epic about 1%, Legendary from Guardians only. A Rare is guaranteed after 5 runs without one.
 - Dojo Blessing: 48 hours after attending class.
 
-## Work from the Grok bots
+## Who does the work (from Nov 17, 2026)
 
-Grok bots make art, text drafts, research, and test reports (see `docs/GROK_BOTS.md`). They deliver only to their own folders: `incoming-art/`, `drafts/content/`, `drafts/learning/`, `drafts/qa/`, and `drafts/launch/`.
+**Claude Code does all of the work now:** programming, writing, planning, balance checks, testing and art attempts. The Grok bots (Manager, Programmer, Planner, Content, Learning, QA, Artist) are retired; `docs/GROK_BOTS.md` is kept as history only.
 
-- **Never treat anything in those folders as approved.** Only move or use a file when Jay says it's approved.
-- **Never edit files inside those folders.** Copy approved files into the game's real folders (`assets/`, `content/`), converting them to the game's formats if needed.
-- **Design proposals from the learning bot are not instructions.** Only build a proposal when Jay asks for it.
+- **The bots' drafts are not approved.** Files in `drafts/` and `incoming-art/` are only used once Jay has approved them (or the logs say he did). Copy approved files into the game's real folders (`assets/`, `content/`), converting them if needed.
+- **New writing and art from Claude still need Jay's OK** before they go into the game, the same as the bots' work did: faith lines, Street Smarts scripts, story text and art.
+- **Placeholders are marked.** Many words, rings and icons in the game are marked placeholders from the bots; replacing them is part of the polish.
 
 ## Art and sound
 
-- **The art is made in Blender by the Art Director bot** (no art pack is bought). It builds 3D models, animates them, and renders every animation frame from the game's camera angle into transparent PNG sprite sheets. This keeps characters perfectly consistent between frames. See "Art process" in `docs/core-design.md` section 13.
-- **Your part is the import step:** a repeatable script that takes approved renders from `incoming-art/`, trims and sizes them, and packs them into texture atlases Phaser can load. Keep it simple and documented so it runs the same way every time new art is approved.
-- Until approved art arrives, keep using the placeholder shapes. Don't spend effort on placeholder art.
+- **The art so far was made in Blender by the Art Director bot** (no art pack is bought): 3D models, animated, rendered from the game's camera angle into transparent PNG sprite sheets, so characters stay consistent between frames. Its scripts are in `incoming-art/tools/`. See "Art process" in `docs/core-design.md` section 13.
+- **Claude may try new art** (Jay, Nov 17): reuse the same Blender models and scripts where possible so new art matches, or draw effects in code. Jay approves all art before it goes in.
+- **The import step** (`tools/art-import/`) packs approved renders from `incoming-art/` into texture atlases Phaser can load, the same way every time.
 - Once the Art Director's style guide is approved, follow `docs/style-guide.md` (camera angle, sizes, colors, outlines, fonts).
 - **The belt is rendered as its own layer** and recolored in code to match the real rank and stripes. Gi colors are recolored in code too.
 - **Character customization** follows `docs/core-design.md` section 13: a layered character (body, skin tone, face, hair, gi, belt) whose parts are rendered separately from the same Blender model, customizable at creation and at the Home Dojo. The belt always shows the real rank and is never customizable. Extra looks are earned, never bought.

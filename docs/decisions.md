@@ -1998,3 +1998,13 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - One true/false per floorSet name in `content/settings/floor-sets.json`, read by `floorRooms`. A tier turns on in L11-B2 by moving its 8 rooms into `content/rooms/` and setting its set to true.
 - Fail safe (Tester, Manager): only a set marked true is live. A missing file, an unlisted set or any other value is off, so that tier keeps the shared rooms and a moved room can't go live by accident.
 - The L11-C1 draft rooms stay in `drafts/content/rooms/L11/`; only the test loads them (Manager).
+
+## Hand-over to Claude Code (2026-11-17)
+
+- **Claude Code takes over completely (Jay, Nov 17: "you are taking over completely").** Programming, writing, planning, balance, testing and art attempts. The Grok bot team is retired; their last board is on the `bot-manager` branch. CLAUDE.md and `docs/work-board.md` updated.
+- **Polish pass next (Jay):** "a polish on most of the game besides possibly artwork. but i would like you to try your hand at it." Claude may try art; Jay approves all art and new words before they go in.
+- **No Apple or Google developer account exists yet (Jay, Nov 17).** Phone builds and store testing wait on them; the web link is the beta fallback.
+- **Linux line endings everywhere** (`.gitattributes`). Windows checkouts had CRLF endings, which failed 16 byte-for-byte and source checks.
+- **Automatic checks on GitHub** (`.github/workflows/checks.yml`): tests, type checks, the live build and the beta build on every push to `main` or a `claude/` branch and on every pull request.
+- **Class Chests after a long time away:** one visit adds at most 5 gear pieces to the bag (`CLASS_CHEST.maxGearPerVisit`). Every class still counts as a chest and still pays its coins and its Home Dojo piece, so nothing is taken away; the arrival card lists the pieces and counts the coins.
+- **Old local copy kept:** this computer's `main` was a month behind GitHub; it was moved to GitHub's latest, and the old copy kept as the local branch `backup/local-main-oct18`.
