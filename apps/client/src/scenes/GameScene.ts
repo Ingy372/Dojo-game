@@ -1423,9 +1423,11 @@ export class GameScene extends Phaser.Scene {
     this.uiCamera.setSize(width * DPR, height * DPR);
     this.controls.layout();
     this.buttons.layout();
-    this.comboText.setX(width / 2);
-    this.comboBonusText.setX(width / 2);
-    this.chainText.setX(width / 2);
+    // The practice room's two-line title sits top centre: the combo words go just under it, never on it.
+    const comboTop = this.practiceLabel ? this.practiceLabel.y + this.practiceLabel.height + 4 : 14;
+    this.comboText.setPosition(width / 2, comboTop);
+    this.comboBonusText.setPosition(width / 2, comboTop + 32);
+    this.chainText.setPosition(width / 2, comboTop + 54);
     this.placeMessage();
     this.placeDoorHint();
     this.roomLabel.setX(width - 16);

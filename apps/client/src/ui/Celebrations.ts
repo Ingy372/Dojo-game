@@ -359,7 +359,8 @@ export class Celebrations {
         // K26: each column has a fixed width and long names wrap inside it, so they never run into the other column.
         // If the list is too tall, try 13 then 12 px (still readable); if it still doesn't fit, show what fits plus an "and N more" line.
         const top = height * 0.1 + 36;
-        const bottom = height - 84;
+        // The "You got stronger!" line sits at height - 64: leave room above it for the "and N more" line.
+        const bottom = height - (gains.power || gains.health ? 106 : 84);
         const gap = 16;
         const cols = m.list.length > 6 ? 2 : 1;
         const colW = cols === 1 ? Math.min(400, width - 40) : Math.min(390, (width - 32 - gap) / 2);
