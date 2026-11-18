@@ -48,7 +48,7 @@ describe('P-MENU2-i menu2 art', () => {
 
   it('each art draw in HomeScene keeps a code-drawn fallback', () => {
     expect(helpers).toMatch(/if \(!s\) return null/);
-    expect(home).toMatch(/if \(tileArt\)[\s\S]{0,400}else/);
+    // Nov 18 overhaul: the Last climb stat tiles are drawn in code on the board's glass (no tile art to fall back from).
     // The bag tile's fallback is the button's own code-drawn face, hidden only when the skin draws.
     expect(home).toMatch(/if \(halves\) \{\s*skinButton/);
     expect(home).toMatch(/hasMenu2\(this, 'belt-knot-band'\)/);
@@ -66,9 +66,9 @@ describe('P-MENU2-i menu2 art', () => {
       expect(out, n).toContain(n);
     }
     expect(home).toMatch(/menu2Slice\(this, 'panel-frame'/);
-    expect(home).toMatch(/menu2Slice\(this, 'title-plaque'/);
+    // Nov 18 overhaul: the Training Board's headline is gold text on glass; the plaque art stays in the pack, unused there.
     expect(helpers).toMatch(/'button-primary-normal'/);
-    expect((home.match(/woodSkin\(this/g) ?? []).length).toBeGreaterThanOrEqual(9);
+    expect((home.match(/woodSkin\(this/g) ?? []).length).toBeGreaterThanOrEqual(7); // Nov 18: the Training Board dropped its wood skins; the Book keeps its own
     expect(out.filter((n) => n.startsWith('switch'))).toEqual([]);
     expect(home + helpers).not.toMatch(/['"`]switch-(?:track|left|right)/);
   });

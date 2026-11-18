@@ -236,9 +236,10 @@ describe('PB-05 Fighting Style screen', () => {
 
   it('Got it on the Fighting Style screen is not white text on the gold fill', () => {
     const home = Object.values(import.meta.glob('../../../apps/client/src/scenes/HomeScene.ts', { query: '?raw', import: 'default', eager: true }))[0] as string;
-    // switchOn (#a8703f) with the default white label measured 4.15:1, so it uses the frame brown.
+    // switchOn (#a8703f) with the default white label measured 4.15:1, so it used the frame brown;
+    // since the Nov 18 overhaul it is the board's violet (#6b55c9, white label 5.4:1).
     const got = home.slice(home.indexOf('STYLE_WORDS.gotIt'), home.indexOf('STYLE_WORDS.gotIt') + 280);
-    expect(got).toMatch(/color: WOOD\.frame/);
+    expect(got).toMatch(/color: GLASS\.violet/);
     expect(got).not.toMatch(/WOOD\.switchOn/);
   });
 });

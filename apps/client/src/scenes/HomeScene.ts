@@ -51,6 +51,7 @@ import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith,
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { TOUR, senseiBubble } from '../ui/homeTour';
+import { GLASS, boardBackdrop, glassPanel, heroPedestal, levelBadge } from '../ui/boardTheme';
 import { currentTraining, seedLoadout, selectProfile, shortDate } from '../game/student';
 import { hex } from '../ui/belt';
 import { startTowerRun } from '../game/tower';
@@ -61,7 +62,7 @@ import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { addSealMedallion, addSlotIcon, loadSlotIcons } from '../art/slotIcons';
 import { drawStageRings } from '../art/stageRings';
 import { addStatic, loadArt, staticArt, staticBounds } from '../art/art';
-import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skinButton, woodSkin, HONEY_INK } from '../art/menu2';
+import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skinButton, woodSkin } from '../art/menu2';
 import { MENU2_PACK, artRarity } from '../art/menu2Frames';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
@@ -97,6 +98,8 @@ export interface HomeSceneData {
 
 const SLOT_NAME: Record<GearSlot, string> = { hands: 'Hands', gi: 'Gi', charm: 'Charm' };
 const KIND_MARK: Record<string, string> = { rest: '+' };
+/** Nov 18 overhaul: each Last climb number in its own bright colour on the glass tiles. */
+const STAT_INK: Record<string, string> = { xp: '#9ad1ff', perfects: '#ffd166', combo: '#ff9fd0', time: '#b6f0c2', rooms: '#fff6e6' };
 
 /** The board's tabs (Last climb, Gear, Fighting Style), then the Book's (L10-B). */
 type Tab = 'run' | 'gear' | 'style' | BookTab;
@@ -783,16 +786,18 @@ export class HomeScene extends Phaser.Scene {
     const leftW = Math.min(300, width * 0.38);
     const t = this.training;
 
-    // Floor of the dojo (placeholder).
-    this.ui.add(this.add.rectangle(0, 0, width, height, 0x1e1a14).setOrigin(0));
-    for (let x = 0; x < width; x += 48) this.ui.add(this.add.rectangle(x, 0, 2, height, 0x2a241c).setOrigin(0));
+    // Nov 18 overhaul: the Equipment screen's violet night instead of the plank floor placeholder.
+    this.ui.add(boardBackdrop(this, width, height));
+    // The left column sits on one glass card (drawn once its height is known, behind everything in it).
+    const cardAt = this.ui.length;
 
     // ---- left (P-MENU-c §3a): header row, character block, level + bar, buttons, the Path card
     // Header: the title and ◀ Dojo on one 44 pt row.
     const title = this.text(pad, pad + 22, 'Training Board', TYPE.heading, '#f2e9d8', true, 'Georgia, serif').setOrigin(0, 0.5);
     title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
+    title.setShadow(0, 2, '#000000', 4, true, true);
     // Nov 17: the board is a station in the Dojo, so its way back is the Dojo.
-    this.button(pad + leftW - 96, pad, 96, 44, PW.back, 0x8a5a35, TYPE.body, () => this.backToDojo());
+    this.button(pad + leftW - 96, pad, 96, 44, PW.back, 0x3a3150, TYPE.body, () => this.backToDojo());
 
     // Character block: a 64 pt row; name and belt stacked 4 pt apart, centred on the avatar.
     const rowTop = pad + 44 + S2;
@@ -805,16 +810,20 @@ export class HomeScene extends Phaser.Scene {
     const stackH = TYPE.title + S1 + TYPE.body + (blessRuns > 0 ? S1 + TYPE.label : 0) + (short ? S1 + TYPE.label + 2 : 0);
     const rowH = short ? Math.max(56, stackH + S1) : 64;
     const cy = rowTop + rowH / 2;
+    // The hero stands on a lit pedestal (blue light while a Blessing is on), a little bigger than the old avatar.
+    const heroR = short ? 18 : 22;
+    const heroFoot = cy + heroR * 1.25;
     if (blessRuns > 0) {
       // Full fill, so the object's alpha is the alpha you see (0.25 to 0.15).
-      const glow = this.add.circle(pad + 24, cy, 32, 0x6fb7ff, 1).setAlpha(MOTION.breath.from);
+      const glow = this.add.circle(pad + 30, cy - 2, 34, 0x6fb7ff, 1).setAlpha(MOTION.breath.from);
       this.ui.add(glow);
       // P-MENU-a: a slow breath (alpha only, no scale); still with Reduced motion on.
       if (!reducedMotion()) this.tweens.add({ targets: glow, alpha: MOTION.breath.to, duration: MOTION.breath.ms, ease: 'Sine.InOut', yoyo: true, repeat: -1 });
     }
-    this.ui.add(makeStandingCharacter(this, pad + 24, cy, 22, t.belt, t.stripesThisBelt, loadLook()).container);
-    const textX = pad + 64;
-    const textW = leftW - 64;
+    this.ui.add(heroPedestal(this, pad + 30, heroFoot, heroR, blessRuns > 0 ? 0x9ad1ff : 0xb9a6ff));
+    this.ui.add(makeStandingCharacter(this, pad + 30, heroFoot - heroR * 0.98, heroR, t.belt, t.stripesThisBelt, loadLook()).container);
+    const textX = pad + 70;
+    const textW = leftW - 70;
     // With a Blessing, a third 12 pt line joins the stack (keeps the column short enough for 375 pt).
     let sy = cy - stackH / 2 - 2;
     this.oneLine(this.text(textX, sy, t.displayName, TYPE.title, '#f2e9d8', true), textW, TYPE.label);
@@ -832,8 +841,10 @@ export class HomeScene extends Phaser.Scene {
     // Level and experience (capped by the real belt): label and cap on one line, a 10 pt bar 8 below.
     let y = rowTop + rowH + S2;
     if (!short) {
-      this.text(pad, y, `Level ${level}`, TYPE.body, '#f2e9d8', true);
-      this.oneLine(this.text(pad + leftW, y + 1, atCap ? PW.levelTop : `of ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0), leftW - 70, 10);
+      // A gold level medal, then "Level 5" and "of 10" beside it.
+      this.ui.add(levelBadge(this, pad + 13, y + 8, 13, level, FONT));
+      this.text(pad + 32, y, `Level ${level}`, TYPE.body, '#f6efe2', true);
+      this.oneLine(this.text(pad + leftW, y + 1, atCap ? PW.levelTop : `of ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : GLASS.soft).setOrigin(1, 0), leftW - 100, 10);
       y += TYPE.body + 4 + S2;
     }
     const share = atCap ? 1 : Math.min(1, this.profile.xp / xpToNext(level, t.belts));
@@ -842,6 +853,11 @@ export class HomeScene extends Phaser.Scene {
 
     // Buttons: ENTER 52 tall (44 when short), Practice room 44, 8 apart.
     const enterH = short ? MIN_TAP : 52;
+    // The big call to action breathes a warm glow (still with Reduced motion on).
+    const enterGlow = this.add.graphics();
+    enterGlow.fillStyle(0xff9a4a, 0.22).fillRoundedRect(pad - 5, y - 4, leftW + 10, enterH + 12, 16);
+    this.ui.add(enterGlow);
+    if (!reducedMotion()) this.tweens.add({ targets: enterGlow, alpha: 0.35, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
     this.button(pad, y, leftW, enterH, 'ENTER THE TOWER', 0xd5713a, 19, () => this.enterTower());
     y += enterH + S2;
     // Staff fixture list, beside Practice room so the next-step card keeps its height on a 375 pt phone.
@@ -849,13 +865,17 @@ export class HomeScene extends Phaser.Scene {
     const testW = BETA ? 0 : 96;
     this.button(pad, y, leftW - (testW && testW + S2), 44, 'Practice room', 0x3a3a4a, TYPE.body, () => this.goTo('Game', {}));
     if (!BETA) this.button(pad + leftW - testW, y, testW, MIN_TAP, 'Testing', 0x4a3f63, TYPE.body, () => this.openTesting());
+    // The left column's glass card, behind the hero, level and buttons.
+    const cardTop = rowTop - S1 - 4;
+    this.ui.addAt(glassPanel(this, pad - S1 - 2, cardTop, leftW + 2 * S1 + 4, y + MIN_TAP + S1 + 2 - cardTop, { radius: 14 }), cardAt);
 
     // ---- right: tabs
     const rx = pad * 2 + leftW;
     const rw = width - rx - pad;
     const top = pad + 46;
     const panelH = height - top - pad;
-    this.codeFrame = woodFrame(this, rx, top, rw, panelH);
+    // Nov 18 overhaul: a glass panel with a gold edge instead of the wood frame.
+    this.codeFrame = glassPanel(this, rx, top, rw, panelH, { gold: true, radius: 16 });
     this.ui.add(this.codeFrame);
     this.panelBox = { rx, top, rw, panelH };
     this.tabBox = { rx, y: pad, tabW: (rw - 6 * 2) / 3, h: 34 };
@@ -875,8 +895,10 @@ export class HomeScene extends Phaser.Scene {
         ];
     const tabW = this.tabBox.tabW;
     tabs.forEach(([tab, label], i) => {
-      const b = button(this, { x: rx + i * (tabW + 6), y: pad, w: tabW, h: th, label, color: this.tab === tab ? 0x4a3f63 : 0x2a2536, size: 14, onTap: () => this.setTab(tab) }, this.ui);
-      woodSkin(this, b, tabW, th, { dim: this.tab !== tab });
+      const on = this.tab === tab;
+      // Nov 18 overhaul: the board's tabs are the Equipment screen's violet chips (the Book keeps its wood tabs).
+      const b = button(this, { x: rx + i * (tabW + 6), y: pad, w: tabW, h: th, label, color: this.view === 'book' ? (on ? 0x4a3f63 : 0x2a2536) : on ? GLASS.violet : GLASS.violetDim, size: 14, selected: on && this.view !== 'book', labelColor: on || this.view === 'book' ? '#ffffff' : GLASS.soft, onTap: () => this.setTab(tab) }, this.ui);
+      if (this.view === 'book') woodSkin(this, b, tabW, th, { dim: !on });
     });
     const i = tabs.findIndex(([tab]) => tab === this.tab);
     const ux = rx + i * (tabW + 6) + 8;
@@ -1053,11 +1075,16 @@ export class HomeScene extends Phaser.Scene {
   private xpBar(x: number, y: number, w: number, share: number, level: number, atCap: boolean): void {
     const bg = this.add.graphics();
     bg.fillStyle(0x000000, 0.5).fillRoundedRect(x, y, w, 10, 5);
+    bg.lineStyle(1, GLASS.tileLine, 0.9).strokeRoundedRect(x, y, w, 10, 5);
     const fill = this.add.graphics();
     this.ui.add([bg, fill]);
+    // Nov 18 overhaul: a gold bar with a shine along its top.
     const draw = (s: number) => {
       fill.clear();
-      if (s > 0) fill.fillStyle(atCap ? 0xffd166 : 0x9ad1ff).fillRoundedRect(x, y, Math.max(10, w * s), 10, 5);
+      if (s <= 0) return;
+      const fw = Math.max(10, w * s);
+      fill.fillStyle(atCap ? 0xffd166 : GLASS.gold).fillRoundedRect(x, y, fw, 10, 5);
+      fill.fillStyle(0xffffff, 0.4).fillRoundedRect(x + 2, y + 1, Math.max(0, fw - 4), 3, 1.5);
     };
     const key = 'dojo.xpBarShown';
     let prev: { level: number; share: number } | null = null;
@@ -1089,14 +1116,9 @@ export class HomeScene extends Phaser.Scene {
    * (only when there is one) and a big Again! button. Positions come from lastRunLayout().
    */
   private renderRun(x: number, y: number, w: number, h: number, visibleH = h): void {
+    // Nov 18 overhaul: the climb's summary sits straight on the board's glass (no paper scroll).
     const g = this.add.graphics();
-    g.fillStyle(WOOD.paper).fillRoundedRect(x - 4, y + 2, w + 8, h - 4, RADIUS.panel);
-    g.lineStyle(2, WOOD.grain, 0.8).strokeRoundedRect(x - 4, y + 2, w + 8, h - 4, RADIUS.panel);
-    // The rolled ends: two wooden rods with knobs.
-    for (const ry of [y - 2, y + h - 6]) {
-      g.fillStyle(WOOD.frame).fillRoundedRect(x - 8, ry, w + 16, 8, 4);
-      g.fillStyle(WOOD.frameDark).fillCircle(x - 8, ry + 4, 5).fillCircle(x + w + 8, ry + 4, 5);
-    }
+    g.fillStyle(GLASS.tileDark, 0.35).fillRoundedRect(x - 4, y + 2, w + 8, h - 4, RADIUS.panel);
     this.ui.add(g);
     const last = this.profile.lastRun;
     const cx0 = x + S2;
@@ -1104,8 +1126,8 @@ export class HomeScene extends Phaser.Scene {
     const cw = w - 2 * S2;
     const ch = h - 2 * (6 + S1);
     if (!last) {
-      this.text(cx0, cy0 + S2, LASTRUN_WORDS.none, TYPE.body, WOOD.ink, true, FONT, cw - 96 - S2);
-      woodSkin(this, button(this, { x: cx0 + cw - 96, y: cy0, w: 96, h: MIN_TAP, label: LASTRUN_WORDS.bests, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.openBests() }, this.ui), 96, MIN_TAP);
+      this.text(cx0, cy0 + S2, LASTRUN_WORDS.none, TYPE.body, GLASS.ink, true, FONT, cw - 96 - S2);
+      button(this, { x: cx0 + cw - 96, y: cy0, w: 96, h: MIN_TAP, label: LASTRUN_WORDS.bests, color: GLASS.tile, size: TYPE.body, onTap: () => this.openBests() }, this.ui);
       return;
     }
     const m = buildLastRun(last, playTimeText.homeHeadline);
@@ -1122,16 +1144,15 @@ export class HomeScene extends Phaser.Scene {
     };
 
     // Banner: the result in kind words, gold for a clear.
-    const head = this.text(X(0), Y(L.banner.h / 2), m.headline, TYPE.heading, m.cleared ? '#a0522d' : WOOD.ink, true).setOrigin(0, 0.5);
+    const head = this.text(X(0), Y(L.banner.h / 2), m.headline, TYPE.heading, m.cleared ? '#ffd166' : GLASS.ink, true, 'Georgia, serif').setOrigin(0, 0.5);
+    head.setShadow(0, 2, '#000000', 4, true, true);
     this.oneLine(head, L.banner.w, TYPE.body);
-    // P-MENU2-i: the honey title plaque behind the headline (dark ink on it); 12 px caps of padding.
-    const ph = Math.min(40, L.banner.h);
-    const plaque = menu2Slice(this, 'title-plaque', X(0) - 12, Y(L.banner.h / 2) - ph / 2, head.width + 24, ph, 'height');
-    if (plaque) {
-      this.ui.addAt(plaque, this.ui.getIndex(head));
-      head.setColor(HONEY_INK);
-    }
-    woodSkin(this, button(this, { ...L.bests, x: X(L.bests.x), y: Y(L.bests.y), label: LASTRUN_WORDS.bests, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.openBests() }, this.ui), L.bests.w, L.bests.h);
+    // A short gold rule under the headline, fading out to the right.
+    const rule = this.add.graphics();
+    const ruleW = Math.min(L.banner.w, head.width + 30);
+    for (let i = 0; i < 6; i++) rule.fillStyle(GLASS.gold, 0.8 - i * 0.13).fillRect(X(0) + (ruleW / 6) * i, Y(L.banner.h / 2) + head.height / 2 + 1, ruleW / 6, 2);
+    this.ui.add(rule);
+    button(this, { ...L.bests, x: X(L.bests.x), y: Y(L.bests.y), label: LASTRUN_WORDS.bests, color: GLASS.tile, size: TYPE.body, onTap: () => this.openBests() }, this.ui);
 
     // Room chips: grade, a drawn chest for treasure, or a mark.
     m.chips.forEach((r, i) => {
@@ -1140,7 +1161,7 @@ export class HomeScene extends Phaser.Scene {
       const py = Y(L.chipsY);
       const color = r.grade ? GRADE_COLOR[r.grade] : '#7a5a3a';
       const chip = this.add.graphics();
-      chip.fillStyle(WOOD.frameDark).fillRoundedRect(px, py, s, s, 6);
+      chip.fillStyle(GLASS.tileDark).fillRoundedRect(px, py, s, s, 6);
       chip.lineStyle(2, r.kind === 'treasure' && !r.grade ? 0xffd166 : Phaser.Display.Color.HexStringToColor(color).color).strokeRoundedRect(px, py, s, s, 6);
       this.ui.add(chip);
       if (r.kind === 'treasure' && !r.grade) this.ui.add(chestIcon(this, px + s / 2, py + s / 2, 0xffd166));
@@ -1158,24 +1179,22 @@ export class HomeScene extends Phaser.Scene {
       // P-MENU2-i: the A-MENU2 stat tile (9-slice 16) with its icon at x 12; code tile if missing.
       // QA: short (44) tiles draw the rim at half size (k 0.25) so the label keeps 8 px inside it.
       const rim = b.h < 56 ? STAT_RIM / 2 : STAT_RIM;
-      const tileArt = menu2Slice(this, 'stat-tile', X(b.x), Y(b.y), b.w, b.h, b.h < 56 ? 0.25 : 0.5);
-      // On the paper tile the words are dark ink (white on wood stays for the code tile).
-      const ink = tileArt ? { num: st.key === 'xp' ? '#245a80' : WOOD.ink, label: '#5a3e28' } : { num: st.key === 'xp' ? '#9ad1ff' : '#fff6e6', label: '#f2e3c4' };
-      if (tileArt) {
-        this.ui.add(tileArt);
-      } else {
-        const tg = this.add.graphics();
-        tg.fillStyle(WOOD.frame).fillRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
-        tg.lineStyle(2, WOOD.frameDark).strokeRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
-        this.ui.add(tg);
-      }
+      // Nov 18 overhaul: glass stat tiles drawn in code, each number in its own bright colour.
+      const tileArt = null as ReturnType<typeof menu2Slice>;
+      const ink = { num: STAT_INK[st.key] ?? '#fff6e6', label: GLASS.soft };
+      const tg = this.add.graphics();
+      tg.fillStyle(0x000000, 0.3).fillRoundedRect(X(b.x) + 1, Y(b.y) + 3, b.w, b.h, RADIUS.button);
+      tg.fillStyle(GLASS.tile).fillRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
+      tg.fillStyle(0xffffff, 0.06).fillRoundedRect(X(b.x) + 2, Y(b.y) + 2, b.w - 4, b.h * 0.42, { tl: RADIUS.button - 2, tr: RADIUS.button - 2, bl: 0, br: 0 });
+      tg.lineStyle(1.5, GLASS.tileLine).strokeRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
+      this.ui.add(tg);
       // QA: on the short art tile the number steps down to 14 so it clears the padded label.
       const big = b.h >= 56 ? TYPE.heading : tileArt ? TYPE.body : TYPE.title;
       const num = this.text(X(b.x + b.w / 2), Y(b.y + S1), st.format(count ? 0 : st.value), big, ink.num, true).setOrigin(0.5, 0);
       num.setData('stat', st.key);
       // P-MENU2-SPACE: the icon keeps 8 pt from the final number: the number slides right if the
       // tile has room (its right edge stays 8 pt inside the rim), otherwise the icon is left out.
-      const iconArt = tileArt ? STAT_ICON[st.key] : undefined;
+      const iconArt = STAT_ICON[st.key];
       const is = Math.min(20, b.h / 3);
       if (iconArt && b.w >= 88) {
         const numW = num.setText(st.format(st.value)).width;
@@ -1227,7 +1246,8 @@ export class HomeScene extends Phaser.Scene {
     const railY = Y(L.bar.y) - 1;
     const railLimit = Math.min(Y(L.foundLabelY), Y(L.newLabelY)) - 8;
     const railH = Math.max(6, Math.min(L.bar.h + 2, railLimit - railY));
-    const frameArt = menu2Slice(this, 'xp-bar-frame', X(0), railY, cw, railH);
+    // Nov 18 overhaul: the code bar (gold with a shine) on the glass, not the wood rail art.
+    const frameArt = null as ReturnType<typeof menu2Slice>;
     frameArt?.setData('xpRail', true);
     const inset = (railH * 4) / 20;
     const fillH = (railH * 11) / 20;
@@ -1245,8 +1265,13 @@ export class HomeScene extends Phaser.Scene {
         return;
       }
       bar.clear();
-      bar.fillStyle(WOOD.frameDark, 0.5).fillRoundedRect(X(0), Y(L.bar.y), cw, L.bar.h, L.bar.h / 2);
-      if (s > 0) bar.fillStyle(atCap ? 0xffd166 : 0x4a90c2).fillRoundedRect(X(0), Y(L.bar.y), Math.max(L.bar.h, cw * s), L.bar.h, L.bar.h / 2);
+      bar.fillStyle(0x000000, 0.45).fillRoundedRect(X(0), Y(L.bar.y), cw, L.bar.h, L.bar.h / 2);
+      bar.lineStyle(1, GLASS.tileLine, 0.8).strokeRoundedRect(X(0), Y(L.bar.y), cw, L.bar.h, L.bar.h / 2);
+      if (s > 0) {
+        const fw = Math.max(L.bar.h, cw * s);
+        bar.fillStyle(atCap ? 0xffd166 : GLASS.gold).fillRoundedRect(X(0), Y(L.bar.y), fw, L.bar.h, L.bar.h / 2);
+        bar.fillStyle(0xffffff, 0.35).fillRoundedRect(X(0) + 2, Y(L.bar.y) + 1, Math.max(0, fw - 4), L.bar.h * 0.35, L.bar.h * 0.2);
+      }
     };
     if (count) {
       drawBar(from);
@@ -1258,21 +1283,21 @@ export class HomeScene extends Phaser.Scene {
     }
 
     // Found: every item and dojo piece from this run, each a 44+ tile that opens its sheet.
-    this.text(X(0), Y(L.foundLabelY), LASTRUN_WORDS.found, TYPE.label, WOOD.ink, true);
-    if (!m.found.length) this.text(X(0), Y(L.found.y + S1), LASTRUN_WORDS.foundNone, TYPE.label, '#7a5a3a', false, FONT, L.found.w);
+    this.text(X(0), Y(L.foundLabelY), LASTRUN_WORDS.found, TYPE.label, GLASS.ink, true);
+    if (!m.found.length) this.text(X(0), Y(L.found.y + S1), LASTRUN_WORDS.foundNone, TYPE.label, GLASS.soft, false, FONT, L.found.w);
     const fp = foundPage(m.found, L.foundPerPage, this.foundPageNo);
     this.foundPageNo = fp.page;
     if (L.arrows) {
-      woodSkin(this, button(this, { x: X(L.found.x + L.found.w + S1), y: Y(L.found.y), w: MIN_TAP, h: MIN_TAP, label: '▶', color: WOOD.switchOff, size: TYPE.body, onTap: () => this.turnFound(1) }, this.ui), MIN_TAP, MIN_TAP);
+      button(this, { x: X(L.found.x + L.found.w + S1), y: Y(L.found.y), w: MIN_TAP, h: MIN_TAP, label: '▶', color: GLASS.tile, size: TYPE.body, onTap: () => this.turnFound(1) }, this.ui);
       const d = pageDots(fp.pages, L.found.w + MIN_TAP - 64);
-      if (d) for (let i = 0; i < fp.pages; i++) this.ui.add(this.add.circle(X(L.found.x + 64 + d.x0 + i * d.step), Y(L.foundLabelY + TYPE.label / 2 + 1), GEAR.dot / 2, i === fp.page ? 0xa8703f : WOOD.grain, i === fp.page ? 1 : 0.5).setData('foundDot', i));
+      if (d) for (let i = 0; i < fp.pages; i++) this.ui.add(this.add.circle(X(L.found.x + 64 + d.x0 + i * d.step), Y(L.foundLabelY + TYPE.label / 2 + 1), GEAR.dot / 2, i === fp.page ? GLASS.gold : GLASS.tileLine, i === fp.page ? 1 : 0.6).setData('foundDot', i));
     }
     fp.tiles.forEach((f, i) => {
       const s = L.foundTile;
       const fx = X(L.found.x + i * (s + S1));
       const fy = Y(L.found.y);
       const stroke = f.kind === 'item' ? RARITY_COLOR[f.item.rarity] : 0xffd166;
-      const b = button(this, { x: fx, y: fy, w: s, h: s, label: '', color: WOOD.frameDark, size: TYPE.label, stroke, onTap: () => this.openFound(f) }, this.ui);
+      const b = button(this, { x: fx, y: fy, w: s, h: s, label: '', color: GLASS.tileDark, size: TYPE.label, stroke, onTap: () => this.openFound(f) }, this.ui);
       b.visual.setData('found', f.kind === 'item' ? f.item.uid : f.id);
       // P-MENU2-i: the rarity found tile (52 tile in a 60 file); dojo pieces use the Rare (gold) frame.
       const foundArt = `found-tile-${f.kind === 'item' ? artRarity(f.item.rarity) : 'rare'}`;
@@ -1287,14 +1312,14 @@ export class HomeScene extends Phaser.Scene {
 
     // Your Strike: the Strike in the Strike slot (shown, not picked; PB-05 adds the slots).
     if (L.perAlways > 0) {
-      this.text(X(0), Y(L.alwaysLabelY), LASTRUN_WORDS.always, TYPE.label, WOOD.ink, true);
-      if (!this.styleModel().always.length) this.text(X(0), Y(L.alwaysY), LASTRUN_WORDS.alwaysEmpty, TYPE.label, WOOD.ink);
+      this.text(X(0), Y(L.alwaysLabelY), LASTRUN_WORDS.always, TYPE.label, GLASS.ink, true);
+      if (!this.styleModel().always.length) this.text(X(0), Y(L.alwaysY), LASTRUN_WORDS.alwaysEmpty, TYPE.label, GLASS.soft);
       this.styleModel().always.slice(0, L.perAlways).forEach((a, i) => {
         const s = L.alwaysIcon;
         const ax = X(i * (s + S1));
         const ay = Y(L.alwaysY);
         const ag = this.add.graphics();
-        ag.fillStyle(0xffd166, 0.35).fillRoundedRect(ax, ay, s, s, RADIUS.button);
+        ag.fillStyle(GLASS.tile, 1).fillRoundedRect(ax, ay, s, s, RADIUS.button);
         ag.lineStyle(2, 0xa8703f, 0.9).strokeRoundedRect(ax, ay, s, s, RADIUS.button);
         this.ui.add(ag);
         const icon = addIcon(this, a.id, ax + s / 2, ay + s / 2, s - 8);
@@ -1307,8 +1332,8 @@ export class HomeScene extends Phaser.Scene {
     const fresh = newForYou(this.trophyCubbies(), this.profile.trophiesSeen);
     if (fresh) {
       const nc = L.newCard;
-      const head = this.text(X(nc.x), Y(L.newLabelY), LASTRUN_WORDS.newForYou, TYPE.label, '#8a4a12', true).setData('newLabel', true);
-      const b = button(this, { x: X(nc.x), y: Y(nc.y), w: nc.w, h: nc.h, label: '', color: 0xa8703f, size: TYPE.label, stroke: 0xffd166, onTap: () => this.openNewForYou() }, this.ui);
+      const head = this.text(X(nc.x), Y(L.newLabelY), LASTRUN_WORDS.newForYou, TYPE.label, '#ffd166', true).setData('newLabel', true);
+      const b = button(this, { x: X(nc.x), y: Y(nc.y), w: nc.w, h: nc.h, label: '', color: GLASS.violet, size: TYPE.label, stroke: 0xffd166, onTap: () => this.openNewForYou() }, this.ui);
       b.visual.setData('newForYou', fresh.id);
       const tall = nc.h >= 80;
       const is = tall ? Math.min(40, nc.h - 2 * S2 - TYPE.label - S1) : Math.min(32, nc.h - 2 * S1);
@@ -1338,7 +1363,7 @@ export class HomeScene extends Phaser.Scene {
     const pin = pinnedAgain(L.again, ch, visibleH - 2 * (6 + S1), 2 * (6 + S1) - 4);
     this.runFooter = pin.footer;
     const again = pin.again;
-    woodSkin(this, button(this, { ...again, x: X(again.x), y: Y(again.y), label: LASTRUN_WORDS.again, color: 0xd5713a, size: TYPE.title, onTap: () => this.enterTower() }, this.panel ?? this.ui), again.w, again.h);
+    button(this, { ...again, x: X(again.x), y: Y(again.y), label: LASTRUN_WORDS.again, color: 0xd5713a, size: TYPE.title, onTap: () => this.enterTower() }, this.panel ?? this.ui);
   }
 
   private turnFound(by: number): void {
@@ -1468,10 +1493,10 @@ export class HomeScene extends Phaser.Scene {
       this.trayPageNo = Math.max(0, Math.min(tp.pages - 1, this.trayPageNo));
       const tray = trayPage(picks, tp, this.trayPageNo);
       const ty = y + L.tray.y;
-      for (const d of trayDots(tp.pages, this.trayPageNo, L.leftW)) this.ui.add(this.add.circle(x + L.preview.x + d.x, y + L.preview.y + L.preview.h + S2 / 2, 3, d.on ? 0xffd166 : WOOD.paper, d.on ? 1 : 0.35).setData('trayDot', d.on));
+      for (const d of trayDots(tp.pages, this.trayPageNo, L.leftW)) this.ui.add(this.add.circle(x + L.preview.x + d.x, y + L.preview.y + L.preview.h + S2 / 2, 3, d.on ? 0xffd166 : GLASS.tileLine, d.on ? 1 : 0.35).setData('trayDot', d.on));
       if (tp.arrows) {
-        button(this, { x: x + L.preview.x, y: y + L.preview.y, w: MIN_TAP, h: L.preview.h, label: '◀', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui).visual.setData('trayArrow', 'back');
-        button(this, { x: x + L.preview.x + MIN_TAP + S2, y: y + L.preview.y, w: MIN_TAP, h: L.preview.h, label: '▶', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui).visual.setData('trayArrow', 'next');
+        button(this, { x: x + L.preview.x, y: y + L.preview.y, w: MIN_TAP, h: L.preview.h, label: '◀', color: GLASS.violetDim, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui).visual.setData('trayArrow', 'back');
+        button(this, { x: x + L.preview.x + MIN_TAP + S2, y: y + L.preview.y, w: MIN_TAP, h: L.preview.h, label: '▶', color: GLASS.violetDim, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui).visual.setData('trayArrow', 'next');
       }
       const room = L.tray.w;
       const tx0 = x + L.tray.x + (room - (tray.length * tp.tileW + (tray.length - 1) * S2)) / 2;
@@ -1480,8 +1505,8 @@ export class HomeScene extends Phaser.Scene {
         const btn = button(this, {
           x: tx0 + i * (tp.tileW + S2), y: ty, w: tp.tileW, h: L.tray.h,
           label: p.name, labelWrap: cubbyTextW(tp.tileW), size: TYPE.label,
-          color: p.earned && !p.comingLater ? WOOD.frame : BOARD_PAPER, labelColor: p.earned && !p.comingLater ? '#fff6e6' : ink,
-          stroke: WOOD.grain, selected: equipped.has(p.id),
+          color: p.earned && !p.comingLater ? GLASS.violet : GLASS.tileDark, labelColor: p.earned && !p.comingLater ? '#fff6e6' : GLASS.soft,
+          stroke: GLASS.tileLine, selected: equipped.has(p.id),
           onTap: () => (p.earned && !p.comingLater ? this.equipStyle(p) : this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'pick', id: p.id }, this.training, CONTENT.abilities, this.profile.grandfatheredStances))),
         }, this.ui);
         btn.visual.setData('stylePick', p.id);
@@ -1497,7 +1522,7 @@ export class HomeScene extends Phaser.Scene {
       const swapOn = this.swapFamily !== null && card.slot === 'seal' && card.pick !== null && card.locked === null;
       const b = button(this, {
         x: x + box.x, y: y + box.y, w: box.w, h: box.h, label: '',
-        color: WOOD.frameDark, size: TYPE.label, selected: on || swapOn, stroke: WOOD.grain,
+        color: GLASS.tile, size: TYPE.label, selected: on || swapOn, stroke: GLASS.tileLine,
         onTap: () => this.pickSlot(card.slot, card.index),
       }, this.ui);
       const v = b.visual.setData('styleKey', `${card.slot}:${card.index}`).setData('styleSlot', card.slot);
@@ -1570,7 +1595,7 @@ export class HomeScene extends Phaser.Scene {
     }
     if (pickSwitch) {
       const on = this.profile.senseiPick;
-      const sw = button(this, { x: x + L.preview.x + L.preview.w - pickW, y: y + L.preview.y, w: pickW, h: Math.max(MIN_TAP, L.preview.h), label: on ? STYLE_WORDS.senseiPick.on : STYLE_WORDS.senseiPick.off, color: on ? WOOD.frame : WOOD.switchOff, size: TYPE.label, selected: on, onTap: () => {
+      const sw = button(this, { x: x + L.preview.x + L.preview.w - pickW, y: y + L.preview.y, w: pickW, h: Math.max(MIN_TAP, L.preview.h), label: on ? STYLE_WORDS.senseiPick.on : STYLE_WORDS.senseiPick.off, color: on ? GLASS.violet : GLASS.violetDim, size: TYPE.label, selected: on, onTap: () => {
         this.profile.senseiPick = !on;
         writeSave(this.profile);
         this.renderPanel('none');
@@ -1578,17 +1603,17 @@ export class HomeScene extends Phaser.Scene {
       sw.visual.setData('senseiPick', on);
     }
     if (this.swapFamily) {
-      const cancel = button(this, { x: x + L.preview.x + L.preview.w - 72, y: y + L.preview.y, w: 72, h: Math.max(MIN_TAP, L.preview.h), label: STYLE_WORDS.swapCancel, color: WOOD.switchOff, size: TYPE.label, onTap: () => this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'cancel' }, this.training, CONTENT.abilities, this.profile.grandfatheredStances)) }, this.ui);
+      const cancel = button(this, { x: x + L.preview.x + L.preview.w - 72, y: y + L.preview.y, w: 72, h: Math.max(MIN_TAP, L.preview.h), label: STYLE_WORDS.swapCancel, color: GLASS.violetDim, size: TYPE.label, onTap: () => this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'cancel' }, this.training, CONTENT.abilities, this.profile.grandfatheredStances)) }, this.ui);
       cancel.visual.setData('styleCancel', true);
     } else if (open?.slot === 'seal' && open.pick && open.locked === null) {
-      const take = button(this, { x: x + L.preview.x + L.preview.w - 72, y: y + L.preview.y, w: 72, h: Math.max(MIN_TAP, L.preview.h), label: STYLE_WORDS.takeOut, color: WOOD.switchOff, size: TYPE.label, onTap: () => this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'take-out' }, this.training, CONTENT.abilities, this.profile.grandfatheredStances)) }, this.ui);
+      const take = button(this, { x: x + L.preview.x + L.preview.w - 72, y: y + L.preview.y, w: 72, h: Math.max(MIN_TAP, L.preview.h), label: STYLE_WORDS.takeOut, color: GLASS.violetDim, size: TYPE.label, onTap: () => this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'take-out' }, this.training, CONTENT.abilities, this.profile.grandfatheredStances)) }, this.ui);
       take.visual.setData('styleTakeOut', true);
     }
 
     if (noteUp && L.note && m.note) {
       this.text(x + L.note.x, y + L.note.y + S1, m.note, TYPE.label, '#f2e3c4', false, FONT, L.note.w - 88).setData('slotNote', true);
       // Same white-on-gold pair as the switch (4.15:1). The frame brown is the fill; the label stays white.
-      button(this, { x: x + L.note.x + L.note.w - 80, y: y + L.note.y, w: 72, h: MIN_TAP, label: STYLE_WORDS.gotIt, color: WOOD.frame, size: TYPE.label, onTap: () => { dismissSlotNote(this.profile); writeSave(this.profile); this.renderPanel('none'); } }, this.ui);
+      button(this, { x: x + L.note.x + L.note.w - 80, y: y + L.note.y, w: 72, h: MIN_TAP, label: STYLE_WORDS.gotIt, color: GLASS.violet, size: TYPE.label, onTap: () => { dismissSlotNote(this.profile); writeSave(this.profile); this.renderPanel('none'); } }, this.ui);
     }
   }
 
@@ -2671,6 +2696,11 @@ export class HomeScene extends Phaser.Scene {
    * still read. Missing art: the code frame stays.
    */
   private panelFrameArt(rx: number, top: number, rw: number, panelH: number): void {
+    // Nov 18 overhaul: the Training Board's tabs sit on its glass panel; only the Book keeps the wood frame art.
+    if (this.view === 'board') {
+      this.codeFrame?.setVisible(true);
+      return;
+    }
     const on = this.tab === 'run' || this.tab === 'gear' || this.tab === 'moves' || this.tab === 'trophies';
     const sh = 6 * 2 * 0.25;
     const art = on ? menu2Slice(this, 'panel-frame', rx - sh, top - sh, rw + 2 * sh, panelH + 2 * sh, 0.25) : null;
