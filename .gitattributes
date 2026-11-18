@@ -1,2 +1,17 @@
+# Every text file uses Linux line endings (LF) on every computer, Windows included.
+# Without this, Windows checkouts get CRLF endings and the byte-for-byte checks fail.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.png binary
+*.jpg binary
+*.gif binary
+*.webp binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.blend binary
+*.jar binary
+
 docs/decisions.md merge=union
 docs/progress.md merge=union

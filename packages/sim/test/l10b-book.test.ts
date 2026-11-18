@@ -64,7 +64,7 @@ describe('L10-B the Book keeps an old save', () => {
   it("Moves shows every lesson Sensei's Scroll showed, and the tutorial replay", () => {
     const lessons = moves.filter((c) => c.shelf === 'lessons');
     expect(lessons.map((c) => c.id)).toEqual([...scroll.map((l) => `lesson-${l.id}`), 'lesson-tutorial']);
-    expect(lessons.at(-1)!.action).toBe('replayTutorial');
+    expect(lessons[lessons.length - 1].action).toBe('replayTutorial');
   });
 
   it('Trophies shows every monster the Journal showed, met ones with their trophy art', () => {
