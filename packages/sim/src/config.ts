@@ -308,6 +308,15 @@ export const COINS = {
   classChest: 150,
 } as const;
 
+/**
+ * Class Chests after a long time away: every class still counts and still pays its coins and its
+ * Home Dojo piece, but one visit adds at most this many pieces of gear to the bag. The rest of
+ * those chests hold coins only, so 200 classes never flood the bag with 200 items.
+ */
+export const CLASS_CHEST = {
+  maxGearPerVisit: 5,
+} as const;
+
 /** Home practice (framework section 5): approved minutes per Training Point. */
 export const TRAINING_POINTS = {
   minutesPerPoint: 15,

@@ -377,8 +377,12 @@ export class DojoScene extends Phaser.Scene {
     });
     if (chests.length > 0) {
       writeSave(this.profile);
-      const shown = chests.slice(0, 3).map((c) => (c.kind === 'decor' ? fill(CW.decor, { name: decorationDef(CONTENT.dojo, c.id).name }) : fill(CW.gear, { name: c.item.name })));
-      if (chests.length > 3) shown.push(fill(CW.more, { n: chests.length - 3 }));
+      // Coins-only chests (a long time away) are counted in the coins line, not listed.
+      const items = chests.flatMap((c) =>
+        c.kind === 'decor' ? [fill(CW.decor, { name: decorationDef(CONTENT.dojo, c.id).name })] : c.kind === 'gear' ? [fill(CW.gear, { name: c.item.name })] : [],
+      );
+      const shown = items.slice(0, 3);
+      if (items.length > 3) shown.push(fill(CW.more, { n: items.length - 3 }));
       if (chests.some((c) => c.kind === 'decor')) shown.push(CW.storage);
       shown.push(fill(CW.coins, { n: chests.length * COINS.classChest }));
       const title = chests.length === 1 ? CW.title : fill(CW.titleMany, { n: chests.length });

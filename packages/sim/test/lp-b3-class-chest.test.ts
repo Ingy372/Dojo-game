@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { auraRings, classPieceOrder, loadFeed, newDojo, newProfile, noteBestStreak, openClassChests, rarityRank, buildTraining } from '../src';
+import { auraRings, CLASS_CHEST, COINS, classPieceOrder, loadFeed, newDojo, newProfile, noteBestStreak, openClassChests, rarityRank, buildTraining } from '../src';
 import { testContent } from './load-content';
 import WORDS from '../../../content/settings/class-chest.json';
 import yellow from '../../../fixtures/3-yellow-belt.json';
@@ -37,6 +37,23 @@ describe('Class Chest every class', () => {
     openClassChests(p, dojo, content, { checkIns: [], classesInRank: 0, classesTotal: null, belt: WHITE });
     const all = Array.from({ length: 30 }, (_, i) => day(i));
     expect(openClassChests(p, dojo, content, { checkIns: all, classesInRank: 0, classesTotal: null, belt: WHITE })).toHaveLength(30);
+  });
+
+  it('200 classes at once: every chest pays coins, but the bag gets at most 5 pieces of gear', () => {
+    const p = newProfile();
+    const dojo = newDojo(content.dojo, 1);
+    openClassChests(p, dojo, content, { checkIns: [], classesInRank: 0, classesTotal: 0, belt: WHITE });
+    const coinsBefore = p.coins;
+    const bagBefore = p.inventory.length;
+    const chests = openClassChests(p, dojo, content, { checkIns: [], classesInRank: 200, classesTotal: 200, belt: WHITE });
+    expect(chests).toHaveLength(200);
+    expect(p.coins - coinsBefore).toBe(200 * COINS.classChest);
+    expect(chests.filter((c) => c.kind === 'decor')).toHaveLength(classPieceOrder(content).length - 1);
+    expect(chests.filter((c) => c.kind === 'gear')).toHaveLength(CLASS_CHEST.maxGearPerVisit);
+    expect(p.inventory.length - bagBefore).toBe(CLASS_CHEST.maxGearPerVisit);
+    // The next class, on its own, gives gear again.
+    const next = openClassChests(p, dojo, content, { checkIns: [], classesInRank: 201, classesTotal: 201, belt: WHITE });
+    expect(next.map((c) => c.kind)).toEqual(['gear']);
   });
 
   it('a long time away still gives a chest for every class, even ones the feed window dropped', () => {

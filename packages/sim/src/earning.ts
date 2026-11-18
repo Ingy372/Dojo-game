@@ -9,7 +9,7 @@
 // Kids rules: nothing is ever taken away, nothing has a deadline, there are no streaks.
 // Test-link runs give nothing.
 
-import { COINS } from './config';
+import { CLASS_CHEST, COINS } from './config';
 import type { Content } from './content';
 import { addDecorations, type DecorationDef, type DojoState, type DropBelt, type NewDecoration } from './dojo';
 import { makeItem, rollRarity, type GearItem } from './loot';
@@ -67,7 +67,7 @@ export function classPieceOrder(content: Content): DecorationDef[] {
 }
 
 /** What one Class Chest held: the next class piece for the dojo, or gear for the bag. */
-export type ClassChest = { kind: 'decor'; id: string } | { kind: 'gear'; item: GearItem };
+export type ClassChest = { kind: 'decor'; id: string } | { kind: 'gear'; item: GearItem } | { kind: 'coins' };
 
 /**
  * Counts new class check-ins (or the growth in the feed's class total, whichever is more) and
@@ -99,6 +99,7 @@ export function openClassChests(profile: Profile, dojo: DojoState, content: Cont
   const order = classPieceOrder(content);
   const rng = createRng(rec.classesCounted * 7919 + profile.nextItemId);
   const opened: ClassChest[] = [];
+  let gearGiven = 0;
   for (let i = 0; i < chests; i++) {
     const def = order[rec.classPiecesGiven];
     if (def) {
@@ -106,6 +107,12 @@ export function openClassChests(profile: Profile, dojo: DojoState, content: Cont
       opened.push({ kind: 'decor', id: def.id });
       continue;
     }
+    // A long time away: past the gear limit, the chest holds its coins only (CLASS_CHEST).
+    if (gearGiven >= CLASS_CHEST.maxGearPerVisit) {
+      opened.push({ kind: 'coins' });
+      continue;
+    }
+    gearGiven++;
     const item = makeItem(rng, content.loot, rollRarity(rng, 0, 'uncommon'), `i${profile.nextItemId++}`);
     profile.inventory.push(item);
     if (!profile.equipped[item.slot]) profile.equipped[item.slot] = item.uid;
