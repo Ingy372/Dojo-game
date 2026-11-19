@@ -246,8 +246,7 @@ for c in range(COLS):
         if ((c + 0.5 - PC) / (PRX + 0.45)) ** 2 + ((r + 0.5 - PR) / (PRY + 0.45)) ** 2 <= 1.0: GROUND_BLOCK.add((c, r))
 
 # the Action Zone's wide stone steps (flat)
-add("az_steps", box(G(23, 9.45, 0.03), (4.6, D(0.9), 0.06)), "#cfc8ba", False)
-add("az_steps2", box(G(23, 9.15, 0.08), (3.8, D(0.4), 0.06)), "#d6cfc1", False)
+add("az_pad", box(G(23, 9.45, 0.02), (7.6, D(0.9), 0.06)), "#d9d4c8", False)
 # My Dojo's doorstep
 add("md_step", box(G(38.5, 20.35, 0.03), (1.8, D(0.5), 0.06)), "#cfc8ba", False)
 
@@ -340,35 +339,173 @@ def nobori(pid, c, r, col, stage=3):
     add("mark", ellipsoid(G(c + 0.22, r + 0.03, 1.75), (0.11, 0.02, 0.11), segs=12, rings=4), "#fbf3df", False)
 
 # ---------------------------------------------------------------- the Action Zone (centre of the north side)
-AZC, AZF, AZD, AZW = 23.0, 9.0, 4.2, 12.0
-piece("az", (AZC, AZF), sort=AZF)
-shadow(AZC, AZF + 0.1, 6.6, 0.4, 0.18)
-walls("az", AZC, AZF, AZD, AZW, 1.7, posts=[-5.92, -3.6, -1.3, 1.3, 3.6, 5.92])
-for x in (-4.75, -2.45, 2.45, 4.75): shoji(f"azs{x}", AZC + x, AZF, 0.45, 1.9, 1.1, n=3)
-add("azdoorfr", box(G(AZC, AZF + 0.02, 0.16 + 0.75), (2.5, 0.08, 1.5)), "#4a3020")
-add("azdoorL", box(G(AZC - 0.62, AZF + 0.05, 0.16 + 0.7), (1.1, 0.06, 1.38)), "#a8743f")
-add("azdoorR", box(G(AZC + 0.62, AZF + 0.05, 0.16 + 0.7), (1.1, 0.06, 1.38)), "#a8743f")
-for x in (-0.62, 0.62):
-    for zz in (0.5, 1.1): add(f"azstud{x}{zz}", box(G(AZC + x, AZF + 0.09, zz), (0.9, 0.02, 0.05)), "#7a5232", False)
-noren("aznoren", AZC, AZF, 1.62, 2.3, "#3a6ea5", n=4)
-hip_roof("azroof1", AZC, AZF + 0.05, AZF - AZD, 1.88, AZW + 0.4, 0.55, "#566690", ox=0.55, oy=0.45, inset=0.2, ridge=None)
-add("azupper", box(G(AZC, AZF - AZD / 2, 2.6), (AZW - 3.2, D(AZD - 1.2), 0.9)), "#efe3c6")
-for x in (-4.3, -1.5, 1.5, 4.3): add(f"azupost{x}", box(G(AZC + x, AZF - 0.6, 2.6), (0.12, 0.1, 0.9)), "#7a5232")
-for x in (-2.9, 0, 2.9): add(f"azuwin{x}", box(G(AZC + x, AZF - 0.58, 2.6), (1.0, 0.03, 0.4)), "#ffe9a0", False)
-hip_roof("azroof2", AZC, AZF - 0.55, AZF - AZD + 0.6, 3.05, AZW - 2.4, 1.2, "#566690", ox=0.55, oy=0.35, inset=1.6)
-add("azplaque", box(G(AZC, AZF - 0.5, 3.35), (1.6, 0.06, 0.55)), "#2c2a33")
-add("azplaquerim", box(G(AZC, AZF - 0.53, 3.35), (1.75, 0.04, 0.68)), "#d9a441", False)
-add("azemblem", ellipsoid(G(AZC, AZF - 0.45, 3.35), (0.18, 0.02, 0.18), segs=16, rings=4), "#ffd36b", False)
-META["az"]["block"] = []
+# The REAL building (Jay, Nov 19: "the actual Action Zone building and sign... modeled from real life pictures", then "try to
+# update it and make it look better... detailed with much better quality"). Same likeness and the same full size as the
+# approved entrance art (incoming-art/action-zone-dojo: 8 tiles wide, tan ribbed metal, brown gable roof, the red
+# CMA MARTIAL ARTS sign with the kick logo, brown double glass doors, white windows, the two banners), rebuilt with far
+# more detail: ribbed panels, a standing-seam roof with trim and gutters, framed glass with reflections, 3D sign letters.
+from mathutils import Matrix
+FONT = None
+for fp in ("C:/Windows/Fonts/ariblk.ttf", "/usr/share/fonts/truetype/sand-box/google/Be Vietnam Pro/BeVietnamPro-Black.ttf"):
+    if os.path.exists(fp): FONT = bpy.data.fonts.load(fp); break
 
-# extra gold for the Action Zone at stage 9: long banners on the front and gold roof tips
-piece("az-gold", (AZC, AZF), stage=9, sort=AZF + 0.01)
-for x in (-6.25, 6.25):
-    add(f"tare{x}", box(G(AZC + x, AZF + 0.12, 1.15), (0.42, 0.04, 1.5)), "#3a6ea5")
-    add(f"tareg{x}", box(G(AZC + x, AZF + 0.15, 1.15), (0.3, 0.02, 1.35)), "#ffd36b", False)
-    add(f"tarem{x}", ellipsoid(G(AZC + x, AZF + 0.17, 1.5), (0.1, 0.02, 0.1), segs=10, rings=4), "#3a6ea5", False)
+def sign_text(name, s, cx, r, z, height, width, hexc, extr=0.05):
+    cu = bpy.data.curves.new(name, "FONT"); cu.body = s; cu.size = 1.0; cu.extrude = extr; cu.align_x = "CENTER"; cu.align_y = "CENTER"
+    cu.bevel_depth = 0.008
+    if FONT: cu.font = FONT
+    ob = bpy.data.objects.new(f"{GRP[0]}:{name}", cu); coll.objects.link(ob)
+    bpy.context.view_layer.objects.active = ob; ob.select_set(True)
+    bpy.ops.object.convert(target="MESH"); ob = bpy.context.view_layer.objects.active
+    xs = [v.co.x for v in ob.data.vertices]; zs = [v.co.y for v in ob.data.vertices]
+    sx = width / max(max(xs) - min(xs), 1e-6); sz = height / max(max(zs) - min(zs), 1e-6)
+    for v in ob.data.vertices: v.co.x = (v.co.x - (max(xs) + min(xs)) / 2) * sx; v.co.y = (v.co.y - (max(zs) + min(zs)) / 2) * sz
+    ob.rotation_euler = (math.radians(90), 0, 0); ob.location = G(cx, r, z)
+    ob.data.materials.clear(); ob.data.materials.append(mat(hexc)); tag(ob); ob.select_set(False); bpy.context.view_layer.update()
+    tag(add_hull(ob, coll, OUT_M, OUTLINE_W * 0.9))
+    return ob
+
+def slab(name, center, size, ry, hexc, outline=True, w=1.6):
+    """a box rotated about the y axis (roof planes and everything that lies on them)"""
+    bm = B.new(); B.ops.create_cube(bm, size=1.0)
+    B.ops.transform(bm, matrix=Matrix.Translation(center) @ Matrix.Rotation(math.radians(ry), 4, "Y") @ Matrix.Diagonal((*size, 1)), verts=bm.verts)
+    return add(name, bm, hexc, outline, w)
+
+AZC, AZF = 23.0, 9.0
+X0, X1, RF, RB, ZE, ZR = 19.0, 27.0, 9.0, 5.0, 2.4, 4.3
+TAN, TANL, TAND, BROWN, BROWND, TRIM, DOOR, RED = "#cdb088", "#dcc39d", "#b0916b", "#5b4234", "#4c372b", "#46332a", "#6a4a3c", "#d92b25"
+xm = (X0 + X1) / 2; half = (X1 - X0) / 2
+piece("az", (AZC, AZF), sort=AZF, block=[])
+shadow(AZC, AZF + 0.1, 4.6, 0.35, 0.16)
+# body: the front gable (pentagon) pushed back to the back wall
+bm = B.new(); pts = [(X0, 0.0), (X1, 0.0), (X1, ZE), (xm, ZR), (X0, ZE)]
+f = [bm.verts.new((x, -RF * K, z)) for x, z in pts]; bk = [bm.verts.new((x, -RB * K, z)) for x, z in pts]
+bm.faces.new(f[::-1]); bm.faces.new(bk)
+for i in range(5): bm.faces.new((f[i], bk[i], bk[(i + 1) % 5], f[(i + 1) % 5]))
+B.ops.recalc_face_normals(bm, faces=bm.faces[:]); add("body", bm, TAN)
+# ribbed metal panels: a raised rib and its shadow every 0.27 tile, up to the roof line
+k = 0; x = X0 + 0.16
+while x < X1 - 0.1:
+    top = ZE + (ZR - ZE) * max(0.0, 1 - abs(x - xm) / half) - 0.16
+    add(f"rib{k}", box(G(x, RF + 0.018, 0.12 + top / 2), (0.05, 0.03, top)), TANL, False)
+    add(f"ribs{k}", box(G(x + 0.04, RF + 0.012, 0.12 + top / 2), (0.025, 0.01, top)), TAND, False)
+    x += 0.27; k += 1
+add("footing", box(G(xm, RF + 0.04, 0.07), (X1 - X0 + 0.12, 0.1, 0.14)), "#9a9282")
+add("base_trim", box(G(xm, RF + 0.05, 0.17), (X1 - X0 + 0.04, 0.06, 0.06)), TRIM, False)
+for xx in (X0, X1):
+    sx_ = 0.14 if xx == X0 else -0.14
+    add(f"corner{xx}", box(G(xx, RF + 0.03, ZE / 2), (0.17, 0.12, ZE)), TRIM)
+    add(f"spout{xx}", tube(G(xx + sx_, RF + 0.1, 0.05), G(xx + sx_, RF + 0.1, ZE - 0.05), 0.045, 0.045, segs=8), "#6b5545")
+    add(f"spoutft{xx}", box(G(xx + sx_, RF + 0.2, 0.05), (0.1, 0.2, 0.06)), "#6b5545", False)
+# roof: two thick planes with standing seams, a ridge cap, rake trim with a shadow line, gutters along the eaves
+slope = math.degrees(math.atan((ZR - ZE) / half)); Ls = math.hypot(half, ZR - ZE) + 0.4; dep = (RF - RB) + 0.45
+for sgn in (-1, 1):
+    ry = sgn * slope
+    cx_ = xm + sgn * (half / 2 + 0.1); cz_ = (ZE + ZR) / 2 + 0.07
+    cy_ = -((RF + RB) / 2 + 0.03) * K
+    slab(f"roof{sgn}", (cx_, cy_, cz_), (Ls, D(dep), 0.12), ry, BROWN if sgn < 0 else "#4f3a2d")
+    R = Matrix.Rotation(math.radians(ry), 3, "Y")
+    for j in range(1, 13):   # standing seams, front to back
+        u = -Ls / 2 + Ls * j / 13
+        off = R @ Vector((u, 0, 0.075)); slab(f"seam{sgn}{j}", (cx_ + off.x, cy_, cz_ + off.z), (0.035, D(dep - 0.04), 0.03), ry, "#6e5242" if sgn < 0 else "#5f4637", False)
+        if j % 2 == 0:   # every other panel a touch lighter, so the metal reads
+            off = R @ Vector((u - Ls / 26, 0, 0.062)); slab(f"pan{sgn}{j}", (cx_ + off.x, cy_, cz_ + off.z), (Ls / 13 - 0.06, D(dep - 0.06), 0.005), ry, "#634838" if sgn < 0 else "#55402f", False)
+    off = R @ Vector((0, 0, -0.01)); slab(f"rake{sgn}", (cx_ + off.x, -(RF + 0.24) * K, cz_ + off.z), (Ls, 0.09, 0.2), ry, TRIM)
+    off = R @ Vector((0, 0, -0.17)); slab(f"rakesh{sgn}", (cx_ + off.x, -(RF + 0.02) * K, cz_ + off.z), (Ls - 0.5, 0.02, 0.12), ry, TAND, False)
+    gx = xm + sgn * (half + 0.22)
+    add(f"gutter{sgn}", box(G(gx, (RF + RB) / 2 + 0.05, ZE - 0.1), (0.12, D(dep), 0.1)), TRIM)
+add("ridge", tube((xm, -(RF + 0.25) * K, ZR + 0.2), (xm, -(RB - 0.2) * K, ZR + 0.2), 0.11, 0.11, segs=10), BROWND)
+add("ridgevent", box((xm, -((RF + RB) / 2) * K, ZR + 0.3), (0.34, D(RF - RB - 1.0), 0.1)), "#3f2e25")
+for j in range(9): add(f"ventslat{j}", box((xm, -(RB + 0.6 + j * (RF - RB - 1.2) / 8) * K, ZR + 0.36), (0.36, 0.04, 0.02)), "#5b4234", False)
+# the double doors: dark frame, two leaves with big glass and a low panel, silver push bar, handles and kick plates
+CX = AZC
+add("doorframe", box(G(CX, RF + 0.04, 0.82), (1.62, 0.08, 1.64)), TRIM)
+add("threshold", box(G(CX, RF + 0.12, 0.03), (1.6, D(0.14), 0.06)), "#b9bec8")
 for sx in (-1, 1):
-    add(f"tip{sx}", ellipsoid(G(AZC + sx * (AZW / 2 - 0.4), AZF - AZD / 2, 4.42), (0.22, 0.12, 0.3), segs=12, rings=8), "#ffd36b")
+    lx = CX + sx * 0.36
+    add(f"leaf{sx}", box(G(lx, RF + 0.1, 0.8), (0.68, 0.05, 1.5), bevel=0.01), DOOR)
+    add(f"glassfr{sx}", box(G(lx, RF + 0.125, 1.04), (0.52, 0.03, 0.78)), "#4f3628", False)
+    add(f"glass{sx}", box(G(lx, RF + 0.13, 1.04), (0.46, 0.03, 0.72)), "#8fb4c9", False)
+    add(f"glint{sx}", box(G(lx - 0.08, RF + 0.145, 1.1), (0.08, 0.02, 0.5), rot=(0, -28, 0)), "#cfe6f2", False)
+    add(f"glint2{sx}", box(G(lx + 0.08, RF + 0.145, 0.96), (0.04, 0.02, 0.3), rot=(0, -28, 0)), "#bcd9e8", False)
+    add(f"paper{sx}", box(G(lx + sx * 0.1, RF + 0.15, 1.2), (0.15, 0.02, 0.2)), "#f6f3ec", False)
+    add(f"panel{sx}", box(G(lx, RF + 0.13, 0.42), (0.46, 0.03, 0.34)), "#5c4033", False)
+    add(f"kick{sx}", box(G(lx, RF + 0.13, 0.12), (0.6, 0.03, 0.14)), "#b9bec8", False)
+    add(f"handle{sx}", box(G(CX + sx * 0.1, RF + 0.17, 0.86), (0.04, 0.04, 0.34)), "#d5d9e0", False)
+add("pushbar", box(G(CX, RF + 0.17, 0.7), (0.6, 0.04, 0.05)), "#c8ccd4", False)
+add("mat", box(G(CX, RF + 0.3, 0.02), (1.5, D(0.32), 0.04)), "#4b4038", True)
+# two windows: white frames with depth, two-tone glass with reflections, mullions, half-open blinds, sills
+for wx in (CX - 2.05, CX + 2.05):
+    add(f"wframe{wx}", box(G(wx, RF + 0.05, 1.18), (1.06, 0.08, 1.0)), "#f1efe8")
+    add(f"wglass{wx}", box(G(wx, RF + 0.1, 1.18), (0.82, 0.04, 0.77)), "#6f93ad", False)
+    add(f"wlow{wx}", box(G(wx, RF + 0.11, 0.95), (0.82, 0.03, 0.3)), "#5b7f99", False)
+    add(f"blind{wx}", box(G(wx, RF + 0.115, 1.46), (0.8, 0.03, 0.2)), "#e9e6dd", False)
+    for j in range(3): add(f"slat{wx}{j}", box(G(wx, RF + 0.125, 1.39 + j * 0.06), (0.8, 0.02, 0.012)), "#c9c5ba", False)
+    add(f"wglint{wx}", box(G(wx - 0.18, RF + 0.13, 1.12), (0.08, 0.02, 0.5), rot=(0, -30, 0)), "#a9c8dc", False)
+    add(f"wmull{wx}", box(G(wx, RF + 0.135, 1.18), (0.05, 0.03, 0.77)), "#f1efe8", False)
+    add(f"wmullh{wx}", box(G(wx, RF + 0.135, 1.13), (0.82, 0.03, 0.05)), "#f1efe8", False)
+    add(f"wsill{wx}", box(G(wx, RF + 0.1, 0.66), (1.16, 0.14, 0.07)), "#e7e4dc", True)
+# the sign: red 3D letters and the kick-logo badge (Jay's real branding)
+sign_text("signCMA", "CMA", CX, RF + 0.07, 3.08, 0.48, 1.6, RED, 0.06)
+sign_text("signMA", "MARTIAL ARTS", CX, RF + 0.07, 2.56, 0.3, 4.1, RED, 0.05)
+lz = 3.74; lr = RF + 0.05
+add("logo_ring", ellipsoid(G(CX, lr, lz), (0.24, 0.035, 0.24), segs=28, rings=8), "#f6f3ec")
+add("logo_badge", ellipsoid(G(CX, lr + 0.02, lz), (0.205, 0.03, 0.205), segs=28, rings=8), "#27407a", False)
+for nm, (dx, dz, sxx, szz, rot) in {"body": (-0.01, -0.01, 0.1, 0.035, -18), "leg": (-0.1, -0.05, 0.065, 0.022, 25), "head": (0.1, 0.05, 0.035, 0.035, 0),
+                                   "arm": (0.12, -0.05, 0.05, 0.018, -30), "kick": (-0.13, 0.04, 0.06, 0.02, -40)}.items():
+    add("logo_" + nm, ellipsoid(G(CX + dx, lr + 0.05, lz + dz), (sxx, 0.02, szz), segs=10, rings=6, rot=(0, rot, 0)), "#ffffff", False)
+# banners: white with a red stripe (left) and the notice banner (right), with grommets
+for bx, red in ((CX - 2.05, True), (CX + 2.05, False)):
+    bw = 1.4 if red else 1.2
+    add(f"ban{bx}", box(G(bx, RF + 0.06, 1.95), (bw, 0.04, 0.42)), "#f6f3ec", True)
+    for gx in (-1, 1):
+        for gz in (-1, 1): add(f"grom{bx}{gx}{gz}", ellipsoid(G(bx + gx * (bw / 2 - 0.06), RF + 0.09, 1.95 + gz * 0.15), (0.025, 0.01, 0.025), segs=6, rings=4), "#8c8ea0", False)
+    if red:
+        add(f"banred{bx}", box(G(bx, RF + 0.085, 1.82), (1.34, 0.02, 0.13)), RED, False)
+        add(f"banbar{bx}", box(G(bx, RF + 0.085, 2.03), (0.95, 0.02, 0.08)), "#9a9aa8", False)
+    else:
+        for j in range(3): add(f"banbar{bx}{j}", box(G(bx + 0.12, RF + 0.085, 2.06 - j * 0.1), (0.65, 0.02, 0.035)), "#8c8ea0", False)
+        add(f"banlogo{bx}", box(G(bx - 0.4, RF + 0.085, 1.96), (0.26, 0.02, 0.22)), "#a8adc2", False)
+# small things on the wall: accessibility signs, notices, the light box, the house plate, wall lamps with warm lenses
+for ax_ in (X0 + 0.75, X1 - 0.75):
+    add(f"acc{ax_}", box(G(ax_, RF + 0.04, 1.15), (0.24, 0.03, 0.3)), "#2f6fd6", True)
+    add(f"accd{ax_}", ellipsoid(G(ax_, RF + 0.065, 1.2), (0.05, 0.01, 0.05), segs=8, rings=4), "#ffffff", False)
+add("notice", box(G(X0 + 0.4, RF + 0.04, 1.35), (0.18, 0.02, 0.22)), "#f6f3ec", False)
+add("notice2", box(G(X1 - 0.45, RF + 0.04, 1.3), (0.14, 0.02, 0.2)), "#f6f3ec", False)
+add("boxlight", box(G(CX + 1.2, RF + 0.05, 1.05), (0.16, 0.03, 0.2)), "#7b8a5a", True)
+add("houseplate", box(G(CX + 0.78, RF + 0.05, 1.78), (0.4, 0.03, 0.2)), "#b8662e", True)
+add("housebar", box(G(CX + 0.78, RF + 0.07, 1.78), (0.26, 0.02, 0.07)), "#7a5a40", False)
+for lx in (X1 - 0.5, X0 + 0.5):
+    add(f"lamp{lx}", box(G(lx, RF + 0.1, 2.0), (0.14, 0.16, 0.14)), "#3b3430", True)
+    add(f"lens{lx}", box(G(lx, RF + 0.19, 1.98), (0.08, 0.02, 0.07)), "#ffd98a", False)
+
+# what stands in front of the real dojo: a bench, the two red chairs and the flower beds beside the door
+def az_bench(pid, cx, w, hexc, slat):
+    piece(pid, (cx, 9.45), block=[(int(cx - w / 2 + 0.05), 9), (int(cx + w / 2 - 0.05), 9)])
+    shadow(cx, 9.45, w * 0.6, 0.25)
+    add("seat", box(G(cx, 9.45, 0.33), (w, D(0.4), 0.07)), hexc)
+    for x in (-w / 2 + 0.1, w / 2 - 0.1):
+        add(f"leg{x}", box(G(cx + x, 9.45, 0.16), (0.08, D(0.34), 0.32)), "#2f2620", False)
+        add(f"post{x}", box(G(cx + x, 9.28, 0.46), (0.07, D(0.07), 0.62)), "#2f2620", False)
+    add("back", box(G(cx, 9.28, 0.56), (w, 0.06, 0.4)), hexc)
+    for j in range(slat): add(f"slat{j}", box(G(cx - w / 2 + 0.12 + j * (w - 0.24) / (slat - 1), 9.31, 0.56), (0.035, 0.02, 0.38)), "#2a211c", False)
+az_bench("az-bench-a", 20.2, 1.6, "#4d3a2f", 7)
+piece("az-chairs", (26.1, 9.5), block=[(25, 9), (26, 9)])
+for j, (cxr, rr, rot) in enumerate(((25.7, 9.4, 0), (26.4, 9.6, 8))):
+    shadow(cxr, rr, 0.3, 0.2)
+    for dx, dr in ((-0.17, -0.15), (0.17, -0.15), (-0.17, 0.15), (0.17, 0.15)):
+        add(f"leg{j}{dx}{dr}", tube(G(cxr + dx, rr + dr, 0), G(cxr + dx, rr + dr, 0.36), 0.02, 0.02, segs=6), RED, False)
+    add(f"seat{j}", box(G(cxr, rr, 0.37), (0.46, D(0.4), 0.05), rot=(0, 0, rot)), RED)
+    add(f"back{j}", box(G(cxr, rr - 0.2, 0.62), (0.46, 0.05, 0.42), rot=(0, 0, rot)), RED)
+    for q in range(4): add(f"bar{j}{q}", box(G(cxr - 0.15 + q * 0.1, rr - 0.17, 0.62), (0.02, 0.02, 0.34), rot=(0, 0, rot)), "#a81f1b", False)
+FLW = ["#ffd36b", "#f0a030", "#ffe48a", "#f5c542", "#fff0b0"]
+for j, bx in enumerate((21.55, 24.45)):
+    piece(f"az-bed-{j}", (bx, 9.55), block=[(int(bx), 9)])
+    add("rim", ellipsoid(G(bx, 9.55, 0.01), (0.62, D(0.36), 0.06), segs=20, rings=4), "#3a3a40")
+    add("mulch", ellipsoid(G(bx, 9.55, 0.05), (0.55, D(0.31), 0.04), segs=20, rings=4), "#7a4a30", False)
+    for q in range(4): add(f"shr{q}", ellipsoid(G(bx - 0.33 + q * 0.22, 9.52 + 0.06 * (q % 2), 0.2), (0.15, 0.12, 0.15), segs=10, rings=6), ("#4f8a4a", "#5f9e55")[q % 2])
+    for q in range(10):
+        a_ = q * 2.399
+        add(f"fl{q}", ellipsoid(G(bx + 0.42 * math.cos(a_) * ((q % 5) / 5 + 0.3), 9.55 + 0.15 * math.sin(a_), 0.32), (0.05, 0.04, 0.05), segs=6, rings=4), FLW[q % 5], False)
 
 # ---------------------------------------------------------------- the market (west of the Action Zone)
 MC, MF, MW = 7.6, 9.0, 8.4
@@ -651,6 +788,7 @@ elif A.mode == "props":
     boxes = {}
     for pid in META:
         if only and pid not in only: continue
+        if META[pid].get("external"): continue
         obs = [o for o in bpy.data.objects if o.type == "MESH" and o.get("grp") == pid]
         xs, ys = [], []
         for o in obs:

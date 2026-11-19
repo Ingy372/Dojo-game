@@ -69,6 +69,7 @@ export class TownScene extends WalkScene {
 
   create(data?: unknown): void {
     this.tourHomeWait = false;
+    this.lifted = false;
     this.stage = currentTownStage();
     this.roomAt = townRoom(WALK, this.stage);
     super.create(data);
@@ -130,9 +131,11 @@ export class TownScene extends WalkScene {
     this.bounds = [0, w, 0, WALK.tiles.length];
     const ground: Phaser.GameObjects.GameObject[] = [];
     const flat: [number, Phaser.GameObjects.Image[]][] = [];
-    for (const [id, s] of Object.entries(staticSprites(this, TOWN_PACK)) as [string, StaticSprite & { stage?: number; until?: number }][]) {
+    for (const [id, s] of Object.entries(staticSprites(this, TOWN_PACK)) as [string, StaticSprite & { stage?: number; until?: number; drawScale?: number }][]) {
       if (!s.anchorTile || !pieceShown({ stage: s.stage ?? 1, until: s.until }, this.stage)) continue;
       const images = addStatic(this, TOWN_PACK, id, s.anchorTile[0] * TILE, s.anchorTile[1] * TILE);
+      // The Action Zone is packed at twice the detail and drawn at half size, so it stays sharp up close.
+      if (s.drawScale) for (const img of images) img.setScale(s.drawScale);
       if (s.place === 'ground') ground.push(...images);
       else if (s.place === 'flat') flat.push([s.sortRow ?? 0, images]);
       else {
@@ -145,10 +148,11 @@ export class TownScene extends WalkScene {
     const marks: Phaser.GameObjects.GameObject[] = [];
     for (const door of [WALK.homeDoor, WALK.dojoDoor]) {
       const [cx, cy] = door.cue;
+      // The Action Zone's tag sits between its doors and its own CMA MARTIAL ARTS sign.
       marks.push(addExitCue(this, cx * TILE, cy * TILE, TILE * 1.3, TILE * 0.8, 'up'));
       marks.push(
         this.add
-          .text(cx * TILE, (cy - 1.25) * TILE, door.label, {
+          .text(cx * TILE, (cy - (door === WALK.dojoDoor ? 1.95 : 1.25)) * TILE, door.label, {
             fontFamily: FONT,
             fontStyle: 'bold',
             fontSize: '15px',
@@ -223,7 +227,16 @@ export class TownScene extends WalkScene {
     }
   }
 
+  /** True while the camera is lifted by the code below (not by a Home Tour stop). */
+  private lifted = false;
+
   update(time: number, delta: number): void {
+    // Near the buildings along the main street the camera looks a little higher, so the Action Zone's sign shows.
+    const p = this.world?.players.p1.pos;
+    if (p && (this.lookAt === null || this.lifted)) {
+      this.lifted = p.y < 12.5 && !this.paused;
+      this.lookAt = this.lifted ? { x: p.x, y: p.y - 1.4 } : null;
+    }
     super.update(time, delta);
     if (!this.walkers.length) return;
     const dt = Math.min(delta, 100) / 1000;

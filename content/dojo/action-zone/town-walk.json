@@ -40,8 +40,52 @@
       "stage": 1
     },
     {
-      "id": "town-az-gold",
-      "stage": 9
+      "id": "town-az-bench-a",
+      "stage": 1,
+      "block": [
+        [
+          19,
+          9
+        ],
+        [
+          20,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-az-chairs",
+      "stage": 1,
+      "block": [
+        [
+          25,
+          9
+        ],
+        [
+          26,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-az-bed-0",
+      "stage": 1,
+      "block": [
+        [
+          21,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-az-bed-1",
+      "stage": 1,
+      "block": [
+        [
+          24,
+          9
+        ]
+      ]
     },
     {
       "id": "town-market",

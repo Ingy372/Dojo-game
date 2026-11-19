@@ -15,6 +15,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--src", required=True); ap.add_argument("--walk", default=""); ap.add_argument("--preview", default="")
 ap.add_argument("--stages", default="1,5,10"); ap.add_argument("--sprites", default=os.path.join(HERE, "..", "sprites"))
 ap.add_argument("--preview-width", type=int, default=1840)
+ap.add_argument("--hires-src", default="", help="a folder of the same pieces rendered at twice the px per tile; those are used instead, drawn at half size")
 A = ap.parse_args()
 
 meta = json.load(open(os.path.join(A.src, "town_meta.json")))
@@ -35,7 +36,9 @@ for i, (c0, c1) in enumerate(((0, COLS // 2), (COLS // 2, COLS))):
         placed.append((0, 0, im, c0 * ppt, r0 * ppt, 1, None))
 
 for p in meta["pieces"]:
-    pid = p["id"]; f = os.path.join(A.src, f"piece_{pid}.png")
+    pid = p["id"]; f = os.path.join(A.src, f"piece_{pid}.png"); k = 1
+    if A.hires_src and os.path.exists(os.path.join(A.hires_src, f"piece_{pid}.png")):
+        f = os.path.join(A.hires_src, f"piece_{pid}.png"); k = 2
     if not os.path.exists(f):
         print("missing render:", pid); continue
     im = Image.open(f).convert("RGBA"); bb = im.getbbox()
@@ -43,10 +46,13 @@ for p in meta["pieces"]:
         print("empty render:", pid); continue
     crop = im.crop(bb); sid = f"town-{pid}"
     crop.save(os.path.join(A.sprites, sid + ".png"))
-    ax, ay = p["anchorTile"][0] * ppt - bb[0], p["anchorTile"][1] * ppt - bb[1]
+    ax, ay = p["anchorTile"][0] * ppt * k - bb[0], p["anchorTile"][1] * ppt * k - bb[1]
     s = {"size": list(crop.size), "layers": ["day"], "files": {"day": sid + ".png"}, "anchorPx": [round(ax, 1), round(ay, 1)],
          "anchorTile": p["anchorTile"], "sortRow": p["sortRow"], "place": "flat" if p["flat"] else "stand", "stage": p["stage"]}
     if p["until"]: s["until"] = p["until"]
+    if k != 1: s["drawScale"] = 1 / k
+    sprites[sid] = s
+    if k != 1: crop = crop.resize((round(crop.width / k), round(crop.height / k)), Image.LANCZOS); bb = (round(bb[0] / k), round(bb[1] / k))
     sprites[sid] = s
     placed.append((1 if p["flat"] else 2, p["sortRow"], crop, bb[0], bb[1], p["stage"], p["until"]))
 

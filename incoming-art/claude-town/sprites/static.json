@@ -94,8 +94,8 @@
   },
   "town-az": {
    "size": [
-    1110,
-    568
+    1390,
+    1358
    ],
    "layers": [
     "day"
@@ -104,8 +104,8 @@
     "day": "town-az.png"
    },
    "anchorPx": [
-    555.0,
-    535.0
+    695.0,
+    1280.0
    ],
    "anchorTile": [
     23.0,
@@ -113,30 +113,104 @@
    ],
    "sortRow": 9.0,
    "place": "stand",
-   "stage": 1
+   "stage": 1,
+   "drawScale": 0.5
   },
-  "town-az-gold": {
+  "town-az-bench-a": {
    "size": [
-    1038,
-    468
+    262,
+    164
    ],
    "layers": [
     "day"
    ],
    "files": {
-    "day": "town-az-gold.png"
+    "day": "town-az-bench-a.png"
    },
    "anchorPx": [
-    519.0,
-    481.0
+    131.0,
+    135.0
    ],
    "anchorTile": [
-    23.0,
-    9.0
+    20.2,
+    9.45
    ],
-   "sortRow": 9.01,
+   "sortRow": 9.45,
    "place": "stand",
-   "stage": 9
+   "stage": 1,
+   "drawScale": 0.5
+  },
+  "town-az-chairs": {
+   "size": [
+    199,
+    206
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-az-chairs.png"
+   },
+   "anchorPx": [
+    104.0,
+    163.0
+   ],
+   "anchorTile": [
+    26.1,
+    9.5
+   ],
+   "sortRow": 9.5,
+   "place": "stand",
+   "stage": 1,
+   "drawScale": 0.5
+  },
+  "town-az-bed-0": {
+   "size": [
+    206,
+    133
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-az-bed-0.png"
+   },
+   "anchorPx": [
+    103.0,
+    74.0
+   ],
+   "anchorTile": [
+    21.55,
+    9.55
+   ],
+   "sortRow": 9.55,
+   "place": "stand",
+   "stage": 1,
+   "drawScale": 0.5
+  },
+  "town-az-bed-1": {
+   "size": [
+    206,
+    133
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-az-bed-1.png"
+   },
+   "anchorPx": [
+    103.0,
+    74.0
+   ],
+   "anchorTile": [
+    24.45,
+    9.55
+   ],
+   "sortRow": 9.55,
+   "place": "stand",
+   "stage": 1,
+   "drawScale": 0.5
   },
   "town-market": {
    "size": [
