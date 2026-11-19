@@ -14,7 +14,15 @@ const BEHIND_BUILDING_ROW = 6;
  * old building layer and the old bench and chairs. Town tile (23, 9), the door front, is this room's (7, 6).
  */
 const FROM_TOWN = { dx: -16, dy: -3 };
-const TOWN_PIECES: Record<string, string[]> = { 'town-az': [], 'town-az-bench-a': ['outside-bench-a'], 'town-az-chairs': ['outside-chair-a', 'outside-chair-b'] };
+const TOWN_PIECES: Record<string, string[]> = {
+  'town-az': [],
+  'town-az-bench-a': ['outside-bench-a'],
+  'town-az-chairs': ['outside-chair-a', 'outside-chair-b'],
+  // Jay, Nov 19: a detailed palm in place of the old one (made with the town's pieces, shown only here).
+  'town-az-palm': ['outside-palm'],
+};
+/** Jay, Nov 19: the little bush in the middle of the walkway is gone. */
+const REMOVED = ['outside-shrub'];
 
 /**
  * The Action Zone dojo, outside (A4-DOJO-ii): the entrance in daylight. Drawn bottom to top as the
@@ -52,7 +60,7 @@ export class OutsideScene extends WalkScene {
 
     // The detailed building from the town, when its art is here (else the old picture stays).
     const town = staticSprites(this, TOWN_PACK) as Record<string, StaticSprite & { drawScale?: number }>;
-    const replaced = new Set<string>();
+    const replaced = new Set<string>(REMOVED);
     let newBuilding: Phaser.GameObjects.Image[] = [];
     for (const [id, olds] of Object.entries(TOWN_PIECES)) {
       const s = town[id];

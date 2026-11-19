@@ -58,7 +58,7 @@ def glows_of(im, x0, y0, k):
     return out
 
 
-def add_piece(sid, f, k, anchor, extra, layer, stage, until, sort, lit=False):
+def add_piece(sid, f, k, anchor, extra, layer, stage, until, sort, lit=False, show=True):
     im = Image.open(f).convert("RGBA"); bb = im.getbbox()
     if not bb:
         print("empty render:", sid); return None
@@ -73,7 +73,7 @@ def add_piece(sid, f, k, anchor, extra, layer, stage, until, sort, lit=False):
     if lit: s["glows"] = glows_of(crop, bb[0], bb[1], k)
     sprites[sid] = s
     if k != 1: crop = crop.resize((round(crop.width / k), round(crop.height / k)), Image.LANCZOS); bb = (round(bb[0] / k), round(bb[1] / k))
-    placed.append((layer, sort or 0, crop, bb[0], bb[1], stage, until, lit, s.get("glows", [])))
+    if show: placed.append((layer, sort or 0, crop, bb[0], bb[1], stage, until, lit, s.get("glows", [])))
     return s
 
 
@@ -100,9 +100,9 @@ for p in meta["pieces"]:
         if not os.path.exists(f):
             if not lit: print("missing render:", pid)
             continue
-        place = ("lit" if lit else ("flat" if p["flat"] else "stand"))
+        place = ("lit" if lit else (p.get("place") or ("flat" if p["flat"] else "stand")))
         add_piece(f"town-{pid}" + ("-lit" if lit else ""), f, k, p["anchorTile"], {"place": place}, (1 if p["flat"] else 2), p["stage"], p["until"],
-                  p["sortRow"] + (0.001 if lit else 0), lit=lit)
+                  p["sortRow"] + (0.001 if lit else 0), lit=lit, show=p.get("place") != "outside")
 
 json.dump({"about": "The town (Claude Code, Nov 18-19 2026), made by incoming-art/claude-town/source/build_town.py and pack_town.py. "
                     "Rendered at %d px per tile; the picture starts %d rows above the town's row 0. Ground pieces are pinned at their "
@@ -116,7 +116,7 @@ if A.walk:
     w = json.load(open(A.walk)) if os.path.exists(A.walk) else {}
     w["tiles"] = meta["tiles"]
     w["pieces"] = [{k: v for k, v in (("id", "town-" + p["id"]), ("stage", p["stage"]), ("until", p["until"]), ("block", p["block"])) if v not in (None, [])}
-                   for p in meta["pieces"]]
+                   for p in meta["pieces"] if p.get("place") != "outside"]   # entrance-scene pieces are not part of the town
     json.dump(w, open(A.walk, "w", newline="\n"), indent=2)
     with open(A.walk, "a", newline="\n") as fh: fh.write("\n")
 

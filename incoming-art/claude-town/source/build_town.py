@@ -836,6 +836,52 @@ for k in range(3):
     add("wall", box(G((c0 + c1) / 2, 29.65, 0.4), (c1 - c0 + 0.02, D(0.3), 0.8)), "#efe3c6", True, 1.2)
     add("cap", box(G((c0 + c1) / 2, 29.65, 0.85), (c1 - c0 + 0.1, D(0.5), 0.12)), "#4a4f66", True, 1.2)
 
+# ---------------------------------------------------------------- the palm beside the real dojo (entrance scene only)
+# Jay, Nov 19: the palm at the Action Zone entrance should be detailed like the new building. It is rendered with the
+# town's Action Zone pieces (town tile (28.4, 9.4) = the entrance's (12.4, 6.4), where the old palm stood) but it is
+# not part of the town itself: place "outside" keeps it out of the town's walk file and drawing.
+PX, PY = 28.4, 9.4
+piece("az-palm", (PX, PY), sort=PY, block=[])
+META["az-palm"]["place"] = "outside"
+shadow(PX + 0.3, PY, 0.9, 0.35)
+add("mound", ellipsoid(G(PX, PY, 0.0), (0.42, D(0.24), 0.1), segs=16, rings=5), "#7a5a3a")
+# a slightly bent trunk of stacked rings, wider at the foot
+segs_ = 16; H = 2.55; bend = 0.45; prev = None
+def trunk_pt(t): return (PX + bend * t * t, PY, H * t)
+for k in range(segs_):
+    t0, t1 = k / segs_, (k + 1) / segs_
+    x0, _, z0 = trunk_pt(t0); x1, _, z1 = trunk_pt(t1)
+    r0 = 0.17 - 0.06 * t0; r1 = 0.17 - 0.06 * t1
+    add(f"tr{k}", tube(G(x0, PY, z0), G(x1, PY, z1), r0, r1 * 0.92, segs=12), ("#8a6440", "#7a5634")[k % 2])
+    add(f"trr{k}", tube(G(x1, PY + 0.01, z1 - 0.03), G(x1, PY + 0.01, z1 + 0.01), r1 + 0.02, r1 + 0.02, segs=12), "#a07a50", False)
+cx_, _, cz_ = trunk_pt(1.0)
+# coconuts and the crown's base
+for k, (dx, dz) in enumerate(((-0.1, -0.12), (0.1, -0.14), (0.0, -0.22), (0.16, -0.05))):
+    add(f"nut{k}", ellipsoid(G(cx_ + dx, PY + 0.12, cz_ + dz), (0.1, 0.1, 0.11), segs=12, rings=8), ("#6b4a2a", "#7a5634")[k % 2])
+add("crown", ellipsoid(G(cx_, PY, cz_ + 0.05), (0.2, 0.2, 0.16), segs=12, rings=8), "#5f8a3a")
+# fronds: a drooping rib with leaflets down both sides, in three greens; the back ones darker
+FR = 11
+for f in range(FR):
+    a = 2 * math.pi * f / FR + 0.2
+    dx, dy = math.cos(a), math.sin(a) * 0.55          # the frond's direction on the ground (squashed toward the camera)
+    L = 1.35 + 0.15 * ((f * 7) % 3) / 2
+    back = dy < -0.2
+    col_rib = "#4f7a30" if back else "#5f8a3a"
+    cols = ("#4f8a4a", "#5f9e55") if back else ("#6fae5a", "#86c46c")
+    pts = []
+    for k in range(9):
+        t = k / 8
+        pts.append((cx_ + dx * L * t, PY - dy * L * t, cz_ + 0.18 + 0.45 * t - 1.05 * t * t))
+    for k in range(8):
+        (x0, y0, z0), (x1, y1, z1) = pts[k], pts[k + 1]
+        add(f"rib{f}_{k}", tube(G(x0, y0, z0), G(x1, y1, z1), 0.03 - 0.0025 * k, 0.027 - 0.0025 * k, segs=6), col_rib, k < 4, 0.8)
+        for side in (-1, 1):   # leaflets: long thin pointed blades, angled outward, forward and down, shorter toward the tip
+            for h in (0.3, 0.75):
+                ln = 0.42 * (1 - 0.55 * (k + h) / 8)
+                mx = x0 + (x1 - x0) * h; my = y0 + (y1 - y0) * h; mz = z0 + (z1 - z0) * h
+                tx = mx + side * dy * ln + dx * ln * 0.3; ty = my - side * dx * ln * 0.55 - dy * ln * 0.3; tz = mz - ln * 0.55
+                add(f"lf{f}_{k}{side}{h}", tube(G(mx, my, mz), G(tx, ty, tz), 0.045, 0.004, segs=5, sy=0.35), cols[(k + (side > 0)) % 2], True, 0.6)
+
 # ===================================================================================== the walk grid
 PATH = set(cells(29, 31, 5, 8))
 base = [["#" if ((r <= 8 and (c, r) not in PATH) or r >= 29 or c == 0 or c == COLS - 1 or (c, r) in GROUND_BLOCK) else "." for c in range(COLS)] for r in range(ROWS)]

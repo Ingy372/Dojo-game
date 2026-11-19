@@ -173,7 +173,7 @@ export class TownScene extends WalkScene {
     const flat: [number, Phaser.GameObjects.GameObject[]][] = [];
     const pools: Phaser.GameObjects.GameObject[] = [];
     for (const [id, s] of all) {
-      if (!s.anchorTile || !pieceShown({ stage: s.stage ?? 1, until: s.until }, this.stage)) continue;
+      if (!s.anchorTile || s.place === 'outside' || !pieceShown({ stage: s.stage ?? 1, until: s.until }, this.stage)) continue;
       const lit = s.place === 'lit' || s.place === 'lit-ground';
       if (lit && !this.night) continue;
       const images = addStatic(this, TOWN_PACK, id, s.anchorTile[0] * TILE, s.anchorTile[1] * TILE);

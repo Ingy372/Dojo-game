@@ -2517,6 +2517,30 @@
    "stage": 1,
    "place": "stand",
    "sortRow": 29.2
+  },
+  "town-az-palm": {
+   "size": [
+    468,
+    474
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-az-palm.png"
+   },
+   "anchorPx": [
+    173.0,
+    429.0
+   ],
+   "anchorTile": [
+    28.4,
+    9.4
+   ],
+   "stage": 1,
+   "place": "outside",
+   "sortRow": 9.4,
+   "drawScale": 0.5
   }
  }
 }
