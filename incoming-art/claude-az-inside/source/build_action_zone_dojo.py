@@ -105,7 +105,9 @@ def render_game(frame_cols, frame_rows, cx, rc, lit_names=()):
     GROUND = ("floor", "ground")                    # the ground group is a HOLDOUT for every other group: whatever sinks into the ground (wall feet, mat platform edge) is cut off exactly as in the one-piece picture
     for g in names:
         for o in meshes:
-            if g not in GROUND and grpname(o) in GROUND: o.hide_render = False; o.is_holdout = True
+            if g not in GROUND and grpname(o) in GROUND:      # the floor cuts off what sinks into it; its see-through shadows and glows are left out (as holdouts they leave a faint haze over the whole frame)
+                see = any(ms.material and ms.material.name.startswith("A#") for ms in o.material_slots)
+                o.hide_render = see; o.is_holdout = not see
             else: o.hide_render = grpname(o) != g; o.is_holdout = False
         r.filepath = os.path.join(A.game, g + ".png"); bpy.ops.render.render(write_still=True)
         for o in meshes: o.is_holdout = False
@@ -506,7 +508,7 @@ def scene_inside():
     KS = 1.3 / 377
     imgplane(os.path.join(TXD, "sil-kick.png"), "silKick", a + 0.95, 394 * KS, 377 * KS, row=WF + 0.1, zc=1.07 + 377 * KS / 2)
     imgplane(os.path.join(TXD, "sil-stance.png"), "silStance", b - 0.95, 389 * KS, 360 * KS, row=WF + 0.1, zc=1.07 + 360 * KS / 2)
-    imgplane(os.path.join(TXD, "sil-split.png"), "silSplit", cx, 490 * KS * 0.72, 201 * KS * 0.72, row=WF + 0.1, zc=0.56)
+    imgplane(os.path.join(TXD, "sil-split.png"), "silSplit", cx, 490 * KS * 0.72, 208 * KS * 0.72, row=WF + 0.1, zc=0.56)
     # round clock
     wdisc(LM.FLAG[0] - 0.12, 3.0, 0.2, "#25252e", 0, "clockRim"); wdisc(LM.FLAG[0] - 0.12, 3.0, 0.16, "#f4f1e8", 1, "clockFace")
     for k in range(12): wdisc(LM.FLAG[0] - 0.12 + 0.12 * math.sin(k * math.pi / 6), 3.0 + 0.12 * math.cos(k * math.pi / 6), 0.012, "#25252e", 2, "tick")

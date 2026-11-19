@@ -38,17 +38,17 @@
   "mmmmmmmmmrrrrrrrrrmmmmmmmmm",
   "mmmmmmmmmPPPPPPPPmmmmmmmmmm",
   "#######mmPPPPPPPPmm########",
-  "......#..SSSSSSSSS.#.......",
-  ".PPPPP#..SSSSSSSSS.#.......",
-  "......#..SSSSSSSSS.#.......",
+  ".........SSSSSSSSS.........",
+  ".PPPPP...SSSSSSSSS.........",
   ".........SSSSSSSSS.........",
   ".........SSSSSSSSS.........",
-  ".PP........................",
-  "..P........................",
+  ".........SSSSSSSSS.........",
+  "...........................",
+  "...........................",
   "..........P......P.........",
   "############DDD############"
  ],
- "walkableCells": 355,
+ "walkableCells": 364,
  "blockers": [
   {
    "id": "wing-west",
@@ -133,54 +133,6 @@
     ]
    ],
    "why": "east wing wall row"
-  },
-  {
-   "id": "stub-west",
-   "rect": [
-    6.9,
-    7.1,
-    10.0,
-    12.35
-   ],
-   "cells": [
-    [
-     6,
-     10
-    ],
-    [
-     6,
-     11
-    ],
-    [
-     6,
-     12
-    ]
-   ],
-   "why": "wing end wall (west); the thin wall is given the column on its alcove side"
-  },
-  {
-   "id": "stub-east",
-   "rect": [
-    19.4,
-    19.6,
-    10.0,
-    12.35
-   ],
-   "cells": [
-    [
-     19,
-     10
-    ],
-    [
-     19,
-     11
-    ],
-    [
-     19,
-     12
-    ]
-   ],
-   "why": "wing end wall (east); the thin wall is given its own column"
   },
   {
    "id": "pro-counter",
@@ -603,30 +555,6 @@
    "why": ""
   },
   {
-   "id": "bench",
-   "rect": [
-    1.5,
-    3.3,
-    15.65,
-    16.15
-   ],
-   "cells": [
-    [
-     1,
-     15
-    ],
-    [
-     2,
-     15
-    ],
-    [
-     2,
-     16
-    ]
-   ],
-   "why": ""
-  },
-  {
    "id": "plant",
    "rect": [
     10.35,
@@ -775,10 +703,10 @@
    "tapPx": null,
    "foregroundSprite": null,
    "tapRectPx": [
-    200,
-    945,
-    488,
-    1125
+    189,
+    964,
+    499,
+    1148
    ]
   },
   {
@@ -801,10 +729,10 @@
    "tapPx": null,
    "foregroundSprite": null,
    "tapRectPx": [
-    81,
+    78,
     33,
-    591,
-    242
+    594,
+    248
    ]
   },
   {
@@ -828,9 +756,9 @@
    "foregroundSprite": null,
    "tapRectPx": [
     1108,
-    35,
+    59,
     1308,
-    250
+    252
    ]
   },
   {
@@ -854,7 +782,7 @@
    "foregroundSprite": null,
    "tapRectPx": [
     1635,
-    796,
+    753,
     1773,
     972
    ]
@@ -905,10 +833,10 @@
    "tapPx": null,
    "foregroundSprite": null,
    "tapRectPx": [
-    1790,
-    768,
-    2029,
-    956
+    1787,
+    767,
+    2031,
+    957
    ]
   },
   {
@@ -936,10 +864,10 @@
    "tapPx": null,
    "foregroundSprite": "bag-black-top",
    "tapRectPx": [
-    1837,
-    303,
-    1923,
-    507
+    1827,
+    304,
+    1932,
+    508
    ]
   },
   {
@@ -967,10 +895,10 @@
    "tapPx": null,
    "foregroundSprite": "bag-blue-top",
    "tapRectPx": [
-    1933,
-    367,
-    2019,
-    571
+    1923,
+    369,
+    2028,
+    572
    ]
   },
   {
@@ -998,10 +926,10 @@
    "tapPx": null,
    "foregroundSprite": "bag-red-top",
    "tapRectPx": [
-    2029,
-    304,
-    2115,
-    507
+    2020,
+    305,
+    2124,
+    509
    ]
   },
   {
@@ -1029,10 +957,10 @@
    "tapPx": null,
    "foregroundSprite": null,
    "tapRectPx": [
-    818,
-    778,
-    1406,
-    963
+    817,
+    777,
+    1407,
+    992
    ]
   },
   {
@@ -1058,7 +986,7 @@
     736,
     960,
     1536,
-    1346
+    1372
    ]
   }
  ],
@@ -1311,16 +1239,16 @@
    "basedOn": "seats",
    "sortRow": 14.7,
    "roomPx": [
-    840,
-    969
+    842,
+    972
    ],
    "size": [
-    592,
-    254
+    588,
+    250
    ],
    "anchorPx": [
-    296.0,
-    375.0
+    294.0,
+    372.0
    ],
    "anchorTile": [
     13.5,
@@ -1335,16 +1263,16 @@
    "basedOn": "bag-black",
    "sortRow": 4.23,
    "roomPx": [
-    1854,
-    305
+    1853,
+    306
    ],
    "size": [
-    52,
-    85
+    54,
+    84
    ],
    "anchorPx": [
-    26.0,
-    201.4
+    27.0,
+    200.4
    ],
    "anchorTile": [
     22.8,
@@ -1359,16 +1287,16 @@
    "basedOn": "bag-blue",
    "sortRow": 5.03,
    "roomPx": [
-    1950,
-    369
+    1949,
+    370
    ],
    "size": [
-    52,
-    85
+    54,
+    84
    ],
    "anchorPx": [
-    26.0,
-    201.4
+    27.0,
+    200.4
    ],
    "anchorTile": [
     24.0,
@@ -1383,16 +1311,16 @@
    "basedOn": "bag-red",
    "sortRow": 4.23,
    "roomPx": [
-    2046,
-    305
+    2045,
+    306
    ],
    "size": [
-    52,
-    85
+    54,
+    84
    ],
    "anchorPx": [
-    26.0,
-    201.4
+    27.0,
+    200.4
    ],
    "anchorTile": [
     25.2,

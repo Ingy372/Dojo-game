@@ -949,12 +949,12 @@
       ]
     },
     "dojo-az-inside": {
-      "note": "A4-DOJO-i: the Action Zone dojo inside room (floor, walls, props, front wall, structures, props, wall decals, seat-back and bag-top foreground sprites). The outside entrance is the dojo-az-outside pack (A4-DOJO-ii).",
+      "note": "A4-DOJO-i: the Action Zone dojo inside room (floor, walls, props, front wall, structures, props, wall decals, seat-back and bag-top foreground sprites). The outside entrance is the dojo-az-outside pack (A4-DOJO-ii). Nov 19 2026: replaced by the detailed v2 room (incoming-art/claude-az-inside, Jay OK); the lobby bench is gone.",
       "sources": [
         {
           "id": "dojo-az-inside",
           "type": "static",
-          "json": "incoming-art/action-zone-dojo/sprites/static.json",
+          "json": "incoming-art/claude-az-inside/sprites/static.json",
           "only": [
             "inside-main-floor",
             "wing-west",
@@ -965,7 +965,6 @@
             "bag-red",
             "gear-box",
             "seats",
-            "bench",
             "plant",
             "trash-can",
             "whiteboard",

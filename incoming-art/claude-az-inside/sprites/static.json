@@ -1,0 +1,916 @@
+{
+ "pixelsPerTile": 80,
+ "camera": {
+  "projection": "orthographic",
+  "elevationDeg": 35.0,
+  "facing": "north (the one game view)"
+ },
+ "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+ "sprites": {
+  "inside-main-floor": {
+   "size": [
+    2272,
+    1696
+   ],
+   "layers": [
+    "floor",
+    "walls",
+    "props",
+    "foreground"
+   ],
+   "files": {
+    "floor": "inside-main-floor_floor.png",
+    "walls": "inside-main-floor_walls.png",
+    "props": "inside-main-floor_props.png",
+    "foreground": "inside-main-floor_foreground.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 27.0,
+    "row1": 19.0,
+    "note": "the room's walkable ground in tiles (27 x 19); the walls sit on its north edge, the front wall on row 18.4"
+   },
+   "topExtraTiles": 0.0,
+   "anchorPx": [
+    56,
+    168
+   ],
+   "anchorNote": "the room frame's pixel for grid tile (0,0)'s top-left corner (same convention as home-dojo room_*.png)",
+   "place": "room",
+   "note": "ONE wide scrolling room. Draw order: floor, walls, props, then wall-decal sprites and y-sorted sprites and characters sorted by sortRow, then foreground ABOVE the characters. floor: ground: lobby tile, blue mats, big red square with the school logo, thresholds, front-door mat, the seating decks and steps, the red gear-bag box base. Draw first, at depth 0. | walls: the north wall with its wall art, the side wall strips, the back-wall drywall. Nothing above the drywall. Draw above floor. | props: wall-hugging furniture that never moves: the creed boards, flag, mural frames, the gear shelf and crash mats. Under every character. | foreground: the front wall (curb, door posts, door header, open door leaves): the one FULL-FRAME layer drawn ABOVE characters, so a student walking in or out passes behind it. The seat backs and the bag tops are foreground SPRITES (see foregroundSprites), because each has its own sortRow."
+  },
+  "wing-west": {
+   "size": [
+    572,
+    268
+   ],
+   "layers": [
+    "wing-west"
+   ],
+   "files": {
+    "wing-west": "wing-west_wing-west.png"
+   },
+   "groundRect": {
+    "col0": -0.075,
+    "row0": 6.675,
+    "col1": 7.075,
+    "row1": 10.025,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 3.27,
+   "anchorPx": [
+    286.0,
+    262.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    3.5,
+    9.95
+   ],
+   "footprintRect": [
+    0.0,
+    7.0,
+    9.78,
+    10.12
+   ],
+   "place": "structure",
+   "sortRow": 9.95,
+   "roomPx": [
+    50,
+    702
+   ],
+   "interactive": false,
+   "note": "pro-shop alcove wall (the left wing). Hides the mat when a character is NORTH of it, is hidden by characters SOUTH of it."
+  },
+  "wing-east": {
+   "size": [
+    620,
+    268
+   ],
+   "layers": [
+    "wing-east"
+   ],
+   "files": {
+    "wing-east": "wing-east_wing-east.png"
+   },
+   "groundRect": {
+    "col0": 19.325,
+    "row0": 6.675,
+    "col1": 27.075,
+    "row1": 10.025,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 3.27,
+   "anchorPx": [
+    310.0,
+    262.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    23.2,
+    9.95
+   ],
+   "footprintRect": [
+    19.4,
+    27.0,
+    9.78,
+    10.12
+   ],
+   "place": "structure",
+   "sortRow": 9.95,
+   "roomPx": [
+    1602,
+    702
+   ],
+   "interactive": false,
+   "note": "east wing wall that carries the two cross doors and the handprint wall (their sprites go on top of it)."
+  },
+  "pro-counter": {
+   "size": [
+    310,
+    184
+   ],
+   "layers": [
+    "pro-counter"
+   ],
+   "files": {
+    "pro-counter": "pro-counter_pro-counter.png"
+   },
+   "groundRect": {
+    "col0": 1.663,
+    "row0": 9.95,
+    "col1": 5.537,
+    "row1": 12.25,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.0,
+   "anchorPx": [
+    155.0,
+    160.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    3.6,
+    11.95
+   ],
+   "footprintRect": [
+    1.9,
+    5.3,
+    11.05,
+    11.95
+   ],
+   "place": "prop",
+   "sortRow": 11.95,
+   "roomPx": [
+    189,
+    964
+   ],
+   "interactive": true,
+   "note": "pro shop counter in the left alcove (its back is the wing wall)."
+  },
+  "bag-black": {
+   "size": [
+    105,
+    204
+   ],
+   "layers": [
+    "bag-black"
+   ],
+   "files": {
+    "bag-black": "bag-black_bag-black.png"
+   },
+   "groundRect": {
+    "col0": 22.137,
+    "row0": 1.7,
+    "col1": 23.45,
+    "row1": 4.25,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.53,
+   "anchorPx": [
+    53.0,
+    202.4
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    22.8,
+    4.23
+   ],
+   "footprintRect": [
+    22.3,
+    23.3,
+    3.37,
+    4.23
+   ],
+   "place": "prop",
+   "sortRow": 4.23,
+   "roomPx": [
+    1827,
+    304
+   ],
+   "interactive": true,
+   "note": "heavy bag, black."
+  },
+  "bag-blue": {
+   "size": [
+    105,
+    203
+   ],
+   "layers": [
+    "bag-blue"
+   ],
+   "files": {
+    "bag-blue": "bag-blue_bag-blue.png"
+   },
+   "groundRect": {
+    "col0": 23.337,
+    "row0": 2.513,
+    "col1": 24.65,
+    "row1": 5.05,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.52,
+   "anchorPx": [
+    53.0,
+    201.4
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    24.0,
+    5.03
+   ],
+   "footprintRect": [
+    23.5,
+    24.5,
+    4.17,
+    5.03
+   ],
+   "place": "prop",
+   "sortRow": 5.03,
+   "roomPx": [
+    1923,
+    369
+   ],
+   "interactive": true,
+   "note": "heavy bag, blue."
+  },
+  "bag-red": {
+   "size": [
+    104,
+    204
+   ],
+   "layers": [
+    "bag-red"
+   ],
+   "files": {
+    "bag-red": "bag-red_bag-red.png"
+   },
+   "groundRect": {
+    "col0": 24.55,
+    "row0": 1.712,
+    "col1": 25.85,
+    "row1": 4.263,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.52,
+   "anchorPx": [
+    52.0,
+    201.4
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    25.2,
+    4.23
+   ],
+   "footprintRect": [
+    24.7,
+    25.7,
+    3.37,
+    4.23
+   ],
+   "place": "prop",
+   "sortRow": 4.23,
+   "roomPx": [
+    2020,
+    305
+   ],
+   "interactive": true,
+   "note": "heavy bag, branded red (DECIDE item, see README)."
+  },
+  "gear-box": {
+   "size": [
+    590,
+    215
+   ],
+   "layers": [
+    "gear-box"
+   ],
+   "files": {
+    "gear-box": "gear-box_gear-box.png"
+   },
+   "groundRect": {
+    "col0": 9.512,
+    "row0": 7.612,
+    "col1": 16.887,
+    "row1": 10.3,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.34,
+   "anchorPx": [
+    295.0,
+    187.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    13.2,
+    9.95
+   ],
+   "footprintRect": [
+    9.6,
+    16.8,
+    8.6,
+    9.95
+   ],
+   "place": "prop",
+   "sortRow": 9.95,
+   "roomPx": [
+    817,
+    777
+   ],
+   "interactive": true,
+   "note": "the red gear-bag box with a 2.6-tile gap at each end onto the mat. Openings face the lobby (south)."
+  },
+  "seats": {
+   "size": [
+    800,
+    412
+   ],
+   "layers": [
+    "seats"
+   ],
+   "files": {
+    "seats": "seats_seats.png"
+   },
+   "groundRect": {
+    "col0": 8.5,
+    "row0": 9.9,
+    "col1": 18.5,
+    "row1": 15.05,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 4.8,
+   "anchorPx": [
+    400.0,
+    384.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    13.5,
+    14.7
+   ],
+   "footprintRect": [
+    8.95,
+    18.05,
+    10.2,
+    14.7
+   ],
+   "place": "prop",
+   "sortRow": 14.7,
+   "roomPx": [
+    736,
+    960
+   ],
+   "interactive": true,
+   "note": "parent stadium seating, 3 tiers of 8 seats facing the mat, with the end steps. One sprite so the tiers never fight over depth."
+  },
+  "plant": {
+   "size": [
+    64,
+    112
+   ],
+   "layers": [
+    "plant"
+   ],
+   "files": {
+    "plant": "plant_plant.png"
+   },
+   "groundRect": {
+    "col0": 10.213,
+    "row0": 16.45,
+    "col1": 11.012,
+    "row1": 17.85,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.3,
+   "anchorPx": [
+    31.0,
+    104.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    10.6,
+    17.75
+   ],
+   "footprintRect": [
+    10.35,
+    10.85,
+    17.25,
+    17.75
+   ],
+   "place": "prop",
+   "sortRow": 17.75,
+   "roomPx": [
+    873,
+    1484
+   ],
+   "interactive": false,
+   "note": "potted plant by the door."
+  },
+  "trash-can": {
+   "size": [
+    57,
+    110
+   ],
+   "layers": [
+    "trash-can"
+   ],
+   "files": {
+    "trash-can": "trash-can_trash-can.png"
+   },
+   "groundRect": {
+    "col0": 16.95,
+    "row0": 16.45,
+    "col1": 17.663,
+    "row1": 17.825,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.32,
+   "anchorPx": [
+    28.0,
+    105.6
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    17.3,
+    17.77
+   ],
+   "footprintRect": [
+    17.03,
+    17.57,
+    17.23,
+    17.77
+   ],
+   "place": "prop",
+   "sortRow": 17.77,
+   "roomPx": [
+    1412,
+    1484
+   ],
+   "interactive": false,
+   "note": "bin by the door."
+  },
+  "whiteboard": {
+   "size": [
+    149,
+    154
+   ],
+   "layers": [
+    "whiteboard"
+   ],
+   "files": {
+    "whiteboard": "whiteboard_whiteboard.png"
+   },
+   "groundRect": {
+    "col0": 20.375,
+    "row0": 4.575,
+    "col1": 22.238,
+    "row1": 6.5,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.82,
+   "anchorPx": [
+    74.0,
+    146.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    21.3,
+    6.4
+   ],
+   "footprintRect": [
+    20.6,
+    22.0,
+    6.2,
+    6.4
+   ],
+   "place": "prop",
+   "sortRow": 6.4,
+   "roomPx": [
+    1686,
+    534
+   ],
+   "interactive": false,
+   "note": "stand whiteboard (blank, no writing)."
+  },
+  "target-wall": {
+   "size": [
+    516,
+    215
+   ],
+   "layers": [
+    "target-wall"
+   ],
+   "files": {
+    "target-wall": "target-wall_target-wall.png"
+   },
+   "groundRect": {
+    "col0": 0.275,
+    "row0": -1.688,
+    "col1": 6.725,
+    "row1": 1.0,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.69,
+   "anchorPx": [
+    258.0,
+    215.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    3.5,
+    1.0
+   ],
+   "footprintRect": [
+    0.4,
+    6.6,
+    0.8,
+    1.0
+   ],
+   "place": "wall-decal",
+   "sortRow": 1.01,
+   "roomPx": [
+    78,
+    33
+   ],
+   "interactive": true,
+   "note": "yellow target wall on the north wall (logo art + styles mural frame). Wall decal: draw it above its wall and below every character."
+  },
+  "back-doors": {
+   "size": [
+    200,
+    193
+   ],
+   "layers": [
+    "back-doors"
+   ],
+   "files": {
+    "back-doors": "back-doors_back-doors.png"
+   },
+   "groundRect": {
+    "col0": 13.15,
+    "row0": -1.363,
+    "col1": 15.65,
+    "row1": 1.05,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.36,
+   "anchorPx": [
+    100.0,
+    189.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    14.4,
+    1.0
+   ],
+   "footprintRect": [
+    13.3,
+    15.5,
+    0.8,
+    1.0
+   ],
+   "place": "wall-decal",
+   "sortRow": 1.01,
+   "roomPx": [
+    1108,
+    59
+   ],
+   "interactive": true,
+   "note": "double back doors in the north wall (to the back room). Wall decal: draw it above its wall and below every character."
+  },
+  "cross-door-a": {
+   "size": [
+    138,
+    219
+   ],
+   "layers": [
+    "cross-door-a"
+   ],
+   "files": {
+    "cross-door-a": "cross-door-a_cross-door-a.png"
+   },
+   "groundRect": {
+    "col0": 19.738,
+    "row0": 7.312,
+    "col1": 21.462,
+    "row1": 10.05,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.64,
+   "anchorPx": [
+    69.0,
+    211.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    20.6,
+    9.95
+   ],
+   "footprintRect": [
+    19.9,
+    21.3,
+    9.95,
+    10.1
+   ],
+   "place": "wall-decal",
+   "sortRow": 9.96,
+   "roomPx": [
+    1635,
+    753
+   ],
+   "interactive": true,
+   "note": "cross door A on the east wing (its shut face is on the lobby side). Wall decal: draw it above its wall and below every character."
+  },
+  "cross-door-b": {
+   "size": [
+    138,
+    176
+   ],
+   "layers": [
+    "cross-door-b"
+   ],
+   "files": {
+    "cross-door-b": "cross-door-b_cross-door-b.png"
+   },
+   "groundRect": {
+    "col0": 24.738,
+    "row0": 7.85,
+    "col1": 26.462,
+    "row1": 10.05,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.1,
+   "anchorPx": [
+    69.0,
+    168.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    25.6,
+    9.95
+   ],
+   "footprintRect": [
+    24.9,
+    26.3,
+    9.95,
+    10.1
+   ],
+   "place": "wall-decal",
+   "sortRow": 9.96,
+   "roomPx": [
+    2035,
+    796
+   ],
+   "interactive": true,
+   "note": "cross door B on the east wing. Wall decal: draw it above its wall and below every character."
+  },
+  "handprint-wall": {
+   "size": [
+    244,
+    190
+   ],
+   "layers": [
+    "handprint-wall"
+   ],
+   "files": {
+    "handprint-wall": "handprint-wall_handprint-wall.png"
+   },
+   "groundRect": {
+    "col0": 21.637,
+    "row0": 7.487,
+    "col1": 24.688,
+    "row1": 9.863,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.46,
+   "anchorPx": [
+    117.0,
+    197.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    23.1,
+    9.95
+   ],
+   "footprintRect": [
+    21.6,
+    24.6,
+    9.95,
+    10.1
+   ],
+   "place": "wall-decal",
+   "sortRow": 9.96,
+   "roomPx": [
+    1787,
+    767
+   ],
+   "interactive": true,
+   "note": "handprint wall between the two cross doors: plain handprints, NO names. Wall decal: draw it above its wall and below every character."
+  },
+  "seats-back": {
+   "size": [
+    588,
+    250
+   ],
+   "layers": [
+    "seats-back"
+   ],
+   "files": {
+    "seats-back": "seats-back_seats-back.png"
+   },
+   "groundRect": {
+    "col0": 9.825,
+    "row0": 10.05,
+    "col1": 17.175,
+    "row1": 13.175,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 4.65,
+   "anchorPx": [
+    294.0,
+    372.0
+   ],
+   "anchorNote": "same anchor tile as the base sprite, so the two line up when both are placed at the same spot",
+   "anchorTile": [
+    13.5,
+    14.7
+   ],
+   "footprintRect": [
+    8.95,
+    18.05,
+    10.2,
+    14.7
+   ],
+   "place": "foreground-sprite",
+   "drawLayer": "foreground",
+   "basedOn": "seats",
+   "sortRow": 14.7,
+   "roomPx": [
+    842,
+    972
+   ],
+   "interactive": false,
+   "foregroundRule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)",
+   "note": "the 24 seat backs (backs and their inset panels) of the parent seating. Foreground sprite: an identical copy of pixels already in 'seats' (draw the base y-sorted as usual, then this one above the characters that are north of it)."
+  },
+  "bag-black-top": {
+   "size": [
+    54,
+    84
+   ],
+   "layers": [
+    "bag-black-top"
+   ],
+   "files": {
+    "bag-black-top": "bag-black-top_bag-black-top.png"
+   },
+   "groundRect": {
+    "col0": 22.462,
+    "row0": 1.725,
+    "col1": 23.137,
+    "row1": 2.775,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.51,
+   "anchorPx": [
+    27.0,
+    200.4
+   ],
+   "anchorNote": "same anchor tile as the base sprite, so the two line up when both are placed at the same spot",
+   "anchorTile": [
+    22.8,
+    4.23
+   ],
+   "footprintRect": [
+    22.3,
+    23.3,
+    3.37,
+    4.23
+   ],
+   "place": "foreground-sprite",
+   "drawLayer": "foreground",
+   "basedOn": "bag-black",
+   "sortRow": 4.23,
+   "roomPx": [
+    1853,
+    306
+   ],
+   "interactive": false,
+   "foregroundRule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)",
+   "note": "top of the black heavy bag: everything above the band, z over 1.25 tile. Foreground sprite: an identical copy of pixels already in 'bag-black' (draw the base y-sorted as usual, then this one above the characters that are north of it)."
+  },
+  "bag-blue-top": {
+   "size": [
+    54,
+    84
+   ],
+   "layers": [
+    "bag-blue-top"
+   ],
+   "files": {
+    "bag-blue-top": "bag-blue-top_bag-blue-top.png"
+   },
+   "groundRect": {
+    "col0": 23.663,
+    "row0": 2.525,
+    "col1": 24.337,
+    "row1": 3.575,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.51,
+   "anchorPx": [
+    27.0,
+    200.4
+   ],
+   "anchorNote": "same anchor tile as the base sprite, so the two line up when both are placed at the same spot",
+   "anchorTile": [
+    24.0,
+    5.03
+   ],
+   "footprintRect": [
+    23.5,
+    24.5,
+    4.17,
+    5.03
+   ],
+   "place": "foreground-sprite",
+   "drawLayer": "foreground",
+   "basedOn": "bag-blue",
+   "sortRow": 5.03,
+   "roomPx": [
+    1949,
+    370
+   ],
+   "interactive": false,
+   "foregroundRule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)",
+   "note": "top of the blue heavy bag: everything above the band, z over 1.25 tile. Foreground sprite: an identical copy of pixels already in 'bag-blue' (draw the base y-sorted as usual, then this one above the characters that are north of it)."
+  },
+  "bag-red-top": {
+   "size": [
+    54,
+    84
+   ],
+   "layers": [
+    "bag-red-top"
+   ],
+   "files": {
+    "bag-red-top": "bag-red-top_bag-red-top.png"
+   },
+   "groundRect": {
+    "col0": 24.863,
+    "row0": 1.725,
+    "col1": 25.538,
+    "row1": 2.775,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.51,
+   "anchorPx": [
+    27.0,
+    200.4
+   ],
+   "anchorNote": "same anchor tile as the base sprite, so the two line up when both are placed at the same spot",
+   "anchorTile": [
+    25.2,
+    4.23
+   ],
+   "footprintRect": [
+    24.7,
+    25.7,
+    3.37,
+    4.23
+   ],
+   "place": "foreground-sprite",
+   "drawLayer": "foreground",
+   "basedOn": "bag-red",
+   "sortRow": 4.23,
+   "roomPx": [
+    2045,
+    306
+   ],
+   "interactive": false,
+   "foregroundRule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)",
+   "note": "top of the red heavy bag: everything above the band, z over 1.25 tile. Foreground sprite: an identical copy of pixels already in 'bag-red' (draw the base y-sorted as usual, then this one above the characters that are north of it)."
+  }
+ }
+}

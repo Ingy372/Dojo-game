@@ -92,7 +92,7 @@ def split(d, T):         # jump split, arms out (front view)
     shape(d, T, pts)
     for sg in (-1, 1):
         limb(d, [(sg * 0.08, 0.765), (sg * 0.26, 0.795), (sg * 0.42, 0.83)], [0.1, 0.095, 0.1], T); disc(d, (sg * 0.455, 0.837), 0.042, T)
-    disc(d, (0.0, 0.865), 0.068, T); limb(d, [(0.0, 0.78), (0.0, 0.84)], [0.075, 0.07], T)
+    disc(d, (0.0, 0.88), 0.085, T); limb(d, [(0.0, 0.78), (0.0, 0.84)], [0.075, 0.07], T)
 st = figure(stance, "sil-stance.png", 1.2, 0.98)
 st = st.transpose(Image.FLIP_LEFT_RIGHT); st.save(os.path.join(TX, "sil-stance.png"))   # faces the logo, like the kicker
 sp = figure(split, "sil-split.png", 1.3, 0.98)
