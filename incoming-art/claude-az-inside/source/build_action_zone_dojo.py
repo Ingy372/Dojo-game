@@ -458,8 +458,9 @@ def scene_inside():
         B(x, RF - 0.6, 1.15, 0.08, 1.1, 2.3, "#5b3d2e", True, name="doorLeaf"); B(x, RF - 0.6, 1.55, 0.1, 0.62, 0.9, "#9fd0f0", False, name="doorGlass")
         B(x, RF - 0.6, 1.0, 0.11, 0.7, 0.06, "#c8ccd4", False, name="doorBar")
     grp("floor")
-    B(sum(LM.DOOR) / 2, RF - 1.3, 0.04, 2.2, 0.9, 0.04, "#3d2a20", True, name="welcomeMat"); B(sum(LM.DOOR) / 2, RF - 1.3, 0.065, 1.95, 0.68, 0.02, "#b8945a", False, name="welcomeMatInner")
-    for k in range(5): B(sum(LM.DOOR) / 2 - 0.8 + k * 0.4, RF - 1.3, 0.077, 0.18, 0.4, 0.004, "#9a7a48", False, name="matWeave")
+    B(sum(LM.DOOR) / 2, RF - 1.3, 0.04, 2.2, 0.9, 0.04, "#3d2a20", True, name="welcomeMat"); B(sum(LM.DOOR) / 2, RF - 1.3, 0.065, 1.95, 0.68, 0.02, "#5b4030", False, name="welcomeMatInner")
+    wt = text("welcomeText", "WELCOME", sum(LM.DOOR) / 2, RF - 1.3, 0.08, 0.3 * K, 1.55, "#e3c98f", 0.005, False)
+    wt.rotation_euler = (0, 0, 0); wt.location = G(sum(LM.DOOR) / 2, RF - 1.3, 0.08)
 
     # ======================= NORTH WALL =======================
     WF = RN
@@ -496,23 +497,6 @@ def scene_inside():
         wpoly(circ(x - s * 0.04, zc + s * 0.83, s * 0.02, 8), "#c99a14", 4, "face"); wpoly(circ(x + s * 0.04, zc + s * 0.83, s * 0.02, 8), "#c99a14", 4, "face")
     for row, z0 in enumerate((1.85, 0.5)):
         for k in range(6): yellow_man(a + 0.55 + k * 1.02, z0, 1.02)
-    # ---- the ninja rig: a red strap along the top of the wall with rings, grips and balls hanging from it
-    def rig_item(x, kind, k):
-        grp("target-wall" if x < LM.TARGET[1] + 0.2 else "walls")
-        rr_ = WF + 0.45; top = 3.3; zb = 3.12 - 0.05 * (k % 3)
-        T(x, rr_, zb, top, 0.012, 0.012, "#e8402f" if kind != "ball" else "#9aa0aa", False, 6, name="rigStrap")
-        if kind == "ring": add("rigRing", torus(G(x, rr_, zb - 0.1), 0.1, 0.022, 18, 6, (90, 0, 0)), "#e8402f")
-        elif kind == "ball": E(x, rr_, zb - 0.1, 0.1, 0.1, 0.1, ("#d9542f", "#b5662f")[k % 2], True, 12, 8, name="rigBall")
-        elif kind == "cone": T(x, rr_, zb - 0.26, zb, 0.07, 0.035, "#c4663a", True, 12, name="rigCone")
-        elif kind == "bar": B(x, rr_, zb - 0.03, 0.26, 0.04, 0.045, "#2b2b33", True, name="rigBar")
-        elif kind == "grip": T(x, rr_, zb - 0.24, zb, 0.03, 0.03, "#25252e", True, 8, name="rigGrip")
-    grp("target-wall")
-    B(3.5, WF + 0.45, 3.3, 6.4, 0.08, 0.07, "#d93a2a", True, name="rigBeamA")
-    grp("walls")
-    B(7.3, WF + 0.45, 3.3, 1.4, 0.08, 0.07, "#d93a2a", True, name="rigBeamB")
-    for x in (0.55, 6.62, 7.95): B(x, WF + 0.22, 3.3, 0.08, 0.46, 0.1, "#3a3a45", True, name="rigBracket")
-    KINDS = ("ring", "grip", "ball", "ring", "cone", "bar", "ring", "ball", "grip", "cone", "ring", "bar", "ball", "ring", "grip", "cone", "ring")
-    for k, kind in enumerate(KINDS[:10]): rig_item(0.8 + k * 0.72, kind, k)
     # ---- mural: the school mark with the five styles
     grp("walls")
     a, b = LM.MURAL; cx = (a + b) / 2
@@ -539,9 +523,6 @@ def scene_inside():
         Wd(x, 0.18, 0.96, 0.3, "#4a3226", 0.1, 0.01, False, name="kickPlate")
     Wd(cx, 1.05, 1.5, 0.06, "#c8ccd4", 0.11, 0.03, False, name="pushBar")
     Wd(cx, 2.72, 0.62, 0.22, "#2b2b33", 0.04, 0.05, True, name="exitBox"); text("exitText", "EXIT", cx, WF + 0.1, 2.72, 0.13, 0.42, "#ff3b30", 0.02, False)
-    for k, x in enumerate((cx - 0.95, cx + 0.95)):
-        Wd(x, 3.0, 0.62, 0.48, "#2b2b33", 0.035, 0.05, True, name="posterFrame"); Wd(x, 3.0, 0.52, 0.38, ("#1f3d8a", "#a81f1b")[k], 0.075, 0.02, False, name="poster")
-        for poly_ in figure(("kick", "punch")[k], x, 2.97, 0.22): wpoly(poly_, "#f4f1e8", 6, "posterFig")
     # ---- flag, black belts on hooks, white cube shelf with cones and bins
     grp("walls")
     a, b = LM.FLAG; cx = (a + b) / 2
@@ -585,9 +566,7 @@ def scene_inside():
         B(cxm + 0.03 * (k % 2), rcm, ZM + 0.11 + 0.21 * k, b - a, rb - ra, 0.2, c, True, bevel=0.04, name=f"crashMat{k}")
         B(cxm + 0.03 * (k % 2), rb - 0.01, ZM + 0.11 + 0.21 * k, 0.5, 0.02, 0.05, "#1d1b24", False, name="crashHandle")
         B(cxm + 0.03 * (k % 2) - (b - a) / 2 + 0.06, rcm, ZM + 0.11 + 0.21 * k, 0.03, rb - ra, 0.2, "#1d4aa0", False, name="crashFold")
-    B(cxm - 0.45, rcm + 0.05, ZM + 0.98, 1.0, 0.95, 0.2, "#d92b25", True, bevel=0.05, name="kickShield")
     B(cxm + 0.55, rcm - 0.05, ZM + 0.98, 0.95, 0.9, 0.2, "#2a5db0", True, bevel=0.05, name="kickShield2")
-    B(cxm - 0.45, rcm + 0.05, ZM + 1.09, 0.6, 0.5, 0.01, "#f4f1e8", False, name="shieldBadge")
     shadow(cxm, rb, 1.4, 0.25, ZM + 0.05, 0.22, "crashShadow")
     # ---- heavy bags: freestanding, filled base, collar, tall bag, white band (no brand words)
     for (x, r, c) in LM.BAGS:
@@ -662,39 +641,31 @@ def scene_inside():
     # ======================= WEST WING: PRO SHOP =======================
     grp("wing-west")
     WF = RW; a, b = LM.WEST_WING
-    for k in range(70):          # sponge-painted clouds on the sky-blue wall
-        x = 0.15 + rnd.random() * 6.7; z = 0.25 + rnd.random() * 3.0; rd = 0.06 + rnd.random() * 0.16
+    CLEAR = ((0.55, 3.55, 0.55, 2.95), (3.6, 5.0, 1.75, 2.75), (5.3, 6.7, 0.85, 2.25), (3.3, 5.9, 2.8, 3.4))   # grid, shirts, window, sign
+    for k in range(90):          # sponge-painted clouds on the sky-blue wall, kept off the shop fittings
+        x = 0.25 + rnd.random() * 6.6; z = 0.25 + rnd.random() * 3.0; rd = 0.06 + rnd.random() * 0.14
+        if any(x0 - rd * 1.4 < x < x1 + rd * 1.4 and z0 - rd < z < z1 + rd for x0, x1, z0, z1 in CLEAR): continue
         wpoly(circ(x, z, rd, 14, 1.4, 0.75), rnd.choice(("#e9f2fb", "#d7e7f8", "#f7fbff")), 0, "cloud")
     Wd(0.12, 1.7, 0.1, 3.4, "#e03a30", 0.02, 0.02, False, name="redStripe")
-    # lion picture
-    Wd(0.88, 2.15, 0.96, 1.22, "#7a5320", 0.03, 0.05, True, name="lionFrame"); Wd(0.88, 2.15, 0.84, 1.1, "#d9b26a", 0.08, 0.02, False, name="lionPic")
-    wpoly([(0.47, 1.6), (1.29, 1.6), (1.29, 1.95), (0.47, 1.95)], "#c08a3e", 1, "savanna")
-    wpoly(circ(0.88, 2.2, 0.3, 22, 1.0, 1.1), "#7a3f12", 2, "mane"); wpoly(circ(0.88, 2.2, 0.24, 22, 1.0, 1.08), "#9a5420", 3, "maneIn")
-    wpoly(circ(0.88, 2.18, 0.15, 18, 1.0, 1.15), "#e6ac5c", 4, "lionFace"); wpoly(circ(0.88, 2.1, 0.06, 12, 1.2, 0.8), "#f3d3a0", 5, "muzzle")
-    for dx in (-0.055, 0.055): wpoly(circ(0.88 + dx, 2.24, 0.018, 8), "#2a1a0e", 6, "lionEye")
-    wpoly([(0.86, 2.13), (0.9, 2.13), (0.88, 2.1)], "#3a2210", 6, "lionNose")
-    Wd(0.88, 1.48, 0.5, 0.08, "#c9a63a", 0.085, 0.01, False, name="lionPlate")
-    # gear grid walls with uniform bags, sparring gear, belts
-    Wd(3.45, 1.85, 2.5, 2.0, "#30333d", 0.03, 0.03, True, name="gridWall")
-    for k in range(11): Wd(3.45, 0.88 + k * 0.195, 2.5, 0.012, "#5a5f6e", 0.06, 0.01, False, name="gridH")
-    for k in range(12): Wd(2.25 + k * 0.218, 1.85, 0.012, 2.0, "#5a5f6e", 0.06, 0.01, False, name="gridV")
-    Wd(3.45, 2.62, 2.4, 0.03, "#8a8f9c", 0.07, 0.02, False, name="peg1"); Wd(3.45, 1.82, 2.4, 0.03, "#8a8f9c", 0.07, 0.02, False, name="peg2")
-    for k in range(5):
-        x = 2.45 + k * 0.48
-        Wd(x, 2.32, 0.4, 0.52, "#fbfbf8", 0.08, 0.03, True, name="uniformBag"); imgplane(LOGO, "proLogo", x, 0.24, 0.24 * LOGO_AR, row=WF + 0.115, zc=2.3)
-        Wd(x, 1.52, 0.4, 0.48, "#25252e" if k % 2 == 0 else "#3a3a45", 0.08, 0.03, True, name="padBag"); imgplane(LOGO, "proLogo2", x, 0.22, 0.22 * LOGO_AR, row=WF + 0.115, zc=1.52)
-    for k, c in enumerate(("#d92b25", "#d92b25", "#2f6fd6", "#d92b25")): E(2.5 + k * 0.6, WF + 0.12, 1.05, 0.13, 0.06, 0.11, c, True, 10, 6, name="hangGlove")
-    Wd(1.75, 1.3, 0.78, 1.2, "#30333d", 0.03, 0.03, True, name="beltRack")
-    for k, c in enumerate(list(BELT.values())[:7]): Wd(1.75, 1.8 - k * 0.165, 0.64, 0.08, c, 0.08, 0.02, False, name="beltRackBar")
+    # gear grid wall: uniform bags (top), pad bags (middle), gloves on hooks (bottom), roomy spacing
+    GX = 2.05
+    Wd(GX, 1.75, 2.7, 2.1, "#30333d", 0.03, 0.03, True, name="gridWall")
+    for k in range(11): Wd(GX, 0.75 + k * 0.2, 2.7, 0.012, "#5a5f6e", 0.06, 0.01, False, name="gridH")
+    for k in range(13): Wd(GX - 1.32 + k * 0.22, 1.75, 0.012, 2.1, "#5a5f6e", 0.06, 0.01, False, name="gridV")
+    for k in range(4):
+        x = GX - 0.96 + k * 0.64
+        Wd(x, 2.4, 0.42, 0.52, "#fbfbf8", 0.08, 0.03, True, name="uniformBag"); imgplane(LOGO, "proLogo", x, 0.24, 0.24 * LOGO_AR, row=WF + 0.115, zc=2.38)
+        Wd(x, 1.62, 0.42, 0.48, "#25252e" if k % 2 == 0 else "#3a3a45", 0.08, 0.03, True, name="padBag"); imgplane(LOGO, "proLogo2", x, 0.22, 0.22 * LOGO_AR, row=WF + 0.115, zc=1.62)
+        E(x, WF + 0.12, 1.0, 0.13, 0.06, 0.11, ("#d92b25", "#2f6fd6", "#d92b25", "#d92b25")[k], True, 10, 6, name="hangGlove")
     # t-shirts on a rail
-    Wd(5.05, 2.62, 0.95, 0.04, "#25252e", 0.07, 0.02, False, name="hangRail")
-    for k, x in enumerate((4.8, 5.3)):
+    Wd(4.3, 2.62, 1.2, 0.04, "#25252e", 0.07, 0.02, False, name="hangRail")
+    for k, x in enumerate((3.98, 4.62)):
         wpoly([(x - 0.1, 2.58), (x + 0.1, 2.58), (x + 0.26, 2.45), (x + 0.2, 2.33), (x + 0.13, 2.38), (x + 0.13, 1.9), (x - 0.13, 1.9), (x - 0.13, 2.38), (x - 0.2, 2.33), (x - 0.26, 2.45)], "#25252e", 2, "tee")
         imgplane(LOGO, "teeLogo", x, 0.16, 0.16 * LOGO_AR, row=WF + 0.1, zc=2.25)
     # red-framed shop window
-    Wd(6.3, 1.55, 1.05, 1.15, "#e03a30", 0.03, 0.05, True, name="shopWinFrame"); Wd(6.3, 1.55, 0.85, 0.95, "#cfe9f7", 0.08, 0.02, False, name="shopWinGlass")
-    Wd(6.3, 1.55, 0.04, 0.95, "#f4f1e8", 0.1, 0.01, False, name="shopWinMull"); Wd(6.05, 1.65, 0.26, 0.32, "#fbfbf8", 0.1, 0.01, False, name="shopNote")
-    text("proShopSign", "PRO SHOP", 5.25, WF + 0.1, 3.02, 0.42, 2.6, INK, 0.06, True)
+    Wd(6.0, 1.55, 1.05, 1.15, "#e03a30", 0.03, 0.05, True, name="shopWinFrame"); Wd(6.0, 1.55, 0.85, 0.95, "#cfe9f7", 0.08, 0.02, False, name="shopWinGlass")
+    Wd(6.0, 1.55, 0.04, 0.95, "#f4f1e8", 0.1, 0.01, False, name="shopWinMull"); Wd(5.75, 1.65, 0.26, 0.32, "#fbfbf8", 0.1, 0.01, False, name="shopNote")
+    text("proShopSign", "PRO SHOP", 4.6, WF + 0.1, 3.08, 0.38, 2.4, INK, 0.06, True)
     # pro counter: glass display case with sparring gear and weapons
     grp("pro-counter")
     shadow(3.6, 11.95, 1.9, 0.3, 0.045, 0.22, "counterShadow")
@@ -750,20 +721,6 @@ def scene_inside():
     B(b - 0.2, WF + 0.2, 1.3, 0.16, 0.04, 0.04, "#25252e", False, name="extHandle")
     Wd(b - 0.2, 1.75, 0.12, 0.42, "#d92b25", 0.06, 0.02, False, name="extSign"); wpoly([(b - 0.24, 1.68), (b - 0.16, 1.68), (b - 0.2, 1.6)], "#ffffff", 8, "extArrow")
     # ======================= LOBBY =======================
-    grp("bench")      # teal metal couch with striped cushions
-    shadow(2.4, 16.15, 1.1, 0.3, 0.035, 0.22, "couchShadow")
-    for x in (1.6, 3.2):
-        T(x, 16.05, 0.0, 0.3, 0.03, 0.03, "#2a8a98", False, 6, name="couchLeg"); T(x, 15.75, 0.0, 0.3, 0.03, 0.03, "#2a8a98", False, 6, name="couchLeg")
-    B(2.4, 15.9, 0.3, 1.8, 0.5, 0.08, "#3fb8c9", True, name="couchFrame")
-    B(2.4, 15.68, 0.7, 1.8, 0.08, 0.8, "#3fb8c9", True, bevel=0.03, name="couchBack")
-    for x in (1.5, 3.3): B(x, 15.9, 0.52, 0.08, 0.5, 0.42, "#3fb8c9", True, name="couchArm")
-    for sx_ in (1.95, 2.85):
-        B(sx_, 15.95, 0.4, 0.84, 0.44, 0.12, "#f4f1e8", True, bevel=0.03, name="cushion")
-        for k, c in enumerate(("#e03a30", "#f08a24", "#f5c542", "#3f9c4a", "#2f6fd6", "#e03a30", "#f08a24")):
-            B(sx_ - 0.36 + k * 0.12, 15.95, 0.465, 0.06, 0.42, 0.006, c, False, name="cushionStripe")
-    B(2.4, 15.74, 0.85, 1.6, 0.06, 0.4, "#f4f1e8", True, bevel=0.03, name="backCushion")
-    for k, c in enumerate(("#e03a30", "#f08a24", "#f5c542", "#3f9c4a", "#2f6fd6") * 3):
-        if k < 13: B(1.7 + k * 0.117, 15.71, 0.85, 0.055, 0.005, 0.38, c, False, name="backStripe")
     grp("trash-can")
     shadow(17.3, 17.62, 0.32, 0.2, 0.035, 0.2, "binShadow")
     T(17.3, 17.5, 0, 0.78, 0.25, 0.27, "#2b2b33", True, 14, name="trashCan", round_ground=True)

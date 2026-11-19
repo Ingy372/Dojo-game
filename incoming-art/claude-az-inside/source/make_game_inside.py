@@ -33,7 +33,6 @@ SPR = {
  "bag-red":        ("bag-red",        "prop",      (25.2, 4.23), (24.7, 25.7, 3.37, 4.23), 4.23,   True,  "heavy bag, branded red (DECIDE item, see README)."),
  "gear-box":       ("gear-box",       "prop",      (13.2, 9.95), (9.6, 16.8, 8.6, 9.95), 9.95,  True,  "the red gear-bag box with a 2.6-tile gap at each end onto the mat. Openings face the lobby (south)."),
  "seats":          ("seats",          "prop",      (13.5, 14.7), (8.95, 18.05, 10.2, 14.7), 14.7, True, "parent stadium seating, 3 tiers of 8 seats facing the mat, with the end steps. One sprite so the tiers never fight over depth."),
- "bench":          ("bench",          "prop",      (2.4, 16.15), (1.5, 3.3, 15.65, 16.15), 16.15, False, "waiting bench against the lobby's west side."),
  "plant":          ("plant",          "prop",      (10.6, 17.75), (10.35, 10.85, 17.25, 17.75), 17.75, False, "potted plant by the door."),
  "trash-can":      ("trash-can",      "prop",      (17.3, 17.77), (17.03, 17.57, 17.23, 17.77), 17.77, False, "bin by the door."),
  "whiteboard":     ("whiteboard",     "prop",      (21.3, 6.4),  (20.6, 22.0, 6.2, 6.4), 6.4,   False, "stand whiteboard (blank, no writing)."),
@@ -141,7 +140,7 @@ block("pro-counter", (1.9, 5.3, 11.05, 11.95), "P"); block("gear-box", LM.CUBBY,
 block("seats", (8.95, 18.05, 10.2, 14.7), "S", "parent seating decks and steps")
 for (bx, br, nm) in LM.BAGS: block("bag-" + nm, (bx - .5, bx + .5, br - .43, br + .43), "P", "heavy bag base")
 block("crash-mats", LM.CRASH, "P"); block("whiteboard", (20.6, 22.0, 6.2, 6.4), "P")
-block("bench", (1.5, 3.3, 15.65, 16.15), "P"); paint({(10, 17)}, "P"); blockers.append({"id": "plant", "rect": [10.35, 10.85, 17.25, 17.75], "cells": [[10, 17]], "why": "pot"})
+paint({(10, 17)}, "P"); blockers.append({"id": "plant", "rect": [10.35, 10.85, 17.25, 17.75], "cells": [[10, 17]], "why": "pot"})
 paint({(17, 17)}, "P"); blockers.append({"id": "trash-can", "rect": [17.03, 17.57, 17.23, 17.77], "cells": [[17, 17]], "why": "bin"})
 # side walls are outside the 27 columns (the room frame draws them as thin strips)
 leaf_rects = [{"id": "door-leaf-west", "rect": [12.36, 12.44, 17.25, 18.35]}, {"id": "door-leaf-east", "rect": [14.56, 14.64, 17.25, 18.35]}]
