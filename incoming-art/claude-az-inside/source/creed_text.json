@@ -1,0 +1,20 @@
+{
+  "_note": "Wording transcribed by eye from the school's own wall boards (Jay's photos, which are NOT in this repo). Two obvious typos on the wall are corrected here and listed under DECIDE in the README: 'falled' -> 'fallen', 'Christ dies' -> 'Christ died'. The creed signature is left out.",
+  "class_creed": {
+    "title": "CLASS CREED",
+    "lines": ["I intend to live by the code of the black belt.", "To seek God's truth. To put God first.", "To bring honor to the family.", "To show respect to my fellow man.", "To encourage and stand firm with him,", "doing all that I can to make the world a", "better place to live."],
+    "closing": ["I AM MORE THAN A CONQUEROR THROUGH", "JESUS CHRIST!!!"]
+  },
+  "belt_boards": [
+    {"title": "WHITE TO YELLOW BELT", "belt": ["white"], "verse": "John 3:16 - For God so loved the world that He gave His only begotten Son that whosoever believes in Him shall not perish but have everlasting life.", "virtue": "UNCONDITIONAL LOVE - No matter what you say or do to me, I will always love and pray for you.", "letter": "F=FORGIVENESS"},
+    {"title": "YELLOW TO ORANGE BELT", "belt": ["yellow", "orange"], "verse": "Romans 3:10 - There is no one righteous, not one.", "virtue": "AVAILABILITY - My time, my money, and anything I have, I will make available to you.", "letter": "A=ACCEPTANCE"},
+    {"title": "ORANGE TO GREEN BELT", "belt": ["orange"], "verse": "Romans 3:23 - For all have sinned and fallen short of the glory of God.", "virtue": "PRAYER - I will always make time to pray for you.", "letter": "I=INTEGRITY"},
+    {"title": "GREEN TO BLUE BELT", "belt": ["green"], "verse": "Romans 6:23 - For the wages of sin is death but the gift of God is eternal life through Jesus Christ our Lord.", "virtue": "OPENNESS - I will always share my thoughts and feelings with you.", "letter": "T=TRUST"},
+    {"title": "BLUE TO RED BELT", "belt": ["blue"], "verse": "Romans 5:8 - For God commendeth His love toward us in that while we were yet sinners Christ died for us.", "virtue": "HONEST - I will always be honest with you.", "letter": "H=HONOR"},
+    {"title": "RED TO RED/BLACK STRIP BELT", "belt": ["red"], "verse": "1st John 1:9 - If we confess our sins He is faithful and just to forgive us of our sins and purify us from all unrighteousness.", "virtue": "SENSITIVITY - I will always be sensitive to your needs, thoughts, and feelings.", "letter": "D=DISCIPLINE"},
+    {"title": "RED/BLACK STRIP TO BROWN BELT", "belt": ["redblack"], "verse": "John 3:17 - For God did not send His son into the world to condemn the world but to save the world through Him.", "virtue": "CONFIDENTIALITY - I will keep whatever is shared within the confines of the group to provide an atmosphere of openness.", "letter": "O=OBEDIENCE"},
+    {"title": "BROWN TO BROWN/BLACK STRIP BELT", "belt": ["brown"], "verse": "John 3:3 - I tell you the truth, unless a man is born again he may not enter the kingdom of God.", "virtue": "ACCOUNTABILITY - I am accountable to you to become what God has designed me to be in His living creation.", "letter": "E=EMPATHY"},
+    {"title": "BROWN/BLACK STRIP TO BLACK BELT", "belt": ["brownblack"], "verse": "John 3:5-8 I tell you the truth, unless a man is born of water and the Spirit, he cannot enter the kingdom of God. Flesh gives birth to flesh, but the Spirit gives birth to spirit. You should not be surprised at my saying, \"You must be born again.\" The wind blows wherever it pleases. You hear it's sound, but you cannot tell where it comes from or where it is going. So it is with everyone born of the Spirit.", "virtue": "", "letter": "S=SERVANTHOOD"},
+    {"title": "BLACK BELT", "belt": ["black"], "verse": "John 6:40 For my Father's will is that everyone that looks to the Son and believes in Him shall have eternal life, and I shall raise him up at that last day.", "virtue": "", "letter": ""}
+  ]
+}
