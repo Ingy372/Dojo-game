@@ -380,39 +380,6 @@ def torus(center, R, r, segs=18, rsegs=6, rot=(90, 0, 0)):
     _BM.ops.transform(bm, matrix=m, verts=bm.verts)
     return bm
 
-def trap(p0, p1, w0, w1):
-    dx, dy = p1[0] - p0[0], p1[1] - p0[1]; L_ = math.hypot(dx, dy) or 1e-6; nx, ny = -dy / L_, dx / L_
-    return [(p0[0] + nx * w0 / 2, p0[1] + ny * w0 / 2), (p1[0] + nx * w1 / 2, p1[1] + ny * w1 / 2), (p1[0] - nx * w1 / 2, p1[1] - ny * w1 / 2), (p0[0] - nx * w0 / 2, p0[1] - ny * w0 / 2)]
-SIL = {   # solid martial-artist silhouettes, facing right; hip at (0, 0), about 1.5 tall. arms/legs: [elbow, fist] / [knee, foot]; arm 0 and leg 0 are the front (right) side
- "sidekick": dict(neck=(-0.32, 0.42), head=(-0.43, 0.57), arms=[[(0.0, 0.42), (0.1, 0.55)], [(-0.56, 0.2), (-0.52, 0.05)]],
-                  legs=[[(0.46, 0.13), (0.86, 0.19)], [(-0.1, -0.42), (-0.08, -0.8)]], feet=["blade", "flat"]),
- "stance":   dict(neck=(0.04, 0.52), head=(0.06, 0.7), arms=[[(0.4, 0.46), (0.64, 0.47)], [(-0.26, 0.3), (-0.08, 0.18)]],
-                  legs=[[(0.34, -0.32), (0.42, -0.78)], [(-0.32, -0.36), (-0.6, -0.78)]], feet=["flat", "flat"]),
- "split":    dict(neck=(0.0, 0.5), head=(0.0, 0.68), arms=[[(0.36, 0.5), (0.62, 0.54)], [(-0.36, 0.5), (-0.62, 0.54)]],
-                  legs=[[(0.5, 0.03), (0.9, 0.06)], [(-0.5, 0.03), (-0.9, 0.06)]], feet=["blade", "bladeL"]),
-}
-def sil(pose, ox, oy, s):
-    """one body for every pose: the same torso, limb widths and head size, so the figures match each other"""
-    P = SIL[pose]; m = lambda p: (ox + s * p[0], oy + s * p[1]); out = []
-    nk = P["neck"]; L_ = math.hypot(*nk); dx, dy = nk[0] / L_, nk[1] / L_; px, py = dy, -dx          # torso direction and its right-hand side
-    base = (nk[0] - dx * 0.05, nk[1] - dy * 0.05)
-    hipR, hipL = (px * 0.12, py * 0.12), (-px * 0.12, -py * 0.12)
-    shR, shL = (base[0] + px * 0.17, base[1] + py * 0.17), (base[0] - px * 0.17, base[1] - py * 0.17)
-    out.append([m((hipL[0] * 1.5, hipL[1] * 1.5)), m((hipR[0] * 1.5, hipR[1] * 1.5)), m(shR), m(nk), m(shL)]); out.append(circ(*m((0, 0)), 0.15 * s, 16))   # solid torso and pelvis
-    out.append(trap(m(base), m(P["head"]), 0.12 * s, 0.11 * s)); out.append(circ(*m(nk), 0.07 * s, 12))
-    out.append(circ(*m(P["head"]), 0.115 * s, 20))
-    for sh, (el, fi) in zip((shR, shL), P["arms"]):
-        out.append(trap(m(sh), m(el), 0.13 * s, 0.11 * s)); out.append(trap(m(el), m(fi), 0.11 * s, 0.095 * s))
-        out.append(circ(*m(sh), 0.07 * s, 10)); out.append(circ(*m(el), 0.055 * s, 10)); out.append(circ(*m(fi), 0.065 * s, 10))
-    for hp, (kn, ft), kind in zip((hipR, hipL), P["legs"], P["feet"]):
-        out.append(trap(m(hp), m(kn), 0.2 * s, 0.15 * s)); out.append(trap(m(kn), m(ft), 0.15 * s, 0.12 * s))
-        out.append(circ(*m(hp), 0.1 * s, 12)); out.append(circ(*m(kn), 0.075 * s, 10))
-        fx, fy = m(ft)
-        if kind == "flat": out.append([(fx - 0.05 * s, fy - 0.04 * s), (fx + 0.15 * s, fy - 0.04 * s), (fx + 0.13 * s, fy + 0.03 * s), (fx - 0.04 * s, fy + 0.04 * s)])
-        else:
-            sg = -1 if kind == "bladeL" else 1
-            out.append(trap((fx - sg * 0.02 * s, fy), (fx + sg * 0.06 * s, fy), 0.14 * s, 0.1 * s))
-    return out
 
 def scene_inside():
     global WF
@@ -535,9 +502,11 @@ def scene_inside():
     imgplane(LOGO, "muralLogo", cx, 1.75, 1.75 * LOGO_AR, row=WF + 0.1, zc=1.72)
     for s, x, z, w in (("Karate", cx, 2.85, 0.95), ("Kung Fu", a + 0.95, 2.62, 0.95), ("Jiu Jitsu", b - 0.95, 2.62, 1.0), ("Tae Kwon Do", a + 0.95, 0.88, 1.25), ("Weapons", b - 0.95, 0.88, 1.0)):
         text("t_" + s, s, x, WF + 0.1, z, 0.21, w, INK, 0.03, False)
-    for poly_ in sil("sidekick", a + 0.8, 1.8, 0.7): wpoly(poly_, INK, 4, "silKick")
-    for poly_ in sil("stance", b - 0.92, 1.8, 0.7): wpoly(poly_, INK, 4, "silStance")
-    for poly_ in sil("split", cx, 0.44, 0.6): wpoly(poly_, INK, 4, "silSplit")
+    # silhouettes in the logo's own style (source/make_silhouettes.py): the kicker is the logo's figure; one scale for all three
+    KS = 1.3 / 377
+    imgplane(os.path.join(TXD, "sil-kick.png"), "silKick", a + 0.95, 394 * KS, 377 * KS, row=WF + 0.1, zc=1.07 + 377 * KS / 2)
+    imgplane(os.path.join(TXD, "sil-stance.png"), "silStance", b - 0.95, 389 * KS, 348 * KS, row=WF + 0.1, zc=1.07 + 348 * KS / 2)
+    imgplane(os.path.join(TXD, "sil-split.png"), "silSplit", cx, 490 * KS * 0.72, 189 * KS * 0.72, row=WF + 0.1, zc=0.56)
     # round clock
     wdisc(LM.FLAG[0] - 0.12, 3.0, 0.2, "#25252e", 0, "clockRim"); wdisc(LM.FLAG[0] - 0.12, 3.0, 0.16, "#f4f1e8", 1, "clockFace")
     for k in range(12): wdisc(LM.FLAG[0] - 0.12 + 0.12 * math.sin(k * math.pi / 6), 3.0 + 0.12 * math.cos(k * math.pi / 6), 0.012, "#25252e", 2, "tick")
