@@ -58,6 +58,14 @@ describe('the town', () => {
     }
   });
 
+  it('a path runs north from the main street to the Tower gate at every stage (the Tower stands beyond it)', () => {
+    for (const s of stages) {
+      const room = townRoom(walk, s);
+      expect(findPath(room, at(walk.dojoDoor.spawn), { x: 30.3, y: 5.5 }, r), `stage ${s}`).not.toBeNull();
+      expect(room.walls[4][30], 'the gate itself is closed').toBe(true);
+    }
+  });
+
   it('a piece shows from its stage until it is replaced, and the stage follows the real belt (capped)', () => {
     expect(pieceShown({ stage: 1, until: 4 }, 3)).toBe(true);
     expect(pieceShown({ stage: 1, until: 4 }, 4)).toBe(false);
@@ -76,7 +84,15 @@ describe('the town', () => {
       expect(sprites[p.id].stage, p.id).toBe(p.stage);
       expect(sprites[p.id].until, p.id).toBe(p.until);
     }
-    expect(Object.keys(sprites).filter((k) => k.startsWith('town-ground-'))).toHaveLength(4);
+    expect(Object.values(sprites).filter((s) => (s as { place?: string }).place === 'ground')).toHaveLength(4);
+    // night: every lit window or lantern has its glow spots, and a lit piece shows exactly when its piece does
+    for (const [id, s] of Object.entries(sprites) as [string, { place?: string; stage?: number; until?: number; glows?: number[][] }][]) {
+      if (s.place !== 'lit') continue;
+      expect(s.glows?.length, id).toBeGreaterThan(0);
+      const day = sprites[id.replace(/-lit$/, '')];
+      expect(day, id).toBeDefined();
+      expect([s.stage, s.until], id).toEqual([day.stage, day.until]);
+    }
   });
 
   it('refuses a broken file with a clear message', () => {

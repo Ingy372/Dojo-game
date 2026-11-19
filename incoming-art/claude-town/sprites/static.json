@@ -1,13 +1,14 @@
 {
- "about": "The town (Claude Code, Nov 18 2026), made by incoming-art/claude-town/source/build_town.py and pack_town.py. Rendered at 80 px per tile. Ground pieces are pinned at their top-left tile; every other piece at its anchor tile. A piece shows from belt stage `stage` and, with `until`, is replaced at that stage. `flat` pieces lie under the hero; `stand` pieces sort against the hero by `sortRow`.",
+ "about": "The town (Claude Code, Nov 18-19 2026), made by incoming-art/claude-town/source/build_town.py and pack_town.py. Rendered at 80 px per tile; the picture starts 9 rows above the town's row 0. Ground pieces are pinned at their top-left tile; every other piece at its anchor tile. A piece shows from belt stage `stage` and, with `until`, is replaced at that stage. `flat` pieces lie under the hero; `stand` pieces sort against the hero by `sortRow`; `lit` pieces are the night lights, laid over the night-tinted town, with `glows` [x, y, radius] in tiles.",
  "ppt": 80,
  "cols": 46,
  "rows": 30,
+ "top": 9,
  "sprites": {
   "town-ground-00": {
    "size": [
     1844,
-    1204
+    1524
    ],
    "layers": [
     "day"
@@ -21,7 +22,7 @@
    ],
    "anchorTile": [
     0,
-    0
+    -9
    ],
    "place": "ground",
    "stage": 1
@@ -29,7 +30,7 @@
   "town-ground-10": {
    "size": [
     1844,
-    1200
+    1600
    ],
    "layers": [
     "day"
@@ -43,7 +44,7 @@
    ],
    "anchorTile": [
     0,
-    15
+    10
    ],
    "place": "ground",
    "stage": 1
@@ -51,7 +52,7 @@
   "town-ground-01": {
    "size": [
     1840,
-    1204
+    1524
    ],
    "layers": [
     "day"
@@ -65,7 +66,7 @@
    ],
    "anchorTile": [
     23,
-    0
+    -9
    ],
    "place": "ground",
    "stage": 1
@@ -73,7 +74,7 @@
   "town-ground-11": {
    "size": [
     1840,
-    1200
+    1600
    ],
    "layers": [
     "day"
@@ -87,10 +88,84 @@
    ],
    "anchorTile": [
     23,
-    15
+    10
    ],
    "place": "ground",
    "stage": 1
+  },
+  "town-ground-lit": {
+   "size": [
+    328,
+    969
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-ground-lit.png"
+   },
+   "anchorPx": [
+    -2260,
+    648
+   ],
+   "anchorTile": [
+    0,
+    0
+   ],
+   "stage": 1,
+   "place": "lit-ground",
+   "glows": [
+    [
+     29.88,
+     -7.35,
+     1.0
+    ],
+    [
+     30.73,
+     -7.35,
+     1.0
+    ],
+    [
+     30.3,
+     -5.05,
+     0.55
+    ],
+    [
+     30.3,
+     -3.65,
+     0.55
+    ],
+    [
+     29.6,
+     -2.0,
+     0.5
+    ],
+    [
+     31.0,
+     -2.0,
+     0.5
+    ],
+    [
+     29.5,
+     -0.05,
+     0.55
+    ],
+    [
+     31.1,
+     -0.05,
+     0.55
+    ],
+    [
+     28.45,
+     3.8,
+     0.5
+    ],
+    [
+     32.15,
+     3.8,
+     0.5
+    ]
+   ]
   },
   "town-az": {
    "size": [
@@ -111,15 +186,61 @@
     23.0,
     9.0
    ],
-   "sortRow": 9.0,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 9.0,
    "drawScale": 0.5
+  },
+  "town-az-lit": {
+   "size": [
+    1134,
+    170
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-az-lit.png"
+   },
+   "anchorPx": [
+    567.0,
+    236.0
+   ],
+   "anchorTile": [
+    23.0,
+    9.0
+   ],
+   "stage": 1,
+   "place": "lit",
+   "sortRow": 9.001,
+   "drawScale": 0.5,
+   "glows": [
+    [
+     20.91,
+     8.07,
+     0.75
+    ],
+    [
+     25.01,
+     8.07,
+     0.75
+    ],
+    [
+     22.61,
+     8.23,
+     0.6
+    ],
+    [
+     23.31,
+     8.23,
+     0.6
+    ]
+   ]
   },
   "town-az-bench-a": {
    "size": [
     262,
-    164
+    165
    ],
    "layers": [
     "day"
@@ -132,18 +253,18 @@
     135.0
    ],
    "anchorTile": [
-    20.2,
+    19.95,
     9.45
    ],
-   "sortRow": 9.45,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 9.45,
    "drawScale": 0.5
   },
   "town-az-chairs": {
    "size": [
-    199,
-    206
+    184,
+    174
    ],
    "layers": [
     "day"
@@ -159,9 +280,9 @@
     26.1,
     9.5
    ],
-   "sortRow": 9.5,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 9.5,
    "drawScale": 0.5
   },
   "town-az-bed-0": {
@@ -183,9 +304,9 @@
     21.55,
     9.55
    ],
-   "sortRow": 9.55,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 9.55,
    "drawScale": 0.5
   },
   "town-az-bed-1": {
@@ -207,9 +328,9 @@
     24.45,
     9.55
    ],
-   "sortRow": 9.55,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 9.55,
    "drawScale": 0.5
   },
   "town-market": {
@@ -231,9 +352,69 @@
     7.6,
     9.0
    ],
-   "sortRow": 9.0,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 9.0
+  },
+  "town-market-lit": {
+   "size": [
+    602,
+    13
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-market-lit.png"
+   },
+   "anchorPx": [
+    301.0,
+    69.0
+   ],
+   "anchorTile": [
+    7.6,
+    9.0
+   ],
+   "stage": 1,
+   "place": "lit",
+   "sortRow": 9.001,
+   "glows": [
+    [
+     4.37,
+     8.19,
+     0.84
+    ],
+    [
+     5.44,
+     8.19,
+     0.84
+    ],
+    [
+     6.52,
+     8.19,
+     0.84
+    ],
+    [
+     7.59,
+     8.19,
+     0.84
+    ],
+    [
+     8.66,
+     8.19,
+     0.84
+    ],
+    [
+     9.73,
+     8.19,
+     0.84
+    ],
+    [
+     10.8,
+     8.19,
+     0.84
+    ]
+   ]
   },
   "town-lot": {
    "size": [
@@ -254,9 +435,9 @@
     38.0,
     8.85
    ],
-   "sortRow": 8.85,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 8.85,
    "until": 5
   },
   "town-hall": {
@@ -278,14 +459,14 @@
     38.0,
     9.0
    ],
-   "sortRow": 9.0,
+   "stage": 5,
    "place": "stand",
-   "stage": 5
+   "sortRow": 9.0
   },
   "town-pagoda": {
    "size": [
     220,
-    291
+    412
    ],
    "layers": [
     "day"
@@ -295,15 +476,15 @@
    },
    "anchorPx": [
     110.0,
-    288.0
+    409.0
    ],
    "anchorTile": [
     14.3,
     3.6
    ],
-   "sortRow": 3.6,
+   "stage": 8,
    "place": "stand",
-   "stage": 8
+   "sortRow": 3.6
   },
   "town-my-dojo": {
    "size": [
@@ -324,9 +505,59 @@
     38.5,
     20.0
    ],
-   "sortRow": 20.0,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 20.0
+  },
+  "town-my-dojo-lit": {
+   "size": [
+    518,
+    71
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-my-dojo-lit.png"
+   },
+   "anchorPx": [
+    259.0,
+    78.0
+   ],
+   "anchorTile": [
+    38.5,
+    20.0
+   ],
+   "stage": 1,
+   "place": "lit",
+   "sortRow": 20.001,
+   "glows": [
+    [
+     35.91,
+     19.32,
+     0.95
+    ],
+    [
+     41.01,
+     19.32,
+     0.95
+    ],
+    [
+     37.56,
+     19.43,
+     0.5
+    ],
+    [
+     39.36,
+     19.43,
+     0.5
+    ],
+    [
+     38.46,
+     19.57,
+     0.9
+    ]
+   ]
   },
   "town-shrub-0": {
    "size": [
@@ -347,9 +578,9 @@
     35.8,
     20.7
    ],
-   "sortRow": 20.7,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 20.7,
    "until": 2
   },
   "town-flowers-0": {
@@ -371,9 +602,9 @@
     35.8,
     20.7
    ],
-   "sortRow": 20.7,
+   "stage": 2,
    "place": "stand",
-   "stage": 2
+   "sortRow": 20.7
   },
   "town-shrub-1": {
    "size": [
@@ -394,9 +625,9 @@
     41.2,
     20.7
    ],
-   "sortRow": 20.7,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 20.7,
    "until": 2
   },
   "town-flowers-1": {
@@ -418,9 +649,9 @@
     41.2,
     20.7
    ],
-   "sortRow": 20.7,
+   "stage": 2,
    "place": "stand",
-   "stage": 2
+   "sortRow": 20.7
   },
   "town-statue": {
    "size": [
@@ -441,9 +672,9 @@
     23.0,
     20.2
    ],
-   "sortRow": 20.0,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 20.0,
    "until": 10
   },
   "town-statue-gold": {
@@ -465,9 +696,44 @@
     23.0,
     20.2
    ],
-   "sortRow": 20.0,
+   "stage": 10,
    "place": "stand",
-   "stage": 10
+   "sortRow": 20.0
+  },
+  "town-statue-gold-lit": {
+   "size": [
+    156,
+    164
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-statue-gold-lit.png"
+   },
+   "anchorPx": [
+    78.0,
+    319.0
+   ],
+   "anchorTile": [
+    23.0,
+    20.2
+   ],
+   "stage": 10,
+   "place": "lit",
+   "sortRow": 20.001,
+   "glows": [
+    [
+     22.5,
+     17.21,
+     1.0
+    ],
+    [
+     23.45,
+     17.21,
+     1.0
+    ]
+   ]
   },
   "town-plaza-sakura-0": {
    "size": [
@@ -488,9 +754,9 @@
     17.5,
     16.5
    ],
-   "sortRow": 16.5,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 16.5
   },
   "town-plaza-sakura-1": {
    "size": [
@@ -511,9 +777,9 @@
     28.5,
     16.5
    ],
-   "sortRow": 16.5,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 16.5
   },
   "town-plaza-sakura-2": {
    "size": [
@@ -534,9 +800,9 @@
     17.5,
     22.5
    ],
-   "sortRow": 22.5,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 22.5
   },
   "town-plaza-sakura-3": {
    "size": [
@@ -557,9 +823,9 @@
     28.5,
     22.5
    ],
-   "sortRow": 22.5,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 22.5
   },
   "town-plaza-bench-0": {
    "size": [
@@ -580,9 +846,9 @@
     17.5,
     24.4
    ],
-   "sortRow": 24.4,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 24.4
   },
   "town-plaza-bench-1": {
    "size": [
@@ -603,9 +869,9 @@
     28.5,
     24.4
    ],
-   "sortRow": 24.4,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 24.4
   },
   "town-torii": {
    "size": [
@@ -626,9 +892,9 @@
     23.0,
     25.5
    ],
-   "sortRow": 25.5,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 25.5,
    "until": 4
   },
   "town-torii-red": {
@@ -650,9 +916,9 @@
     23.0,
     25.5
    ],
-   "sortRow": 25.5,
+   "stage": 4,
    "place": "stand",
-   "stage": 4
+   "sortRow": 25.5
   },
   "town-toro-0": {
    "size": [
@@ -673,9 +939,9 @@
     20.5,
     27.6
    ],
-   "sortRow": 27.6,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 27.6,
    "until": 7
   },
   "town-toro-lit-0": {
@@ -697,9 +963,39 @@
     20.5,
     27.6
    ],
-   "sortRow": 27.6,
+   "stage": 7,
    "place": "stand",
-   "stage": 7
+   "sortRow": 27.6
+  },
+  "town-toro-lit-0-lit": {
+   "size": [
+    74,
+    54
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-0-lit.png"
+   },
+   "anchorPx": [
+    37.0,
+    78.0
+   ],
+   "anchorTile": [
+    20.5,
+    27.6
+   ],
+   "stage": 7,
+   "place": "lit",
+   "sortRow": 27.601000000000003,
+   "glows": [
+    [
+     20.49,
+     26.92,
+     0.75
+    ]
+   ]
   },
   "town-toro-1": {
    "size": [
@@ -720,9 +1016,9 @@
     25.5,
     27.6
    ],
-   "sortRow": 27.6,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 27.6,
    "until": 7
   },
   "town-toro-lit-1": {
@@ -744,9 +1040,39 @@
     25.5,
     27.6
    ],
-   "sortRow": 27.6,
+   "stage": 7,
    "place": "stand",
-   "stage": 7
+   "sortRow": 27.6
+  },
+  "town-toro-lit-1-lit": {
+   "size": [
+    74,
+    54
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-1-lit.png"
+   },
+   "anchorPx": [
+    37.0,
+    78.0
+   ],
+   "anchorTile": [
+    25.5,
+    27.6
+   ],
+   "stage": 7,
+   "place": "lit",
+   "sortRow": 27.601000000000003,
+   "glows": [
+    [
+     25.49,
+     26.92,
+     0.75
+    ]
+   ]
   },
   "town-toro-2": {
    "size": [
@@ -767,9 +1093,9 @@
     14.3,
     9.5
    ],
-   "sortRow": 9.5,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 9.5,
    "until": 7
   },
   "town-toro-lit-2": {
@@ -791,14 +1117,44 @@
     14.3,
     9.5
    ],
-   "sortRow": 9.5,
+   "stage": 7,
    "place": "stand",
-   "stage": 7
+   "sortRow": 9.5
+  },
+  "town-toro-lit-2-lit": {
+   "size": [
+    74,
+    54
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-2-lit.png"
+   },
+   "anchorPx": [
+    37.0,
+    78.0
+   ],
+   "anchorTile": [
+    14.3,
+    9.5
+   ],
+   "stage": 7,
+   "place": "lit",
+   "sortRow": 9.501,
+   "glows": [
+    [
+     14.29,
+     8.82,
+     0.75
+    ]
+   ]
   },
   "town-toro-3": {
    "size": [
-    69,
-    139
+    68,
+    140
    ],
    "layers": [
     "day"
@@ -808,21 +1164,21 @@
    },
    "anchorPx": [
     34.0,
-    121.0
+    122.0
    ],
    "anchorTile": [
-    31.3,
+    32.3,
     9.5
    ],
-   "sortRow": 9.5,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 9.5,
    "until": 7
   },
   "town-toro-lit-3": {
    "size": [
     74,
-    139
+    140
    ],
    "layers": [
     "day"
@@ -832,15 +1188,45 @@
    },
    "anchorPx": [
     37.0,
-    121.0
+    122.0
    ],
    "anchorTile": [
-    31.3,
+    32.3,
     9.5
    ],
-   "sortRow": 9.5,
+   "stage": 7,
    "place": "stand",
-   "stage": 7
+   "sortRow": 9.5
+  },
+  "town-toro-lit-3-lit": {
+   "size": [
+    74,
+    54
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-3-lit.png"
+   },
+   "anchorPx": [
+    37.0,
+    78.0
+   ],
+   "anchorTile": [
+    32.3,
+    9.5
+   ],
+   "stage": 7,
+   "place": "lit",
+   "sortRow": 9.501,
+   "glows": [
+    [
+     32.29,
+     8.82,
+     0.75
+    ]
+   ]
   },
   "town-toro-4": {
    "size": [
@@ -861,9 +1247,9 @@
     44.2,
     9.5
    ],
-   "sortRow": 9.5,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 9.5,
    "until": 7
   },
   "town-toro-lit-4": {
@@ -885,9 +1271,39 @@
     44.2,
     9.5
    ],
-   "sortRow": 9.5,
+   "stage": 7,
    "place": "stand",
-   "stage": 7
+   "sortRow": 9.5
+  },
+  "town-toro-lit-4-lit": {
+   "size": [
+    74,
+    54
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-4-lit.png"
+   },
+   "anchorPx": [
+    37.0,
+    78.0
+   ],
+   "anchorTile": [
+    44.2,
+    9.5
+   ],
+   "stage": 7,
+   "place": "lit",
+   "sortRow": 9.501,
+   "glows": [
+    [
+     44.19,
+     8.82,
+     0.75
+    ]
+   ]
   },
   "town-pond-lantern": {
    "size": [
@@ -908,9 +1324,39 @@
     34.6,
     25.4
    ],
-   "sortRow": 25.4,
+   "stage": 7,
    "place": "stand",
-   "stage": 7
+   "sortRow": 25.4
+  },
+  "town-pond-lantern-lit": {
+   "size": [
+    62,
+    46
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-pond-lantern-lit.png"
+   },
+   "anchorPx": [
+    31.0,
+    66.0
+   ],
+   "anchorTile": [
+    34.6,
+    25.4
+   ],
+   "stage": 7,
+   "place": "lit",
+   "sortRow": 25.401,
+   "glows": [
+    [
+     34.56,
+     24.83,
+     0.65
+    ]
+   ]
   },
   "town-lantern-0": {
    "size": [
@@ -931,9 +1377,39 @@
     3.0,
     9.4
    ],
-   "sortRow": 9.4,
+   "stage": 2,
    "place": "stand",
-   "stage": 2
+   "sortRow": 9.4
+  },
+  "town-lantern-0-lit": {
+   "size": [
+    32,
+    37
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-0-lit.png"
+   },
+   "anchorPx": [
+    0.0,
+    126.0
+   ],
+   "anchorTile": [
+    3.0,
+    9.4
+   ],
+   "stage": 2,
+   "place": "lit",
+   "sortRow": 9.401,
+   "glows": [
+    [
+     3.2,
+     8.02,
+     0.5
+    ]
+   ]
   },
   "town-lantern-1": {
    "size": [
@@ -954,9 +1430,39 @@
     12.2,
     9.4
    ],
-   "sortRow": 9.4,
+   "stage": 2,
    "place": "stand",
-   "stage": 2
+   "sortRow": 9.4
+  },
+  "town-lantern-1-lit": {
+   "size": [
+    32,
+    37
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-1-lit.png"
+   },
+   "anchorPx": [
+    0.0,
+    126.0
+   ],
+   "anchorTile": [
+    12.2,
+    9.4
+   ],
+   "stage": 2,
+   "place": "lit",
+   "sortRow": 9.401,
+   "glows": [
+    [
+     12.4,
+     8.02,
+     0.5
+    ]
+   ]
   },
   "town-lantern-2": {
    "size": [
@@ -977,9 +1483,39 @@
     17.6,
     9.4
    ],
-   "sortRow": 9.4,
+   "stage": 2,
    "place": "stand",
-   "stage": 2
+   "sortRow": 9.4
+  },
+  "town-lantern-2-lit": {
+   "size": [
+    32,
+    37
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-2-lit.png"
+   },
+   "anchorPx": [
+    0.0,
+    126.0
+   ],
+   "anchorTile": [
+    17.6,
+    9.4
+   ],
+   "stage": 2,
+   "place": "lit",
+   "sortRow": 9.401,
+   "glows": [
+    [
+     17.8,
+     8.02,
+     0.5
+    ]
+   ]
   },
   "town-lantern-3": {
    "size": [
@@ -1000,9 +1536,39 @@
     28.4,
     9.4
    ],
-   "sortRow": 9.4,
+   "stage": 2,
    "place": "stand",
-   "stage": 2
+   "sortRow": 9.4
+  },
+  "town-lantern-3-lit": {
+   "size": [
+    32,
+    37
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-3-lit.png"
+   },
+   "anchorPx": [
+    0.0,
+    126.0
+   ],
+   "anchorTile": [
+    28.4,
+    9.4
+   ],
+   "stage": 2,
+   "place": "lit",
+   "sortRow": 9.401,
+   "glows": [
+    [
+     28.6,
+     8.02,
+     0.5
+    ]
+   ]
   },
   "town-lantern-4": {
    "size": [
@@ -1023,9 +1589,39 @@
     33.4,
     9.4
    ],
-   "sortRow": 9.4,
+   "stage": 2,
    "place": "stand",
-   "stage": 2
+   "sortRow": 9.4
+  },
+  "town-lantern-4-lit": {
+   "size": [
+    32,
+    37
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-4-lit.png"
+   },
+   "anchorPx": [
+    0.0,
+    126.0
+   ],
+   "anchorTile": [
+    33.4,
+    9.4
+   ],
+   "stage": 2,
+   "place": "lit",
+   "sortRow": 9.401,
+   "glows": [
+    [
+     33.6,
+     8.02,
+     0.5
+    ]
+   ]
   },
   "town-lantern-5": {
    "size": [
@@ -1046,9 +1642,39 @@
     42.6,
     9.4
    ],
-   "sortRow": 9.4,
+   "stage": 2,
    "place": "stand",
-   "stage": 2
+   "sortRow": 9.4
+  },
+  "town-lantern-5-lit": {
+   "size": [
+    32,
+    37
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-5-lit.png"
+   },
+   "anchorPx": [
+    0.0,
+    126.0
+   ],
+   "anchorTile": [
+    42.6,
+    9.4
+   ],
+   "stage": 2,
+   "place": "lit",
+   "sortRow": 9.401,
+   "glows": [
+    [
+     42.8,
+     8.02,
+     0.5
+    ]
+   ]
   },
   "town-makiwara-0": {
    "size": [
@@ -1069,9 +1695,9 @@
     7.5,
     17.0
    ],
-   "sortRow": 17.0,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 17.0
   },
   "town-makiwara-1": {
    "size": [
@@ -1092,9 +1718,9 @@
     5.0,
     17.0
    ],
-   "sortRow": 17.0,
+   "stage": 3,
    "place": "stand",
-   "stage": 3
+   "sortRow": 17.0
   },
   "town-makiwara-2": {
    "size": [
@@ -1115,9 +1741,9 @@
     10.0,
     17.0
    ],
-   "sortRow": 17.0,
+   "stage": 3,
    "place": "stand",
-   "stage": 3
+   "sortRow": 17.0
   },
   "town-yard-banner-0": {
    "size": [
@@ -1138,9 +1764,9 @@
     3.0,
     16.6
    ],
-   "sortRow": 16.6,
+   "stage": 3,
    "place": "stand",
-   "stage": 3
+   "sortRow": 16.6
   },
   "town-yard-banner-1": {
    "size": [
@@ -1161,9 +1787,9 @@
     12.0,
     16.6
    ],
-   "sortRow": 16.6,
+   "stage": 3,
    "place": "stand",
-   "stage": 3
+   "sortRow": 16.6
   },
   "town-rack": {
    "size": [
@@ -1184,9 +1810,9 @@
     1.9,
     20.0
    ],
-   "sortRow": 20.0,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 20.0
   },
   "town-mook-jong": {
    "size": [
@@ -1207,9 +1833,9 @@
     5.5,
     25.6
    ],
-   "sortRow": 25.6,
+   "stage": 9,
    "place": "stand",
-   "stage": 9
+   "sortRow": 25.6
   },
   "town-plaza-banner-0": {
    "size": [
@@ -1230,9 +1856,9 @@
     15.4,
     18.0
    ],
-   "sortRow": 18.0,
+   "stage": 4,
    "place": "stand",
-   "stage": 4
+   "sortRow": 18.0
   },
   "town-plaza-banner-1": {
    "size": [
@@ -1253,9 +1879,9 @@
     15.4,
     21.0
    ],
-   "sortRow": 21.0,
+   "stage": 4,
    "place": "stand",
-   "stage": 4
+   "sortRow": 21.0
   },
   "town-plaza-banner-2": {
    "size": [
@@ -1276,9 +1902,9 @@
     30.6,
     18.0
    ],
-   "sortRow": 18.0,
+   "stage": 4,
    "place": "stand",
-   "stage": 4
+   "sortRow": 18.0
   },
   "town-plaza-banner-3": {
    "size": [
@@ -1299,9 +1925,9 @@
     30.6,
     21.0
    ],
-   "sortRow": 21.0,
+   "stage": 4,
    "place": "stand",
-   "stage": 4
+   "sortRow": 21.0
   },
   "town-tree-0": {
    "size": [
@@ -1322,9 +1948,9 @@
     1.6,
     15.6
    ],
-   "sortRow": 15.6,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 15.6,
    "until": 6
   },
   "town-tree-sakura-0": {
@@ -1346,9 +1972,9 @@
     1.6,
     15.6
    ],
-   "sortRow": 15.6,
+   "stage": 6,
    "place": "stand",
-   "stage": 6
+   "sortRow": 15.6
   },
   "town-tree-1": {
    "size": [
@@ -1369,9 +1995,9 @@
     13.6,
     23.6
    ],
-   "sortRow": 23.6,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 23.6,
    "until": 6
   },
   "town-tree-sakura-1": {
@@ -1393,9 +2019,9 @@
     13.6,
     23.6
    ],
-   "sortRow": 23.6,
+   "stage": 6,
    "place": "stand",
-   "stage": 6
+   "sortRow": 23.6
   },
   "town-tree-2": {
    "size": [
@@ -1416,9 +2042,9 @@
     31.6,
     27.4
    ],
-   "sortRow": 27.4,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 27.4,
    "until": 6
   },
   "town-tree-sakura-2": {
@@ -1440,9 +2066,9 @@
     31.6,
     27.4
    ],
-   "sortRow": 27.4,
+   "stage": 6,
    "place": "stand",
-   "stage": 6
+   "sortRow": 27.4
   },
   "town-tree-3": {
    "size": [
@@ -1463,9 +2089,9 @@
     14.4,
     27.6
    ],
-   "sortRow": 27.6,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 27.6,
    "until": 6
   },
   "town-tree-sakura-3": {
@@ -1487,9 +2113,9 @@
     14.4,
     27.6
    ],
-   "sortRow": 27.6,
+   "stage": 6,
    "place": "stand",
-   "stage": 6
+   "sortRow": 27.6
   },
   "town-tree-4": {
    "size": [
@@ -1510,9 +2136,9 @@
     44.0,
     23.4
    ],
-   "sortRow": 23.4,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 23.4,
    "until": 6
   },
   "town-tree-sakura-4": {
@@ -1534,9 +2160,9 @@
     44.0,
     23.4
    ],
-   "sortRow": 23.4,
+   "stage": 6,
    "place": "stand",
-   "stage": 6
+   "sortRow": 23.4
   },
   "town-tree-5": {
    "size": [
@@ -1557,9 +2183,9 @@
     32.6,
     15.4
    ],
-   "sortRow": 15.4,
-   "place": "stand",
    "stage": 1,
+   "place": "stand",
+   "sortRow": 15.4,
    "until": 6
   },
   "town-tree-sakura-5": {
@@ -1581,9 +2207,9 @@
     32.6,
     15.4
    ],
-   "sortRow": 15.4,
+   "stage": 6,
    "place": "stand",
-   "stage": 6
+   "sortRow": 15.4
   },
   "town-pine-0": {
    "size": [
@@ -1604,9 +2230,9 @@
     2.4,
     27.2
    ],
-   "sortRow": 27.2,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 27.2
   },
   "town-pine-1": {
    "size": [
@@ -1627,9 +2253,9 @@
     44.0,
     28.2
    ],
-   "sortRow": 28.2,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 28.2
   },
   "town-pine-2": {
    "size": [
@@ -1650,14 +2276,14 @@
     11.6,
     28.0
    ],
-   "sortRow": 28.0,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 28.0
   },
   "town-bamboo-sw": {
    "size": [
-    254,
-    319
+    260,
+    323
    ],
    "layers": [
     "day"
@@ -1673,14 +2299,14 @@
     8.6,
     28.4
    ],
-   "sortRow": 28.4,
+   "stage": 6,
    "place": "stand",
-   "stage": 6
+   "sortRow": 28.4
   },
   "town-bamboo-md": {
    "size": [
-    196,
-    268
+    181,
+    260
    ],
    "layers": [
     "day"
@@ -1689,16 +2315,16 @@
     "day": "town-bamboo-md.png"
    },
    "anchorPx": [
-    80.0,
+    65.0,
     274.0
    ],
    "anchorTile": [
     43.7,
     19.6
    ],
-   "sortRow": 19.6,
+   "stage": 6,
    "place": "stand",
-   "stage": 6
+   "sortRow": 19.6
   },
   "town-taiko": {
    "size": [
@@ -1719,9 +2345,9 @@
     23.0,
     28.6
    ],
-   "sortRow": 28.6,
+   "stage": 8,
    "place": "stand",
-   "stage": 8
+   "sortRow": 28.6
   },
   "town-koi": {
    "size": [
@@ -1742,9 +2368,9 @@
     39.5,
     26.2
    ],
-   "sortRow": 26.2,
+   "stage": 3,
    "place": "flat",
-   "stage": 3
+   "sortRow": 26.2
   },
   "town-petals": {
    "size": [
@@ -1765,9 +2391,9 @@
     23.0,
     20.0
    ],
-   "sortRow": 20.0,
+   "stage": 6,
    "place": "flat",
-   "stage": 6
+   "sortRow": 20.0
   },
   "town-gold-ring": {
    "size": [
@@ -1788,9 +2414,9 @@
     23.0,
     19.0
    ],
-   "sortRow": 19.0,
+   "stage": 10,
    "place": "flat",
-   "stage": 10
+   "sortRow": 19.0
   },
   "town-swall-0": {
    "size": [
@@ -1811,9 +2437,9 @@
     7.667,
     29.6
    ],
-   "sortRow": 29.2,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 29.2
   },
   "town-swall-1": {
    "size": [
@@ -1834,9 +2460,9 @@
     23.0,
     29.6
    ],
-   "sortRow": 29.2,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 29.2
   },
   "town-swall-2": {
    "size": [
@@ -1857,9 +2483,9 @@
     38.333,
     29.6
    ],
-   "sortRow": 29.2,
+   "stage": 1,
    "place": "stand",
-   "stage": 1
+   "sortRow": 29.2
   }
  }
 }

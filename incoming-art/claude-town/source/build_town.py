@@ -29,6 +29,7 @@ os.makedirs(A.out, exist_ok=True)
 
 EL = 35.0; K = 1 / math.sin(math.radians(EL))
 COLS, ROWS = 46, 30
+TOP = 9          # rows of hills, sky and the Tower above the town's top edge (Jay, Nov 19: the Tower in the background)
 random.seed(11)
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -68,18 +69,27 @@ def ground():
 def tag(ob):
     ob["grp"] = GRP[0]; return ob
 
+LIT_TOKENS = ("glow", "pap", "mdln", "mkinside", "wglass", "wlow", "blind", "lens", "hwin", "twin", "twlight", "twhalo", "halo", "glint", "mdshoji", "glanb")
+LIT_EXACT = {"lan", "win", "glass1", "glass-1", "lanb"}
+def is_lit(n):
+    return n in LIT_EXACT or any(t in n for t in LIT_TOKENS)
+
 def add(name, bm, hexc, outline=True, w=1.6):
+    lit = is_lit(name)
     name = f"{GRP[0]}:{name}"
     me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free(); me.materials.append(mat(hexc))
     ob = bpy.data.objects.new(name, me); coll.objects.link(ob); tag(ob)
+    if lit: ob["lit"] = 1
     for p in me.polygons: p.use_smooth = False
     if outline: tag(add_hull(ob, coll, OUT_M, OUTLINE_W * w))
     return ob
 
 def add_a(name, bm, hexc, a):
+    lit = is_lit(name)
     name = f"{GRP[0]}:{name}"
     me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free(); me.materials.append(alpha_mat(hexc, a))
     ob = bpy.data.objects.new(name, me); coll.objects.link(ob); tag(ob)
+    if lit: ob["lit"] = 1
     return ob
 
 def G(c, r, z=0.0): return (c, -r * K, z)
@@ -157,19 +167,28 @@ for k in range(70):
     c, r = random.uniform(1, COLS - 1), random.uniform(15, ROWS - 1)
     add(f"flw{k}", ellipsoid(G(c, r, 0.02), (0.05, D(0.05), 0.02), segs=6, rings=3), random.choice(("#fbf3df", "#ffd36b", "#f6c3d6")), False)
 
-# --- the back of town: tree canopy beyond a long plaster wall with a dark tiled cap (rows 0-4.5)
-for k in range(30):
-    c = -0.5 + k * 1.65 + random.uniform(-0.3, 0.3); r = random.uniform(1.3, 3.2)
-    col = random.choice(("#5f9e55", "#4f8a4a", "#6fae5a"))
-    add(f"bk{k}", ellipsoid(G(c, r, 0.9), (1.25, D(0.8), 1.0), segs=14, rings=8), col)
-for k in range(9):   # a few sakura in the back canopy
-    c = 2 + k * 5.3 + random.uniform(-0.6, 0.6)
-    add(f"bks{k}", ellipsoid(G(c, 3.3, 1.3), (1.0, D(0.6), 0.75), segs=14, rings=8), "#f6c3d6")
-    add(f"bks2{k}", ellipsoid(G(c - 0.3, 3.4, 1.65), (0.5, D(0.35), 0.4), segs=10, rings=6), "#fbdbe6", False)
-add("nwall", box(G(COLS / 2, 4.35, 0.45), (COLS + 1, D(0.3), 0.9)), "#efe3c6")
-add("nwallcap", box(G(COLS / 2, 4.35, 0.95), (COLS + 1.2, D(0.55), 0.12)), "#4a4f66")
-add("nwallbase", box(G(COLS / 2, 4.4, 0.08), (COLS + 1, D(0.36), 0.16)), "#a9adc4", False)
+# --- the back of town: a long plaster wall with a dark tiled cap and a gate to the Tower (the tree line is added further down)
+GATE_C = 30.3                                   # the gate in the back wall, at the end of the Tower path
+for k, (w0, w1) in enumerate(((-0.5, GATE_C - 1.55), (GATE_C + 1.55, COLS + 0.5))):
+    add(f"nwall{k}", box(G((w0 + w1) / 2, 4.35, 0.45), (w1 - w0, D(0.3), 0.9)), "#efe3c6")
+    add(f"nwallcap{k}", box(G((w0 + w1) / 2, 4.35, 0.95), (w1 - w0 + 0.2, D(0.55), 0.12)), "#4a4f66")
+    add(f"nwallbase{k}", box(G((w0 + w1) / 2, 4.4, 0.08), (w1 - w0, D(0.36), 0.16)), "#a9adc4", False)
+# the Tower gate: two dark posts, a small tiled roof, closed doors with a gold crest, a lantern each side
+for x in (-1.5, 1.5):
+    add(f"gpost{x}", box(G(GATE_C + x, 4.35, 0.85), (0.24, D(0.24), 1.7)), "#4a3020")
+    add(f"glp{x}", tube(G(GATE_C + x * 1.25, 4.7, 0), G(GATE_C + x * 1.25, 4.7, 0.95), 0.04, 0.04), "#5f3f26")
+    add(f"glanb{x}", ellipsoid(G(GATE_C + x * 1.25, 4.72, 1.12), (0.17, 0.17, 0.22), segs=12, rings=8), "#fff6c8")
+add("gbeam", box(G(GATE_C, 4.35, 1.62), (3.4, D(0.3), 0.16)), "#4a3020")
+hip_roof("groof", GATE_C, 4.55, 4.0, 1.72, 3.2, 0.42, "#3a4057", ox=0.3, oy=0.18, inset=0.3, ridge="#d9a441")
+for x in (-0.68, 0.68):
+    add(f"gdoor{x}", box(G(GATE_C + x, 4.4, 0.75), (1.3, 0.08, 1.45)), "#8a5e38")
+    for zz in (0.35, 0.75, 1.15): add(f"gstud{x}{zz}", box(G(GATE_C + x, 4.45, zz), (1.2, 0.03, 0.05)), "#6b4428", False)
+add("gcrest", ellipsoid(G(GATE_C, 4.47, 1.05), (0.2, 0.03, 0.2), segs=16, rings=6), "#ffd36b")
+# beyond the gate: a stone path up to the Tower
+for k in range(9):
+    add(f"tstep{k}", box(G(GATE_C, 4.1 - k * 0.42, 0.01), (1.4 - k * 0.04, D(0.34), 0.04)), "#d6cfc1", False)
 add("backgrass", box(G(COLS / 2, 6.8, -0.04), (COLS + 1, D(4.6), 0.05)), "#7fbf6f", False)
+add("farlawn", box(G(COLS / 2, -1.5, -0.08), (COLS + 4, D(11), 0.1)), "#86c46c", False)
 
 # --- side walls (low; the hero never stands behind them)
 for c in (0.35, COLS - 0.35):
@@ -191,6 +210,7 @@ def paving(nm, c0, c1, r0, r1, base="#948b7c", stones=STONES, size=1.0, offset=T
 
 # main street (rows 9-14) across the whole town
 paving("street", 0.7, COLS - 0.7, 9.0, 14.0)
+paving("tpath", 28.8, 31.8, 4.5, 9.0)   # the path north to the Tower gate
 # the plaza (big, light stone) and its round centre
 paving("plaza", 15.0, 31.0, 14.0, 25.0, stones=["#e6dfcf", "#e0d8c6", "#ebe4d5", "#ddd5c3"])
 for k in range(36):
@@ -267,7 +287,7 @@ def stone_lantern(pid, c, r, lit, stage=1, until=None, s=1.0):
     add("post", tube(G(c, r, 0.14 * s), G(c, r, 0.75 * s), 0.12 * s, 0.1 * s, segs=8), "#b7bacd")
     add("plat", tube(G(c, r, 0.75 * s), G(c, r, 0.86 * s), 0.3 * s, 0.3 * s, segs=6), "#a9adc4")
     add("box", box(G(c, r, 1.08 * s), (0.36 * s, 0.36 * s, 0.42 * s)), "#b7bacd")
-    add("win", box(G(c, r + 0.19 * s, 1.08 * s), (0.2 * s, 0.02, 0.22 * s)), "#ffe9a0" if lit else "#5d6177", False)
+    add("win" if lit else "winoff", box(G(c, r + 0.19 * s, 1.08 * s), (0.2 * s, 0.02, 0.22 * s)), "#ffe9a0" if lit else "#5d6177", False)
     add("roof", tube(G(c, r, 1.3 * s), G(c, r, 1.62 * s), 0.46 * s, 0.05 * s, segs=6), "#8e92ab")
     add("tip", ellipsoid(G(c, r, 1.7 * s), (0.08 * s, 0.08 * s, 0.1 * s), segs=8, rings=6), "#8e92ab")
     if lit:
@@ -276,6 +296,9 @@ def stone_lantern(pid, c, r, lit, stage=1, until=None, s=1.0):
 def tree(pid, c, r, s=1.0, stage=1, until=None):
     piece(pid, (c, r), stage=stage, until=until, block=[(c, r)])
     shadow(c, r, 0.9 * s, 0.45 * s)
+    tree_geo(c, r, s)
+
+def tree_geo(c, r, s=1.0):
     add("trunk", tube(G(c, r, 0), G(c, r, 1.0 * s), 0.14 * s, 0.1 * s), "#7a5232")
     add("leaf", ellipsoid(G(c, r, 1.55 * s), (0.95 * s, 0.65 * s, 0.8 * s), segs=16, rings=10), "#6fae5a")
     add("leaf2", ellipsoid(G(c + 0.35 * s, r + 0.15, 1.35 * s), (0.55 * s, 0.4 * s, 0.45 * s), segs=12, rings=8), "#5f9e55")
@@ -284,6 +307,9 @@ def tree(pid, c, r, s=1.0, stage=1, until=None):
 def sakura(pid, c, r, s=1.0, stage=1, until=None, planter=False, block=None):
     piece(pid, (c, r), stage=stage, until=until, block=block if block is not None else [(c, r)])
     shadow(c, r, 1.25 * s, 0.6 * s)
+    sakura_geo(c, r, s, planter)
+
+def sakura_geo(c, r, s=1.0, planter=False):
     if planter:
         add("planter", tube(G(c, r, 0), G(c, r, 0.32), 0.62, 0.66, segs=16, sy=1.0), "#b7bacd")
         add("soil", tube(G(c, r, 0.3), G(c, r, 0.34), 0.56, 0.56, segs=16), "#6b4a32", False)
@@ -302,6 +328,9 @@ def sakura(pid, c, r, s=1.0, stage=1, until=None, planter=False, block=None):
 def pine(pid, c, r, s=1.0, stage=1, until=None):
     piece(pid, (c, r), stage=stage, until=until, block=[(c, r)])
     shadow(c, r, 1.0 * s, 0.5 * s)
+    pine_geo(c, r, s)
+
+def pine_geo(c, r, s=1.0):
     add("trunk", tube(G(c, r, 0), G(c + 0.2 * s, r, 1.6 * s), 0.16 * s, 0.1 * s), "#6b4428")
     for k, (dx, z, sx) in enumerate(((0.0, 0.9, 1.05), (0.35, 1.45, 0.85), (-0.2, 1.95, 0.7), (0.25, 2.35, 0.45))):
         add(f"pad{k}", ellipsoid(G(c + dx * s, r + 0.05, z * s), (sx * s, 0.55 * s, 0.26 * s), segs=16, rings=6), ("#4f8a4a", "#5f9e55")[k % 2])
@@ -337,6 +366,46 @@ def nobori(pid, c, r, col, stage=3):
     add("cloth", box(G(c + 0.22, r, 1.55), (0.38, 0.04, 1.4)), col)
     add("edge", box(G(c + 0.22, r + 0.025, 2.2), (0.38, 0.02, 0.1)), "#fbf3df", False)
     add("mark", ellipsoid(G(c + 0.22, r + 0.03, 1.75), (0.11, 0.02, 0.11), segs=12, rings=4), "#fbf3df", False)
+
+# ---------------------------------------------------------------- the back tree line, the hills and the Tower (ground)
+ground()
+rng = random.Random(23)
+x = -0.8
+while x < COLS + 1:
+    if GATE_C - 2.6 < x < GATE_C + 2.6:          # a clearing behind the gate, so the Tower shows
+        x = GATE_C + 2.6
+    kind = rng.random(); r = rng.uniform(2.3, 3.7); s_ = rng.uniform(0.85, 1.3)
+    if kind < 0.3: sakura_geo(x, r, s_ * 1.05)
+    elif kind < 0.55: pine_geo(x, r, s_)
+    else: tree_geo(x, r, s_ * 1.1)
+    x += rng.uniform(1.4, 2.3) * s_
+for k in range(14):   # a second, farther row (smaller, softer), behind the first
+    c = -1 + k * 3.6 + rng.uniform(-0.6, 0.6)
+    if GATE_C - 3.2 < c < GATE_C + 3.2: continue
+    (sakura_geo if k % 3 == 0 else tree_geo)(c, rng.uniform(0.6, 1.6), rng.uniform(0.75, 1.0))
+# far hills (soft blue-green) and nearer rolling hills
+for k, (c, sx, h, col) in enumerate(((-4, 9, 3.4, "#a3c8c0"), (9, 10, 4.1, "#b0d1c8"), (22, 9, 3.6, "#a3c8c0"), (37, 10, 4.3, "#b0d1c8"), (50, 9, 3.5, "#a3c8c0"))):
+    add(f"mtn{k}", ellipsoid(G(c, -4.5, -0.5), (sx, D(1.2), h), segs=32, rings=14), col, False)
+for k, (c, sx, h, col) in enumerate(((2, 7, 3.0, "#86c47e"), (14, 7.5, 3.6, "#93cf88"), (26, 6, 2.6, "#86c47e"), (40, 8, 3.4, "#93cf88"))):
+    add(f"hill{k}", ellipsoid(G(c, -2.6, -0.4), (sx, D(1.0), h), segs=28, rings=12), col, False)
+# THE TOWER the students climb: lavender stone tiers with gold bands and warm windows, a big door, and the light at the top
+TC, TR = GATE_C, 0.4
+add("tw_plinth", tube(G(TC, TR, 0), G(TC, TR, 0.3), 2.5, 2.4, segs=24, sy=0.55), "#a9adc4")
+add("tw_plinth2", tube(G(TC, TR, 0.3), G(TC, TR, 0.5), 2.25, 2.2, segs=24, sy=0.55), "#cfc8ba")
+z = 0.5
+for k, (r0, r1, hh) in enumerate(((2.0, 1.78, 2.4), (1.72, 1.5, 2.0), (1.44, 1.22, 1.7), (1.16, 0.95, 1.4))):
+    add(f"tw{k}", tube(G(TC, TR, z), G(TC, TR, z + hh), r0, r1, segs=24, sy=0.55), "#a7afd6" if k % 2 == 0 else "#b6bde0")
+    add(f"twband{k}", tube(G(TC, TR, z + hh - 0.1), G(TC, TR, z + hh + 0.06), r1 + 0.1, r1 + 0.1, segs=24, sy=0.55), "#d9a441")
+    for w in ((-0.45, 0.45) if k < 2 else (0.0,)):   # warm windows
+        add(f"twin{k}{w}", box(G(TC + w * r1, TR + r1 * 0.55 + 0.05, z + hh * 0.55), (0.24, 0.05, 0.46)), "#ffe9a0", False)
+        add(f"twfr{k}{w}", box(G(TC + w * r1, TR + r1 * 0.55 + 0.03, z + hh * 0.55), (0.34, 0.04, 0.56)), "#6b6f8f", False)
+    z += hh
+add("tw_door", box(G(TC, TR + 1.12, 0.5 + 0.75), (0.95, 0.06, 1.5)), "#4a3020")
+add("tw_doorarch", ellipsoid(G(TC, TR + 1.13, 0.5 + 1.5), (0.48, 0.05, 0.3), segs=16, rings=6), "#4a3020", False)
+add("tw_doorrim", box(G(TC, TR + 1.1, 0.5 + 0.8), (1.15, 0.04, 1.65)), "#d9a441", False)
+add("twroof", tube(G(TC, TR, z), G(TC, TR, z + 1.3), 1.2, 0.06, segs=24, sy=0.55), "#5f6f92")
+add("twlight", ellipsoid(G(TC, TR, z + 1.75), (0.42, 0.42, 0.55), segs=18, rings=10), "#ffe48a", False)
+add_a("twhalo", ellipsoid(G(TC, TR + 0.3, z + 1.75), (0.85, 0.08, 0.85), segs=24, rings=8), "#fff6c8", 0.5)
 
 # ---------------------------------------------------------------- the Action Zone (centre of the north side)
 # The REAL building (Jay, Nov 19: "the actual Action Zone building and sign... modeled from real life pictures", then "try to
@@ -448,11 +517,9 @@ for wx in (CX - 2.05, CX + 2.05):
 sign_text("signCMA", "CMA", CX, RF + 0.07, 3.08, 0.48, 1.6, RED, 0.06)
 sign_text("signMA", "MARTIAL ARTS", CX, RF + 0.07, 2.56, 0.3, 4.1, RED, 0.05)
 lz = 3.74; lr = RF + 0.05
-add("logo_ring", ellipsoid(G(CX, lr, lz), (0.24, 0.035, 0.24), segs=28, rings=8), "#f6f3ec")
-add("logo_badge", ellipsoid(G(CX, lr + 0.02, lz), (0.205, 0.03, 0.205), segs=28, rings=8), "#27407a", False)
-for nm, (dx, dz, sxx, szz, rot) in {"body": (-0.01, -0.01, 0.1, 0.035, -18), "leg": (-0.1, -0.05, 0.065, 0.022, 25), "head": (0.1, 0.05, 0.035, 0.035, 0),
-                                   "arm": (0.12, -0.05, 0.05, 0.018, -30), "kick": (-0.13, 0.04, 0.06, 0.02, -40)}.items():
-    add("logo_" + nm, ellipsoid(G(CX + dx, lr + 0.05, lz + dz), (sxx, 0.02, szz), segs=10, rings=6, rot=(0, rot, 0)), "#ffffff", False)
+pass  # (logo removed, Jay Nov 19)
+pass  # (logo removed, Jay Nov 19)
+# (the kick-logo badge above CMA is removed: Jay, Nov 19)
 # banners: white with a red stripe (left) and the notice banner (right), with grommets
 for bx, red in ((CX - 2.05, True), (CX + 2.05, False)):
     bw = 1.4 if red else 1.2
@@ -488,9 +555,9 @@ def az_bench(pid, cx, w, hexc, slat):
         add(f"post{x}", box(G(cx + x, 9.28, 0.46), (0.07, D(0.07), 0.62)), "#2f2620", False)
     add("back", box(G(cx, 9.28, 0.56), (w, 0.06, 0.4)), hexc)
     for j in range(slat): add(f"slat{j}", box(G(cx - w / 2 + 0.12 + j * (w - 0.24) / (slat - 1), 9.31, 0.56), (0.035, 0.02, 0.38)), "#2a211c", False)
-az_bench("az-bench-a", 20.2, 1.6, "#4d3a2f", 7)
+az_bench("az-bench-a", 19.95, 1.6, "#4d3a2f", 7)   # Jay: clear of the flower bed
 piece("az-chairs", (26.1, 9.5), block=[(25, 9), (26, 9)])
-for j, (cxr, rr, rot) in enumerate(((25.7, 9.4, 0), (26.4, 9.6, 8))):
+for j, (cxr, rr, rot) in enumerate(((25.7, 9.4, 0), (26.35, 9.4, 0))):   # Jay: both chairs straight
     shadow(cxr, rr, 0.3, 0.2)
     for dx, dr in ((-0.17, -0.15), (0.17, -0.15), (-0.17, 0.15), (0.17, 0.15)):
         add(f"leg{j}{dx}{dr}", tube(G(cxr + dx, rr + dr, 0), G(cxr + dx, rr + dr, 0.36), 0.02, 0.02, segs=6), RED, False)
@@ -653,7 +720,7 @@ torii("torii", False, until=4)
 torii("torii-red", True, stage=4)
 
 # stone lanterns: the garden path and the street gaps; unlit until stage 7, then lit
-for k, (c, r) in enumerate(((20.5, 27.6), (25.5, 27.6), (14.3, 9.5), (31.3, 9.5), (44.2, 9.5))):
+for k, (c, r) in enumerate(((20.5, 27.6), (25.5, 27.6), (14.3, 9.5), (32.3, 9.5), (44.2, 9.5))):
     stone_lantern(f"toro-{k}", c, r, False, until=7)
     stone_lantern(f"toro-lit-{k}", c, r, True, stage=7)
 stone_lantern("pond-lantern", 34.6, 25.4, True, stage=7, s=0.85)
@@ -739,9 +806,10 @@ for k in range(3):
     add("cap", box(G((c0 + c1) / 2, 29.65, 0.85), (c1 - c0 + 0.1, D(0.5), 0.12)), "#4a4f66", True, 1.2)
 
 # ===================================================================================== the walk grid
-base = [["#" if (r <= 8 or r >= 29 or c == 0 or c == COLS - 1 or (c, r) in GROUND_BLOCK) else "." for c in range(COLS)] for r in range(ROWS)]
+PATH = set(cells(29, 31, 5, 8))
+base = [["#" if ((r <= 8 and (c, r) not in PATH) or r >= 29 or c == 0 or c == COLS - 1 or (c, r) in GROUND_BLOCK) else "." for c in range(COLS)] for r in range(ROWS)]
 meta = {
-    "cols": COLS, "rows": ROWS, "ppt": A.ppt,
+    "cols": COLS, "rows": ROWS, "top": TOP, "ppt": A.ppt,
     "tiles": ["".join(row) for row in base],
     "pieces": [META[k] for k in META],
 }
@@ -765,14 +833,14 @@ if A.gpu:
     except Exception as e: print("GPU setup failed", e)
 print("DEVICE", sc.cycles.device)
 r_.film_transparent = True; sc.view_settings.view_transform = "Standard"; sc.view_settings.look = "None"
-W, H = COLS * A.ppt, ROWS * A.ppt
+W, H = COLS * A.ppt, (ROWS + TOP) * A.ppt
 r_.resolution_x, r_.resolution_y = W, H; r_.resolution_percentage = 100
 r_.image_settings.file_format = "PNG"; r_.image_settings.color_mode = "RGBA"
 cd = bpy.data.cameras.new("Cam"); cd.type = "ORTHO"; cd.sensor_fit = "HORIZONTAL"; cd.ortho_scale = COLS; cd.clip_end = 300
 cam = bpy.data.objects.new("Cam", cd); coll.objects.link(cam); sc.camera = cam
 cam.rotation_euler = (math.radians(90 - EL), 0, 0)
 d = Euler(cam.rotation_euler).to_matrix() @ Vector((0, 0, -1))
-cam.location = Vector((COLS / 2, -(ROWS / 2) * K, 0)) - d * 60
+cam.location = Vector((COLS / 2, -((ROWS - TOP) / 2) * K, 0)) - d * 60
 bpy.context.view_layer.update()
 
 from bpy_extras.object_utils import world_to_camera_view
@@ -802,5 +870,28 @@ elif A.mode == "props":
         r_.filepath = os.path.join(A.out, f"piece_{pid}.png"); bpy.ops.render.render(write_still=True)
         boxes[pid] = [x0, x1, y0, y1]
     json.dump(boxes, open(os.path.join(A.out, "boxes.json"), "w"))
+elif A.mode == "lights":
+    # For every piece (and the ground) with lit parts: only its lit parts, the rest of the same piece a holdout, so a
+    # window half behind a post is cut the same way. The game lays these over the night-tinted town, untinted.
+    only = [s for s in A.only.split(",") if s]
+    groups = ["ground"] + [pid for pid in META if not (only and pid not in only)]
+    for gid in groups:
+        if only and gid not in only: continue
+        mine = [o for o in bpy.data.objects if o.type == "MESH" and o.get("grp") == gid]
+        lit = [o for o in mine if o.get("lit")]
+        if not lit: continue
+        xs, ys = [], []
+        for o in lit:
+            for v in o.data.vertices:
+                p = world_to_camera_view(sc, cam, o.matrix_world @ v.co); xs.append(p.x); ys.append(p.y)
+        for o in bpy.data.objects:
+            if o.type != "MESH": continue
+            o.hide_render = o.get("grp") != gid
+            o.is_holdout = o.get("grp") == gid and not o.get("lit")
+        r_.use_border = True; r_.use_crop_to_border = False
+        r_.border_min_x, r_.border_max_x = max(0, min(xs) - 8 / W), min(1, max(xs) + 8 / W)
+        r_.border_min_y, r_.border_max_y = max(0, min(ys) - 8 / H), min(1, max(ys) + 8 / H)
+        r_.filepath = os.path.join(A.out, ("ground" if gid == "ground" else f"piece_{gid}") + ".lit.png"); bpy.ops.render.render(write_still=True)
+    for o in bpy.data.objects: o.is_holdout = False
 elif A.mode == "blend":
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(HERE, "town.blend"))

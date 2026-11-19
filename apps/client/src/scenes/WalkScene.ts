@@ -203,6 +203,13 @@ export abstract class WalkScene extends Phaser.Scene {
     return VIEW_ROWS;
   }
 
+  /** Re-reads viewRows() and zooms to it, without laying the controls out again (for a smooth zoom, every frame). */
+  protected refreshZoom(): void {
+    const { height } = view(this);
+    this.zoom = height / (this.viewRows() * TILE);
+    this.worldLayer.setScale(this.zoom);
+  }
+
   /** Zooms in so the view is VIEW_ROWS tiles tall, like the Home Dojo and the Tower. */
   private layout(): void {
     const { height } = view(this);

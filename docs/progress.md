@@ -1364,3 +1364,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - 1,631 tests pass; type checks and the build pass. Not on `main`.
 - **Next:** Jay walks the town on his phone (stages 1, 5, 10 and a crowd), OKs or changes the art; then drop the old `dojo-az-town` pack and copy to `main`.
 - Nov 19: the real Action Zone (CMA Martial Arts) building is in the town at true size, rebuilt with much more detail and rendered twice as sharp. Close-up: `incoming-art/claude-town/previews/action-zone-closeup.png`. Next: Jay's OK; then maybe re-render the entrance scene to match.
+- Nov 19 (later): Jay's detail fixes (logo, bench, chair, back trees), the Tower in the background behind a gate at the end of a new path, and the warm night town (7 pm-6 am, `?night=1`). Previews (day and night, stages 1, 5, 10) in `incoming-art/claude-town/previews/`. 1,632 tests pass. Not on `main`. Next: Jay's OK; night for the Home Dojo and the entrance scene if he wants it.
