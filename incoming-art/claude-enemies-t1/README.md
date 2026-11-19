@@ -32,3 +32,11 @@ Determined glowing eyes under a dark lid, no mouths, no teeth, no claws: rivals,
 Same rig, animations, layers and timings as before, so the game data does not change.
 `source/build_shades.py`, blends in `source/shades/`, preview `preview/shades-lineup.png` (today / front / side).
 Names are placeholders (game names stay Swarmer, Shield Guard, Brute, Floor Keeper until Jay says).
+
+## Shades v2 (Nov 18, Jay: "v1 isn't what you said": still murky, small, plain)
+
+Lighter indigo (same hues), glowing light-lines, trims, rivets, ink drips, robe hems, bigger chest shards; rendered at
+160 px per tile (twice today's) so the detail survives on a phone. `source/build_shades_v2.py`, blends in `source/shades-v2/`.
+`preview/phone-size-on-floor.png` shows the true phone size on the White belt floor: today, v2 same size, v2 25% bigger.
+Known: the Rumbler's belt tassels hang below its feet (fix if this direction is kept). Shipping 160 px renders needs the
+import tool to pack this pack at 0.3 instead of 0.6 (download grows by about 4x for these four monsters).
