@@ -505,8 +505,8 @@ def scene_inside():
     # silhouettes in the logo's own style (source/make_silhouettes.py): the kicker is the logo's figure; one scale for all three
     KS = 1.3 / 377
     imgplane(os.path.join(TXD, "sil-kick.png"), "silKick", a + 0.95, 394 * KS, 377 * KS, row=WF + 0.1, zc=1.07 + 377 * KS / 2)
-    imgplane(os.path.join(TXD, "sil-stance.png"), "silStance", b - 0.95, 389 * KS, 348 * KS, row=WF + 0.1, zc=1.07 + 348 * KS / 2)
-    imgplane(os.path.join(TXD, "sil-split.png"), "silSplit", cx, 490 * KS * 0.72, 189 * KS * 0.72, row=WF + 0.1, zc=0.56)
+    imgplane(os.path.join(TXD, "sil-stance.png"), "silStance", b - 0.95, 389 * KS, 360 * KS, row=WF + 0.1, zc=1.07 + 360 * KS / 2)
+    imgplane(os.path.join(TXD, "sil-split.png"), "silSplit", cx, 490 * KS * 0.72, 201 * KS * 0.72, row=WF + 0.1, zc=0.56)
     # round clock
     wdisc(LM.FLAG[0] - 0.12, 3.0, 0.2, "#25252e", 0, "clockRim"); wdisc(LM.FLAG[0] - 0.12, 3.0, 0.16, "#f4f1e8", 1, "clockFace")
     for k in range(12): wdisc(LM.FLAG[0] - 0.12 + 0.12 * math.sin(k * math.pi / 6), 3.0 + 0.12 * math.cos(k * math.pi / 6), 0.012, "#25252e", 2, "tick")

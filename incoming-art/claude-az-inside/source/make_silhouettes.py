@@ -81,7 +81,7 @@ STANCE_BODY = [(0.13, 0.74), (0.155, 0.62), (0.15, 0.49), (0.18, 0.43), (0.27, 0
 def stance(d, T):        # front stance, straight punch to the right, rear fist chambered at the hip (baggy karate gi)
     shape(d, T, STANCE_BODY)
     limb(d, [(0.04, 0.765), (0.27, 0.765), (0.455, 0.77)], [0.1, 0.095, 0.105], T); disc(d, (0.49, 0.772), 0.043, T)        # punch
-    disc(d, (0.06, 0.85), 0.052, T); limb(d, [(0.04, 0.78), (0.055, 0.84)], [0.075, 0.07], T)                                  # head, neck
+    disc(d, (0.06, 0.865), 0.068, T); limb(d, [(0.04, 0.78), (0.055, 0.84)], [0.075, 0.07], T)                                  # head, neck
 def stance_arm(d, T, grow=0.0):
     limb(d, [(-0.07, 0.74), (-0.17, 0.63), (-0.08, 0.53), (0.0, 0.52)], [0.1 + grow, 0.095 + grow, 0.095 + grow, 0.09 + grow], T)
     disc(d, (0.02, 0.523), 0.042 + grow / 2, T)
@@ -92,7 +92,7 @@ def split(d, T):         # jump split, arms out (front view)
     shape(d, T, pts)
     for sg in (-1, 1):
         limb(d, [(sg * 0.08, 0.765), (sg * 0.26, 0.795), (sg * 0.42, 0.83)], [0.1, 0.095, 0.1], T); disc(d, (sg * 0.455, 0.837), 0.042, T)
-    disc(d, (0.0, 0.85), 0.052, T); limb(d, [(0.0, 0.78), (0.0, 0.84)], [0.075, 0.07], T)
+    disc(d, (0.0, 0.865), 0.068, T); limb(d, [(0.0, 0.78), (0.0, 0.84)], [0.075, 0.07], T)
 st = figure(stance, "sil-stance.png", 1.2, 0.98)
 st = st.transpose(Image.FLIP_LEFT_RIGHT); st.save(os.path.join(TX, "sil-stance.png"))   # faces the logo, like the kicker
 sp = figure(split, "sil-split.png", 1.3, 0.98)
