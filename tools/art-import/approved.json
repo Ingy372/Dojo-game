@@ -1051,6 +1051,16 @@
           "json": "incoming-art/tutorial-path/sprites/static.json"
         }
       ]
+    },
+    "town": {
+      "note": "The redesigned town (Claude Code, Nov 18 2026, Jay: bigger, martial artsy, sakura, grows with each real belt). Ground in 4 pieces plus every standing piece with its stage. Made by incoming-art/claude-town/source/build_town.py and pack_town.py. DRAFT until Jay OKs it on the preview.",
+      "sources": [
+        {
+          "id": "town",
+          "type": "static",
+          "json": "incoming-art/claude-town/sprites/static.json"
+        }
+      ]
     }
   }
 }

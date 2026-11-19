@@ -96,6 +96,8 @@ export class TitleScene extends Phaser.Scene {
       sfx.unlock();
       const params = testFlags();
       if (params.get('room') === 'training') this.scene.start('Game');
+      // Test link: ?room=town opens the town straight away (add &townstage=1-10 for a belt's town, &crowd=20 for classmates).
+      else if (params.get('room') === 'town') this.scene.start('ActionZoneTown', { from: 'home' });
       // Test link: ?street=store-separated opens a Street Smarts scenario straight away.
       else if (params.get('street')) this.scene.start('StreetSmarts', { id: params.get('street') });
       // A new student makes their character first.

@@ -1,54 +1,1001 @@
 {
   "id": "town-walk",
   "name": "Town",
-  "about": "The town square you can walk in (Nov 17). One tile is 40 px of the 932x430 town picture (the game draws it at 48 px a tile). # = can't walk (buildings, trees, the river, the statue, flower boxes, the weapon rack), . = street, P = where you come out of your own dojo. Walk into the grey house's door to go home, or the Action Zone's door to visit the real dojo.",
+  "about": "The town (Nov 18 redesign, Jay: bigger, martial artsy, sakura trees, grows nicer with each real belt). 46 x 30 tiles, drawn by the 'town' art pack. # = can't walk, . = open ground. Each piece (building, tree, lantern, gate) shows from belt stage `stage` and, with `until`, is replaced at that stage; while it shows it fills its `block` cells. Made by incoming-art/claude-town/source/pack_town.py: rerun it rather than editing tiles or pieces by hand. Walk into My Dojo's door to go home, or the Action Zone's door to visit the real dojo.",
   "tiles": [
-    "########################",
-    "########################",
-    "########################",
-    "########################",
-    "########################",
-    "#......#####..####...###",
-    "##....#.##....####.P.###",
-    "##.........##.###..#####",
-    "##.........##........###",
-    "#.###......##.###..##..#",
-    "########################",
-    "########################"
+    "##############################################",
+    "##############################################",
+    "##############################################",
+    "##############################################",
+    "##############################################",
+    "##############################################",
+    "##############################################",
+    "##############################################",
+    "##############################################",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#............................................#",
+    "#...................................#######..#",
+    "#..................................#########.#",
+    "#...............###........###.....#########.#",
+    "#...............###........###......#######..#",
+    "#...............###........###........###....#",
+    "##############################################"
   ],
-  "pictureTile": 40,
+  "pieces": [
+    {
+      "id": "town-az",
+      "stage": 1
+    },
+    {
+      "id": "town-az-gold",
+      "stage": 9
+    },
+    {
+      "id": "town-market",
+      "stage": 1,
+      "block": [
+        [
+          3,
+          9
+        ],
+        [
+          11,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-lot",
+      "stage": 1,
+      "until": 5
+    },
+    {
+      "id": "town-hall",
+      "stage": 5
+    },
+    {
+      "id": "town-pagoda",
+      "stage": 8
+    },
+    {
+      "id": "town-my-dojo",
+      "stage": 1,
+      "block": [
+        [
+          35,
+          15
+        ],
+        [
+          35,
+          16
+        ],
+        [
+          35,
+          17
+        ],
+        [
+          35,
+          18
+        ],
+        [
+          35,
+          19
+        ],
+        [
+          36,
+          15
+        ],
+        [
+          36,
+          16
+        ],
+        [
+          36,
+          17
+        ],
+        [
+          36,
+          18
+        ],
+        [
+          36,
+          19
+        ],
+        [
+          37,
+          15
+        ],
+        [
+          37,
+          16
+        ],
+        [
+          37,
+          17
+        ],
+        [
+          37,
+          18
+        ],
+        [
+          37,
+          19
+        ],
+        [
+          38,
+          15
+        ],
+        [
+          38,
+          16
+        ],
+        [
+          38,
+          17
+        ],
+        [
+          38,
+          18
+        ],
+        [
+          38,
+          19
+        ],
+        [
+          39,
+          15
+        ],
+        [
+          39,
+          16
+        ],
+        [
+          39,
+          17
+        ],
+        [
+          39,
+          18
+        ],
+        [
+          39,
+          19
+        ],
+        [
+          40,
+          15
+        ],
+        [
+          40,
+          16
+        ],
+        [
+          40,
+          17
+        ],
+        [
+          40,
+          18
+        ],
+        [
+          40,
+          19
+        ],
+        [
+          41,
+          15
+        ],
+        [
+          41,
+          16
+        ],
+        [
+          41,
+          17
+        ],
+        [
+          41,
+          18
+        ],
+        [
+          41,
+          19
+        ]
+      ]
+    },
+    {
+      "id": "town-shrub-0",
+      "stage": 1,
+      "until": 2,
+      "block": [
+        [
+          35,
+          20
+        ]
+      ]
+    },
+    {
+      "id": "town-flowers-0",
+      "stage": 2,
+      "block": [
+        [
+          35,
+          20
+        ]
+      ]
+    },
+    {
+      "id": "town-shrub-1",
+      "stage": 1,
+      "until": 2,
+      "block": [
+        [
+          41,
+          20
+        ]
+      ]
+    },
+    {
+      "id": "town-flowers-1",
+      "stage": 2,
+      "block": [
+        [
+          41,
+          20
+        ]
+      ]
+    },
+    {
+      "id": "town-statue",
+      "stage": 1,
+      "until": 10,
+      "block": [
+        [
+          22,
+          18
+        ],
+        [
+          22,
+          19
+        ],
+        [
+          23,
+          18
+        ],
+        [
+          23,
+          19
+        ]
+      ]
+    },
+    {
+      "id": "town-statue-gold",
+      "stage": 10,
+      "block": [
+        [
+          22,
+          18
+        ],
+        [
+          22,
+          19
+        ],
+        [
+          23,
+          18
+        ],
+        [
+          23,
+          19
+        ]
+      ]
+    },
+    {
+      "id": "town-plaza-sakura-0",
+      "stage": 1,
+      "block": [
+        [
+          17,
+          16
+        ]
+      ]
+    },
+    {
+      "id": "town-plaza-sakura-1",
+      "stage": 1,
+      "block": [
+        [
+          28,
+          16
+        ]
+      ]
+    },
+    {
+      "id": "town-plaza-sakura-2",
+      "stage": 1,
+      "block": [
+        [
+          17,
+          22
+        ]
+      ]
+    },
+    {
+      "id": "town-plaza-sakura-3",
+      "stage": 1,
+      "block": [
+        [
+          28,
+          22
+        ]
+      ]
+    },
+    {
+      "id": "town-plaza-bench-0",
+      "stage": 1,
+      "block": [
+        [
+          16,
+          24
+        ],
+        [
+          17,
+          24
+        ],
+        [
+          18,
+          24
+        ]
+      ]
+    },
+    {
+      "id": "town-plaza-bench-1",
+      "stage": 1,
+      "block": [
+        [
+          27,
+          24
+        ],
+        [
+          28,
+          24
+        ],
+        [
+          29,
+          24
+        ]
+      ]
+    },
+    {
+      "id": "town-torii",
+      "stage": 1,
+      "until": 4,
+      "block": [
+        [
+          20,
+          25
+        ],
+        [
+          25,
+          25
+        ]
+      ]
+    },
+    {
+      "id": "town-torii-red",
+      "stage": 4,
+      "block": [
+        [
+          20,
+          25
+        ],
+        [
+          25,
+          25
+        ]
+      ]
+    },
+    {
+      "id": "town-toro-0",
+      "stage": 1,
+      "until": 7,
+      "block": [
+        [
+          20,
+          27
+        ]
+      ]
+    },
+    {
+      "id": "town-toro-lit-0",
+      "stage": 7,
+      "block": [
+        [
+          20,
+          27
+        ]
+      ]
+    },
+    {
+      "id": "town-toro-1",
+      "stage": 1,
+      "until": 7,
+      "block": [
+        [
+          25,
+          27
+        ]
+      ]
+    },
+    {
+      "id": "town-toro-lit-1",
+      "stage": 7,
+      "block": [
+        [
+          25,
+          27
+        ]
+      ]
+    },
+    {
+      "id": "town-toro-2",
+      "stage": 1,
+      "until": 7,
+      "block": [
+        [
+          14,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-toro-lit-2",
+      "stage": 7,
+      "block": [
+        [
+          14,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-toro-3",
+      "stage": 1,
+      "until": 7,
+      "block": [
+        [
+          31,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-toro-lit-3",
+      "stage": 7,
+      "block": [
+        [
+          31,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-toro-4",
+      "stage": 1,
+      "until": 7,
+      "block": [
+        [
+          44,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-toro-lit-4",
+      "stage": 7,
+      "block": [
+        [
+          44,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-pond-lantern",
+      "stage": 7,
+      "block": [
+        [
+          34,
+          25
+        ]
+      ]
+    },
+    {
+      "id": "town-lantern-0",
+      "stage": 2,
+      "block": [
+        [
+          3,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-lantern-1",
+      "stage": 2,
+      "block": [
+        [
+          12,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-lantern-2",
+      "stage": 2,
+      "block": [
+        [
+          17,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-lantern-3",
+      "stage": 2,
+      "block": [
+        [
+          28,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-lantern-4",
+      "stage": 2,
+      "block": [
+        [
+          33,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-lantern-5",
+      "stage": 2,
+      "block": [
+        [
+          42,
+          9
+        ]
+      ]
+    },
+    {
+      "id": "town-makiwara-0",
+      "stage": 1,
+      "block": [
+        [
+          7,
+          17
+        ]
+      ]
+    },
+    {
+      "id": "town-makiwara-1",
+      "stage": 3,
+      "block": [
+        [
+          5,
+          17
+        ]
+      ]
+    },
+    {
+      "id": "town-makiwara-2",
+      "stage": 3,
+      "block": [
+        [
+          10,
+          17
+        ]
+      ]
+    },
+    {
+      "id": "town-yard-banner-0",
+      "stage": 3,
+      "block": [
+        [
+          3,
+          16
+        ]
+      ]
+    },
+    {
+      "id": "town-yard-banner-1",
+      "stage": 3,
+      "block": [
+        [
+          12,
+          16
+        ]
+      ]
+    },
+    {
+      "id": "town-rack",
+      "stage": 1,
+      "block": [
+        [
+          1,
+          19
+        ],
+        [
+          1,
+          20
+        ],
+        [
+          2,
+          19
+        ],
+        [
+          2,
+          20
+        ]
+      ]
+    },
+    {
+      "id": "town-mook-jong",
+      "stage": 9,
+      "block": [
+        [
+          5,
+          25
+        ]
+      ]
+    },
+    {
+      "id": "town-plaza-banner-0",
+      "stage": 4,
+      "block": [
+        [
+          15,
+          18
+        ]
+      ]
+    },
+    {
+      "id": "town-plaza-banner-1",
+      "stage": 4,
+      "block": [
+        [
+          15,
+          21
+        ]
+      ]
+    },
+    {
+      "id": "town-plaza-banner-2",
+      "stage": 4,
+      "block": [
+        [
+          30,
+          18
+        ]
+      ]
+    },
+    {
+      "id": "town-plaza-banner-3",
+      "stage": 4,
+      "block": [
+        [
+          30,
+          21
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-0",
+      "stage": 1,
+      "until": 6,
+      "block": [
+        [
+          1,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-sakura-0",
+      "stage": 6,
+      "block": [
+        [
+          1,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-1",
+      "stage": 1,
+      "until": 6,
+      "block": [
+        [
+          13,
+          23
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-sakura-1",
+      "stage": 6,
+      "block": [
+        [
+          13,
+          23
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-2",
+      "stage": 1,
+      "until": 6,
+      "block": [
+        [
+          31,
+          27
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-sakura-2",
+      "stage": 6,
+      "block": [
+        [
+          31,
+          27
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-3",
+      "stage": 1,
+      "until": 6,
+      "block": [
+        [
+          14,
+          27
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-sakura-3",
+      "stage": 6,
+      "block": [
+        [
+          14,
+          27
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-4",
+      "stage": 1,
+      "until": 6,
+      "block": [
+        [
+          44,
+          23
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-sakura-4",
+      "stage": 6,
+      "block": [
+        [
+          44,
+          23
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-5",
+      "stage": 1,
+      "until": 6,
+      "block": [
+        [
+          32,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "town-tree-sakura-5",
+      "stage": 6,
+      "block": [
+        [
+          32,
+          15
+        ]
+      ]
+    },
+    {
+      "id": "town-pine-0",
+      "stage": 1,
+      "block": [
+        [
+          2,
+          27
+        ]
+      ]
+    },
+    {
+      "id": "town-pine-1",
+      "stage": 1,
+      "block": [
+        [
+          44,
+          28
+        ]
+      ]
+    },
+    {
+      "id": "town-pine-2",
+      "stage": 1,
+      "block": [
+        [
+          11,
+          28
+        ]
+      ]
+    },
+    {
+      "id": "town-bamboo-sw",
+      "stage": 6,
+      "block": [
+        [
+          7,
+          27
+        ],
+        [
+          7,
+          28
+        ],
+        [
+          8,
+          27
+        ],
+        [
+          8,
+          28
+        ],
+        [
+          9,
+          27
+        ],
+        [
+          9,
+          28
+        ],
+        [
+          10,
+          27
+        ],
+        [
+          10,
+          28
+        ]
+      ]
+    },
+    {
+      "id": "town-bamboo-md",
+      "stage": 6,
+      "block": [
+        [
+          43,
+          18
+        ],
+        [
+          43,
+          19
+        ],
+        [
+          44,
+          18
+        ],
+        [
+          44,
+          19
+        ]
+      ]
+    },
+    {
+      "id": "town-taiko",
+      "stage": 8,
+      "block": [
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ]
+      ]
+    },
+    {
+      "id": "town-koi",
+      "stage": 3
+    },
+    {
+      "id": "town-petals",
+      "stage": 6
+    },
+    {
+      "id": "town-gold-ring",
+      "stage": 10
+    },
+    {
+      "id": "town-swall-0",
+      "stage": 1
+    },
+    {
+      "id": "town-swall-1",
+      "stage": 1
+    },
+    {
+      "id": "town-swall-2",
+      "stage": 1
+    }
+  ],
   "homeDoor": {
     "label": "My Dojo",
     "enterRect": [
-      18.9,
-      20.1,
-      5.0,
-      5.75
+      37.9,
+      39.1,
+      20.0,
+      20.75
     ],
     "spawn": [
-      19.5,
-      6.35
+      38.5,
+      21.35
     ],
     "cue": [
-      19.5,
-      5.55
+      38.5,
+      20.55
     ]
   },
   "dojoDoor": {
     "label": "Action Zone",
     "enterRect": [
-      3.0,
-      4.3,
-      5.0,
-      5.75
+      22.4,
+      23.6,
+      9.0,
+      9.75
     ],
     "spawn": [
-      3.65,
-      6.35
+      23.0,
+      10.35
     ],
     "cue": [
-      3.65,
-      5.55
+      23.0,
+      9.55
     ]
   }
 }

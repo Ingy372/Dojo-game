@@ -1356,3 +1356,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - 1,627 tests pass; type checks pass. Not on `main` yet.
 - **Next:** Jay plays the tour and the new board on the preview; OK (or new words) for the tour lines; pick the first art rework (recommended: the tier-1 enemies).
 - **Art rework item 1 done: the Shades** (new White belt monsters, sharper and 25% bigger), after three drafts Jay turned down (bright, night, Shades v1). Next art: Journal stickers and trophies to match, then the Home Dojo room and mats.
+
+## The town redesign (2026-11-18, branch `claude/tutorial-playtest`)
+- New, much bigger martial-arts town (46 x 30 tiles): wide main street, open plaza with the statue and sakura, practice yard, torii gate and garden, My Dojo and the koi pond. Rendered in Blender as separate pieces so the hero walks behind things.
+- The town gets nicer with every real belt (10 stages; see decisions.md). Previews: `incoming-art/claude-town/previews/town-stage-1|5|10.png`.
+- Test links: `?room=town&townstage=10&crowd=20`.
+- 1,631 tests pass; type checks and the build pass. Not on `main`.
+- **Next:** Jay walks the town on his phone (stages 1, 5, 10 and a crowd), OKs or changes the art; then drop the old `dojo-az-town` pack and copy to `main`.

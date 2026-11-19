@@ -1,0 +1,1791 @@
+{
+ "about": "The town (Claude Code, Nov 18 2026), made by incoming-art/claude-town/source/build_town.py and pack_town.py. Rendered at 80 px per tile. Ground pieces are pinned at their top-left tile; every other piece at its anchor tile. A piece shows from belt stage `stage` and, with `until`, is replaced at that stage. `flat` pieces lie under the hero; `stand` pieces sort against the hero by `sortRow`.",
+ "ppt": 80,
+ "cols": 46,
+ "rows": 30,
+ "sprites": {
+  "town-ground-00": {
+   "size": [
+    1844,
+    1204
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-ground-00.png"
+   },
+   "anchorPx": [
+    0,
+    0
+   ],
+   "anchorTile": [
+    0,
+    0
+   ],
+   "place": "ground",
+   "stage": 1
+  },
+  "town-ground-10": {
+   "size": [
+    1844,
+    1200
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-ground-10.png"
+   },
+   "anchorPx": [
+    0,
+    0
+   ],
+   "anchorTile": [
+    0,
+    15
+   ],
+   "place": "ground",
+   "stage": 1
+  },
+  "town-ground-01": {
+   "size": [
+    1840,
+    1204
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-ground-01.png"
+   },
+   "anchorPx": [
+    0,
+    0
+   ],
+   "anchorTile": [
+    23,
+    0
+   ],
+   "place": "ground",
+   "stage": 1
+  },
+  "town-ground-11": {
+   "size": [
+    1840,
+    1200
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-ground-11.png"
+   },
+   "anchorPx": [
+    0,
+    0
+   ],
+   "anchorTile": [
+    23,
+    15
+   ],
+   "place": "ground",
+   "stage": 1
+  },
+  "town-az": {
+   "size": [
+    1110,
+    568
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-az.png"
+   },
+   "anchorPx": [
+    555.0,
+    535.0
+   ],
+   "anchorTile": [
+    23.0,
+    9.0
+   ],
+   "sortRow": 9.0,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-az-gold": {
+   "size": [
+    1038,
+    468
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-az-gold.png"
+   },
+   "anchorPx": [
+    519.0,
+    481.0
+   ],
+   "anchorTile": [
+    23.0,
+    9.0
+   ],
+   "sortRow": 9.01,
+   "place": "stand",
+   "stage": 9
+  },
+  "town-market": {
+   "size": [
+    758,
+    509
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-market.png"
+   },
+   "anchorPx": [
+    379.0,
+    445.0
+   ],
+   "anchorTile": [
+    7.6,
+    9.0
+   ],
+   "sortRow": 9.0,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-lot": {
+   "size": [
+    740,
+    238
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lot.png"
+   },
+   "anchorPx": [
+    370.0,
+    221.0
+   ],
+   "anchorTile": [
+    38.0,
+    8.85
+   ],
+   "sortRow": 8.85,
+   "place": "stand",
+   "stage": 1,
+   "until": 5
+  },
+  "town-hall": {
+   "size": [
+    814,
+    546
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-hall.png"
+   },
+   "anchorPx": [
+    407.0,
+    516.0
+   ],
+   "anchorTile": [
+    38.0,
+    9.0
+   ],
+   "sortRow": 9.0,
+   "place": "stand",
+   "stage": 5
+  },
+  "town-pagoda": {
+   "size": [
+    220,
+    291
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-pagoda.png"
+   },
+   "anchorPx": [
+    110.0,
+    288.0
+   ],
+   "anchorTile": [
+    14.3,
+    3.6
+   ],
+   "sortRow": 3.6,
+   "place": "stand",
+   "stage": 8
+  },
+  "town-my-dojo": {
+   "size": [
+    662,
+    549
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-my-dojo.png"
+   },
+   "anchorPx": [
+    331.0,
+    520.0
+   ],
+   "anchorTile": [
+    38.5,
+    20.0
+   ],
+   "sortRow": 20.0,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-shrub-0": {
+   "size": [
+    92,
+    72
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-shrub-0.png"
+   },
+   "anchorPx": [
+    46.0,
+    57.0
+   ],
+   "anchorTile": [
+    35.8,
+    20.7
+   ],
+   "sortRow": 20.7,
+   "place": "stand",
+   "stage": 1,
+   "until": 2
+  },
+  "town-flowers-0": {
+   "size": [
+    108,
+    70
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-flowers-0.png"
+   },
+   "anchorPx": [
+    54.0,
+    46.0
+   ],
+   "anchorTile": [
+    35.8,
+    20.7
+   ],
+   "sortRow": 20.7,
+   "place": "stand",
+   "stage": 2
+  },
+  "town-shrub-1": {
+   "size": [
+    92,
+    72
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-shrub-1.png"
+   },
+   "anchorPx": [
+    46.0,
+    57.0
+   ],
+   "anchorTile": [
+    41.2,
+    20.7
+   ],
+   "sortRow": 20.7,
+   "place": "stand",
+   "stage": 1,
+   "until": 2
+  },
+  "town-flowers-1": {
+   "size": [
+    108,
+    70
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-flowers-1.png"
+   },
+   "anchorPx": [
+    54.0,
+    46.0
+   ],
+   "anchorTile": [
+    41.2,
+    20.7
+   ],
+   "sortRow": 20.7,
+   "place": "stand",
+   "stage": 2
+  },
+  "town-statue": {
+   "size": [
+    204,
+    325
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-statue.png"
+   },
+   "anchorPx": [
+    102.0,
+    333.0
+   ],
+   "anchorTile": [
+    23.0,
+    20.2
+   ],
+   "sortRow": 20.0,
+   "place": "stand",
+   "stage": 1,
+   "until": 10
+  },
+  "town-statue-gold": {
+   "size": [
+    204,
+    325
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-statue-gold.png"
+   },
+   "anchorPx": [
+    102.0,
+    333.0
+   ],
+   "anchorTile": [
+    23.0,
+    20.2
+   ],
+   "sortRow": 20.0,
+   "place": "stand",
+   "stage": 10
+  },
+  "town-plaza-sakura-0": {
+   "size": [
+    270,
+    274
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-plaza-sakura-0.png"
+   },
+   "anchorPx": [
+    132.0,
+    229.0
+   ],
+   "anchorTile": [
+    17.5,
+    16.5
+   ],
+   "sortRow": 16.5,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-plaza-sakura-1": {
+   "size": [
+    269,
+    275
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-plaza-sakura-1.png"
+   },
+   "anchorPx": [
+    132.0,
+    230.0
+   ],
+   "anchorTile": [
+    28.5,
+    16.5
+   ],
+   "sortRow": 16.5,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-plaza-sakura-2": {
+   "size": [
+    270,
+    275
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-plaza-sakura-2.png"
+   },
+   "anchorPx": [
+    132.0,
+    230.0
+   ],
+   "anchorTile": [
+    17.5,
+    22.5
+   ],
+   "sortRow": 22.5,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-plaza-sakura-3": {
+   "size": [
+    269,
+    274
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-plaza-sakura-3.png"
+   },
+   "anchorPx": [
+    132.0,
+    229.0
+   ],
+   "anchorTile": [
+    28.5,
+    22.5
+   ],
+   "sortRow": 22.5,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-plaza-bench-0": {
+   "size": [
+    116,
+    85
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-plaza-bench-0.png"
+   },
+   "anchorPx": [
+    58.0,
+    70.0
+   ],
+   "anchorTile": [
+    17.5,
+    24.4
+   ],
+   "sortRow": 24.4,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-plaza-bench-1": {
+   "size": [
+    116,
+    85
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-plaza-bench-1.png"
+   },
+   "anchorPx": [
+    58.0,
+    70.0
+   ],
+   "anchorTile": [
+    28.5,
+    24.4
+   ],
+   "sortRow": 24.4,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-torii": {
+   "size": [
+    596,
+    230
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-torii.png"
+   },
+   "anchorPx": [
+    298.0,
+    218.0
+   ],
+   "anchorTile": [
+    23.0,
+    25.5
+   ],
+   "sortRow": 25.5,
+   "place": "stand",
+   "stage": 1,
+   "until": 4
+  },
+  "town-torii-red": {
+   "size": [
+    596,
+    230
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-torii-red.png"
+   },
+   "anchorPx": [
+    298.0,
+    218.0
+   ],
+   "anchorTile": [
+    23.0,
+    25.5
+   ],
+   "sortRow": 25.5,
+   "place": "stand",
+   "stage": 4
+  },
+  "town-toro-0": {
+   "size": [
+    68,
+    139
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-0.png"
+   },
+   "anchorPx": [
+    34.0,
+    121.0
+   ],
+   "anchorTile": [
+    20.5,
+    27.6
+   ],
+   "sortRow": 27.6,
+   "place": "stand",
+   "stage": 1,
+   "until": 7
+  },
+  "town-toro-lit-0": {
+   "size": [
+    74,
+    139
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-0.png"
+   },
+   "anchorPx": [
+    37.0,
+    121.0
+   ],
+   "anchorTile": [
+    20.5,
+    27.6
+   ],
+   "sortRow": 27.6,
+   "place": "stand",
+   "stage": 7
+  },
+  "town-toro-1": {
+   "size": [
+    69,
+    139
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-1.png"
+   },
+   "anchorPx": [
+    35.0,
+    121.0
+   ],
+   "anchorTile": [
+    25.5,
+    27.6
+   ],
+   "sortRow": 27.6,
+   "place": "stand",
+   "stage": 1,
+   "until": 7
+  },
+  "town-toro-lit-1": {
+   "size": [
+    74,
+    139
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-1.png"
+   },
+   "anchorPx": [
+    37.0,
+    121.0
+   ],
+   "anchorTile": [
+    25.5,
+    27.6
+   ],
+   "sortRow": 27.6,
+   "place": "stand",
+   "stage": 7
+  },
+  "town-toro-2": {
+   "size": [
+    69,
+    140
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-2.png"
+   },
+   "anchorPx": [
+    34.0,
+    122.0
+   ],
+   "anchorTile": [
+    14.3,
+    9.5
+   ],
+   "sortRow": 9.5,
+   "place": "stand",
+   "stage": 1,
+   "until": 7
+  },
+  "town-toro-lit-2": {
+   "size": [
+    74,
+    140
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-2.png"
+   },
+   "anchorPx": [
+    37.0,
+    122.0
+   ],
+   "anchorTile": [
+    14.3,
+    9.5
+   ],
+   "sortRow": 9.5,
+   "place": "stand",
+   "stage": 7
+  },
+  "town-toro-3": {
+   "size": [
+    69,
+    139
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-3.png"
+   },
+   "anchorPx": [
+    34.0,
+    121.0
+   ],
+   "anchorTile": [
+    31.3,
+    9.5
+   ],
+   "sortRow": 9.5,
+   "place": "stand",
+   "stage": 1,
+   "until": 7
+  },
+  "town-toro-lit-3": {
+   "size": [
+    74,
+    139
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-3.png"
+   },
+   "anchorPx": [
+    37.0,
+    121.0
+   ],
+   "anchorTile": [
+    31.3,
+    9.5
+   ],
+   "sortRow": 9.5,
+   "place": "stand",
+   "stage": 7
+  },
+  "town-toro-4": {
+   "size": [
+    68,
+    139
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-4.png"
+   },
+   "anchorPx": [
+    34.0,
+    121.0
+   ],
+   "anchorTile": [
+    44.2,
+    9.5
+   ],
+   "sortRow": 9.5,
+   "place": "stand",
+   "stage": 1,
+   "until": 7
+  },
+  "town-toro-lit-4": {
+   "size": [
+    74,
+    139
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-4.png"
+   },
+   "anchorPx": [
+    37.0,
+    121.0
+   ],
+   "anchorTile": [
+    44.2,
+    9.5
+   ],
+   "sortRow": 9.5,
+   "place": "stand",
+   "stage": 7
+  },
+  "town-pond-lantern": {
+   "size": [
+    62,
+    118
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-pond-lantern.png"
+   },
+   "anchorPx": [
+    31.0,
+    103.0
+   ],
+   "anchorTile": [
+    34.6,
+    25.4
+   ],
+   "sortRow": 25.4,
+   "place": "stand",
+   "stage": 7
+  },
+  "town-lantern-0": {
+   "size": [
+    56,
+    151
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-0.png"
+   },
+   "anchorPx": [
+    22.0,
+    142.0
+   ],
+   "anchorTile": [
+    3.0,
+    9.4
+   ],
+   "sortRow": 9.4,
+   "place": "stand",
+   "stage": 2
+  },
+  "town-lantern-1": {
+   "size": [
+    56,
+    151
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-1.png"
+   },
+   "anchorPx": [
+    22.0,
+    142.0
+   ],
+   "anchorTile": [
+    12.2,
+    9.4
+   ],
+   "sortRow": 9.4,
+   "place": "stand",
+   "stage": 2
+  },
+  "town-lantern-2": {
+   "size": [
+    56,
+    151
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-2.png"
+   },
+   "anchorPx": [
+    22.0,
+    142.0
+   ],
+   "anchorTile": [
+    17.6,
+    9.4
+   ],
+   "sortRow": 9.4,
+   "place": "stand",
+   "stage": 2
+  },
+  "town-lantern-3": {
+   "size": [
+    56,
+    151
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-3.png"
+   },
+   "anchorPx": [
+    22.0,
+    142.0
+   ],
+   "anchorTile": [
+    28.4,
+    9.4
+   ],
+   "sortRow": 9.4,
+   "place": "stand",
+   "stage": 2
+  },
+  "town-lantern-4": {
+   "size": [
+    56,
+    151
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-4.png"
+   },
+   "anchorPx": [
+    22.0,
+    142.0
+   ],
+   "anchorTile": [
+    33.4,
+    9.4
+   ],
+   "sortRow": 9.4,
+   "place": "stand",
+   "stage": 2
+  },
+  "town-lantern-5": {
+   "size": [
+    56,
+    151
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-lantern-5.png"
+   },
+   "anchorPx": [
+    22.0,
+    142.0
+   ],
+   "anchorTile": [
+    42.6,
+    9.4
+   ],
+   "sortRow": 9.4,
+   "place": "stand",
+   "stage": 2
+  },
+  "town-makiwara-0": {
+   "size": [
+    38,
+    97
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-makiwara-0.png"
+   },
+   "anchorPx": [
+    19.0,
+    89.0
+   ],
+   "anchorTile": [
+    7.5,
+    17.0
+   ],
+   "sortRow": 17.0,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-makiwara-1": {
+   "size": [
+    37,
+    96
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-makiwara-1.png"
+   },
+   "anchorPx": [
+    19.0,
+    88.0
+   ],
+   "anchorTile": [
+    5.0,
+    17.0
+   ],
+   "sortRow": 17.0,
+   "place": "stand",
+   "stage": 3
+  },
+  "town-makiwara-2": {
+   "size": [
+    38,
+    96
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-makiwara-2.png"
+   },
+   "anchorPx": [
+    19.0,
+    88.0
+   ],
+   "anchorTile": [
+    10.0,
+    17.0
+   ],
+   "sortRow": 17.0,
+   "place": "stand",
+   "stage": 3
+  },
+  "town-yard-banner-0": {
+   "size": [
+    55,
+    168
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-yard-banner-0.png"
+   },
+   "anchorPx": [
+    16.0,
+    161.0
+   ],
+   "anchorTile": [
+    3.0,
+    16.6
+   ],
+   "sortRow": 16.6,
+   "place": "stand",
+   "stage": 3
+  },
+  "town-yard-banner-1": {
+   "size": [
+    55,
+    168
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-yard-banner-1.png"
+   },
+   "anchorPx": [
+    16.0,
+    161.0
+   ],
+   "anchorTile": [
+    12.0,
+    16.6
+   ],
+   "sortRow": 16.6,
+   "place": "stand",
+   "stage": 3
+  },
+  "town-rack": {
+   "size": [
+    140,
+    128
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-rack.png"
+   },
+   "anchorPx": [
+    70.0,
+    111.0
+   ],
+   "anchorTile": [
+    1.9,
+    20.0
+   ],
+   "sortRow": 20.0,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-mook-jong": {
+   "size": [
+    102,
+    140
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-mook-jong.png"
+   },
+   "anchorPx": [
+    51.0,
+    120.0
+   ],
+   "anchorTile": [
+    5.5,
+    25.6
+   ],
+   "sortRow": 25.6,
+   "place": "stand",
+   "stage": 9
+  },
+  "town-plaza-banner-0": {
+   "size": [
+    54,
+    170
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-plaza-banner-0.png"
+   },
+   "anchorPx": [
+    16.0,
+    162.0
+   ],
+   "anchorTile": [
+    15.4,
+    18.0
+   ],
+   "sortRow": 18.0,
+   "place": "stand",
+   "stage": 4
+  },
+  "town-plaza-banner-1": {
+   "size": [
+    55,
+    168
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-plaza-banner-1.png"
+   },
+   "anchorPx": [
+    16.0,
+    161.0
+   ],
+   "anchorTile": [
+    15.4,
+    21.0
+   ],
+   "sortRow": 21.0,
+   "place": "stand",
+   "stage": 4
+  },
+  "town-plaza-banner-2": {
+   "size": [
+    55,
+    168
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-plaza-banner-2.png"
+   },
+   "anchorPx": [
+    16.0,
+    161.0
+   ],
+   "anchorTile": [
+    30.6,
+    18.0
+   ],
+   "sortRow": 18.0,
+   "place": "stand",
+   "stage": 4
+  },
+  "town-plaza-banner-3": {
+   "size": [
+    55,
+    169
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-plaza-banner-3.png"
+   },
+   "anchorPx": [
+    16.0,
+    162.0
+   ],
+   "anchorTile": [
+    30.6,
+    21.0
+   ],
+   "sortRow": 21.0,
+   "place": "stand",
+   "stage": 4
+  },
+  "town-tree-0": {
+   "size": [
+    172,
+    210
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-0.png"
+   },
+   "anchorPx": [
+    86.0,
+    180.0
+   ],
+   "anchorTile": [
+    1.6,
+    15.6
+   ],
+   "sortRow": 15.6,
+   "place": "stand",
+   "stage": 1,
+   "until": 6
+  },
+  "town-tree-sakura-0": {
+   "size": [
+    273,
+    269
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-sakura-0.png"
+   },
+   "anchorPx": [
+    128.0,
+    221.0
+   ],
+   "anchorTile": [
+    1.6,
+    15.6
+   ],
+   "sortRow": 15.6,
+   "place": "stand",
+   "stage": 6
+  },
+  "town-tree-1": {
+   "size": [
+    157,
+    191
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-1.png"
+   },
+   "anchorPx": [
+    78.0,
+    164.0
+   ],
+   "anchorTile": [
+    13.6,
+    23.6
+   ],
+   "sortRow": 23.6,
+   "place": "stand",
+   "stage": 1,
+   "until": 6
+  },
+  "town-tree-sakura-1": {
+   "size": [
+    259,
+    244
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-sakura-1.png"
+   },
+   "anchorPx": [
+    127.0,
+    201.0
+   ],
+   "anchorTile": [
+    13.6,
+    23.6
+   ],
+   "sortRow": 23.6,
+   "place": "stand",
+   "stage": 6
+  },
+  "town-tree-2": {
+   "size": [
+    172,
+    210
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-2.png"
+   },
+   "anchorPx": [
+    86.0,
+    180.0
+   ],
+   "anchorTile": [
+    31.6,
+    27.4
+   ],
+   "sortRow": 27.4,
+   "place": "stand",
+   "stage": 1,
+   "until": 6
+  },
+  "town-tree-sakura-2": {
+   "size": [
+    285,
+    269
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-sakura-2.png"
+   },
+   "anchorPx": [
+    140.0,
+    221.0
+   ],
+   "anchorTile": [
+    31.6,
+    27.4
+   ],
+   "sortRow": 27.4,
+   "place": "stand",
+   "stage": 6
+  },
+  "town-tree-3": {
+   "size": [
+    156,
+    192
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-3.png"
+   },
+   "anchorPx": [
+    78.0,
+    165.0
+   ],
+   "anchorTile": [
+    14.4,
+    27.6
+   ],
+   "sortRow": 27.6,
+   "place": "stand",
+   "stage": 1,
+   "until": 6
+  },
+  "town-tree-sakura-3": {
+   "size": [
+    259,
+    244
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-sakura-3.png"
+   },
+   "anchorPx": [
+    127.0,
+    201.0
+   ],
+   "anchorTile": [
+    14.4,
+    27.6
+   ],
+   "sortRow": 27.6,
+   "place": "stand",
+   "stage": 6
+  },
+  "town-tree-4": {
+   "size": [
+    157,
+    191
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-4.png"
+   },
+   "anchorPx": [
+    78.0,
+    164.0
+   ],
+   "anchorTile": [
+    44.0,
+    23.4
+   ],
+   "sortRow": 23.4,
+   "place": "stand",
+   "stage": 1,
+   "until": 6
+  },
+  "town-tree-sakura-4": {
+   "size": [
+    259,
+    244
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-sakura-4.png"
+   },
+   "anchorPx": [
+    127.0,
+    201.0
+   ],
+   "anchorTile": [
+    44.0,
+    23.4
+   ],
+   "sortRow": 23.4,
+   "place": "stand",
+   "stage": 6
+  },
+  "town-tree-5": {
+   "size": [
+    142,
+    172
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-5.png"
+   },
+   "anchorPx": [
+    71.0,
+    148.0
+   ],
+   "anchorTile": [
+    32.6,
+    15.4
+   ],
+   "sortRow": 15.4,
+   "place": "stand",
+   "stage": 1,
+   "until": 6
+  },
+  "town-tree-sakura-5": {
+   "size": [
+    234,
+    221
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-tree-sakura-5.png"
+   },
+   "anchorPx": [
+    115.0,
+    182.0
+   ],
+   "anchorTile": [
+    32.6,
+    15.4
+   ],
+   "sortRow": 15.4,
+   "place": "stand",
+   "stage": 6
+  },
+  "town-pine-0": {
+   "size": [
+    212,
+    246
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-pine-0.png"
+   },
+   "anchorPx": [
+    99.0,
+    211.0
+   ],
+   "anchorTile": [
+    2.4,
+    27.2
+   ],
+   "sortRow": 27.2,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-pine-1": {
+   "size": [
+    186,
+    213
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-pine-1.png"
+   },
+   "anchorPx": [
+    87.0,
+    183.0
+   ],
+   "anchorTile": [
+    44.0,
+    28.2
+   ],
+   "sortRow": 28.2,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-pine-2": {
+   "size": [
+    167,
+    191
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-pine-2.png"
+   },
+   "anchorPx": [
+    78.0,
+    164.0
+   ],
+   "anchorTile": [
+    11.6,
+    28.0
+   ],
+   "sortRow": 28.0,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-bamboo-sw": {
+   "size": [
+    254,
+    319
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-bamboo-sw.png"
+   },
+   "anchorPx": [
+    146.0,
+    319.0
+   ],
+   "anchorTile": [
+    8.6,
+    28.4
+   ],
+   "sortRow": 28.4,
+   "place": "stand",
+   "stage": 6
+  },
+  "town-bamboo-md": {
+   "size": [
+    196,
+    268
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-bamboo-md.png"
+   },
+   "anchorPx": [
+    80.0,
+    274.0
+   ],
+   "anchorTile": [
+    43.7,
+    19.6
+   ],
+   "sortRow": 19.6,
+   "place": "stand",
+   "stage": 6
+  },
+  "town-taiko": {
+   "size": [
+    302,
+    250
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-taiko.png"
+   },
+   "anchorPx": [
+    151.0,
+    226.0
+   ],
+   "anchorTile": [
+    23.0,
+    28.6
+   ],
+   "sortRow": 28.6,
+   "place": "stand",
+   "stage": 8
+  },
+  "town-koi": {
+   "size": [
+    470,
+    196
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-koi.png"
+   },
+   "anchorPx": [
+    231.0,
+    92.0
+   ],
+   "anchorTile": [
+    39.5,
+    26.2
+   ],
+   "sortRow": 26.2,
+   "place": "flat",
+   "stage": 3
+  },
+  "town-petals": {
+   "size": [
+    1191,
+    1181
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-petals.png"
+   },
+   "anchorPx": [
+    586.0,
+    460.0
+   ],
+   "anchorTile": [
+    23.0,
+    20.0
+   ],
+   "sortRow": 20.0,
+   "place": "flat",
+   "stage": 6
+  },
+  "town-gold-ring": {
+   "size": [
+    478,
+    471
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-gold-ring.png"
+   },
+   "anchorPx": [
+    239.0,
+    238.0
+   ],
+   "anchorTile": [
+    23.0,
+    19.0
+   ],
+   "sortRow": 19.0,
+   "place": "flat",
+   "stage": 10
+  },
+  "town-swall-0": {
+   "size": [
+    1233,
+    96
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-swall-0.png"
+   },
+   "anchorPx": [
+    613.4,
+    78.0
+   ],
+   "anchorTile": [
+    7.667,
+    29.6
+   ],
+   "sortRow": 29.2,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-swall-1": {
+   "size": [
+    1239,
+    97
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-swall-1.png"
+   },
+   "anchorPx": [
+    619.0,
+    78.0
+   ],
+   "anchorTile": [
+    23.0,
+    29.6
+   ],
+   "sortRow": 29.2,
+   "place": "stand",
+   "stage": 1
+  },
+  "town-swall-2": {
+   "size": [
+    1233,
+    96
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-swall-2.png"
+   },
+   "anchorPx": [
+    619.6,
+    78.0
+   ],
+   "anchorTile": [
+    38.333,
+    29.6
+   ],
+   "sortRow": 29.2,
+   "place": "stand",
+   "stage": 1
+  }
+ }
+}

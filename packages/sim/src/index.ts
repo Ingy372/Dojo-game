@@ -46,3 +46,4 @@ export * from './beltEntry';
 export * from './safety';
 export * from './shop';
 export * from './stones';
+export * from './town';
