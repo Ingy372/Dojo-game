@@ -537,26 +537,27 @@
       ]
     },
     "enemies-t1": {
+      "note": "Shades v2 (Claude Code, Jay approved Nov 18 2026): redesigned White belt monsters rendered at 160 px per tile and packed at the usual 0.6, so 96 px per tile (twice every other pack). The game draws them at half size, then 25% bigger: ART_BOOST in apps/client/src/art/tiers.ts.",
       "sources": [
         {
           "id": "swarmer",
           "type": "character",
-          "json": "incoming-art/enemies-tier1/swarmer/sprites/swarmer.json"
+          "json": "incoming-art/claude-enemies-t1/swarmer/sprites/swarmer.json"
         },
         {
           "id": "shield",
           "type": "character",
-          "json": "incoming-art/enemies-tier1/shield/sprites/shield.json"
+          "json": "incoming-art/claude-enemies-t1/shield/sprites/shield.json"
         },
         {
           "id": "brute",
           "type": "character",
-          "json": "incoming-art/enemies-tier1/brute/sprites/brute.json"
+          "json": "incoming-art/claude-enemies-t1/brute/sprites/brute.json"
         },
         {
           "id": "floor-keeper",
           "type": "character",
-          "json": "incoming-art/enemies-tier1/keeper/sprites/keeper.json"
+          "json": "incoming-art/claude-enemies-t1/keeper/sprites/keeper.json"
         }
       ]
     },

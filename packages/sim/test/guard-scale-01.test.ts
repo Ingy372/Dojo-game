@@ -305,7 +305,9 @@ describe('GUARD-SCALE-01: the art is drawn at the same scale', () => {
     expect(gameSceneRaw).toMatch(/sprite\.container\.setScale\(scale\)/);
     expect(gameSceneRaw).toMatch(/addShadow\(this, \(r \* 2\.2\) \/ scale\)/);
     expect(gameSceneRaw).toMatch(/characterTop\(this, art\) \* scale/);
-    expect(gameSceneRaw).toMatch(/setScale\(e\.def\.scale \* \(1 \+ 0\.3/);
-    expect(gameSceneRaw).toMatch(/s\.container\.setScale\(e\.def\.scale\)/);
+    // Shades v2 (Nov 18): artScale(def) = def.scale times the White belt monsters' drawing boost (art/tiers.ts).
+    expect(gameSceneRaw).toMatch(/const scale = artScale\(e\.def\)/);
+    expect(gameSceneRaw).toMatch(/setScale\(artScale\(e\.def\) \* \(1 \+ 0\.3/);
+    expect(gameSceneRaw).toMatch(/s\.container\.setScale\(artScale\(e\.def\)\)/);
   });
 });

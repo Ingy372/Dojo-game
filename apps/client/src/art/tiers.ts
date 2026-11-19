@@ -56,6 +56,20 @@ const HEARTH_COOK_RIGS: Array<{ atHealth: number; pack: PackName; id: string }> 
 /** Every pack ENEMY_PACKS or a phase rig can use, for loading. */
 export const ENEMY_ART_PACKS: PackName[] = [...new Set([...Object.values(ENEMY_PACKS).map((p) => p.pack), ...HEARTH_COOK_RIGS.map((r) => r.pack)])];
 
+/**
+ * Shades v2 (Jay, Nov 18: "draw them sharper and bigger"). The White belt monsters (pack enemies-t1) are rendered at
+ * 160 px per tile and packed at 96, twice the pixels of every other pack, so they are drawn at half size
+ * (SHARP_PACK) and then 25% bigger than their hit circle (BIGGER). Drawing only: the fight rules are unchanged.
+ */
+const SHARP_PACK = 0.5;
+const BIGGER = 1.25;
+export const ART_BOOST: Record<string, number> = { swarmer: SHARP_PACK * BIGGER, shield: SHARP_PACK * BIGGER, brute: SHARP_PACK * BIGGER, 'floor-keeper': SHARP_PACK * BIGGER };
+
+/** How big an enemy's art is drawn: its Guardian scale times any drawing boost. */
+export function artScale(def: { id: string; scale: number }): number {
+  return def.scale * (ART_BOOST[def.id] ?? 1);
+}
+
 /** The art (pack, id) for an enemy at this share of health; phase bosses change rig as they lose health. */
 export function enemyArt(enemyId: string, healthShare: number): { pack: PackName; id: string } | undefined {
   if (enemyId === 'hearth-cook') return HEARTH_COOK_RIGS.find((r) => healthShare >= r.atHealth) ?? HEARTH_COOK_RIGS[2];

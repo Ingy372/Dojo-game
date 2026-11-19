@@ -250,8 +250,6 @@ elif E == "brute":
         vein(f"sveins{x}", [(x * R * 0.25, -R * 0.62, H * 0.78), (x * R * 0.6, -R * 0.55, H * 0.7), (x * R * 0.95, -R * 0.35, H * 0.6), (x * R * 1.1, -R * 0.1, H * 0.48)], R * 0.04)
     M_("mawashi", tube((0, 0, H * 0.14), (0, 0, H * 0.26), R * 1.05, R * 1.08, segs=28), MAT["ink"], outline=False)
     M_("mawashiknot", ellipsoid((0, -R * 1.02, H * 0.2), (R * 0.22, R * 0.1, H * 0.08)), MAT["accent"], outline=False)
-    for k, x in enumerate((-R * 0.3, 0, R * 0.3)):
-        M_(f"tassel{k}", tube((x, -R * 1.04, H * 0.15), (x * 1.1, -R * 1.08, H * 0.04), R * 0.04, R * 0.03, segs=6), MAT["accent"], outline=False)
 else:
     M_("hem", tube((0, R * 0.12, H * 0.03), (0, R * 0.12, H * 0.07), R * 1.06, R * 1.04, segs=32), TRIM, outline=False)
     M_("hem2", tube((0, R * 0.11, H * 0.12), (0, R * 0.11, H * 0.135), R * 0.98, R * 0.97, segs=32), TRIM, outline=False)

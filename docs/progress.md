@@ -1355,3 +1355,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - **Art audit** with scores and a 10-item rework list: `docs/reviews/art-audit-2026-11-18.md`.
 - 1,627 tests pass; type checks pass. Not on `main` yet.
 - **Next:** Jay plays the tour and the new board on the preview; OK (or new words) for the tour lines; pick the first art rework (recommended: the tier-1 enemies).
+- **Art rework item 1 done: the Shades** (new White belt monsters, sharper and 25% bigger), after three drafts Jay turned down (bright, night, Shades v1). Next art: Journal stickers and trophies to match, then the Home Dojo room and mats.
