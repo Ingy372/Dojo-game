@@ -134,8 +134,6 @@ blockers = []
 def block(bid, rect, ch="P", why=""):
     cells = cover(rect); paint(cells, ch); blockers.append({"id": bid, "rect": list(rect), "cells": sorted([c, r] for c, r in cells), "why": why})
 block("wing-west", (0.0, 7.0, 9.0, 10.0), "#", "west wing wall row"); block("wing-east", (19.4, 27.0, 9.0, 10.0), "#", "east wing wall row")
-paint({(6, r) for r in (10, 11, 12)} | {(19, r) for r in (10, 11, 12)}, "#")
-blockers += [{"id": "stub-west", "rect": [6.9, 7.1, 10.0, 12.35], "cells": [[6, 10], [6, 11], [6, 12]], "why": "wing end wall (west); the thin wall is given the column on its alcove side"}, {"id": "stub-east", "rect": [19.4, 19.6, 10.0, 12.35], "cells": [[19, 10], [19, 11], [19, 12]], "why": "wing end wall (east); the thin wall is given its own column"}]
 block("pro-counter", (1.9, 5.3, 11.05, 11.95), "P"); block("gear-box", LM.CUBBY, "P", "red gear-bag box (gaps on both ends stay open)")
 block("seats", (8.95, 18.05, 10.2, 14.7), "S", "parent seating decks and steps")
 for (bx, br, nm) in LM.BAGS: block("bag-" + nm, (bx - .5, bx + .5, br - .43, br + .43), "P", "heavy bag base")

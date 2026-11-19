@@ -380,6 +380,38 @@ def torus(center, R, r, segs=18, rsegs=6, rot=(90, 0, 0)):
     _BM.ops.transform(bm, matrix=m, verts=bm.verts)
     return bm
 
+def trap(p0, p1, w0, w1):
+    dx, dy = p1[0] - p0[0], p1[1] - p0[1]; L_ = math.hypot(dx, dy) or 1e-6; nx, ny = -dy / L_, dx / L_
+    return [(p0[0] + nx * w0 / 2, p0[1] + ny * w0 / 2), (p1[0] + nx * w1 / 2, p1[1] + ny * w1 / 2), (p1[0] - nx * w1 / 2, p1[1] - ny * w1 / 2), (p0[0] - nx * w0 / 2, p0[1] - ny * w0 / 2)]
+SIL = {   # solid martial-artist silhouettes in a gi, facing right; hip at (0, 0), about 1.5 tall. joints: neck, head, arms [shoulder->elbow->fist], legs [hip->knee->foot]
+ "sidekick": dict(neck=(-0.3, 0.44), head=(-0.42, 0.6), lean=True,
+                  arms=[[(-0.24, 0.42), (-0.02, 0.5), (0.1, 0.62)], [(-0.36, 0.4), (-0.56, 0.26), (-0.5, 0.1)]],
+                  legs=[[(0.04, 0.02), (0.42, 0.1), (0.84, 0.18)], [(-0.04, -0.02), (-0.1, -0.4), (-0.12, -0.8)]], feet=[(1, 0.0), (0, 1)]),
+ "stance":   dict(neck=(0.04, 0.52), head=(0.06, 0.7), lean=False,
+                  arms=[[(0.12, 0.48), (0.36, 0.46), (0.62, 0.47)], [(-0.06, 0.46), (-0.24, 0.28), (-0.06, 0.16)]],
+                  legs=[[(0.06, 0.0), (0.32, -0.32), (0.4, -0.78)], [(-0.06, 0.0), (-0.32, -0.36), (-0.6, -0.78)]], feet=[(0, 1), (0, 1)]),
+ "split":    dict(neck=(0.0, 0.5), head=(0.0, 0.68), lean=False,
+                  arms=[[(0.1, 0.46), (0.36, 0.5), (0.62, 0.52)], [(-0.1, 0.46), (-0.36, 0.5), (-0.62, 0.52)]],
+                  legs=[[(0.06, 0.0), (0.45, 0.03), (0.9, 0.06)], [(-0.06, 0.0), (-0.45, 0.03), (-0.9, 0.06)]], feet=[(1, 0.0), (-1, 0.0)]),
+}
+def sil(pose, ox, oy, s):
+    P = SIL[pose]; m = lambda p: (ox + s * p[0], oy + s * p[1]); out = []
+    hipL, hipR = m((-0.11, 0.0)), m((0.11, 0.0)); nk = P["neck"]
+    sh = (-0.16, 0.0) if not P["lean"] else (-0.15, 0.05)
+    out.append([hipL, hipR, m((nk[0] - sh[0], nk[1] - sh[1] - 0.03)), m((nk[0] + sh[0], nk[1] + sh[1] - 0.03))])      # torso (jacket)
+    out.append(trap(m((0, 0.04)), m((nk[0] * 0.25, 0.25)), 0.3 * s, 0.32 * s))                                        # gi skirt / waist
+    out.append(circ(*m(P["head"]), 0.11 * s, 18)); out.append(trap(m(nk), m(P["head"]), 0.09 * s, 0.08 * s))
+    for arm in P["arms"]:
+        out.append(trap(m(arm[0]), m(arm[1]), 0.12 * s, 0.1 * s)); out.append(trap(m(arm[1]), m(arm[2]), 0.1 * s, 0.08 * s))
+        out.append(circ(*m(arm[1]), 0.05 * s, 10)); out.append(circ(*m(arm[2]), 0.055 * s, 10)); out.append(circ(*m(arm[0]), 0.065 * s, 10))
+    for leg, ft in zip(P["legs"], P["feet"]):
+        out.append(trap(m(leg[0]), m(leg[1]), 0.19 * s, 0.14 * s)); out.append(trap(m(leg[1]), m(leg[2]), 0.14 * s, 0.1 * s))
+        out.append(circ(*m(leg[1]), 0.07 * s, 10)); out.append(circ(*m(leg[0]), 0.1 * s, 12))
+        fx, fy = m(leg[2])
+        if ft[1]: out.append([(fx - 0.06 * s, fy - 0.03 * s), (fx + 0.16 * s, fy - 0.03 * s), (fx + 0.15 * s, fy + 0.04 * s), (fx - 0.05 * s, fy + 0.05 * s)])   # foot flat on the ground
+        else: out.append(trap((fx - ft[0] * 0.02 * s, fy), (fx + ft[0] * 0.07 * s, fy), 0.15 * s, 0.11 * s))                                           # blade of the foot
+    return out
+
 def scene_inside():
     global WF
     rnd = _rnd.Random(19)
@@ -445,9 +477,6 @@ def scene_inside():
         grp("wing-west" if nm == "westWing" else "wing-east"); cx = (a + b) / 2
         B(cx, RW - 0.17, Hh / 2, b - a, 0.34, Hh, col, True, name=nm); B(cx, RW - 0.17, Hh + 0.04, b - a + 0.04, 0.38, 0.1, CAP, True, name=nm + "Cap")
         B(cx, RW + 0.03, 0.06, b - a, 0.04, 0.12, "#8c8a84", False, name="baseboard")
-    grp("wing-west"); B(LM.WEST_WING[1] - 0.1, RW + 1.2, Hh / 2, 0.2, 2.4, Hh, PRO, True, name="westStub")
-    B(LM.WEST_WING[1] - 0.1, RW + 2.42, Hh / 2, 0.24, 0.06, Hh, "#e03a30", False, name="westStubTrim")
-    grp("wing-east"); B(LM.EAST_WING[0] + 0.1, RW + 1.2, Hh / 2, 0.2, 2.4, Hh, WALL, True, name="eastStub")
     # front wall (foreground): low curb, brown door posts and header, open brown leaves with glass
     grp("foreground")
     for (a, b) in ((0, LM.DOOR[0]), (LM.DOOR[1], Wd_)):
@@ -504,9 +533,9 @@ def scene_inside():
     imgplane(LOGO, "muralLogo", cx, 1.75, 1.75 * LOGO_AR, row=WF + 0.1, zc=1.72)
     for s, x, z, w in (("Karate", cx, 2.85, 0.95), ("Kung Fu", a + 0.95, 2.62, 0.95), ("Jiu Jitsu", b - 0.95, 2.62, 1.0), ("Tae Kwon Do", a + 0.95, 0.88, 1.25), ("Weapons", b - 0.95, 0.88, 1.0)):
         text("t_" + s, s, x, WF + 0.1, z, 0.21, w, INK, 0.03, False)
-    for poly_ in figure("kick", a + 0.95, 1.85, 0.85): wpoly(poly_, INK, 4, "silKick")
-    for poly_ in figure("block", b - 0.95, 1.85, 0.85): wpoly(poly_, INK, 4, "silStance")
-    for poly_ in figure("split", cx, 0.42, 0.5): wpoly(poly_, INK, 4, "silSplit")
+    for poly_ in sil("sidekick", a + 0.78, 1.78, 0.72): wpoly(poly_, INK, 4, "silKick")
+    for poly_ in sil("stance", b - 0.9, 1.78, 0.72): wpoly(poly_, INK, 4, "silStance")
+    for poly_ in sil("split", cx, 0.3, 0.55): wpoly(poly_, INK, 4, "silSplit")
     # round clock
     wdisc(LM.FLAG[0] - 0.12, 3.0, 0.2, "#25252e", 0, "clockRim"); wdisc(LM.FLAG[0] - 0.12, 3.0, 0.16, "#f4f1e8", 1, "clockFace")
     for k in range(12): wdisc(LM.FLAG[0] - 0.12 + 0.12 * math.sin(k * math.pi / 6), 3.0 + 0.12 * math.cos(k * math.pi / 6), 0.012, "#25252e", 2, "tick")
@@ -566,7 +595,6 @@ def scene_inside():
         B(cxm + 0.03 * (k % 2), rcm, ZM + 0.11 + 0.21 * k, b - a, rb - ra, 0.2, c, True, bevel=0.04, name=f"crashMat{k}")
         B(cxm + 0.03 * (k % 2), rb - 0.01, ZM + 0.11 + 0.21 * k, 0.5, 0.02, 0.05, "#1d1b24", False, name="crashHandle")
         B(cxm + 0.03 * (k % 2) - (b - a) / 2 + 0.06, rcm, ZM + 0.11 + 0.21 * k, 0.03, rb - ra, 0.2, "#1d4aa0", False, name="crashFold")
-    B(cxm + 0.55, rcm - 0.05, ZM + 0.98, 0.95, 0.9, 0.2, "#2a5db0", True, bevel=0.05, name="kickShield2")
     shadow(cxm, rb, 1.4, 0.25, ZM + 0.05, 0.22, "crashShadow")
     # ---- heavy bags: freestanding, filled base, collar, tall bag, white band (no brand words)
     for (x, r, c) in LM.BAGS:
@@ -605,7 +633,6 @@ def scene_inside():
     for k in range(5):
         x = x0 + 1.0 + k * 1.3
         B(x, r1 + 0.01, 0.74, 1.0, 0.02, 0.6, "#5a1c18", False, name="cubbyRim"); B(x, r1 + 0.015, 0.74, 0.92, 0.02, 0.52, "#2a0f0f", False, name="cubbyOpening")
-        E(x, r1 + 0.04, 0.6, 0.34, 0.2, 0.19, BAGC[k], True, 12, 6, name="gearBag"); B(x, r1 + 0.2, 0.66, 0.4, 0.02, 0.03, "#f4f1e8", False, name="bagZip")
     B(10.9, rc, 1.2, 0.6, 0.45, 0.07, "#25252e", True, name="binder"); B(10.95, rc, 1.27, 0.55, 0.4, 0.07, "#d92b25", True, name="binder2")
     B(11.7, rc, 1.19, 0.5, 0.38, 0.05, "#f4f1e8", True, name="papers"); B(15.0, rc, 1.19, 0.7, 0.45, 0.05, "#f4f1e8", False, name="papers2")
     T(16.3, rc, 1.16, 1.5, 0.07, 0.07, "#8ec6ff", True, 10, name="bottle"); T(16.3, rc, 1.5, 1.56, 0.04, 0.04, "#2f6fd6", False, 8, name="bottleCap")
@@ -636,12 +663,11 @@ def scene_inside():
             x = X0 + 0.3 + pitch * k; B(x, rs, zt + 0.4, 0.05, 0.42, 0.035, "#2c2c33", True, name="armrest"); B(x, rs + 0.1, zt + 0.2, 0.035, 0.035, 0.4, "#2c2c33", False, name="armpost")
     sxk = lambda k: X0 + 0.3 + pitch * (k + 0.5); rsw = lambda ti: LM.TIERS[ti][0] - LM.TIERS[ti][1] / 2 - 0.1
     B(sxk(5), rsw(1), LM.TIERS[1][2] + 0.42, 0.42, 0.32, 0.24, "#f5c542", True, bevel=0.04, name="seatBag"); B(sxk(5), rsw(1) - 0.17, LM.TIERS[1][2] + 0.5, 0.3, 0.02, 0.04, "#27407a", False, name="seatBagStrap")
-    E(sxk(2), rsw(2) + 0.2, LM.TIERS[2][2] + 0.9, 0.3, 0.14, 0.12, "#7fd1b9", True, 10, 6, name="jacket")
     T(sxk(7) + 0.2, rsw(0) - 0.2, LM.TIERS[0][2] + 0.03, LM.TIERS[0][2] + 0.3, 0.045, 0.045, "#8ec6ff", True, 8, name="seatBottle")
     # ======================= WEST WING: PRO SHOP =======================
     grp("wing-west")
     WF = RW; a, b = LM.WEST_WING
-    CLEAR = ((0.55, 3.55, 0.55, 2.95), (3.6, 5.0, 1.75, 2.75), (5.3, 6.7, 0.85, 2.25), (3.3, 5.9, 2.8, 3.4))   # grid, shirts, window, sign
+    CLEAR = ((0.55, 3.55, 0.55, 2.95), (3.45, 5.3, 1.45, 2.75), (5.3, 6.7, 0.85, 2.25), (3.3, 5.9, 2.8, 3.4))   # grid, shirts, window, sign
     for k in range(90):          # sponge-painted clouds on the sky-blue wall, kept off the shop fittings
         x = 0.25 + rnd.random() * 6.6; z = 0.25 + rnd.random() * 3.0; rd = 0.06 + rnd.random() * 0.14
         if any(x0 - rd * 1.4 < x < x1 + rd * 1.4 and z0 - rd < z < z1 + rd for x0, x1, z0, z1 in CLEAR): continue
@@ -658,10 +684,13 @@ def scene_inside():
         Wd(x, 1.62, 0.42, 0.48, "#25252e" if k % 2 == 0 else "#3a3a45", 0.08, 0.03, True, name="padBag"); imgplane(LOGO, "proLogo2", x, 0.22, 0.22 * LOGO_AR, row=WF + 0.115, zc=1.62)
         E(x, WF + 0.12, 1.0, 0.13, 0.06, 0.11, ("#d92b25", "#2f6fd6", "#d92b25", "#d92b25")[k], True, 10, 6, name="hangGlove")
     # t-shirts on a rail
-    Wd(4.3, 2.62, 1.2, 0.04, "#25252e", 0.07, 0.02, False, name="hangRail")
-    for k, x in enumerate((3.98, 4.62)):
-        wpoly([(x - 0.1, 2.58), (x + 0.1, 2.58), (x + 0.26, 2.45), (x + 0.2, 2.33), (x + 0.13, 2.38), (x + 0.13, 1.9), (x - 0.13, 1.9), (x - 0.13, 2.38), (x - 0.2, 2.33), (x - 0.26, 2.45)], "#25252e", 2, "tee")
-        imgplane(LOGO, "teeLogo", x, 0.16, 0.16 * LOGO_AR, row=WF + 0.1, zc=2.25)
+    Wd(4.37, 2.64, 1.75, 0.045, "#25252e", 0.07, 0.02, False, name="hangRail")
+    TEE = [(0.1, 0), (0.26, -0.13), (0.2, -0.25), (0.13, -0.2), (0.13, -0.68)]
+    for k, x in enumerate((3.95, 4.8)):
+        S_ = 1.55; pts = [(x + S_ * dx, 2.6 + S_ * dz) for dx, dz in TEE]; pts = pts + [(2 * x - px, pz) for px, pz in reversed(pts)]
+        wpoly([(x - 0.012, 2.67), (x + 0.012, 2.67), (x + 0.012, 2.6), (x - 0.012, 2.6)], "#8a8f9c", 1, "hanger")
+        wpoly(pts, "#1d1b24", 2, "tee"); wpoly(circ(x, 2.6, 0.09, 14, 1.2, 0.6), "#3a3844", 3, "teeCollar")
+        imgplane(LOGO, "teeLogo", x, 0.36, 0.36 * LOGO_AR, row=WF + 0.13, zc=2.12)
     # red-framed shop window
     Wd(6.0, 1.55, 1.05, 1.15, "#e03a30", 0.03, 0.05, True, name="shopWinFrame"); Wd(6.0, 1.55, 0.85, 0.95, "#cfe9f7", 0.08, 0.02, False, name="shopWinGlass")
     Wd(6.0, 1.55, 0.04, 0.95, "#f4f1e8", 0.1, 0.01, False, name="shopWinMull"); Wd(5.75, 1.65, 0.26, 0.32, "#fbfbf8", 0.1, 0.01, False, name="shopNote")
@@ -695,10 +724,7 @@ def scene_inside():
                 Wd(c + dx, zc_, 0.5, hh, "#e6e2d8", 0.1, 0.01, False, name="doorPanel"); Wd(c + dx, zc_, 0.42, hh - 0.08, "#f6f4ee", 0.105, 0.01, False, name="doorPanelIn")
         Wd(c, 1.45, 0.2, 1.75, RED, 0.115, 0.02, False, name="crossV"); Wd(c, 1.95, 1.0, 0.2, RED, 0.115, 0.02, False, name="crossH")
         E(c + 0.55, WF + 0.14, 1.1, 0.05, 0.03, 0.05, "#c8ccd4", True, 8, 6, name="knob")
-        if isB:
-            Wd(c - 0.5, 1.3, 0.24, 0.3, "#2f6fd6", 0.12, 0.02, False, name="doorPlate")
-            for dx in (-0.05, 0.05): wpoly(circ(c - 0.5 + dx, 1.36, 0.02, 8), "#ffffff", 8, "signHead"); wpoly(rect((c - 0.5 + dx, 1.33), (c - 0.5 + dx, 1.2), 0.04), "#ffffff", 8, "signBody")
-        else:
+        if not isB:
             Wd(c, 2.95, 0.36, 0.46, INK, 0.04, 0.04, True, name="crossFrame"); Wd(c, 2.95, 0.3, 0.4, "#f4f1e8", 0.07, 0.01, False, name="crossFrameIn")
             Wd(c, 2.95, 0.035, 0.3, "#3a2a20", 0.08, 0.01, False, name="crossPicV"); Wd(c, 3.02, 0.18, 0.035, "#3a2a20", 0.08, 0.01, False, name="crossPicH")
     grp("handprint-wall")
@@ -781,7 +807,6 @@ def scene_seating():
     sx = lambda k: X0 + 0.3 + pitch * (k + 0.5); rsw = lambda ti: tiers[ti][0] - tiers[ti][1] / 2 + 0.05
     B(sx(1), rsw(2), tiers[2][2] + 0.33 + 0.12, 0.42, 0.32, 0.24, "#f5c542", True, bevel=0.04, name="bag"); B(sx(1), rsw(2), tiers[2][2] + 0.47, 0.3, 0.05, 0.03, "#27407a", False, name="bagStrap")
     T(X0 - 0.55, rsw(2), tiers[2][2], tiers[2][2] + 0.3, 0.05, 0.05, "#8ec6ff", True, 8, name="bottle"); T(X0 - 0.55, rsw(2), tiers[2][2] + 0.3, tiers[2][2] + 0.36, 0.025, 0.025, "#f4f1e8", False, 6, name="bottleCap")
-    E(sx(3), rsw(1) - 0.2, tiers[1][2] + 0.95, 0.3, 0.14, 0.14, "#7fd1b9", True, 10, 6, name="jacket")
     B(sx(6), rsw(0), tiers[0][2] + 0.35, 0.26, 0.2, 0.05, "#ee7fb0", True, name="book")
     # floor: a welcome mat and a toy basket by the steps
     B(CX, 8.9, 0.04, 2.4, 0.7, 0.04, "#4a5470", True, name="mat"); B(CX, 8.9, 0.07, 2.2, 0.5, 0.02, "#f4f1e8", False, name="matInner")
