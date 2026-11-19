@@ -1,11 +1,20 @@
 import { wantsThrough, type MoveInput, type Room, type Vec2 } from '@dojo/sim';
 import { OUTSIDE, OUTSIDE_PACK } from '../game/actionZone';
-import { addStatic, staticArt, staticSprites } from '../art/art';
+import { addStatic, staticArt, staticSprites, type StaticSprite } from '../art/art';
 import { addExitCue } from '../ui/exitCue';
 import { TILE, WalkScene, type Facing } from './WalkScene';
+import { TOWN_PACK } from './TownScene';
 
 /** The scenery that stands behind the building (its sort row is north of the building's row 6). */
 const BEHIND_BUILDING_ROW = 6;
+
+/**
+ * Jay, Nov 19: the entrance should show the same detailed building as the town. The town's Action Zone pieces
+ * (town pack, drawn at half size because they are packed at twice the detail) are placed here instead of the
+ * old building layer and the old bench and chairs. Town tile (23, 9), the door front, is this room's (7, 6).
+ */
+const FROM_TOWN = { dx: -16, dy: -3 };
+const TOWN_PIECES: Record<string, string[]> = { 'town-az': [], 'town-az-bench-a': ['outside-bench-a'], 'town-az-chairs': ['outside-chair-a', 'outside-chair-b'] };
 
 /**
  * The Action Zone dojo, outside (A4-DOJO-ii): the entrance in daylight. Drawn bottom to top as the
@@ -24,7 +33,7 @@ export class OutsideScene extends WalkScene {
   }
 
   protected roomPacks(): string[] {
-    return [OUTSIDE_PACK];
+    return [OUTSIDE_PACK, TOWN_PACK];
   }
 
   /** Back from inside you stand at the doors; arriving from the town you stand on the walk below the beds. */
@@ -41,9 +50,28 @@ export class OutsideScene extends WalkScene {
       this.bounds = [-ax / TILE, (frame.frameWidth - ax) / TILE, -ay / TILE, (frame.frameHeight - ay) / TILE];
     }
 
+    // The detailed building from the town, when its art is here (else the old picture stays).
+    const town = staticSprites(this, TOWN_PACK) as Record<string, StaticSprite & { drawScale?: number }>;
+    const replaced = new Set<string>();
+    let newBuilding: Phaser.GameObjects.Image[] = [];
+    for (const [id, olds] of Object.entries(TOWN_PIECES)) {
+      const s = town[id];
+      if (!s?.anchorTile) continue;
+      const images = addStatic(this, TOWN_PACK, id, (s.anchorTile[0] + FROM_TOWN.dx) * TILE, (s.anchorTile[1] + FROM_TOWN.dy) * TILE);
+      for (const img of images) img.setScale(s.drawScale ?? 1);
+      if (id === 'town-az') newBuilding = images;
+      else {
+        for (const img of images) img.setDepth(((s.sortRow ?? s.anchorTile[1]) + FROM_TOWN.dy) * TILE);
+        this.standLayer.add(images);
+      }
+      olds.forEach((o) => replaced.add(o));
+    }
+    const oldBuilding = newBuilding.length ? [] : [building, phone, address];
+    if (newBuilding.length) [building, phone, address].forEach((img) => img?.destroy());
+
     const behind: Phaser.GameObjects.Image[] = [];
     for (const [id, s] of Object.entries(staticSprites(this, OUTSIDE_PACK))) {
-      if (!s.anchorTile || s.sortRow === undefined) continue;
+      if (!s.anchorTile || s.sortRow === undefined || replaced.has(id)) continue;
       const images = addStatic(this, OUTSIDE_PACK, id, s.anchorTile[0] * TILE, s.anchorTile[1] * TILE);
       if (s.sortRow < BEHIND_BUILDING_ROW) {
         behind.push(...images);
@@ -57,7 +85,7 @@ export class OutsideScene extends WalkScene {
     const cues = OUTSIDE.exits.map((e) =>
       addExitCue(this, e.cue.x * TILE, e.cue.y * TILE, e.cue.w * TILE, e.cue.h * TILE, e.rect[0] < 1 ? 'left' : 'right'),
     );
-    this.worldLayer.add([ground, ...behind, building, phone, address, ...cues, this.standLayer].filter(Boolean));
+    this.worldLayer.add([ground, ...behind, ...oldBuilding, ...newBuilding, ...cues, this.standLayer].filter(Boolean));
   }
 
   /** A tap on the double doors walks to the doorstep. */
