@@ -463,29 +463,6 @@
    "place": "stand",
    "sortRow": 9.0
   },
-  "town-pagoda": {
-   "size": [
-    220,
-    412
-   ],
-   "layers": [
-    "day"
-   ],
-   "files": {
-    "day": "town-pagoda.png"
-   },
-   "anchorPx": [
-    110.0,
-    409.0
-   ],
-   "anchorTile": [
-    14.3,
-    3.6
-   ],
-   "stage": 8,
-   "place": "stand",
-   "sortRow": 3.6
-  },
   "town-my-dojo": {
    "size": [
     662,
@@ -1676,143 +1653,197 @@
     ]
    ]
   },
-  "town-makiwara-0": {
+  "town-rock-0": {
    "size": [
-    38,
-    97
+    191,
+    135
    ],
    "layers": [
     "day"
    ],
    "files": {
-    "day": "town-makiwara-0.png"
+    "day": "town-rock-0.png"
    },
    "anchorPx": [
-    19.0,
-    89.0
-   ],
-   "anchorTile": [
-    7.5,
-    17.0
-   ],
-   "stage": 1,
-   "place": "stand",
-   "sortRow": 17.0
-  },
-  "town-makiwara-1": {
-   "size": [
-    37,
-    96
-   ],
-   "layers": [
-    "day"
-   ],
-   "files": {
-    "day": "town-makiwara-1.png"
-   },
-   "anchorPx": [
-    19.0,
-    88.0
+    102.0,
+    123.0
    ],
    "anchorTile": [
     5.0,
-    17.0
-   ],
-   "stage": 3,
-   "place": "stand",
-   "sortRow": 17.0
-  },
-  "town-makiwara-2": {
-   "size": [
-    38,
-    96
-   ],
-   "layers": [
-    "day"
-   ],
-   "files": {
-    "day": "town-makiwara-2.png"
-   },
-   "anchorPx": [
-    19.0,
-    88.0
-   ],
-   "anchorTile": [
-    10.0,
-    17.0
-   ],
-   "stage": 3,
-   "place": "stand",
-   "sortRow": 17.0
-  },
-  "town-yard-banner-0": {
-   "size": [
-    55,
-    168
-   ],
-   "layers": [
-    "day"
-   ],
-   "files": {
-    "day": "town-yard-banner-0.png"
-   },
-   "anchorPx": [
-    16.0,
-    161.0
-   ],
-   "anchorTile": [
-    3.0,
-    16.6
-   ],
-   "stage": 3,
-   "place": "stand",
-   "sortRow": 16.6
-  },
-  "town-yard-banner-1": {
-   "size": [
-    55,
-    168
-   ],
-   "layers": [
-    "day"
-   ],
-   "files": {
-    "day": "town-yard-banner-1.png"
-   },
-   "anchorPx": [
-    16.0,
-    161.0
-   ],
-   "anchorTile": [
-    12.0,
-    16.6
-   ],
-   "stage": 3,
-   "place": "stand",
-   "sortRow": 16.6
-  },
-  "town-rack": {
-   "size": [
-    140,
-    128
-   ],
-   "layers": [
-    "day"
-   ],
-   "files": {
-    "day": "town-rack.png"
-   },
-   "anchorPx": [
-    70.0,
-    111.0
-   ],
-   "anchorTile": [
-    1.9,
-    20.0
+    18.575
    ],
    "stage": 1,
    "place": "stand",
-   "sortRow": 20.0
+   "sortRow": 18.575
+  },
+  "town-rock-1": {
+   "size": [
+    153,
+    111
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-rock-1.png"
+   },
+   "anchorPx": [
+    82.0,
+    99.0
+   ],
+   "anchorTile": [
+    10.0,
+    19.9
+   ],
+   "stage": 1,
+   "place": "stand",
+   "sortRow": 19.9
+  },
+  "town-rock-2": {
+   "size": [
+    138,
+    101
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-rock-2.png"
+   },
+   "anchorPx": [
+    74.0,
+    88.6
+   ],
+   "anchorTile": [
+    6.4,
+    22.57
+   ],
+   "stage": 1,
+   "place": "stand",
+   "sortRow": 22.57
+  },
+  "town-basin": {
+   "size": [
+    132,
+    153
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-basin.png"
+   },
+   "anchorPx": [
+    70.0,
+    98.0
+   ],
+   "anchorTile": [
+    11.4,
+    23.2
+   ],
+   "stage": 3,
+   "place": "stand",
+   "sortRow": 23.2
+  },
+  "town-toro-5": {
+   "size": [
+    69,
+    139
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-5.png"
+   },
+   "anchorPx": [
+    35.0,
+    121.0
+   ],
+   "anchorTile": [
+    3.1,
+    21.2
+   ],
+   "stage": 1,
+   "place": "stand",
+   "sortRow": 21.2,
+   "until": 7
+  },
+  "town-toro-lit-5": {
+   "size": [
+    74,
+    139
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-5.png"
+   },
+   "anchorPx": [
+    37.0,
+    121.0
+   ],
+   "anchorTile": [
+    3.1,
+    21.2
+   ],
+   "stage": 7,
+   "place": "stand",
+   "sortRow": 21.2
+  },
+  "town-toro-lit-5-lit": {
+   "size": [
+    74,
+    54
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-toro-lit-5-lit.png"
+   },
+   "anchorPx": [
+    37.0,
+    78.0
+   ],
+   "anchorTile": [
+    3.1,
+    21.2
+   ],
+   "stage": 7,
+   "place": "lit",
+   "sortRow": 21.201,
+   "glows": [
+    [
+     3.09,
+     20.52,
+     0.75
+    ]
+   ]
+  },
+  "town-maple": {
+   "size": [
+    176,
+    179
+   ],
+   "layers": [
+    "day"
+   ],
+   "files": {
+    "day": "town-maple.png"
+   },
+   "anchorPx": [
+    86.0,
+    149.0
+   ],
+   "anchorTile": [
+    3.3,
+    16.9
+   ],
+   "stage": 6,
+   "place": "stand",
+   "sortRow": 16.9
   },
   "town-mook-jong": {
    "size": [

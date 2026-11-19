@@ -242,14 +242,38 @@ for k in range(9):
     add(f"mossb{k}", ellipsoid(G(random.uniform(27, 30), random.uniform(26.5, 28.2), 0.06), (0.35, D(0.25), 0.15), segs=10, rings=5), random.choice(("#5f9e55", "#78b860")), False)
 GROUND_BLOCK.update(cells(27, 29, 26, 28))
 
-# the practice yard: a raised wooden floor with a sand border (walkable)
+# the rock garden (Jay, Nov 19: "enough wood colour and blue in the personal dojo... make it a rock garden"):
+# raked pale gravel inside a low stone curb, ripples raked round three rock groups on moss islands, and a path of
+# stepping stones across it. The gravel is walkable (the rocks and moss are not), so classmates still have room.
 YC, YR = 7.5, 20.0
-add("yd_sand", box(G(YC, YR, 0.0), (10.2, D(7.8), 0.04)), "#e9d7a8", False)
-add("yd_floor", box(G(YC, YR, 0.05), (9.4, D(7.0), 0.08), bevel=0.03), "#c99a62", True, 1.2)
-for k in range(1, 19):
-    add(f"yd_pl{k}", box(G(YC - 4.7 + k * 0.5, YR, 0.095), (0.03, D(6.95), 0.01)), "#a8743f", False)
-add("yd_mat", box(G(YC, YR + 0.6, 0.1), (4.2, D(3.0), 0.03)), "#3a6ea5", False)
-add("yd_matrim", box(G(YC, YR + 0.6, 0.095), (4.5, D(3.3), 0.03)), "#6f9fd2", False)
+GX0, GX1, GY0, GY1 = 2.4, 12.6, 16.0, 24.0
+add("rg_base", box(G(YC, YR, 0.0), (GX1 - GX0, D(GY1 - GY0), 0.05)), "#ece3cb", False)
+for k in range(int((GY1 - GY0) / 0.26)):     # straight rake lines
+    add(f"rg_rake{k}", box(G(YC, GY0 + 0.15 + k * 0.26, 0.03), (GX1 - GX0 - 0.3, D(0.035), 0.01)), "#d8ccad", False)
+# the curb: rounded grey stones all round, with an opening on the east side (from the plaza) and the north (the street)
+for side, (x0, x1, y0, y1) in enumerate(((GX0, GX1, GY0, GY0), (GX0, GX1, GY1, GY1), (GX0, GX0, GY0, GY1), (GX1, GX1, GY0, GY1))):
+    n = int(max(abs(x1 - x0), abs(y1 - y0)) / 0.42)
+    for k in range(n + 1):
+        t = k / n; x = x0 + (x1 - x0) * t; y = y0 + (y1 - y0) * t
+        if side == 3 and 18.6 < y < 21.4: continue          # east opening
+        if side == 0 and 11.0 < x < 12.6: continue          # north-east opening
+        add(f"rg_curb{side}_{k}", ellipsoid(G(x, y, 0.06), (0.26, D(0.17), 0.1), segs=10, rings=5), ("#a9adc4", "#b7bacd", "#9fa3b8")[k % 3])
+ROCKS = [(5.0, 18.2, 1.25), (10.0, 19.6, 1.0), (6.4, 22.3, 0.9)]
+for g, (rx, ry, sz) in enumerate(ROCKS):
+    # moss island under each group
+    add(f"rg_moss{g}", ellipsoid(G(rx, ry, 0.02), (1.15 * sz, D(0.62 * sz), 0.08), segs=24, rings=6), "#6fae5a", False)
+    for k in range(6):
+        a = k * 1.05 + g
+        add(f"rg_mossb{g}{k}", ellipsoid(G(rx + math.cos(a) * 0.8 * sz, ry + math.sin(a) * 0.4 * sz, 0.08), (0.22, D(0.15), 0.1), segs=8, rings=4), ("#5f9e55", "#78b860")[k % 2], False)
+    # raked ripples round the island
+    for ring in range(3):
+        rr = 1.45 * sz + ring * 0.32; m = int(rr * 22)
+        for k in range(m):
+            a = 2 * math.pi * k / m
+            add(f"rg_rip{g}{ring}{k}", box(G(rx + rr * math.cos(a), ry + rr * 0.55 * math.sin(a), 0.035), (0.18, D(0.035), 0.012), rot=(0, 0, -math.degrees(math.atan2(0.55 * math.cos(a), -math.sin(a))))), "#cfc2a0", False)
+# stepping stones from the street across the garden to the west lawn
+for k, (sx, sy) in enumerate(((11.8, 16.6), (11.2, 17.3), (10.3, 17.6), (9.3, 18.1), (8.4, 18.9), (8.2, 19.9), (8.7, 20.8), (9.3, 21.6), (9.0, 22.6), (8.2, 23.3), (7.3, 23.6))):
+    add(f"rg_step{k}", ellipsoid(G(sx, sy, 0.05), (0.34, D(0.24), 0.06), segs=12, rings=4), ("#d6cfc1", "#cfc8ba")[k % 2])
 
 # the koi pond (south-east), blocked
 PC, PR, PRX, PRY = 39.5, 26.2, 4.2, 2.0
@@ -629,15 +653,7 @@ hip_roof("hroof", LC, 8.9, 4.9, 2.2, 8.6, 1.3, "#3d4766", ox=0.6, oy=0.3, inset=
 add("hplaque", box(G(LC, 8.75, 1.9), (1.3, 0.06, 0.32)), "#2c2a33")
 add("hplaquerim", box(G(LC, 8.72, 1.9), (1.45, 0.04, 0.44)), "#ffd36b", False)
 
-# ---------------------------------------------------------------- the pagoda beyond the back wall (stage 8)
-piece("pagoda", (14.3, 3.6), stage=8, sort=3.6)
-z = 0.0
-for k, (w, h) in enumerate(((2.4, 1.0), (2.0, 0.85), (1.7, 0.75), (1.4, 0.65), (1.1, 0.6))):
-    add(f"pw{k}", box(G(14.3, 3.0, z + h / 2), (w * 0.62, D(w * 0.5), h)), "#b8322a" if k == 0 else "#efe3c6")
-    hip_roof(f"pr{k}", 14.3, 3.0 + w * 0.32, 3.0 - w * 0.32, z + h - 0.05, w * 0.7, 0.32, "#3a4057", ox=0.35, oy=0.25, inset=0.2, ridge=None)
-    z += h + 0.1
-add("spire", tube(G(14.3, 3.0, z), G(14.3, 3.0, z + 1.1), 0.06, 0.03), "#d9a441")
-for k in range(4): add(f"ring{k}", tube(G(14.3, 3.0, z + 0.2 + k * 0.22), G(14.3, 3.0, z + 0.25 + k * 0.22), 0.14, 0.14), "#d9a441", False)
+# (the pagoda that stood beyond the back wall at stage 8 is gone: Jay, Nov 19, "it will be confusing having 2 towers")
 
 # ---------------------------------------------------------------- My Dojo (the student's own home dojo, east side)
 HC, HF, HW = 38.5, 20.0, 7.0
@@ -729,18 +745,33 @@ stone_lantern("pond-lantern", 34.6, 25.4, True, stage=7, s=0.85)
 for k, c in enumerate((3.0, 12.2, 17.6, 28.4, 33.4, 42.6)):
     lantern_pole(f"lantern-{k}", c, 9.4)
 
-# the practice yard: makiwara (1, then 3 at stage 3), banners and a rack
-makiwara("makiwara-0", 7.5, 17.0)
-makiwara("makiwara-1", 5.0, 17.0, stage=3)
-makiwara("makiwara-2", 10.0, 17.0, stage=3)
-nobori("yard-banner-0", 3.0, 16.6, "#3a6ea5")
-nobori("yard-banner-1", 12.0, 16.6, "#3f9a7a")
-piece("rack", (1.9, 20.0), block=[(1, 19), (2, 19), (1, 20), (2, 20)])
-shadow(1.9, 20.0, 0.95, 0.25)
-add("base", box(G(1.9, 20.0, 0.06), (1.7, D(0.35), 0.12)), "#7a5232")
-for x in (-0.75, 0.75): add(f"post{x}", box(G(1.9 + x, 20.0, 0.65), (0.12, D(0.12), 1.2)), "#6b4428")
-add("bar", box(G(1.9, 19.95, 1.15), (1.65, D(0.08), 0.08)), "#8a5e38")
-for k in range(5): add(f"bo{k}", tube(G(1.4 + k * 0.25, 19.9, 0.12), G(1.4 + k * 0.25, 19.9, 1.5), 0.035, 0.035), ("#c99a62", "#b98a55")[k % 2])
+# the rock garden's standing pieces: three rock groups (blocked), a stone basin with a bamboo spout (stage 3),
+# a stone lantern (lit from stage 7, like the others) and a red maple (stage 6)
+def rock_group(pid, rx, ry, sz):
+    blk = [(c, r) for c in range(int(rx - 0.9 * sz), int(rx + 0.9 * sz) + 1) for r in range(int(ry - 0.45 * sz), int(ry + 0.45 * sz) + 1)]
+    piece(pid, (rx, ry + 0.3 * sz), sort=ry + 0.3 * sz, block=blk)
+    shadow(rx, ry + 0.15, 0.9 * sz, 0.4 * sz)
+    for k, (dx, dy, w, h, col) in enumerate(((0.0, 0.0, 0.62, 0.95, "#8e92ab"), (-0.62, 0.18, 0.38, 0.5, "#a3a7bd"), (0.55, 0.22, 0.32, 0.38, "#7d8199"))):
+        add(f"rock{k}", ellipsoid(G(rx + dx * sz, ry + dy * sz, h * sz * 0.45), (w * sz, D(w * sz * 0.55), h * sz * 0.55), segs=9, rings=6, rot=(0, 8 * (k - 1), 18 * k)), col)
+        add(f"rockhi{k}", ellipsoid(G(rx + dx * sz - 0.12 * w * sz, ry + dy * sz + 0.05, h * sz * 0.72), (w * sz * 0.5, D(w * sz * 0.25), h * sz * 0.18), segs=8, rings=4), "#b7bacd", False)
+        add(f"rockmoss{k}", ellipsoid(G(rx + dx * sz + 0.1 * w * sz, ry + dy * sz, h * sz * 0.95), (w * sz * 0.45, D(w * sz * 0.3), 0.06), segs=8, rings=4), "#6fae5a", False)
+for g, (rx, ry, sz) in enumerate(ROCKS):
+    rock_group(f"rock-{g}", rx, ry, sz)
+piece("basin", (11.4, 23.2), stage=3, block=[(11, 23), (11, 22)])
+shadow(11.4, 23.2, 0.55, 0.28)
+add("bowl", tube(G(11.4, 23.2, 0), G(11.4, 23.2, 0.38), 0.42, 0.36, segs=14, sy=0.7), "#a9adc4")
+add("water", tube(G(11.4, 23.2, 0.36), G(11.4, 23.2, 0.39), 0.27, 0.27, segs=14, sy=0.7), "#7cc4e4", False)
+add("spout", tube(G(11.95, 22.75, 0.75), G(11.55, 23.1, 0.5), 0.05, 0.05, segs=8), "#8cbc5a")
+add("spoutpost", tube(G(12.0, 22.7, 0), G(12.0, 22.7, 0.8), 0.07, 0.07, segs=8), "#7fae4f")
+add("ladle", tube(G(11.15, 23.15, 0.4), G(11.65, 23.0, 0.42), 0.02, 0.02, segs=6), "#c99a62", False)
+for k in range(3): add(f"bstone{k}", ellipsoid(G(10.8 + k * 0.55, 23.75, 0.06), (0.25, D(0.16), 0.08), segs=8, rings=4), "#b7bacd")
+stone_lantern("toro-5", 3.1, 21.2, False, until=7)
+stone_lantern("toro-lit-5", 3.1, 21.2, True, stage=7)
+piece("maple", (3.3, 16.9), stage=6, block=[(3, 16)])
+shadow(3.3, 16.9, 1.0, 0.5)
+add("trunk", tube(G(3.3, 16.9, 0), G(3.2, 16.9, 1.0), 0.13, 0.08), "#6b4428")
+for k, (dx, dr, z, sx, sz_, col) in enumerate(((0, 0, 1.5, 0.95, 0.65, "#d9532b"), (-0.5, 0.1, 1.3, 0.55, 0.45, "#e8772e"), (0.55, 0.12, 1.35, 0.55, 0.45, "#c8402a"), (-0.1, 0.25, 1.9, 0.55, 0.4, "#f0a030"))):
+    add(f"leaf{k}", ellipsoid(G(3.3 + dx, 16.9 + dr, z), (sx, 0.5, sz_), segs=14, rings=8), col, k < 3)
 # a wooden dummy (stage 9) on the west lawn
 piece("mook-jong", (5.5, 25.6), stage=9, block=[(5, 25)])
 shadow(5.5, 25.6, 0.5, 0.22)
