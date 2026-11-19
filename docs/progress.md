@@ -1366,3 +1366,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Nov 19: the real Action Zone (CMA Martial Arts) building is in the town at true size, rebuilt with much more detail and rendered twice as sharp. Close-up: `incoming-art/claude-town/previews/action-zone-closeup.png`. Next: Jay's OK; then maybe re-render the entrance scene to match.
 - Nov 19 (later): Jay's detail fixes (logo, bench, chair, back trees), the Tower in the background behind a gate at the end of a new path, and the warm night town (7 pm-6 am, `?night=1`). Previews (day and night, stages 1, 5, 10) in `incoming-art/claude-town/previews/`. 1,632 tests pass. Not on `main`. Next: Jay's OK; night for the Home Dojo and the entrance scene if he wants it.
 - Nov 19: Jay OK'd the new town ("Yes, copy to live"). Copied onto `main` (the live link) after the checks passed. The old `dojo-az-town` picture pack can now be dropped in a clean-up.
+
+## The Action Zone inside room, v2 (2026-11-19, branch `claude/az-inside`)
+- The real dojo's inside room rebuilt with much more detail from Jay's photos, over four rounds of his notes (see decisions.md). In the game as pack `dojo-az-inside` (2 pages, 1.0 MB; was 0.8 MB). Test link: `?room=dojo`.
+- Fixed on the way: the see-through floor shadows were rendered as a faint haze into every furniture sprite (no trimming, 10 pages); they are now left out of the sprite renders.
+- 1,632 tests pass; type checks and the build pass. Copied onto `main` with Jay's OK ("put it in").
+- Jay can delete a stray test folder `C:\samples` (one picture; the safety check would not let Claude remove it).
+- **Next:** night for the inside room if Jay wants it; the old `incoming-art/action-zone-dojo` inside sprites are no longer used by the game.
