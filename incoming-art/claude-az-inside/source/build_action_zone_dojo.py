@@ -383,33 +383,35 @@ def torus(center, R, r, segs=18, rsegs=6, rot=(90, 0, 0)):
 def trap(p0, p1, w0, w1):
     dx, dy = p1[0] - p0[0], p1[1] - p0[1]; L_ = math.hypot(dx, dy) or 1e-6; nx, ny = -dy / L_, dx / L_
     return [(p0[0] + nx * w0 / 2, p0[1] + ny * w0 / 2), (p1[0] + nx * w1 / 2, p1[1] + ny * w1 / 2), (p1[0] - nx * w1 / 2, p1[1] - ny * w1 / 2), (p0[0] - nx * w0 / 2, p0[1] - ny * w0 / 2)]
-SIL = {   # solid martial-artist silhouettes in a gi, facing right; hip at (0, 0), about 1.5 tall. joints: neck, head, arms [shoulder->elbow->fist], legs [hip->knee->foot]
- "sidekick": dict(neck=(-0.3, 0.44), head=(-0.42, 0.6), lean=True,
-                  arms=[[(-0.24, 0.42), (-0.02, 0.5), (0.1, 0.62)], [(-0.36, 0.4), (-0.56, 0.26), (-0.5, 0.1)]],
-                  legs=[[(0.04, 0.02), (0.42, 0.1), (0.84, 0.18)], [(-0.04, -0.02), (-0.1, -0.4), (-0.12, -0.8)]], feet=[(1, 0.0), (0, 1)]),
- "stance":   dict(neck=(0.04, 0.52), head=(0.06, 0.7), lean=False,
-                  arms=[[(0.12, 0.48), (0.36, 0.46), (0.62, 0.47)], [(-0.06, 0.46), (-0.24, 0.28), (-0.06, 0.16)]],
-                  legs=[[(0.06, 0.0), (0.32, -0.32), (0.4, -0.78)], [(-0.06, 0.0), (-0.32, -0.36), (-0.6, -0.78)]], feet=[(0, 1), (0, 1)]),
- "split":    dict(neck=(0.0, 0.5), head=(0.0, 0.68), lean=False,
-                  arms=[[(0.1, 0.46), (0.36, 0.5), (0.62, 0.52)], [(-0.1, 0.46), (-0.36, 0.5), (-0.62, 0.52)]],
-                  legs=[[(0.06, 0.0), (0.45, 0.03), (0.9, 0.06)], [(-0.06, 0.0), (-0.45, 0.03), (-0.9, 0.06)]], feet=[(1, 0.0), (-1, 0.0)]),
+SIL = {   # solid martial-artist silhouettes, facing right; hip at (0, 0), about 1.5 tall. arms/legs: [elbow, fist] / [knee, foot]; arm 0 and leg 0 are the front (right) side
+ "sidekick": dict(neck=(-0.32, 0.42), head=(-0.43, 0.57), arms=[[(0.0, 0.42), (0.1, 0.55)], [(-0.56, 0.2), (-0.52, 0.05)]],
+                  legs=[[(0.46, 0.13), (0.86, 0.19)], [(-0.1, -0.42), (-0.08, -0.8)]], feet=["blade", "flat"]),
+ "stance":   dict(neck=(0.04, 0.52), head=(0.06, 0.7), arms=[[(0.4, 0.46), (0.64, 0.47)], [(-0.26, 0.3), (-0.08, 0.18)]],
+                  legs=[[(0.34, -0.32), (0.42, -0.78)], [(-0.32, -0.36), (-0.6, -0.78)]], feet=["flat", "flat"]),
+ "split":    dict(neck=(0.0, 0.5), head=(0.0, 0.68), arms=[[(0.36, 0.5), (0.62, 0.54)], [(-0.36, 0.5), (-0.62, 0.54)]],
+                  legs=[[(0.5, 0.03), (0.9, 0.06)], [(-0.5, 0.03), (-0.9, 0.06)]], feet=["blade", "bladeL"]),
 }
 def sil(pose, ox, oy, s):
+    """one body for every pose: the same torso, limb widths and head size, so the figures match each other"""
     P = SIL[pose]; m = lambda p: (ox + s * p[0], oy + s * p[1]); out = []
-    hipL, hipR = m((-0.11, 0.0)), m((0.11, 0.0)); nk = P["neck"]
-    sh = (-0.16, 0.0) if not P["lean"] else (-0.15, 0.05)
-    out.append([hipL, hipR, m((nk[0] - sh[0], nk[1] - sh[1] - 0.03)), m((nk[0] + sh[0], nk[1] + sh[1] - 0.03))])      # torso (jacket)
-    out.append(trap(m((0, 0.04)), m((nk[0] * 0.25, 0.25)), 0.3 * s, 0.32 * s))                                        # gi skirt / waist
-    out.append(circ(*m(P["head"]), 0.11 * s, 18)); out.append(trap(m(nk), m(P["head"]), 0.09 * s, 0.08 * s))
-    for arm in P["arms"]:
-        out.append(trap(m(arm[0]), m(arm[1]), 0.12 * s, 0.1 * s)); out.append(trap(m(arm[1]), m(arm[2]), 0.1 * s, 0.08 * s))
-        out.append(circ(*m(arm[1]), 0.05 * s, 10)); out.append(circ(*m(arm[2]), 0.055 * s, 10)); out.append(circ(*m(arm[0]), 0.065 * s, 10))
-    for leg, ft in zip(P["legs"], P["feet"]):
-        out.append(trap(m(leg[0]), m(leg[1]), 0.19 * s, 0.14 * s)); out.append(trap(m(leg[1]), m(leg[2]), 0.14 * s, 0.1 * s))
-        out.append(circ(*m(leg[1]), 0.07 * s, 10)); out.append(circ(*m(leg[0]), 0.1 * s, 12))
-        fx, fy = m(leg[2])
-        if ft[1]: out.append([(fx - 0.06 * s, fy - 0.03 * s), (fx + 0.16 * s, fy - 0.03 * s), (fx + 0.15 * s, fy + 0.04 * s), (fx - 0.05 * s, fy + 0.05 * s)])   # foot flat on the ground
-        else: out.append(trap((fx - ft[0] * 0.02 * s, fy), (fx + ft[0] * 0.07 * s, fy), 0.15 * s, 0.11 * s))                                           # blade of the foot
+    nk = P["neck"]; L_ = math.hypot(*nk); dx, dy = nk[0] / L_, nk[1] / L_; px, py = dy, -dx          # torso direction and its right-hand side
+    base = (nk[0] - dx * 0.05, nk[1] - dy * 0.05)
+    hipR, hipL = (px * 0.12, py * 0.12), (-px * 0.12, -py * 0.12)
+    shR, shL = (base[0] + px * 0.17, base[1] + py * 0.17), (base[0] - px * 0.17, base[1] - py * 0.17)
+    out.append([m((hipL[0] * 1.5, hipL[1] * 1.5)), m((hipR[0] * 1.5, hipR[1] * 1.5)), m(shR), m(nk), m(shL)]); out.append(circ(*m((0, 0)), 0.15 * s, 16))   # solid torso and pelvis
+    out.append(trap(m(base), m(P["head"]), 0.12 * s, 0.11 * s)); out.append(circ(*m(nk), 0.07 * s, 12))
+    out.append(circ(*m(P["head"]), 0.115 * s, 20))
+    for sh, (el, fi) in zip((shR, shL), P["arms"]):
+        out.append(trap(m(sh), m(el), 0.13 * s, 0.11 * s)); out.append(trap(m(el), m(fi), 0.11 * s, 0.095 * s))
+        out.append(circ(*m(sh), 0.07 * s, 10)); out.append(circ(*m(el), 0.055 * s, 10)); out.append(circ(*m(fi), 0.065 * s, 10))
+    for hp, (kn, ft), kind in zip((hipR, hipL), P["legs"], P["feet"]):
+        out.append(trap(m(hp), m(kn), 0.2 * s, 0.15 * s)); out.append(trap(m(kn), m(ft), 0.15 * s, 0.12 * s))
+        out.append(circ(*m(hp), 0.1 * s, 12)); out.append(circ(*m(kn), 0.075 * s, 10))
+        fx, fy = m(ft)
+        if kind == "flat": out.append([(fx - 0.05 * s, fy - 0.04 * s), (fx + 0.15 * s, fy - 0.04 * s), (fx + 0.13 * s, fy + 0.03 * s), (fx - 0.04 * s, fy + 0.04 * s)])
+        else:
+            sg = -1 if kind == "bladeL" else 1
+            out.append(trap((fx - sg * 0.02 * s, fy), (fx + sg * 0.06 * s, fy), 0.14 * s, 0.1 * s))
     return out
 
 def scene_inside():
@@ -533,9 +535,9 @@ def scene_inside():
     imgplane(LOGO, "muralLogo", cx, 1.75, 1.75 * LOGO_AR, row=WF + 0.1, zc=1.72)
     for s, x, z, w in (("Karate", cx, 2.85, 0.95), ("Kung Fu", a + 0.95, 2.62, 0.95), ("Jiu Jitsu", b - 0.95, 2.62, 1.0), ("Tae Kwon Do", a + 0.95, 0.88, 1.25), ("Weapons", b - 0.95, 0.88, 1.0)):
         text("t_" + s, s, x, WF + 0.1, z, 0.21, w, INK, 0.03, False)
-    for poly_ in sil("sidekick", a + 0.78, 1.78, 0.72): wpoly(poly_, INK, 4, "silKick")
-    for poly_ in sil("stance", b - 0.9, 1.78, 0.72): wpoly(poly_, INK, 4, "silStance")
-    for poly_ in sil("split", cx, 0.3, 0.55): wpoly(poly_, INK, 4, "silSplit")
+    for poly_ in sil("sidekick", a + 0.8, 1.8, 0.7): wpoly(poly_, INK, 4, "silKick")
+    for poly_ in sil("stance", b - 0.92, 1.8, 0.7): wpoly(poly_, INK, 4, "silStance")
+    for poly_ in sil("split", cx, 0.44, 0.6): wpoly(poly_, INK, 4, "silSplit")
     # round clock
     wdisc(LM.FLAG[0] - 0.12, 3.0, 0.2, "#25252e", 0, "clockRim"); wdisc(LM.FLAG[0] - 0.12, 3.0, 0.16, "#f4f1e8", 1, "clockFace")
     for k in range(12): wdisc(LM.FLAG[0] - 0.12 + 0.12 * math.sin(k * math.pi / 6), 3.0 + 0.12 * math.cos(k * math.pi / 6), 0.012, "#25252e", 2, "tick")
