@@ -47,3 +47,4 @@ export * from './safety';
 export * from './shop';
 export * from './stones';
 export * from './town';
+export * from './starWall';

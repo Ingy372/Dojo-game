@@ -1,0 +1,13 @@
+{
+  "id": "heavy-bag",
+  "name": "Heavy Bag",
+  "notes": "Nov 20 (Jay): the Action Zone's freestanding punching bags, used like the practice dummy: passive (never moves or attacks), and it never runs out (the dojo keeps it full). Loaded only by the Action Zone inside room, not a Tower enemy, so it is not in content/enemies or the Monster Journal.",
+  "color": "#25252e",
+  "passive": true,
+  "maxHealth": 100000,
+  "power": 1,
+  "guard": 0,
+  "radius": 0.45,
+  "sightRange": 12,
+  "parSeconds": 3
+}

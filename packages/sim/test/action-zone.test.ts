@@ -36,7 +36,7 @@ describe('Action Zone inside room', () => {
   });
 
   it('the spawn reaches every walk-up spot by tapping it, and each spot is on open floor', () => {
-    expect(inside.spots.map((s) => s.id)).toHaveLength(11);
+    expect(inside.spots.map((s) => s.id)).toHaveLength(13);
     for (const s of inside.spots) {
       const goal = { x: s.approachTile.x + 0.5, y: s.approachTile.y + 0.5 };
       expect(circleHitsWall(room, goal, R), s.id).toBe(false);
@@ -84,7 +84,8 @@ describe('Action Zone inside room', () => {
       expect(sprites, f.id).toContain(f.id);
       expect(all[f.id].sortRow, `${f.id} sortRow in the pack and in the room file`).toBe(f.sortRow);
     }
-    for (const it of insideJson.interactables) expect(sprites, it.id).toContain(it.sprite);
+    // The wall boards (Read spots) are part of the props layer, with no sprite of their own.
+    for (const it of insideJson.interactables) if (it.sprite !== null) expect(sprites, it.id).toContain(it.sprite);
     expect(inside.foregroundSprites.map((f) => f.id).sort()).toEqual(['bag-black-top', 'bag-blue-top', 'bag-red-top', 'seats-back']);
   });
 

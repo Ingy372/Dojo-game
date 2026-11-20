@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { TICKS_PER_SECOND, createWorld, stepWorld, type MoveInput, type PlayerInput, type Room, type Vec2, type WorldState } from '@dojo/sim';
+import { TICKS_PER_SECOND, createWorld, stepWorld, type PlayerInput, type Room, type Vec2, type WorldState } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { reducedMotion } from '../game/motion';
 import { touchPlayClock } from '../game/playTime';
@@ -67,7 +67,15 @@ export abstract class WalkScene extends Phaser.Scene {
   /** Called after every sim tick with the hero's position. */
   protected abstract afterTick(pos: Vec2): void;
   /** Called before every sim tick with what the player asked for and where the hero stands. */
-  protected onInput(_input: MoveInput, _pos: Vec2): void {}
+  protected onInput(_input: PlayerInput, _pos: Vec2): void {}
+  /** True for screen points (CSS pixels) on this scene's own buttons, so a press there doesn't walk the hero. */
+  protected overUi(_x: number, _y: number): boolean {
+    return false;
+  }
+  /** True while the hero plays an action (a bow, a punch), so walking doesn't replace it. */
+  protected heroBusy(): boolean {
+    return false;
+  }
   /** True for room points (tiles) that are tap targets even where the stick would start: a tap there walks. */
   protected isTapTarget(_tile: Vec2): boolean {
     return false;
@@ -105,7 +113,7 @@ export abstract class WalkScene extends Phaser.Scene {
     const trail = wornShop().fx.trail;
     this.trail = trail ? new TrailEmitter(this, trail, { tile: TILE, depth: 0, add: (g) => this.worldLayer.add(g) }) : null;
 
-    this.controls = new TouchControls(this, this.cameras.main, (x, y) => this.toTile(x, y), () => this.leaving || this.paused, (x, y) => this.isTapTarget(this.rawTile(x, y)));
+    this.controls = new TouchControls(this, this.cameras.main, (x, y) => this.toTile(x, y), (x, y) => this.leaving || this.paused || this.overUi(x, y), (x, y) => this.isTapTarget(this.rawTile(x, y)));
     this.layout();
 
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
@@ -191,7 +199,7 @@ export abstract class WalkScene extends Phaser.Scene {
 
     this.hero.face(p.facing.x, p.facing.y);
     const speed = Math.hypot(p.pos.x - this.prevPos.x, p.pos.y - this.prevPos.y) * TICKS_PER_SECOND;
-    playLocomotion(this.hero, p.moving ? speed : 0);
+    if (!this.heroBusy()) playLocomotion(this.hero, p.moving ? speed : 0);
     this.hero.update();
   }
 
@@ -241,7 +249,7 @@ export abstract class WalkScene extends Phaser.Scene {
   }
 
   /** Screen point to room tiles, before a scene sends the tap elsewhere. */
-  private rawTile(x: number, y: number): Vec2 {
+  protected rawTile(x: number, y: number): Vec2 {
     return { x: (x - this.worldLayer.x) / this.zoom / TILE, y: (y - this.worldLayer.y) / this.zoom / TILE };
   }
 }

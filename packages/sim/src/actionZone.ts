@@ -9,10 +9,15 @@ import type { Room } from './room';
 
 export type Rect = readonly [x0: number, x1: number, y0: number, y1: number];
 
-/** A spot to walk up to (the pro counter, a heavy bag, the parent seats...). No behaviour yet. */
+/**
+ * A spot to walk up to (the pro counter, a heavy bag, the parent seats...). Nov 20 (Jay): kinds with behaviour are
+ * "read" (a wall board shown large: `image`), "target-wall" (the throwing star game) and "heavy-bag" (bag practice).
+ */
 export interface WalkUpSpot {
   id: string;
   kind: string;
+  /** For "read" spots: the picture to show large (a file under assets/boards/, without the extension). */
+  image?: string;
   /** The tile to stand on, and the way to face when there. */
   approachTile: Vec2;
   approachFacing: 'north' | 'south' | 'east' | 'west';
@@ -34,6 +39,85 @@ export interface InsideRoom {
   exit: Rect;
   spots: WalkUpSpot[];
   foregroundSprites: ForegroundSprite[];
+  /** Where the hero bows on and off the mat (Jay, Nov 20); null when the room has no mat line. */
+  matBow: MatBow | null;
+}
+
+/**
+ * The mat's edge (Jay, Nov 20): the hero bows, facing the mat, before stepping on and again before stepping off.
+ * `line` is the row edge (tiles) between the mat (north, smaller y) and the lobby; `gaps` are the openings onto
+ * the mat, as [x0, x1] in tiles.
+ */
+export interface MatBow {
+  line: number;
+  gaps: [number, number][];
+}
+
+/** Where the hero stands about the mat: on it or not, and whether it has just bowed to step on or off. */
+export interface MatGate {
+  onMat: boolean;
+  /** Bowed at the edge, facing the mat: may step on. */
+  mayEnter: boolean;
+  /** Bowed at the edge, turned to face the mat: may step off. */
+  mayLeave: boolean;
+}
+
+/** How close to the line (tiles) the hero must stand for the Bow button. */
+export const MAT_BOW_REACH = 0.9;
+/** A bow is forgotten once the hero walks this far back from the line without crossing it. */
+export const MAT_BOW_FORGET = 1.6;
+
+export function newMatGate(onMat = false): MatGate {
+  return { onMat, mayEnter: false, mayLeave: false };
+}
+
+/** True when x is inside one of the mat's openings. */
+export function inMatGap(bow: MatBow, x: number): boolean {
+  return bow.gaps.some(([x0, x1]) => x >= x0 && x <= x1);
+}
+
+/**
+ * After each step: a hero that has not bowed is held at the line (the mat's edge); one that has bowed crosses,
+ * and the bow is used up. Changes `gate` and `pos` in place. Returns true when the hero was held back this step.
+ */
+export function holdAtMat(bow: MatBow, gate: MatGate, pos: Vec2): boolean {
+  if (!gate.onMat) {
+    if (pos.y < bow.line) {
+      if (gate.mayEnter) {
+        gate.onMat = true;
+        gate.mayEnter = false;
+        return false;
+      }
+      pos.y = bow.line;
+      return true;
+    }
+    if (pos.y - bow.line > MAT_BOW_FORGET) gate.mayEnter = false;
+    return false;
+  }
+  if (pos.y > bow.line) {
+    if (gate.mayLeave) {
+      gate.onMat = false;
+      gate.mayLeave = false;
+      return false;
+    }
+    pos.y = bow.line;
+    return true;
+  }
+  if (bow.line - pos.y > MAT_BOW_FORGET) gate.mayLeave = false;
+  return false;
+}
+
+/** Which bow the hero can make where it stands: "enter" (facing the mat to step on), "leave" (turn and bow to step off), or none. */
+export function matBowHere(bow: MatBow, gate: MatGate, pos: Vec2): 'enter' | 'leave' | null {
+  if (!inMatGap(bow, pos.x)) return null;
+  if (!gate.onMat) return !gate.mayEnter && pos.y >= bow.line && pos.y - bow.line <= MAT_BOW_REACH ? 'enter' : null;
+  return !gate.mayLeave && pos.y <= bow.line && bow.line - pos.y <= MAT_BOW_REACH ? 'leave' : null;
+}
+
+/** The bow was made: the hero may now cross. */
+export function bowAtMat(gate: MatGate, which: 'enter' | 'leave'): void {
+  if (which === 'enter') gate.mayEnter = true;
+  else gate.mayLeave = true;
 }
 
 export class ActionZoneError extends Error {
@@ -92,7 +176,16 @@ export function loadInsideRoom(data: unknown): InsideRoom {
     const approachTile = cell(it.approachTile, `${id}.approachTile`);
     open(approachTile, `${id} approach tile`);
     if (!FACINGS.includes(String(it.approachFacing))) fail(`${id}.approachFacing must be north, south, east or west`);
-    return { id, kind: String(it.kind), approachTile, approachFacing: it.approachFacing as WalkUpSpot['approachFacing'], footprint: rect(it.footprintRect, `${id}.footprintRect`) };
+    const image = it.image === undefined || it.image === null ? undefined : String(it.image);
+    if (it.kind === 'read' && !image) fail(`${id} is a "read" spot, so it needs an "image"`);
+    return {
+      id,
+      kind: String(it.kind),
+      approachTile,
+      approachFacing: it.approachFacing as WalkUpSpot['approachFacing'],
+      footprint: rect(it.footprintRect, `${id}.footprintRect`),
+      ...(image ? { image } : {}),
+    };
   });
   if (spots.length === 0) fail('no interactables');
 
@@ -121,7 +214,21 @@ export function loadInsideRoom(data: unknown): InsideRoom {
     tutorial: false,
     stoneWaves: [],
   };
-  return { room, spawn, exit, spots, foregroundSprites };
+  let matBow: MatBow | null = null;
+  if (raw.matBow !== undefined) {
+    const m = raw.matBow as { line?: unknown; gaps?: unknown };
+    const line = num(m.line, 'matBow.line');
+    if (!Array.isArray(m.gaps) || m.gaps.length === 0) fail('matBow.gaps must list the openings onto the mat');
+    const gaps = (m.gaps as unknown[]).map((g, i) => {
+      if (!Array.isArray(g) || g.length !== 2) fail(`matBow.gaps[${i}] must be [x0, x1]`);
+      const x0 = num(g[0], `matBow.gaps[${i}]`);
+      const x1 = num(g[1], `matBow.gaps[${i}]`);
+      if (x1 <= x0) fail(`matBow.gaps[${i}] must go left to right`);
+      return [x0, x1] as [number, number];
+    });
+    matBow = { line, gaps };
+  }
+  return { room, spawn, exit, spots, foregroundSprites, matBow };
 }
 
 export type ZoneFacing = 'north' | 'south' | 'east' | 'west';
