@@ -3,78 +3,207 @@
   "name": "David and Goliath",
   "requirement": "green-kata",
   "stance": null,
-  "from": "drafts/content/katas/david-and-goliath.json (S3-K1). Only names, step counts and directions are shown in the game (D1).",
+  "from": "drafts/content/katas/david-and-goliath.json, the school sheet. Nov 20 (Jay): kata practice shows the moves, so each step lists its beats: the direction the hero faces, then the technique (content/dojo/kata-moves.json). Turns, pivots, cat stances, chambers and catches happen by themselves. Waiting on Jay's check.",
   "steps": [
     {
       "n": 1,
       "facing": [
         "F"
-      ]
+      ],
+      "beats": [],
+      "note": "Begins at attention (the hero does this by itself)."
     },
     {
       "n": 2,
       "facing": [
         "F"
+      ],
+      "beats": [
+        {
+          "dir": "F",
+          "move": "knife-hand-block"
+        }
       ]
     },
     {
       "n": 3,
       "facing": [
         "F"
+      ],
+      "beats": [
+        {
+          "dir": "F",
+          "move": "backfist",
+          "kiai": true
+        },
+        {
+          "dir": "F",
+          "move": "low-block"
+        },
+        {
+          "dir": "F",
+          "move": "punch"
+        }
       ]
     },
     {
       "n": 4,
       "facing": [
         "L"
+      ],
+      "beats": [
+        {
+          "dir": "L",
+          "move": "low-block"
+        },
+        {
+          "dir": "L",
+          "move": "punch"
+        }
       ]
     },
     {
       "n": 5,
       "facing": [
         "R"
+      ],
+      "beats": [
+        {
+          "dir": "R",
+          "move": "low-block"
+        },
+        {
+          "dir": "R",
+          "move": "punch"
+        }
       ]
     },
     {
       "n": 6,
       "facing": [
         "F"
+      ],
+      "beats": [
+        {
+          "dir": "F",
+          "move": "backfist"
+        },
+        {
+          "dir": "F",
+          "move": "punch"
+        },
+        {
+          "dir": "F",
+          "move": "reverse-punch"
+        }
       ]
     },
     {
       "n": 7,
       "facing": [
         "L"
+      ],
+      "beats": [
+        {
+          "dir": "L",
+          "move": "inside-block"
+        },
+        {
+          "dir": "L",
+          "move": "reverse-punch"
+        }
       ]
     },
     {
       "n": 8,
       "facing": [
         "R"
+      ],
+      "beats": [
+        {
+          "dir": "R",
+          "move": "inside-block"
+        },
+        {
+          "dir": "R",
+          "move": "reverse-punch"
+        }
       ]
     },
     {
       "n": 9,
       "facing": [
         "B"
+      ],
+      "beats": [
+        {
+          "dir": "B",
+          "move": "backfist"
+        },
+        {
+          "dir": "B",
+          "move": "punch"
+        },
+        {
+          "dir": "B",
+          "move": "reverse-punch"
+        },
+        {
+          "dir": "B",
+          "move": "reverse-punch"
+        }
       ]
     },
     {
       "n": 10,
       "facing": [
         "R"
+      ],
+      "beats": [
+        {
+          "dir": "R",
+          "move": "overhead-block"
+        },
+        {
+          "dir": "R",
+          "move": "front-kick"
+        },
+        {
+          "dir": "R",
+          "move": "punch"
+        }
       ]
     },
     {
       "n": 11,
       "facing": [
         "L"
+      ],
+      "beats": [
+        {
+          "dir": "L",
+          "move": "overhead-block"
+        },
+        {
+          "dir": "L",
+          "move": "front-kick"
+        },
+        {
+          "dir": "L",
+          "move": "punch"
+        }
       ]
     },
     {
       "n": 12,
       "facing": [
         "F"
+      ],
+      "beats": [
+        {
+          "dir": "F",
+          "move": "choke-break"
+        }
       ]
     }
   ]

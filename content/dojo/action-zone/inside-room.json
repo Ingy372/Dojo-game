@@ -696,6 +696,14 @@
   ],
   "note": "Nov 20 (Jay): bow before stepping on the mat, and turn back to the mat and bow before stepping off. line = the mat's edge in the two openings (the lobby tiles start at row 10); gaps = the openings, [x0, x1] in tiles."
  },
+ "kataSpot": {
+  "center": [
+   13.5,
+   5.2
+  ],
+  "radius": 0.9,
+  "note": "Nov 20 (Jay): standing in the middle of the school logo on the red square offers Practice Kata. The logo is centred at (13.5, 5.2), 4.6 tiles wide (incoming-art/claude-az-inside/source/layout_main_floor.py)."
+ },
  "interactables": [
   {
    "id": "pro-counter",

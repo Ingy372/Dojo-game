@@ -3,60 +3,159 @@
   "name": "Keon",
   "requirement": "orange-kata",
   "stance": null,
-  "from": "drafts/content/katas/keon.json (S3-K2). Only names, step counts and directions are shown in the game (D1).",
+  "from": "drafts/content/katas/keon.json, the school sheet. Nov 20 (Jay): kata practice shows the moves, so each step lists its beats: the direction the hero faces, then the technique (content/dojo/kata-moves.json). Turns, pivots, cat stances, chambers and catches happen by themselves. Waiting on Jay's check.",
   "steps": [
     {
       "n": 1,
       "facing": [
         "L"
+      ],
+      "beats": [
+        {
+          "dir": "L",
+          "move": "low-block"
+        },
+        {
+          "dir": "L",
+          "move": "punch"
+        }
       ]
     },
     {
       "n": 2,
       "facing": [
         "R"
+      ],
+      "beats": [
+        {
+          "dir": "R",
+          "move": "low-block"
+        },
+        {
+          "dir": "R",
+          "move": "punch"
+        }
       ]
     },
     {
       "n": 3,
       "facing": [
         "F"
+      ],
+      "beats": [
+        {
+          "dir": "F",
+          "move": "low-block"
+        },
+        {
+          "dir": "F",
+          "move": "punch"
+        }
       ]
     },
     {
       "n": 4,
       "facing": [
         "R"
+      ],
+      "beats": [
+        {
+          "dir": "R",
+          "move": "inside-block"
+        },
+        {
+          "dir": "R",
+          "move": "reverse-punch"
+        }
       ]
     },
     {
       "n": 5,
       "facing": [
         "L"
+      ],
+      "beats": [
+        {
+          "dir": "L",
+          "move": "inside-block"
+        },
+        {
+          "dir": "L",
+          "move": "reverse-punch"
+        }
       ]
     },
     {
       "n": 6,
       "facing": [
         "F"
+      ],
+      "beats": [
+        {
+          "dir": "F",
+          "move": "low-block"
+        },
+        {
+          "dir": "F",
+          "move": "reverse-punch"
+        }
       ]
     },
     {
       "n": 7,
       "facing": [
         "L"
+      ],
+      "beats": [
+        {
+          "dir": "L",
+          "move": "overhead-block"
+        },
+        {
+          "dir": "L",
+          "move": "front-kick"
+        },
+        {
+          "dir": "L",
+          "move": "punch"
+        }
       ]
     },
     {
       "n": 8,
       "facing": [
         "R"
+      ],
+      "beats": [
+        {
+          "dir": "R",
+          "move": "overhead-block"
+        },
+        {
+          "dir": "R",
+          "move": "front-kick"
+        },
+        {
+          "dir": "R",
+          "move": "punch"
+        }
       ]
     },
     {
       "n": 9,
       "facing": [
         "B"
+      ],
+      "beats": [
+        {
+          "dir": "B",
+          "move": "low-block"
+        },
+        {
+          "dir": "B",
+          "move": "punch",
+          "kiai": true
+        }
       ]
     }
   ]

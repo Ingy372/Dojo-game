@@ -1,0 +1,14 @@
+{
+  "note": "Nov 20 (Jay): the technique buttons for kata practice. Each kata step in content/katas lists its beats (a direction, then one of these moves). 'icon' picks the button's code-drawn picture; 'anim' is the hero animation used until the real kata moves are modelled in Blender (stand-ins marked).",
+  "moves": [
+    { "id": "low-block", "name": "Low Block", "icon": "block-low", "anim": "counter", "standIn": true },
+    { "id": "inside-block", "name": "Inside Block", "icon": "block-inside", "anim": "counter", "standIn": true },
+    { "id": "overhead-block", "name": "Overhead Block", "icon": "block-high", "anim": "counter", "standIn": true },
+    { "id": "knife-hand-block", "name": "Knife Hand Blocks", "icon": "block-knife", "anim": "counter", "standIn": true },
+    { "id": "punch", "name": "Punch", "icon": "punch", "anim": "jab", "standIn": false },
+    { "id": "reverse-punch", "name": "Reverse Punch", "icon": "punch-reverse", "anim": "jab", "standIn": true },
+    { "id": "backfist", "name": "Backfist", "icon": "backfist", "anim": "jab", "standIn": true },
+    { "id": "front-kick", "name": "Front Kick", "icon": "kick", "anim": "strike", "standIn": true },
+    { "id": "choke-break", "name": "Choke Break", "icon": "choke-break", "anim": "counter", "standIn": true }
+  ]
+}

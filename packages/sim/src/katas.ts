@@ -1,6 +1,6 @@
-// Kata cards (S3-P1): one file per kata in content/katas/. The game shows only the kata's
-// name, its number of steps and the direction of each step (decision D1); the school's step
-// text stays with the school.
+// Kata cards (S3-P1): one file per kata in content/katas/, with each step's direction.
+// Nov 20 (Jay): decision D1 (names, step counts and arrows only) is lifted. Kata practice shows the
+// moves: each step lists its beats, a direction and a technique (content/dojo/kata-moves.json).
 
 export type Facing = 'F' | 'B' | 'L' | 'R';
 
@@ -8,6 +8,17 @@ export interface KataStep {
   n: number;
   /** Directions from the school map. Empty while a step's direction is still an open question. */
   facing: Facing[];
+  /** Nov 20 (Jay): what the student taps, in order: the direction, then the technique. Empty = the hero does it alone. */
+  beats: KataBeat[];
+  /** A short line for this step (e.g. "Begins at attention"), or absent. */
+  note?: string;
+}
+
+/** One tap pair in kata practice: the way the hero faces (on screen: F up, B down, L left, R right), then the move. */
+export interface KataBeat {
+  dir: Facing;
+  move: string;
+  kiai: boolean;
 }
 
 export interface KataDef {
@@ -32,7 +43,14 @@ export function parseKata(raw: unknown): KataDef {
   const steps = d.steps.map((s, i) => {
     if (s.n !== i + 1) throw new Error(`${where}: step ${i + 1} is numbered ${s.n}`);
     if (!Array.isArray(s.facing) || s.facing.some((f) => !FACINGS.includes(f))) throw new Error(`${where}: step ${s.n} has a bad facing`);
-    return { n: s.n, facing: [...s.facing] };
+    const rawBeats = (s as { beats?: unknown }).beats ?? [];
+    if (!Array.isArray(rawBeats)) throw new Error(`${where}: step ${s.n} beats must be a list`);
+    const beats = rawBeats.map((b: Partial<KataBeat>, j) => {
+      if (!FACINGS.includes(b?.dir as Facing) || typeof b.move !== 'string' || b.move === '') throw new Error(`${where}: step ${s.n} beat ${j + 1} needs a dir and a move`);
+      return { dir: b.dir as Facing, move: b.move, kiai: b.kiai === true };
+    });
+    const note = (s as { note?: unknown }).note;
+    return { n: s.n, facing: [...s.facing], beats, ...(typeof note === 'string' ? { note } : {}) };
   });
   return { id: d.id, name: d.name, requirement: d.requirement, stance: d.stance ?? null, steps };
 }
