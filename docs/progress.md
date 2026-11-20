@@ -1373,3 +1373,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - 1,632 tests pass; type checks and the build pass. Copied onto `main` with Jay's OK ("put it in").
 - Jay can delete a stray test folder `C:\samples` (one picture; the safety check would not let Claude remove it).
 - **Next:** night for the inside room if Jay wants it; the old `incoming-art/action-zone-dojo` inside sprites are no longer used by the game.
+
+## The Action Zone inside room: things to do (2026-11-20, branch `claude/az-inside`)
+- Belt verse board belts redrawn from Jay's photo; red box made one solid red (re-rendered and re-packed).
+- New in the room: Read (creed and belt board large, X top right), Bow on and off the mat, the Star Wall throwing star game, and Train at the three bags (unlimited hits). Details in decisions.md.
+- 1,641 tests pass; type checks and both builds pass. Preview: https://claude-az-inside-dojo-ascent.jay-lindemuth.workers.dev/?room=dojo. Not on `main`.
+- **Next:** Jay plays it on his phone; his OK on the art changes and the Star Wall; then copy to `main`.
