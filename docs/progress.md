@@ -1379,3 +1379,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - New in the room: Read (creed and belt board large, X top right), Bow on and off the mat, the Star Wall throwing star game, and Train at the three bags (unlimited hits). Details in decisions.md.
 - 1,641 tests pass; type checks and both builds pass. Copied onto `main` (the live link) with Jay's OK ("Yes, copy to live"), after the checks passed.
 - **Next:** Jay's notes from playing it on his phone (he may redesign the Star Wall).
+
+## Kata practice (2026-11-20, branch `claude/kata-practice`)
+- Stand in the middle of the logo on the Action Zone mat: "Practice Kata" opens a menu of the katas you've reached, with a Time Trial switch. The hero bows in, takes the ready stance, and you tap the arrow, then the move, for every beat. Misses are counted with a gentle buzz, right moves get a satisfying sound, and the right button glows after two misses. Small finish card with bests. Details in decisions.md (D1 lifted).
+- Beats written for Basic Form 1, Basic Form 2, Keon, and David and Goliath, from the school sheet. 1,649 tests pass; type checks and both builds pass. Not on `main` yet.
+- **Next:** Jay checks the beats for the four katas and plays it on his phone; Jay sends Pinon 1–3, Nahanchi and Possi; Blender work for the real kata moves (ready stance, blocks, reverse punch, backfist, front kick, choke break).

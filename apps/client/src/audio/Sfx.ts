@@ -333,6 +333,43 @@ class SoundMaker {
     this.tone(down ? 260 : 380, down ? 200 : 460, 0.08, 'triangle', 0.15);
   }
 
+  // ---- kata practice (Jay, Nov 20)
+
+  /** The right arrow: a soft wooden tick. */
+  kataArrow(): void {
+    this.tone(1100, 900, 0.04, 'triangle', 0.07);
+  }
+
+  /**
+   * A beat played right: a crisp snap of the gi, a solid thump and a bright chime that climbs the scale as the
+   * kata goes on. A kiai adds a bigger, rising shout.
+   */
+  kataRight(index: number, kiai: boolean): void {
+    this.noise(0.05, 0.35, 3200);
+    this.tone(180, 55, 0.14, 'sine', 0.4);
+    const scale = [523, 587, 659, 784, 880, 1047, 1175, 1319];
+    const f = scale[index % scale.length];
+    this.tone(f, f, 0.24, 'triangle', 0.13, 0.03);
+    this.tone(f * 2, f * 2, 0.14, 'sine', 0.05, 0.03);
+    if (kiai) {
+      this.tone(220, 520, 0.22, 'sawtooth', 0.07, 0.02);
+      this.tone(120, 50, 0.25, 'sine', 0.35, 0.02);
+      [784, 988, 1175].forEach((n, i) => this.tone(n, n, 0.3, 'sine', 0.08, 0.1 + i * 0.05));
+    }
+  }
+
+  /** A wrong arrow or move: a gentle, low buzz (never harsh). */
+  kataWrong(): void {
+    this.tone(150, 135, 0.18, 'square', 0.035);
+    this.tone(156, 140, 0.18, 'square', 0.03);
+    this.tone(240, 190, 0.12, 'triangle', 0.07);
+  }
+
+  /** The kata is finished: a small rising chime (kept below real achievements). */
+  kataDone(): void {
+    [523, 659, 784, 1047].forEach((f, i) => this.tone(f, f, 0.4, 'sine', 0.09, i * 0.11));
+  }
+
   /** Fetches and decodes every listed file once. A file that fails is simply left out. */
   private loadFiles(ctx: AudioContext): void {
     const paths = new Set<string>();

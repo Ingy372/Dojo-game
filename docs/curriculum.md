@@ -53,7 +53,7 @@ Jay's descriptions, 2026-10-23, in his own words. Kick combos 8–12 (black belt
 
 ## Katas
 
-The kata names are in the table above. Their descriptions are still a work in progress with Jay.
+The kata names are in the table above. Kata practice (Nov 20) plays each kata as beats (a direction, then a technique) from `content/katas/`. Basic Form 1, Basic Form 2, Keon, and David and Goliath are written from the school sheet and wait on Jay's check; Pinon 1–3, Nahanchi and Possi are still to come from Jay.
 
 ## Still needed from Jay
 
