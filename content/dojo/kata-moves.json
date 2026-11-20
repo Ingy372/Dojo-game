@@ -1,14 +1,16 @@
 {
-  "note": "Nov 20 (Jay): the technique buttons for kata practice. Each kata step in content/katas lists its beats (a direction, then one of these moves). 'icon' picks the button's code-drawn picture; 'anim' is the hero animation used until the real kata moves are modelled in Blender (stand-ins marked).",
+  "note": "Nov 20 (Jay): the technique buttons for kata practice. Each kata step in content/katas lists its beats (a direction, then one of these moves); a kata only shows the buttons it uses. 'icon' picks the button's code-drawn picture (its first word picks the colour family); 'anim' is the hero animation used until the real kata moves are modelled in Blender (stand-ins marked). Names follow Jay's terms (Nov 20).",
   "moves": [
     { "id": "low-block", "name": "Low Block", "icon": "block-low", "anim": "counter", "standIn": true },
     { "id": "inside-block", "name": "Inside Block", "icon": "block-inside", "anim": "counter", "standIn": true },
-    { "id": "overhead-block", "name": "Overhead Block", "icon": "block-high", "anim": "counter", "standIn": true },
+    { "id": "reverse-inside-block", "name": "Reverse Inside Block", "icon": "block-reverse-inside", "anim": "counter", "standIn": true },
+    { "id": "high-block", "name": "High Block", "icon": "block-high", "anim": "counter", "standIn": true },
     { "id": "knife-hand-block", "name": "Knife Hand Blocks", "icon": "block-knife", "anim": "counter", "standIn": true },
     { "id": "punch", "name": "Punch", "icon": "punch", "anim": "jab", "standIn": false },
     { "id": "reverse-punch", "name": "Reverse Punch", "icon": "punch-reverse", "anim": "jab", "standIn": true },
     { "id": "backfist", "name": "Backfist", "icon": "backfist", "anim": "jab", "standIn": true },
-    { "id": "front-kick", "name": "Front Kick", "icon": "kick", "anim": "strike", "standIn": true },
-    { "id": "choke-break", "name": "Choke Break", "icon": "choke-break", "anim": "counter", "standIn": true }
+    { "id": "spear-hand", "name": "Palm Down / Spear Hand", "icon": "spear-hand", "anim": "jab", "standIn": true },
+    { "id": "rear-leg-front-kick", "name": "Rear Leg Front Kick", "icon": "kick", "anim": "strike", "standIn": true },
+    { "id": "break-hold", "name": "Break the Hold", "icon": "break-hold", "anim": "counter", "standIn": true }
   ]
 }

@@ -1,6 +1,6 @@
 // Kata practice (Jay, Nov 20): stand in the middle of the logo on the Action Zone floor and tap "Kata".
 // The menu lists the katas this student has reached (Basic Form 1 at white belt, then one more per belt) with a
-// Time Trial switch. Playing: the hero bows in and takes the ready stance, walking is locked, an arrow pad (left)
+// Time Trial switch. Playing: the hero bows in and takes the Open Leg Stance, walking is locked, an arrow pad (left)
 // and the kata's technique buttons (right) appear. Tap the direction the hero faces, then the technique. A wrong
 // tap gives a gentle buzz and counts as a miss; after two misses on one beat the right button glows. The finish
 // is kept small (real promotions get the big celebrations): misses, time if timed, and the bests. No power,
@@ -24,6 +24,7 @@ import {
 import { sfx } from '../audio/Sfx';
 import { hasTouch } from '../input/TouchControls';
 import { reducedMotion } from '../game/motion';
+import { drawBelt, hex, type BeltColors } from './belt';
 import { closeX } from './boardReader';
 import { button } from './button';
 import { FONT, crisp, view } from './theme';
@@ -36,8 +37,8 @@ const GAP = 10;
 const INK = '#fff6e0';
 const STROKE = '#14121c';
 const GOLD = 0xffd166;
-/** Blocks blue, punches and strikes red, kicks orange: the same colour for the same family in every kata. */
-const FAMILY_COLOR: Record<string, number> = { block: 0x2f6fb5, punch: 0xb8432f, backfist: 0x8a3fb0, kick: 0xc97a16, choke: 0x2a8a6a };
+/** Blocks blue, punches red, open-hand strikes purple, kicks orange, escapes green: the same colour for the same family in every kata. */
+const FAMILY_COLOR: Record<string, number> = { block: 0x2f6fb5, punch: 0xb8432f, backfist: 0x8a3fb0, spear: 0x8a3fb0, kick: 0xc97a16, break: 0x2a8a6a };
 
 const TIME_TRIAL_KEY = 'dojo.kataTimeTrial';
 function savedTimeTrial(): boolean {
@@ -79,6 +80,8 @@ export class KataMenu {
   constructor(
     private readonly scene: Phaser.Scene,
     private readonly katas: readonly KataDef[],
+    /** The belt each kata belongs to (its colour shows on the kata's row). */
+    private readonly belts: ReadonlyMap<string, BeltColors | undefined>,
     private readonly bests: Readonly<Record<string, KataBest>>,
     private readonly onPick: (k: KataDef, timeTrial: boolean) => void,
     private readonly onClose: () => void,
@@ -86,55 +89,155 @@ export class KataMenu {
     this.layer = scene.add.container(0, 0).setDepth(110);
     this.close = closeX(scene, () => this.finish(null));
     this.draw();
+    if (!reducedMotion()) scene.tweens.add({ targets: this.layer, alpha: { from: 0, to: 1 }, duration: 180 });
   }
 
   private draw(): void {
     const s = this.scene;
     this.layer.removeAll(true);
     const { width, height } = view(s);
-    const dim = s.add.rectangle(0, 0, width, height, 0x0a0810, 0.82).setOrigin(0).setInteractive();
-    this.layer.add(dim);
-    const cw = Math.min(width - 2 * MARGIN, 600);
-    const cols = this.katas.length > 2 && cw > 420 ? 2 : 1;
-    const rows = Math.ceil(this.katas.length / cols);
-    const bh = 64;
-    const ch = Math.min(height - 2 * MARGIN, 82 + rows * (bh + GAP) + 64);
+    this.layer.add(s.add.rectangle(0, 0, width, height, 0x0a0810, 0.82).setOrigin(0).setInteractive());
+    const n = this.katas.length;
+    const cw = Math.min(width - 2 * MARGIN, 620);
+    const cols = n > 2 && cw > 440 ? 2 : 1;
+    const rows = Math.ceil(n / cols);
+    const HEAD = 86;
+    const FOOT = 70;
+    const maxCh = height - 2 * MARGIN;
+    const rh = Math.max(42, Math.min(58, (maxCh - HEAD - FOOT + GAP) / rows - GAP));
+    const ch = Math.min(maxCh, HEAD + rows * (rh + GAP) - GAP + FOOT);
     const x0 = (width - cw) / 2;
     const y0 = (height - ch) / 2;
-    const card = s.add.graphics();
-    card.fillStyle(0x221a33, 0.97).fillRoundedRect(x0, y0, cw, ch, 18).lineStyle(3, GOLD, 0.8).strokeRoundedRect(x0, y0, cw, ch, 18);
-    this.layer.add(card);
-    this.layer.add(text(s, width / 2, y0 + 16, 'Practice Kata', 26, '#ffd166').setOrigin(0.5, 0));
-    this.layer.add(text(s, width / 2, y0 + 50, 'Tap the arrow, then the move.', 14).setOrigin(0.5, 0));
-    const bw = (cw - 40 - (cols - 1) * GAP) / cols;
-    this.katas.forEach((k, i) => {
-      const c = i % cols;
-      const r = Math.floor(i / cols);
-      const bx = x0 + 20 + c * (bw + GAP);
-      const by = y0 + 82 + r * (bh + GAP);
-      button(s, { x: bx, y: by, w: bw, h: bh - 18, label: k.name, color: 0x6a3fb0, size: 19, onTap: () => this.finish(k) }, this.layer);
-      this.layer.add(text(s, bx + bw / 2, by + bh - 14, bestLine(this.bests[k.id], this.timeTrial), 11, '#d8cdee').setOrigin(0.5, 0.5));
+
+    // The card: a drop shadow, a lighter header band, a gold frame with a thin inner line and gold corner studs.
+    const g = s.add.graphics();
+    g.fillStyle(0x000000, 0.45).fillRoundedRect(x0 + 3, y0 + 9, cw, ch, 20);
+    g.fillStyle(0x1b1429, 0.98).fillRoundedRect(x0, y0, cw, ch, 20);
+    g.fillStyle(0x2d2245, 1).fillRoundedRect(x0, y0, cw, HEAD - 10, { tl: 20, tr: 20, bl: 0, br: 0 });
+    g.fillStyle(0xffffff, 0.05).fillRoundedRect(x0 + 8, y0 + 6, cw - 16, 24, 12);
+    g.lineStyle(3, GOLD, 0.9).strokeRoundedRect(x0, y0, cw, ch, 20);
+    g.lineStyle(1, GOLD, 0.35).strokeRoundedRect(x0 + 7, y0 + 7, cw - 14, ch - 14, 14);
+    g.lineStyle(1.5, GOLD, 0.45).lineBetween(x0 + 18, y0 + HEAD - 10, x0 + cw - 18, y0 + HEAD - 10);
+    for (const [dx, dy] of [
+      [x0 + 16, y0 + 16],
+      [x0 + cw - 16, y0 + 16],
+      [x0 + 16, y0 + ch - 16],
+      [x0 + cw - 16, y0 + ch - 16],
+    ])
+      diamond(g, dx, dy, 4, GOLD, 0.85);
+    this.layer.add(g);
+
+    // The title, with a gold flourish on each side.
+    const title = text(s, width / 2, y0 + 12, 'Practice Kata', 26, '#ffd166').setOrigin(0.5, 0);
+    const fl = s.add.graphics();
+    const ty = y0 + 12 + title.height / 2;
+    for (const side of [-1, 1]) {
+      const a = width / 2 + side * (title.width / 2 + 10);
+      const b = a + side * 46;
+      fl.lineStyle(2, GOLD, 0.7).lineBetween(a, ty, b, ty);
+      diamond(fl, b + side * 5, ty, 5, GOLD, 0.9);
+    }
+    this.layer.add([fl, title]);
+    this.layer.add(text(s, width / 2, y0 + 48, 'Tap the arrow, then the move.', 13, '#d8cdee').setOrigin(0.5, 0));
+
+    const bw = (cw - 36 - (cols - 1) * GAP) / cols;
+    this.katas.forEach((k, i) => this.kataRow(k, x0 + 18 + (i % cols) * (bw + GAP), y0 + HEAD + Math.floor(i / cols) * (rh + GAP), bw, rh));
+    this.toggle(width / 2, y0 + ch - FOOT / 2 - 4);
+  }
+
+  /** One kata: its belt's colour, its name, its length and the bests; tap to play. */
+  private kataRow(k: KataDef, x: number, y: number, w: number, h: number): void {
+    const s = this.scene;
+    const c = s.add.container(x + w / 2, y + h / 2);
+    const g = s.add.graphics();
+    g.fillStyle(0x000000, 0.4).fillRoundedRect(-w / 2, -h / 2 + 4, w, h, 12);
+    g.fillStyle(0x45297a, 1).fillRoundedRect(-w / 2, -h / 2, w, h, 12);
+    g.fillStyle(0x6a3fb0, 1).fillRoundedRect(-w / 2, -h / 2, w, h - 4, 12);
+    g.fillStyle(0xffffff, 0.13).fillRoundedRect(-w / 2 + 4, -h / 2 + 3, w - 8, h * 0.38, 9);
+    g.lineStyle(2, 0xffffff, 0.5).strokeRoundedRect(-w / 2, -h / 2, w, h, 12);
+    // A round badge holding a little belt in this kata's belt colour.
+    const bx = -w / 2 + 26;
+    g.fillStyle(0x1b1429, 0.85).fillCircle(bx, -2, 18).lineStyle(2, GOLD, 0.7).strokeCircle(bx, -2, 18);
+    c.add(g);
+    const belt = this.belts.get(k.id);
+    if (belt) {
+      const bg = s.add.graphics();
+      drawBelt(bg, bx, -2, 28, 8, belt, 0);
+      // The knot and its two hanging ends.
+      bg.fillStyle(hex(belt.color)).fillRect(bx - 4, -7, 8, 10).fillRect(bx - 5, 3, 4, 9).fillRect(bx + 1, 3, 4, 9);
+      bg.lineStyle(1.5, 0x14121c).strokeRect(bx - 4, -7, 8, 10).strokeRect(bx - 5, 3, 4, 9).strokeRect(bx + 1, 3, 4, 9);
+      c.add(bg);
+    }
+    const left = -w / 2 + 52;
+    const avail = w - 52 - 34;
+    const name = text(s, left, -h / 2 + h * 0.34 - 2, k.name, h < 50 ? 16 : 18).setOrigin(0, 0.5);
+    const best = this.bests[k.id];
+    const parts = [`${k.steps.length} steps`];
+    if (!best || best.runs === 0) parts.push('Not tried yet');
+    else {
+      parts.push(`Fewest misses ${best.fewestWrong ?? '-'}`);
+      if (best.bestMs !== null) parts.push(`Best ${formatKataTime(best.bestMs)}`);
+    }
+    const info = text(s, left, h / 2 - h * 0.28, parts.join('  ·  '), 11, '#e3d9f5').setOrigin(0, 0.5);
+    for (const t of [name, info]) if (t.width > avail) t.setScale(avail / t.width);
+    c.add([name, info]);
+    // A small gold star once the kata has been played with no misses.
+    if (best?.fewestWrong === 0) {
+      const st = s.add.graphics();
+      star(st, w / 2 - 14, -h / 2 + 12, 6, GOLD);
+      c.add(st);
+    }
+    const chev = s.add.graphics().lineStyle(3, INK_NUM, 0.9);
+    chev.beginPath().moveTo(w / 2 - 22, -6).lineTo(w / 2 - 15, 1).lineTo(w / 2 - 22, 8).strokePath();
+    c.add(chev);
+    const zone = s.add.zone(x + w / 2, y + h / 2, w, h).setInteractive({ useHandCursor: true });
+    zone.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
+      if (!reducedMotion()) s.tweens.add({ targets: c, scale: 0.96, duration: 70 });
     });
-    const ty = y0 + ch - 58;
-    button(
-      s,
-      {
-        x: width / 2 - 110,
-        y: ty,
-        w: 220,
-        h: 42,
-        label: `Time Trial: ${this.timeTrial ? 'ON' : 'OFF'}`,
-        color: this.timeTrial ? 0x277a56 : 0x3a3150,
-        size: 17,
-        selected: this.timeTrial,
-        onTap: () => {
-          this.timeTrial = !this.timeTrial;
-          saveTimeTrial(this.timeTrial);
-          this.draw();
-        },
-      },
-      this.layer,
-    );
+    zone.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => c.setScale(1));
+    zone.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      sfx.unlock();
+      sfx.tap();
+      this.finish(k);
+    });
+    this.layer.add([c, zone]);
+  }
+
+  /** The Time Trial switch: a stopwatch, the words, and a slider that turns green when on. */
+  private toggle(cx: number, cy: number): void {
+    const s = this.scene;
+    const on = this.timeTrial;
+    const W = 236;
+    const H = 46;
+    const c = s.add.container(cx, cy);
+    const g = s.add.graphics();
+    g.fillStyle(0x000000, 0.4).fillRoundedRect(-W / 2, -H / 2 + 4, W, H, H / 2);
+    g.fillStyle(on ? 0x1f5e44 : 0x2c2440, 1).fillRoundedRect(-W / 2, -H / 2, W, H, H / 2);
+    g.fillStyle(0xffffff, 0.08).fillRoundedRect(-W / 2 + 6, -H / 2 + 3, W - 12, H * 0.4, H * 0.2);
+    g.lineStyle(2, on ? 0x7fe0a8 : GOLD, on ? 0.9 : 0.55).strokeRoundedRect(-W / 2, -H / 2, W, H, H / 2);
+    // Stopwatch.
+    const sx = -W / 2 + 26;
+    g.lineStyle(2.5, 0xfff6e0, 1).strokeCircle(sx, 2, 10);
+    g.fillStyle(0xfff6e0, 1).fillRect(sx - 3, -12, 6, 4).fillRect(sx + 7, -9, 3, 3);
+    g.lineStyle(2, on ? 0x7fe0a8 : GOLD, 1).lineBetween(sx, 2, sx, -4).lineBetween(sx, 2, sx + 4, 4);
+    // The slider.
+    const tx = W / 2 - 34;
+    g.fillStyle(on ? 0x3ad17f : 0x5a5070, 1).fillRoundedRect(tx - 23, -12, 46, 24, 12);
+    g.lineStyle(1.5, 0x14121c, 0.8).strokeRoundedRect(tx - 23, -12, 46, 24, 12);
+    g.fillStyle(0x000000, 0.3).fillCircle(tx + (on ? 11 : -11), 2, 10);
+    g.fillStyle(0xffffff, 1).fillCircle(tx + (on ? 11 : -11), 0, 10);
+    c.add(g);
+    c.add(text(s, -W / 2 + 46, 0, 'Time Trial', 17).setOrigin(0, 0.5));
+    c.add(text(s, tx - 34, 0, on ? 'ON' : 'OFF', 12, on ? '#7fe0a8' : '#b8acd0').setOrigin(1, 0.5));
+    const zone = s.add.zone(cx, cy, W, H + 8).setInteractive({ useHandCursor: true });
+    zone.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      sfx.unlock();
+      sfx.tap();
+      this.timeTrial = !this.timeTrial;
+      saveTimeTrial(this.timeTrial);
+      this.draw();
+    });
+    this.layer.add([c, zone]);
   }
 
   private finish(k: KataDef | null): void {
@@ -145,6 +248,22 @@ export class KataMenu {
     if (k) this.onPick(k, this.timeTrial);
     else this.onClose();
   }
+}
+
+const INK_NUM = 0xfff6e0;
+
+function diamond(g: Phaser.GameObjects.Graphics, x: number, y: number, r: number, color: number, alpha: number): void {
+  g.fillStyle(color, alpha).fillTriangle(x, y - r, x + r, y, x, y + r).fillTriangle(x, y - r, x - r, y, x, y + r);
+}
+
+function star(g: Phaser.GameObjects.Graphics, x: number, y: number, r: number, color: number): void {
+  const pts: Phaser.Types.Math.Vector2Like[] = [];
+  for (let i = 0; i < 10; i++) {
+    const a = -Math.PI / 2 + (i * Math.PI) / 5;
+    const rr = i % 2 === 0 ? r : r * 0.45;
+    pts.push({ x: x + Math.cos(a) * rr, y: y + Math.sin(a) * rr });
+  }
+  g.fillStyle(color, 1).fillPoints(pts, true).lineStyle(1.5, 0x14121c, 0.9).strokePoints(pts, true);
 }
 
 // ---------------------------------------------------------------- the pad
@@ -218,7 +337,7 @@ export class KataPad {
     this.bindKeys();
   }
 
-  /** Shows the pad and starts listening to taps (after the bow and the ready stance). */
+  /** Shows the pad and starts listening to taps (after the bow and the Open Leg Stance). */
   start(): void {
     this.active = true;
     this.scene.tweens.add({ targets: this.layer, alpha: 1, duration: reducedMotion() ? 0 : 200 });
@@ -517,7 +636,17 @@ export function drawMoveIcon(scene: Phaser.Scene, icon: string, size: number): P
       g.fillStyle(white, 1).fillRoundedRect(-u * 0.6, -u * 0.18, u * 1.0, u * 0.4, u * 0.18).fillRect(-u * 0.6, -u * 0.6, u * 0.36, u * 0.6);
       arrow(u * 0.2, u * 0.45, u * 0.7, u * 0.45);
       break;
-    case 'choke-break':
+    case 'block-reverse-inside':
+      forearm(u * 0.15, u * 0.55, u * 0.15, -u * 0.45);
+      arrow(-u * 0.6, 0, u * 0.05, 0);
+      break;
+    case 'spear-hand':
+      // A flat open hand, fingers together, thrusting forward.
+      g.fillStyle(white, 1).fillRoundedRect(-u * 0.35, -u * 0.2, u * 0.95, u * 0.36, u * 0.14).fillRoundedRect(-u * 0.6, -u * 0.24, u * 0.36, u * 0.44, u * 0.1);
+      g.lineStyle(1.5, 0x5a4030, 0.9).lineBetween(-u * 0.05, -u * 0.02, u * 0.55, -u * 0.02);
+      arrow(-u * 0.2, u * 0.5, u * 0.65, u * 0.5);
+      break;
+    case 'break-hold':
       g.lineStyle(u * 0.26, white, 1).beginPath().arc(0, 0, u * 0.55, Math.PI * 1.15, Math.PI * 1.85).strokePath();
       arrow(-u * 0.55, -u * 0.1, -u * 0.55, u * 0.6);
       arrow(u * 0.55, -u * 0.1, u * 0.55, u * 0.6);

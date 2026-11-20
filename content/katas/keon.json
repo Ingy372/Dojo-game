@@ -61,7 +61,7 @@
       "beats": [
         {
           "dir": "R",
-          "move": "inside-block"
+          "move": "reverse-inside-block"
         },
         {
           "dir": "R",
@@ -77,7 +77,7 @@
       "beats": [
         {
           "dir": "L",
-          "move": "inside-block"
+          "move": "reverse-inside-block"
         },
         {
           "dir": "L",
@@ -109,11 +109,11 @@
       "beats": [
         {
           "dir": "L",
-          "move": "overhead-block"
+          "move": "high-block"
         },
         {
           "dir": "L",
-          "move": "front-kick"
+          "move": "rear-leg-front-kick"
         },
         {
           "dir": "L",
@@ -129,11 +129,11 @@
       "beats": [
         {
           "dir": "R",
-          "move": "overhead-block"
+          "move": "high-block"
         },
         {
           "dir": "R",
-          "move": "front-kick"
+          "move": "rear-leg-front-kick"
         },
         {
           "dir": "R",

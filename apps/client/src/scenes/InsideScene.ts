@@ -68,7 +68,7 @@ const HEAVY_BAG = loadEnemy(heavyBagJson);
 const KATA_STEP = 0.3;
 const KATA_ROAM = 1.6;
 const KATA_SPEED = 0.09;
-/** The hero's kata ready stance. A stand-in until the open-leg ready stance is modelled. */
+/** The hero's Open Leg Stance for kata. A stand-in until it is modelled. */
 const KATA_READY_ANIM = 'stance_rooted';
 const KATA_VEC: Record<KataFacing, Vec2> = { F: { x: 0, y: -1 }, B: { x: 0, y: 1 }, L: { x: -1, y: 0 }, R: { x: 1, y: 0 } };
 
@@ -98,7 +98,7 @@ export class InsideScene extends WalkScene {
   private refusedHint = false;
   /** The room the rules step: the plain room, or (while training) the one with the bags as targets. */
   private activeRoom: Room = INSIDE.room;
-  /** Kata practice: the pad while playing, where the hero is stepping to, and whether it holds the ready stance. */
+  /** Kata practice: the pad while playing, where the hero is stepping to, and whether it holds the Open Leg Stance. */
   private kataPad: KataPad | null = null;
   private kataTarget: Vec2 | null = null;
   private kataReady = false;
@@ -376,6 +376,7 @@ export class InsideScene extends WalkScene {
     new KataMenu(
       this,
       katas,
+      new Map(katas.map((k) => [k.id, training.belts.find((b) => `${b.id}-kata` === k.requirement)])),
       loadSave().kataBests,
       (kata, timeTrial) => this.startKata(kata, timeTrial),
       () => {
@@ -385,7 +386,7 @@ export class InsideScene extends WalkScene {
     );
   }
 
-  /** The hero steps to the logo's middle, faces the front, bows in and takes the ready stance; then the pad shows. */
+  /** The hero steps to the logo's middle, faces the front, bows in and takes the Open Leg Stance; then the pad shows. */
   private startKata(kata: KataDef, timeTrial: boolean): void {
     const k = INSIDE.kataSpot!;
     const me = this.world.players.p1;
@@ -432,7 +433,7 @@ export class InsideScene extends WalkScene {
           if (this.kataPad !== pad) return;
           this.heroAction = null;
           this.kataReady = true;
-          this.say('Ready stance');
+          this.say('Open Leg Stance');
           pad.start();
         },
         this.hero,
