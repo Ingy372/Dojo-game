@@ -31,9 +31,9 @@ front, horse and cat stances. **Nothing here is approved or wired into the game.
 
 ## Previews (look at these first)
 
-- `preview/stances.png`: the four stances, side by side in five directions.
-- `preview/<move>.png`: each move, every frame, seen from the front (S), the corner (SE) and the side (E).
-- `preview/<move>.gif`: each move playing at game speed.
+- `preview/game/all-moves-final-pose.png`: **start here.** The finished pose of every stance and move, in the game's real look (white gi, yellow belt), from the front, the corner and both sides.
+- `preview/game/<animation>.gif`: each one playing at game speed, from the same four views (moves hold their finished pose, then replay).
+- `preview/stances.png` and `preview/<move>.png`: quick pose-check pictures (plain white, bigger), every frame from the front (S), corner (SE) and side (E).
 
 ## Rebuild
 
@@ -43,6 +43,8 @@ blender -b incoming-art/claude-kata-moves/source/player_kata_a.blend -P incoming
 # quick pose check pictures (not game quality):
 blender -b .../player_kata_a.blend -P incoming-art/claude-kata-moves/source/quick_stills.py -- --out <dir> --anims kata_low_block --frames all --dirs S,SE,E
 python incoming-art/claude-kata-moves/source/make_sheet.py <dir> <out.png>
+# game-look GIFs (one face and hair, tinted):
+python incoming-art/claude-kata-moves/source/make_kata_gifs.py --sheets incoming-art/claude-kata-moves/sprites/body-a --out incoming-art/claude-kata-moves/preview/game
 ```
 
 Only body A is rendered (`sprites/body-a`). Body B is built (`source/player_kata_b.blend`) and renders the same way once Jay approves.
