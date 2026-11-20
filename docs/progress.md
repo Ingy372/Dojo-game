@@ -1385,3 +1385,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Beats written for Basic Form 1, Basic Form 2, Keon, and David and Goliath, from the school sheet. 1,649 tests pass; type checks and both builds pass. Not on `main` yet.
 - **Next:** Jay checks the beats for the four katas and plays it on his phone; Jay sends Pinon 1–3, Nahanchi and Possi; Blender work for the real kata moves (Open Leg Stance, the blocks, Reverse Punch, Backfist, Palm Down / Spear Hand, Rear Leg Front Kick, Break the Hold).
 - Jay's notes (Nov 20): menu polished (belt badge per kata, step count, gold frame, a Time Trial slider, a star for a no-miss run); Jay's terms used everywhere (Open Leg Stance, High Block, Rear Leg Front Kick, Break the Hold); new buttons Reverse Inside Block (now in Keon and David and Goliath, as the sheet says) and Palm Down / Spear Hand (waiting for a kata that uses it).
+
+## Kata moves art draft (2026-11-20 overnight, branch `claude/kata-moves-art`)
+- Researched every kata technique and the three stances (`docs/kata-technique-reference.md`, with 7 questions for Jay).
+- Animated in Blender on the approved hero: Open Leg Stance, front, horse and cat stances (loops), plus Low Block, Inside Block, Reverse Inside Block, High Block, Knife Hand Blocks, Punch, Reverse Punch, Backfist, Palm Down / Spear Hand, Rear Leg Front Kick and Break the Hold. Body A rendered; previews in `incoming-art/claude-kata-moves/preview/`. Not in the game.
+- **Next:** Jay reviews the previews and answers the questions; once approved, render body B, import the sheets and swap the stand-ins in `content/dojo/kata-moves.json` (the game holds each move's last frame and flips the sprite for right-side moves).
