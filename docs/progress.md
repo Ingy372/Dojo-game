@@ -1377,5 +1377,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## The Action Zone inside room: things to do (2026-11-20, branch `claude/az-inside`)
 - Belt verse board belts redrawn from Jay's photo; red box made one solid red (re-rendered and re-packed).
 - New in the room: Read (creed and belt board large, X top right), Bow on and off the mat, the Star Wall throwing star game, and Train at the three bags (unlimited hits). Details in decisions.md.
-- 1,641 tests pass; type checks and both builds pass. Preview: https://claude-az-inside-dojo-ascent.jay-lindemuth.workers.dev/?room=dojo. Not on `main`.
-- **Next:** Jay plays it on his phone; his OK on the art changes and the Star Wall; then copy to `main`.
+- 1,641 tests pass; type checks and both builds pass. Copied onto `main` (the live link) with Jay's OK ("Yes, copy to live"), after the checks passed.
+- **Next:** Jay's notes from playing it on his phone (he may redesign the Star Wall).
