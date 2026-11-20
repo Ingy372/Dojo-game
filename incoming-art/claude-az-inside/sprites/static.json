@@ -171,8 +171,8 @@
   },
   "bag-black": {
    "size": [
-    105,
-    204
+    104,
+    203
    ],
    "layers": [
     "bag-black"
@@ -181,16 +181,16 @@
     "bag-black": "bag-black_bag-black.png"
    },
    "groundRect": {
-    "col0": 22.137,
-    "row0": 1.7,
+    "col0": 22.15,
+    "row0": 1.712,
     "col1": 23.45,
     "row1": 4.25,
     "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
    },
-   "topExtraTiles": 2.53,
+   "topExtraTiles": 2.52,
    "anchorPx": [
-    53.0,
-    202.4
+    52.0,
+    201.4
    ],
    "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
    "anchorTile": [
@@ -206,16 +206,16 @@
    "place": "prop",
    "sortRow": 4.23,
    "roomPx": [
-    1827,
-    304
+    1828,
+    305
    ],
    "interactive": true,
    "note": "heavy bag, black."
   },
   "bag-blue": {
    "size": [
-    105,
-    203
+    106,
+    205
    ],
    "layers": [
     "bag-blue"
@@ -225,15 +225,15 @@
    },
    "groundRect": {
     "col0": 23.337,
-    "row0": 2.513,
-    "col1": 24.65,
-    "row1": 5.05,
+    "row0": 2.5,
+    "col1": 24.663,
+    "row1": 5.062,
     "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
    },
-   "topExtraTiles": 2.52,
+   "topExtraTiles": 2.53,
    "anchorPx": [
     53.0,
-    201.4
+    202.4
    ],
    "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
    "anchorTile": [
@@ -250,7 +250,7 @@
    "sortRow": 5.03,
    "roomPx": [
     1923,
-    369
+    368
    ],
    "interactive": true,
    "note": "heavy bag, blue."
@@ -258,7 +258,7 @@
   "bag-red": {
    "size": [
     104,
-    204
+    205
    ],
    "layers": [
     "bag-red"
@@ -268,15 +268,15 @@
    },
    "groundRect": {
     "col0": 24.55,
-    "row0": 1.712,
+    "row0": 1.7,
     "col1": 25.85,
     "row1": 4.263,
     "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
    },
-   "topExtraTiles": 2.52,
+   "topExtraTiles": 2.53,
    "anchorPx": [
     52.0,
-    201.4
+    202.4
    ],
    "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
    "anchorTile": [
@@ -293,7 +293,7 @@
    "sortRow": 4.23,
    "roomPx": [
     2020,
-    305
+    304
    ],
    "interactive": true,
    "note": "heavy bag, branded red (DECIDE item, see README)."
@@ -386,8 +386,8 @@
   },
   "plant": {
    "size": [
-    64,
-    112
+    66,
+    114
    ],
    "layers": [
     "plant"
@@ -396,16 +396,16 @@
     "plant": "plant_plant.png"
    },
    "groundRect": {
-    "col0": 10.213,
-    "row0": 16.45,
-    "col1": 11.012,
-    "row1": 17.85,
+    "col0": 10.2,
+    "row0": 16.438,
+    "col1": 11.025,
+    "row1": 17.863,
     "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
    },
-   "topExtraTiles": 1.3,
+   "topExtraTiles": 1.31,
    "anchorPx": [
-    31.0,
-    104.0
+    32.0,
+    105.0
    ],
    "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
    "anchorTile": [
@@ -421,15 +421,15 @@
    "place": "prop",
    "sortRow": 17.75,
    "roomPx": [
-    873,
-    1484
+    872,
+    1483
    ],
    "interactive": false,
    "note": "potted plant by the door."
   },
   "trash-can": {
    "size": [
-    57,
+    56,
     110
    ],
    "layers": [
@@ -441,7 +441,7 @@
    "groundRect": {
     "col0": 16.95,
     "row0": 16.45,
-    "col1": 17.663,
+    "col1": 17.65,
     "row1": 17.825,
     "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
    },
@@ -472,7 +472,7 @@
   },
   "whiteboard": {
    "size": [
-    149,
+    150,
     154
    ],
    "layers": [
@@ -482,7 +482,7 @@
     "whiteboard": "whiteboard_whiteboard.png"
    },
    "groundRect": {
-    "col0": 20.375,
+    "col0": 20.363,
     "row0": 4.575,
     "col1": 22.238,
     "row1": 6.5,
@@ -490,7 +490,7 @@
    },
    "topExtraTiles": 1.82,
    "anchorPx": [
-    74.0,
+    75.0,
     146.0
    ],
    "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
@@ -507,7 +507,7 @@
    "place": "prop",
    "sortRow": 6.4,
    "roomPx": [
-    1686,
+    1685,
     534
    ],
    "interactive": false,
@@ -602,7 +602,7 @@
   "cross-door-a": {
    "size": [
     138,
-    219
+    220
    ],
    "layers": [
     "cross-door-a"
@@ -612,15 +612,15 @@
    },
    "groundRect": {
     "col0": 19.738,
-    "row0": 7.312,
+    "row0": 7.3,
     "col1": 21.462,
     "row1": 10.05,
     "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
    },
-   "topExtraTiles": 2.64,
+   "topExtraTiles": 2.65,
    "anchorPx": [
     69.0,
-    211.0
+    212.0
    ],
    "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
    "anchorTile": [
@@ -637,7 +637,7 @@
    "sortRow": 9.96,
    "roomPx": [
     1635,
-    753
+    752
    ],
    "interactive": true,
    "note": "cross door A on the east wing (its shut face is on the lobby side). Wall decal: draw it above its wall and below every character."
@@ -645,7 +645,7 @@
   "cross-door-b": {
    "size": [
     138,
-    176
+    177
    ],
    "layers": [
     "cross-door-b"
@@ -655,15 +655,15 @@
    },
    "groundRect": {
     "col0": 24.738,
-    "row0": 7.85,
+    "row0": 7.838,
     "col1": 26.462,
     "row1": 10.05,
     "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
    },
-   "topExtraTiles": 2.1,
+   "topExtraTiles": 2.11,
    "anchorPx": [
     69.0,
-    168.0
+    169.0
    ],
    "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
    "anchorTile": [
@@ -680,14 +680,14 @@
    "sortRow": 9.96,
    "roomPx": [
     2035,
-    796
+    795
    ],
    "interactive": true,
    "note": "cross door B on the east wing. Wall decal: draw it above its wall and below every character."
   },
   "handprint-wall": {
    "size": [
-    244,
+    245,
     190
    ],
    "layers": [
@@ -697,7 +697,7 @@
     "handprint-wall": "handprint-wall_handprint-wall.png"
    },
    "groundRect": {
-    "col0": 21.637,
+    "col0": 21.625,
     "row0": 7.487,
     "col1": 24.688,
     "row1": 9.863,
@@ -705,7 +705,7 @@
    },
    "topExtraTiles": 2.46,
    "anchorPx": [
-    117.0,
+    118.0,
     197.0
    ],
    "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
@@ -722,7 +722,7 @@
    "place": "wall-decal",
    "sortRow": 9.96,
    "roomPx": [
-    1787,
+    1786,
     767
    ],
    "interactive": true,

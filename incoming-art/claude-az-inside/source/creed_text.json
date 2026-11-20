@@ -7,7 +7,7 @@
   },
   "belt_boards": [
     {"title": "WHITE TO YELLOW BELT", "belt": ["white"], "verse": "John 3:16 - For God so loved the world that He gave His only begotten Son that whosoever believes in Him shall not perish but have everlasting life.", "virtue": "UNCONDITIONAL LOVE - No matter what you say or do to me, I will always love and pray for you.", "letter": "F=FORGIVENESS"},
-    {"title": "YELLOW TO ORANGE BELT", "belt": ["yellow", "orange"], "verse": "Romans 3:10 - There is no one righteous, not one.", "virtue": "AVAILABILITY - My time, my money, and anything I have, I will make available to you.", "letter": "A=ACCEPTANCE"},
+    {"title": "YELLOW TO ORANGE BELT", "belt": ["yellow"], "verse": "Romans 3:10 - There is no one righteous, not one.", "virtue": "AVAILABILITY - My time, my money, and anything I have, I will make available to you.", "letter": "A=ACCEPTANCE"},
     {"title": "ORANGE TO GREEN BELT", "belt": ["orange"], "verse": "Romans 3:23 - For all have sinned and fallen short of the glory of God.", "virtue": "PRAYER - I will always make time to pray for you.", "letter": "I=INTEGRITY"},
     {"title": "GREEN TO BLUE BELT", "belt": ["green"], "verse": "Romans 6:23 - For the wages of sin is death but the gift of God is eternal life through Jesus Christ our Lord.", "virtue": "OPENNESS - I will always share my thoughts and feelings with you.", "letter": "T=TRUST"},
     {"title": "BLUE TO RED BELT", "belt": ["blue"], "verse": "Romans 5:8 - For God commendeth His love toward us in that while we were yet sinners Christ died for us.", "virtue": "HONEST - I will always be honest with you.", "letter": "H=HONOR"},

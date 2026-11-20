@@ -782,7 +782,7 @@
    "foregroundSprite": null,
    "tapRectPx": [
     1635,
-    753,
+    752,
     1773,
     972
    ]
@@ -808,7 +808,7 @@
    "foregroundSprite": null,
    "tapRectPx": [
     2035,
-    796,
+    795,
     2173,
     972
    ]
@@ -833,7 +833,7 @@
    "tapPx": null,
    "foregroundSprite": null,
    "tapRectPx": [
-    1787,
+    1786,
     767,
     2031,
     957
@@ -864,8 +864,8 @@
    "tapPx": null,
    "foregroundSprite": "bag-black-top",
    "tapRectPx": [
-    1827,
-    304,
+    1828,
+    305,
     1932,
     508
    ]
@@ -896,9 +896,9 @@
    "foregroundSprite": "bag-blue-top",
    "tapRectPx": [
     1923,
-    369,
-    2028,
-    572
+    368,
+    2029,
+    573
    ]
   },
   {
@@ -927,7 +927,7 @@
    "foregroundSprite": "bag-red-top",
    "tapRectPx": [
     2020,
-    305,
+    304,
     2124,
     509
    ]

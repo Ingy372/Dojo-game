@@ -593,22 +593,16 @@ def scene_inside():
         T(21.3 + dx, 6.42, ZM + 0.08, 1.05, 0.03, 0.03, "#5b5f6e", False, 6, name="wbLeg")
         E(21.3 + dx, 6.42, ZM + 0.05, 0.05, 0.05, 0.05, "#25252e", False, 8, 4, name="wbWheel")
     B(21.3, 6.42, ZM + 0.1, 1.3, 0.25, 0.04, "#5b5f6e", False, name="wbFoot")
-    # ======================= RED GEAR BOX (padded red platform with blue base and cubbies) =======================
+    # ======================= RED GEAR BOX (solid padded red platform with a blue base) =======================
     grp("gear-box")
     x0, x1, r0, r1 = LM.CUBBY; cx, rc = (x0 + x1) / 2, (r0 + r1) / 2
     shadow(cx, r1 + 0.05, (x1 - x0) / 2 + 0.3, 0.3, 0.045, 0.24, "boxShadow")
     B(cx, rc, 0.66, x1 - x0, r1 - r0, 0.96, RED, True, bevel=0.04, name="cubby")
     B(cx, r1 - 0.02, 0.17, x1 - x0 + 0.08, 0.1, 0.22, BLUE, True, name="cubbyBase")
-    B(cx, rc, 1.15, x1 - x0 - 0.12, r1 - r0 - 0.12, 0.02, "#e8473e", False, name="cubbyLid")
-    for k in range(1, 6): B(x0 + k * (x1 - x0) / 6, rc, 1.16, 0.03, r1 - r0 - 0.12, 0.012, RED_D, False, name="lidSeam")
-    B(cx, r1 + 0.005, 1.08, x1 - x0, 0.02, 0.05, "#f06b62", False, name="boxEdgeLight")
-    BAGC = ("#2f6fd6", "#f5c542", "#3f9c4a", "#25252e", "#ee7fb0")
-    for k in range(5):
-        x = x0 + 1.0 + k * 1.3
-        B(x, r1 + 0.01, 0.74, 1.0, 0.02, 0.6, "#5a1c18", False, name="cubbyRim"); B(x, r1 + 0.015, 0.74, 0.92, 0.02, 0.52, "#2a0f0f", False, name="cubbyOpening")
-    B(10.9, rc, 1.2, 0.6, 0.45, 0.07, "#25252e", True, name="binder"); B(10.95, rc, 1.27, 0.55, 0.4, 0.07, "#d92b25", True, name="binder2")
-    B(11.7, rc, 1.19, 0.5, 0.38, 0.05, "#f4f1e8", True, name="papers"); B(15.0, rc, 1.19, 0.7, 0.45, 0.05, "#f4f1e8", False, name="papers2")
-    T(16.3, rc, 1.16, 1.5, 0.07, 0.07, "#8ec6ff", True, 10, name="bottle"); T(16.3, rc, 1.5, 1.56, 0.04, 0.04, "#2f6fd6", False, 8, name="bottleCap")
+    # Nov 20 (Jay's photo): one solid red padded box, no cubbies; nothing on top (the binders and flags are not part of it).
+    # Padded panels: three wide sections, each with a soft seam on the top and down the front.
+    for k in (1, 2): xs = x0 + k * (x1 - x0) / 3; B(xs, rc, 1.145, 0.025, r1 - r0 - 0.04, 0.012, RED_D, False, name="lidSeam"); B(xs, r1 + 0.008, 0.66, 0.025, 0.02, 0.9, RED_D, False, name="frontSeam")
+    B(cx, r1 + 0.005, 1.1, x1 - x0 - 0.04, 0.02, 0.03, "#e2453c", False, name="boxEdgeLight")
     grp("floor")
     for g in (LM.GAP, LM.GAP_R): B(sum(g) / 2, RW + 0.14, 0.05, g[1] - g[0], 0.3, 0.1, "#c9a86a", True, name="gapThreshold")
     # ======================= PARENT SEATING: red and blue stadium bucket seats on carpeted tiers =======================

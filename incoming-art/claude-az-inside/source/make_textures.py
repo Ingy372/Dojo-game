@@ -40,19 +40,31 @@ def center(d, y, s, f, W, fill):
 def fit(d, s, p, size, wmax):
     while d.textlength(s, font=font(p, size)) > wmax and size > 8: size -= 1
     return font(p, size)
-def belt_bar(d, cx, cy, w, h, cols):
-    """a belt: a bar (one or two colours) tied with a simple knot"""
-    PAL = {"white": (244, 241, 232), "yellow": (245, 210, 46), "orange": (240, 138, 36), "green": (22, 110, 56), "blue": (36, 54, 150), "red": (190, 30, 36),
-           "brown": (92, 56, 36), "black": (28, 28, 34)}
-    def bar(x0, x1, c, edge=False):
-        d.rectangle([x0, cy - h / 2, x1, cy + h / 2], fill=PAL[c], outline=(40, 40, 40) if edge or c == "white" else None, width=max(2, int(h * 0.12)))
-    if cols == ["white"]: bar(cx - w / 2, cx + w / 2, "white", True)
-    elif cols == ["yellow", "orange"]: bar(cx - w / 2, cx, "yellow"); bar(cx, cx + w / 2, "orange")
-    elif cols == ["redblack"]: bar(cx - w / 2, cx + w / 2, "black"); bar(cx - w / 2 + w * 0.08, cx + w / 2 - w * 0.08, "red", False); d.rectangle([cx - w / 2, cy - h * 0.12, cx + w / 2, cy + h * 0.12], fill=PAL["black"])
-    elif cols == ["brownblack"]: bar(cx - w / 2, cx + w / 2, "brown"); d.rectangle([cx - w / 2, cy - h * 0.12, cx + w / 2, cy + h * 0.12], fill=PAL["black"])
-    else: bar(cx - w / 2, cx + w / 2, cols[0])
-    k = INK if cols[0] in ("white", "yellow", "orange") else (20, 20, 24)
-    d.polygon([(cx - h * 0.9, cy - h * 0.8), (cx, cy), (cx - h * 0.9, cy + h * 0.8)], fill=k); d.polygon([(cx + h * 0.9, cy - h * 0.8), (cx, cy), (cx + h * 0.9, cy + h * 0.8)], fill=k)
+def belt_bar(d, cx, cy, w, h, cols, tl=None):
+    """a tied belt like the real wall (Jay's photo, Nov 20): one colour (a black stripe down the middle for the
+    red/black and brown/black strip belts), a square knot in the middle and two tails hanging down in a V"""
+    PAL = {"white": (244, 241, 232), "yellow": (245, 196, 30), "orange": (240, 118, 30), "green": (22, 96, 50), "blue": (30, 50, 150), "red": (196, 28, 34),
+           "brown": (66, 38, 26), "black": (28, 28, 34)}
+    base = {"redblack": "red", "brownblack": "brown"}.get(cols[0], cols[0]); col = PAL[base]
+    stripe = cols[0] in ("redblack", "brownblack")
+    ol = (40, 40, 40) if base in ("white", "yellow") else tuple(max(0, int(c * 0.55)) for c in col)
+    lw = max(2, int(h * 0.14))
+    def band(poly):
+        d.polygon(poly, fill=col, outline=ol); d.line(poly + [poly[0]], fill=ol, width=lw)
+    # the belt across
+    band([(cx - w / 2, cy - h / 2), (cx + w / 2, cy - h / 2), (cx + w / 2, cy + h / 2), (cx - w / 2, cy + h / 2)])
+    if stripe: d.rectangle([cx - w / 2 + lw, cy - h * 0.13, cx + w / 2 - lw, cy + h * 0.13], fill=PAL["black"])
+    # two tails hanging down and out from the knot
+    tl, tw = (tl if tl is not None else h * 2.0), h * 0.9
+    for sgn in (-1, 1):
+        x0, y0 = cx + sgn * h * 0.25, cy + h * 0.2; x1, y1 = cx + sgn * h * 1.35, cy + h * 0.2 + tl
+        dx, dy = x1 - x0, y1 - y0; L = (dx * dx + dy * dy) ** 0.5; nx, ny = -dy / L * tw / 2, dx / L * tw / 2
+        band([(x0 + nx, y0 + ny), (x1 + nx, y1 + ny), (x1 - nx, y1 - ny), (x0 - nx, y0 - ny)])
+        if stripe: d.line([(x0, y0), (x1, y1)], fill=PAL["black"], width=max(2, int(tw * 0.26)))
+    # the knot
+    k = h * 0.75
+    band([(cx - k, cy - h * 0.72), (cx + k, cy - h * 0.72), (cx + k * 0.85, cy + h * 0.72), (cx - k * 0.85, cy + h * 0.72)])
+    d.line([(cx - k * 0.7, cy - h * 0.5), (cx + k * 0.7, cy + h * 0.5)], fill=ol, width=lw)
 
 def make_class_creed(T):
     W, H = 1000, 1060; im = Image.new("RGB", (W, H), "white"); d = ImageDraw.Draw(im); d.rectangle([4, 4, W - 5, H - 5], outline=INK, width=10)
@@ -77,12 +89,12 @@ def make_belts(BB):
             fs = 24
             while True:
                 f = font(FS, fs); vl = wrap(d, b["verse"], f, w - 50); ul = wrap(d, b["virtue"], f, w - 50) if b["virtue"] else []
-                need = 62 + len(vl) * (fs + 4) + 40 + (len(ul) * (fs + 4) + 8 if ul else 0) + (44 if b["letter"] else 4)
+                need = 62 + len(vl) * (fs + 4) + 58 + (len(ul) * (fs + 4) + 8 if ul else 0) + (44 if b["letter"] else 4)
                 if need <= h or fs <= 12: break
                 fs -= 1
             yy = y + 62
             for ln in vl: cen(yy, ln, f, INK); yy += fs + 4
-            by = yy + 20; belt_bar(d, x + w / 2, by, w * 0.5, 15, b["belt"]); yy = by + 22
+            by = yy + 20; belt_bar(d, x + w / 2, by, w * 0.5, 15, b["belt"]); yy = by + 40
             for ln in ul: cen(yy, ln, f, INK); yy += fs + 4
             if b["letter"]: cen(y + h - 42, b["letter"], font(FB, 26), RED)
         y += h + pad
