@@ -372,14 +372,14 @@ make_kick("kata_rear_leg_front_kick_left", KK_CATCH, KK_CHAMBER, KK_KICK, KK_LAN
           "Rear Leg Front Kick (left leg): the same kick from a right front stance: hands catch at the left hip, the right foot stays planted, the left leg kicks and lands one step ahead (ends in a left front stance)", left_leg=True)
 
 # Stacked-hands version (Jay, Nov 21): the legs do exactly the same, but both fists stack one over the other at the
-# hip on the kicking side (the bottom fist at the hip, the other fist on top of it) through the chamber, the kick and
-# the landing, ready for the next technique.
+# hip on the kicking side (the bottom fist at the hip, the other fist on top of it) through the chamber and the kick;
+# on landing the hands finish like the regular kick.
 def stacked(hips_fwd):
     return P(hand("R", 0.15, 0.60, hips_fwd - 0.05), hand("L", -0.14, 0.685, hips_fwd - 0.02))
 ST_CATCH = P(KK_CATCH, stacked(0.05))
 ST_CHAMBER = P(KK_CHAMBER, stacked(0.17))
 ST_KICK = P(KK_KICK, stacked(0.17))
-ST_LAND = P(KK_LAND, stacked(0.05 + KICK_TRAVEL))
+ST_LAND = KK_LAND      # Jay, Nov 21: the hands finish like the regular kick (holding the stack after landing left an arm behind the back)
 make_kick("kata_front_kick_stacked", ST_CATCH, ST_CHAMBER, ST_KICK, ST_LAND,
           "Rear Leg Front Kick, hands stacked (right leg): both fists stack one over the other at the right hip and stay there while the right leg chambers, kicks and lands one step ahead")
 make_kick("kata_front_kick_stacked_left", ST_CATCH, ST_CHAMBER, ST_KICK, ST_LAND,

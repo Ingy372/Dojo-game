@@ -23,8 +23,8 @@ front, horse and cat stances. **Nothing here is approved or wired into the game.
 | `kata_spear_hand` | 10 at 20 | **Palm Down / Spear Hand** (Pinon 1): rear open hand presses down palm down, tucked close under the front elbow, while the front open hand thrusts out at the solar plexus, palm down |
 | `kata_rear_leg_front_kick` | 15 at 20 | **Rear Leg Front Kick** (no wasted movement): hands catch at the hip, the standing foot stays planted, the back knee lifts high, kicks out and back, and lands one step ahead as the new front stance. The hero travels 0.56 tiles; drawn centred (see `travel` in the JSON) |
 | `kata_rear_leg_front_kick_left` | 15 at 20 | The same kick with the **left** leg, from a right front stance (a real render, mirrored in Blender) |
-| `kata_front_kick_stacked` | 15 at 20 | **Front kick, hands stacked** (Jay, Nov 21): the same legs, but both fists stack one over the other at the right hip (the kicking side) |
-| `kata_front_kick_stacked_left` | 15 at 20 | The stacked-hands kick with the **left** leg, fists stacked at the left hip |
+| `kata_front_kick_stacked` | 15 at 20 | **Front kick, hands stacked** (Jay, Nov 21): the same legs, but both fists stack one over the other at the right hip (the kicking side) through the kick, then finish like the regular kick |
+| `kata_front_kick_stacked_left` | 15 at 20 | The stacked-hands kick with the **left** leg, fists stacked at the left hip through the kick, then finish like the regular kick |
 | `kata_break_hold_finish` | 13 at 20 | **Break the Hold**, David and Goliath step 12 (end of the kata): left foot draws in (heels together), arms go up above the head, then drop sharply, hands crossing in front of the face, to finish palms down outside the hips |
 
 - **Techniques are one-shots that end on the finished pose** (`holdLastFrame`), so the game can hold each move until the next tap.
