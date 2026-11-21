@@ -260,14 +260,14 @@ RIB_DONE = P(front_stance(12), hand("R", -0.05, 0.93, 0.27), HIP_L, elbows(r=(0.
 tech("kata_reverse_inside_block", [(1, START_GUARD, "smooth"), (4, RIB_CHAMBER, "smooth"), (7, RIB_DONE, "snap"), (10, RIB_DONE, "smooth")],
      "impact:6", "Reverse Inside Block: the inside block (outside to inside) with the rear (right) hand while the left foot is forward; it stops just past the left cheek; the hips turn square, the left fist pulls to the hip", 7)
 
-# High block, Action Zone's way (Jay, Nov 21): the blocking fist starts low by the opposite hip while the other
-# arm rises in front; the arm rises to slope up at about 45 degrees out in front, the fist a little higher than
-# the head, the elbow up too but lower than the fist; the other fist to the hip. (The hero's arms are short for
-# its big head, so the fist is as high as the arm can reach.)
+# High block, Action Zone's way (Jay, Nov 21, from his drawing): the blocking fist starts low by the opposite hip
+# while the other arm rises in front; the forearm rises and stops sloping up across the front of the face: the
+# elbow out and lower (where the backfist stops, by the cheek), the fist higher, just above the opposite eyebrow,
+# out in front; the other fist to the hip.
 HB_CHAMBER = P(front_stance(-5), hand("L", -0.04, 0.56, 0.14), hand("R", 0.02, 0.92, 0.26))
-HB_DONE = P(front_stance(-22), hand("L", 0.05, 1.12, 0.31), HIP_R, elbows((0.12, 0.6, 0.5)))
+HB_DONE = P(front_stance(-24), hand("L", -0.05, 1.07, 0.24), HIP_R, elbows((0.35, 0.55, 0.3)))
 tech("kata_high_block", [(1, START_GUARD, "smooth"), (4, HB_CHAMBER, "smooth"), (7, HB_DONE, "snap"), (10, HB_DONE, "smooth")],
-     "impact:6", "High Block: the left arm rises to slope up at about 45 degrees in front, the fist a little above the head and the elbow up but lower than the fist; the right fist pulls to the hip", 7)
+     "impact:6", "High Block: the left forearm rises to slope up across the front of the face, elbow out and lower by the left cheek, fist higher just above the right eyebrow; the right fist pulls to the hip", 7)
 
 # Break the Hold, David and Goliath step 2 (Jay, Nov 21: this pose IS Break the Hold; the old name "Knife Hand
 # Blocks" is gone): from attention, both open hands rise up the middle of the body, cross in front of the chest,
@@ -296,10 +296,11 @@ tech("kata_reverse_punch", [(1, START_GUARD, "smooth"), (3, RP_START, "smooth"),
      "impact:5", "Reverse Punch: the right (rear) fist drives to the middle while the hips turn square and the left fist pulls back to the hip", 6)
 
 # Backfist (uraken), Jay Nov 21: the fist "loads up" at the opposite shoulder, elbow up, then swings out like a
-# whip, knuckles leading, and stops extended just outside the hero's own cheek (face height, same side).
+# whip, knuckles leading, and stops just outside the hero's own cheek (face height, same side) with the arm
+# nearly straight (Jay: a slight bend at most).
 BF_CHAMBER = P(front_stance(2), hand("L", -0.11, 0.87, 0.05), hand("R", 0.04, 0.62, 0.28), elbows((0.2, 0.35, -0.2)))
-BF_HIT = P(front_stance(-30), hand("L", 0.17, 0.97, 0.33), HIP_R, elbows((0.25, 0.35, -0.1)), hands(l_roll=90))
-BF_DONE = P(front_stance(-28), hand("L", 0.15, 0.96, 0.30), HIP_R, elbows((0.25, 0.35, -0.1)), hands(l_roll=90))
+BF_HIT = P(front_stance(-30), hand("L", 0.15, 0.96, 0.44), HIP_R, elbows((0.25, 0.35, -0.1)), hands(l_roll=90))
+BF_DONE = P(front_stance(-28), hand("L", 0.15, 0.95, 0.41), HIP_R, elbows((0.25, 0.35, -0.1)), hands(l_roll=90))
 tech("kata_backfist", [(1, START_GUARD, "smooth"), (4, BF_CHAMBER, "smooth"), (6, BF_HIT, "snap"), (8, BF_DONE, "smooth"), (10, BF_DONE, "smooth")],
      "impact:5", "Backfist: the left fist loads up at the right shoulder with the elbow up, then swings out, knuckles leading, to stop extended just outside the left cheek", 6)
 
@@ -310,19 +311,40 @@ SH_DONE = P(front_stance(-18, fwd=0.06), hand("L", 0.01, 0.71, 0.46), hand("R", 
 tech("kata_spear_hand", [(1, START_GUARD, "smooth"), (4, SH_CHAMBER, "smooth"), (7, SH_DONE, "snap"), (10, SH_DONE, "smooth")],
      "impact:6", "Palm Down / Spear Hand: the right open hand presses down palm down to under the left elbow while the left open hand thrusts out at the solar plexus, palm down, fingers together", 7)
 
-# Rear Leg Front Kick: from the left front stance both fists "catch" at the right hip, the right knee lifts high
-# in front (chamber), the leg snaps out (ball of the foot, toes pulled back) to the middle, the knee comes back,
-# and the foot lands in front: the hero ends in a right front stance (the hand technique that follows starts there).
+# Rear Leg Front Kick, Action Zone's way (Jay, Nov 21: "no wasted movement"): from the left front stance both fists
+# "catch" at the right hip, the LEFT (standing) foot stays planted the whole time, the right knee lifts high in front
+# (chamber), the leg snaps out (ball of the foot) to the middle, the knee comes back, and the right foot lands one
+# step ahead: the hero ends in a right front stance, having travelled forward one stance length (0.56 tiles).
+# So the step fits inside the sprite frame, the move is drawn centred: it starts 0.28 tiles behind the usual stance
+# spot and ends 0.28 tiles ahead of it (see `travel` in the JSON: the game moves the hero forward by that much).
+KICK_TRAVEL = 0.56
+
+def shift(pose, d):
+    """Moves a whole pose forward by d tiles (hips, feet and hand targets together)."""
+    out = dict(pose)
+    for k, v in pose.items():
+        bone, prop = k
+        if prop == "location" and (bone == "hips" or bone.startswith("foot_ik") or bone.startswith("hand_ik")):
+            out[k] = (v[0], v[1], v[2] + d)
+    return out
+
 KK_CATCH = P(front_stance(-10), hand("L", -0.08, 0.62, 0.06), hand("R", 0.15, 0.60, 0.00))
-KK_CHAMBER = P(body(0.04, 0.03, 0.0, lean=-4), foot("L", 0.08, 0.20, turn_out=10), foot("R", 0.07, 0.10, up=0.34, pitch=-0.2),
-               hand("L", -0.08, 0.66, 0.08), hand("R", 0.15, 0.64, 0.02))
-KK_KICK = P(body(0.03, 0.02, 4.0, lean=-9), foot("L", 0.08, 0.20, turn_out=12), foot("R", 0.06, 0.44, up=0.42, pitch=-0.75),
-            hand("L", -0.08, 0.66, 0.06), hand("R", 0.15, 0.64, 0.00))
-KK_LAND = P(body(0.11, 0.05, 20.0), foot("R", 0.10, 0.30, turn_out=5), foot("L", 0.10, -0.26, turn_out=35),
-            hand("L", 0.15, 0.585, -0.06), hand("R", 0.06, 0.62, 0.30))
-tech("kata_rear_leg_front_kick", [(1, START_GUARD, "smooth"), (3, KK_CATCH, "smooth"), (6, KK_CHAMBER, "smooth"), (8, KK_KICK, "snap"),
-                                  (10, KK_CHAMBER, "smooth"), (13, KK_LAND, "smooth"), (15, KK_LAND, "smooth")],
-     "impact:7", "Rear Leg Front Kick: hands catch at the right hip, the right knee lifts high, the leg snaps out to the middle and back, then lands in front (ends in a right front stance)", 8)
+# the standing foot stays exactly where it was in the front stance (0.10 out, 0.30 forward); the hips move over it
+KK_CHAMBER = P(body(0.05, 0.17, 0.0, lean=-4), foot("L", 0.10, 0.30, turn_out=5), foot("R", 0.07, 0.40, up=0.34, pitch=-0.2),
+               hand("L", -0.08, 0.66, 0.20), hand("R", 0.15, 0.64, 0.14))
+KK_KICK = P(body(0.04, 0.17, 4.0, lean=-9), foot("L", 0.10, 0.30, turn_out=8), foot("R", 0.06, 0.74, up=0.42, pitch=-0.75),
+            hand("L", -0.08, 0.66, 0.18), hand("R", 0.15, 0.64, 0.12))
+# landing: the right foot goes down one stance length ahead; the left foot (now the back foot) only turns out on its spot
+KK_LAND = P(body(0.11, 0.05 + KICK_TRAVEL, 20.0), foot("R", 0.10, 0.30 + KICK_TRAVEL, turn_out=5), foot("L", 0.10, 0.30, turn_out=35),
+            hand("L", 0.15, 0.585, -0.06 + KICK_TRAVEL), hand("R", 0.06, 0.62, 0.30 + KICK_TRAVEL))
+H = -KICK_TRAVEL / 2
+make("kata_rear_leg_front_kick",
+     [(1, shift(START_GUARD, H), "smooth"), (3, shift(KK_CATCH, H), "smooth"), (6, shift(KK_CHAMBER, H), "smooth"),
+      (8, shift(KK_KICK, H), "snap"), (10, shift(KK_CHAMBER, H), "smooth"), (13, shift(KK_LAND, H), "smooth"), (15, shift(KK_LAND, H), "smooth")],
+     20, nxt(), tags="impact:7",
+     info=dict(HOLD, keyFrames={"impact": 8}, side="left foot forward; mirror for the right side",
+               travel={"tiles": KICK_TRAVEL, "startOffset": H, "endOffset": -H, "note": "drawn centred: the hero starts 0.28 tiles behind the usual stance spot and ends 0.28 ahead; the standing foot never moves on the ground"},
+               note="Rear Leg Front Kick: hands catch at the right hip, the left foot stays planted, the right knee lifts high, the leg snaps out to the middle and back, then the right foot lands one step ahead (ends in a right front stance)"))
 
 # Break the Hold, David and Goliath step 12 (the end of the kata; Jay, Nov 21): the left foot draws in to the right
 # (heels together, toes out), both arms go up above the head, then drop sharply: the open hands cross in front of

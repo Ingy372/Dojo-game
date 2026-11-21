@@ -15,13 +15,13 @@ front, horse and cat stances. **Nothing here is approved or wired into the game.
 | `kata_low_block` | 10 at 20 | **Low Block**: fist starts by the opposite ear, sweeps down to stop above the front knee; other fist to the hip |
 | `kata_inside_block` | 10 at 20 | **Inside Block** (outside to inside, Jay Nov 21): fist starts out by the same-side ear, forearm swings across to stop upright just past the other cheek, away from the face |
 | `kata_reverse_inside_block` | 10 at 20 | **Reverse Inside Block**: the same block with the rear hand, hips square |
-| `kata_high_block` | 10 at 20 | **High Block**: arm slopes up at about 45 degrees in front, fist a little above the head, elbow up but lower than the fist |
+| `kata_high_block` | 10 at 20 | **High Block** (Jay's drawing): forearm slopes up across the front of the face, elbow out and lower by the cheek, fist just above the opposite eyebrow |
 | `kata_break_hold` | 11 at 20 | **Break the Hold**, David and Goliath step 2 (was "Knife Hand Blocks"): from attention, open hands rise up the middle, cross, and open out to head height, palms forward |
 | `kata_punch` | 9 at 20 | **Punch**: front-side fist from the hip to the middle of the chest; other fist pulls back to the hip |
 | `kata_reverse_punch` | 9 at 20 | **Reverse Punch**: rear fist to the middle as the hips turn square |
-| `kata_backfist` | 10 at 20 | **Backfist**: loads up at the opposite shoulder, elbow up, swings out to stop extended just outside the hero's own cheek, knuckles leading |
+| `kata_backfist` | 10 at 20 | **Backfist**: loads up at the opposite shoulder, elbow up, swings out to stop just outside the hero's own cheek with the arm nearly straight, knuckles leading |
 | `kata_spear_hand` | 10 at 20 | **Palm Down / Spear Hand** (Pinon 1): rear open hand presses down palm down, tucked close under the front elbow, while the front open hand thrusts out at the solar plexus, palm down |
-| `kata_rear_leg_front_kick` | 15 at 20 | **Rear Leg Front Kick**: hands catch at the hip, back knee lifts high, leg snaps out and back, foot lands in front (ends in the other front stance) |
+| `kata_rear_leg_front_kick` | 15 at 20 | **Rear Leg Front Kick** (no wasted movement): hands catch at the hip, the standing foot stays planted, the back knee lifts high, kicks out and back, and lands one step ahead as the new front stance. The hero travels 0.56 tiles; drawn centred (see `travel` in the JSON) |
 | `kata_break_hold_finish` | 13 at 20 | **Break the Hold**, David and Goliath step 12 (end of the kata): left foot draws in (heels together), arms go up above the head, then drop sharply, hands crossing in front of the face, to finish palms down outside the hips |
 
 - **Techniques are one-shots that end on the finished pose** (`holdLastFrame`), so the game can hold each move until the next tap.

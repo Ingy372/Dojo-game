@@ -2098,9 +2098,9 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 
 ## Kata moves: Jay's notes on the art draft (2026-11-21)
 - **Inside Block goes outside to inside** (Action Zone's way): the fist starts out by the same-side ear and the forearm swings across to stop just past the other cheek, out in front of the face. Same for Reverse Inside Block.
-- **High Block:** the arm slopes up at about 45 degrees in front, the fist a little higher than the head, the elbow up but lower than the fist. The hero's big head limits how high the fist can go; Jay knows.
+- **High Block** (Jay's drawing, second round): the forearm slopes up across the front of the face, the elbow out and lower by the cheek (where the backfist stops), the fist higher, just above the opposite eyebrow.
 - **"Knife Hand Blocks" is gone: that pose is Break the Hold** (David and Goliath step 2). David and Goliath step 12 is Break the Hold too, with its own motion: the arms go up above the head and drop, the hands crossing in front of the face, to finish palms down outside the hips (striking down on the tops of the reaching arms). In the game data both steps use the one Break the Hold button; when the art goes in, step 2 plays `kata_break_hold` and step 12 `kata_break_hold_finish`.
-- **Backfist** loads up at the opposite shoulder and swings out to stop extended just outside the hero's own cheek.
+- **Backfist** loads up at the opposite shoulder and swings out to stop just outside the hero's own cheek, the arm nearly straight (a slight bend at most).
 - **Palm Down / Spear Hand:** the palm-down hand stays under the spear hand's elbow and tucks back a little closer.
 - **Open Leg Stance:** the fists sit a little further out from the body. **Horse stance:** a touch wider.
-- **Rear Leg Front Kick** ends after landing in a front stance, so its still picture looked like a stance; the previews now show the kick at full extension, and the GIF shows the whole kick.
+- **Rear Leg Front Kick, no wasted movement:** the standing foot stays planted the whole time; the back leg chambers in front, kicks, and lands one step ahead as the new front stance. The hero travels forward one stance length (0.56 tiles) during the move; the sprite is drawn centred (starts 0.28 behind the usual spot, ends 0.28 ahead), recorded as `travel` in its JSON for the game wiring. The preview still shows the kick at full extension.
