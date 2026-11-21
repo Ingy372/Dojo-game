@@ -498,6 +498,31 @@
         }
       ]
     },
+    "player-b-kata": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), base layers. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "body",
+            "skin",
+            "gi",
+            "belt",
+            "belt-sheen",
+            "belt-center",
+            "belt-rim",
+            "belt-tape1-edge",
+            "belt-tape1",
+            "belt-tape2-edge",
+            "belt-tape2",
+            "prop-broom",
+            "prop-rag"
+          ]
+        }
+      ]
+    },
     "player-b-faces": {
       "note": "All 6 faces (small).",
       "sources": [
@@ -519,6 +544,24 @@
         }
       ]
     },
+    "player-b-kata-faces": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), faces. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "face-01",
+            "face-02",
+            "face-03",
+            "face-04",
+            "face-05",
+            "face-06"
+          ]
+        }
+      ]
+    },
     "player-b-hair-01": {
       "note": "One hair style (only the chosen one is loaded).",
       "sources": [
@@ -531,6 +574,19 @@
           ],
           "mergeAnimations": [
             "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-01": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-01. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-01"
           ]
         }
       ]
@@ -551,6 +607,19 @@
         }
       ]
     },
+    "player-b-kata-hair-02": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-02. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-02"
+          ]
+        }
+      ]
+    },
     "player-b-hair-03": {
       "note": "One hair style (only the chosen one is loaded).",
       "sources": [
@@ -563,6 +632,19 @@
           ],
           "mergeAnimations": [
             "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-03": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-03. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-03"
           ]
         }
       ]
@@ -583,6 +665,19 @@
         }
       ]
     },
+    "player-b-kata-hair-04": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-04. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-04"
+          ]
+        }
+      ]
+    },
     "player-b-hair-05": {
       "note": "One hair style (only the chosen one is loaded).",
       "sources": [
@@ -595,6 +690,19 @@
           ],
           "mergeAnimations": [
             "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-05": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-05. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-05"
           ]
         }
       ]
@@ -615,6 +723,19 @@
         }
       ]
     },
+    "player-b-kata-hair-06": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-06. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-06"
+          ]
+        }
+      ]
+    },
     "player-b-hair-07": {
       "note": "One hair style (only the chosen one is loaded).",
       "sources": [
@@ -627,6 +748,19 @@
           ],
           "mergeAnimations": [
             "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-07": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-07. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-07"
           ]
         }
       ]
@@ -647,6 +781,19 @@
         }
       ]
     },
+    "player-b-kata-hair-08": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-08. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-08"
+          ]
+        }
+      ]
+    },
     "player-b-hair-09": {
       "note": "One hair style (only the chosen one is loaded).",
       "sources": [
@@ -659,6 +806,19 @@
           ],
           "mergeAnimations": [
             "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-09": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-09. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-09"
           ]
         }
       ]
@@ -679,6 +839,19 @@
         }
       ]
     },
+    "player-b-kata-hair-10": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-10. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-10"
+          ]
+        }
+      ]
+    },
     "player-b-hair-11": {
       "note": "One hair style (only the chosen one is loaded).",
       "sources": [
@@ -695,6 +868,19 @@
         }
       ]
     },
+    "player-b-kata-hair-11": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-11. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-11"
+          ]
+        }
+      ]
+    },
     "player-b-hair-12": {
       "note": "One hair style (only the chosen one is loaded).",
       "sources": [
@@ -707,6 +893,19 @@
           ],
           "mergeAnimations": [
             "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-12": {
+      "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-12. Loaded only in the Action Zone.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-kata-moves/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-12"
           ]
         }
       ]
