@@ -11,9 +11,9 @@ knife hand blocks "palms facing forward", the "catch" at the hip before the kick
 
 | Stance | What it looks like (as animated) |
 | --- | --- |
-| **Open Leg Stance** (kata ready stance) | Feet about shoulder width apart, toes turned out a little, knees soft. Fists closed in front of the belt, about a fist apart. Eyes ahead. (Like the karate "yoi" ready position: feet shoulder width, fists slightly forward.) |
+| **Open Leg Stance** (kata ready stance) | Feet about shoulder width apart, toes turned out a little, knees soft. Fists closed out in front of the belt, a little away from the body (Jay), about a fist apart. Eyes ahead. (Like the karate "yoi" ready position: feet shoulder width, fists slightly forward.) |
 | **Front stance** | A long step: the front knee is bent over the ankle and the back leg is nearly straight, with the back heel down and the back foot turned out about 35°. Feet about hip width apart side to side, hips low, back upright. Most schools put a little more weight on the front leg (about 60/40). |
-| **Horse stance** | Feet wide and parallel, about two shoulder widths apart. Knees bent and pushed outward, hips sunk straight down, back upright, weight even. Fists chambered at the hips. |
+| **Horse stance** | Feet wide and parallel, a bit more than two shoulder widths apart (Jay: slightly wider). Knees bent and pushed outward, hips sunk straight down, back upright, weight even. Fists chambered at the hips. |
 | **Cat stance** | Nearly all the weight (about 90%) sits on the bent back leg, with the back foot turned out under the hips. The front foot rests lightly on its ball with the heel up, ready to kick. Hips set back, hands in a forward guard. |
 
 ## Techniques
@@ -23,26 +23,24 @@ Every technique pulls the other hand back to the hip (the "chamber"), unless not
 | Technique | What it looks like (as animated) |
 | --- | --- |
 | **Low Block** | The blocking fist starts up by the opposite ear while the other arm reaches down across the body. The fist sweeps down and out to stop about a fist above the front knee, elbow slightly bent. |
-| **Inside Block** | Drawn inside to outside: the fist starts under the opposite armpit, and the forearm swings out until it stands upright in front of the same shoulder, elbow bent about 90°. **Schools disagree on the direction** (see questions). |
-| **Reverse Inside Block** | The same block done with the rear hand (the hand on the side of the back foot). The school sheet uses it in Keon steps 4–5 and David and Goliath steps 7–8. The hips turn square behind it. |
-| **High Block** | The blocking fist starts low by the opposite hip while the other arm rises in front. The blocking forearm rises across the face to stop angled above the forehead, about a fist away, elbow out to the side. (Note: the hero's head is big for its body, so the fist ends beside and above the head rather than right over the forehead.) |
-| **Knife Hand Blocks** (double, David and Goliath step 2) | From attention, both open hands rise up the middle of the body and cross in front of the chest, then open out to the sides at head height, palms forward. The sheet notes it breaks a choke or shoulder hold. |
+| **Inside Block** | **Outside to inside** (Jay, Nov 21): the fist starts up and out by the same-side ear, and the forearm swings across the body to stop upright just past the other cheek, out in front of the face. |
+| **Reverse Inside Block** | The same block (outside to inside) done with the rear hand (the hand on the side of the back foot). The school sheet uses it in Keon steps 4–5 and David and Goliath steps 7–8. The hips turn square behind it. |
+| **High Block** | Action Zone's way (Jay, Nov 21): the arm rises to slope up at about 45° out in front, the fist a little higher than the head, the elbow up too but lower than the fist. (The hero's arms are short for its big head, so the fist goes as high as the arm reaches.) |
+| **Break the Hold**, David and Goliath step 2 (once called Knife Hand Blocks; Jay, Nov 21) | From attention, both open hands rise up the middle of the body and cross in front of the chest, then open out to the sides at head height, palms forward. It breaks a choke or shoulder hold. |
 | **Punch** | The fist drives from the hip straight to the middle of the chest (solar plexus), turning palm down at the end, while the other fist pulls back to the hip. In the kata it's the hand on the same side as the front foot. |
 | **Reverse Punch** | The punch with the rear hand. The hips turn square behind it for power. |
-| **Backfist** | The fist starts by the opposite shoulder, elbow up, then the forearm snaps out like a whip to face height, knuckles leading, and comes back a little. A loose arm that snaps, not a stiff push. |
-| **Palm Down / Spear Hand** (Pinon 1, Jay Nov 20) | An open hand with the fingers together and the thumb tucked, thrusting straight out with the fingertips at the solar plexus, palm down. Drawn the common kata way: the other open hand presses down palm down under the striking elbow at the same time. |
+| **Backfist** | The fist "loads up" at the opposite shoulder, elbow up, then swings out like a whip, knuckles leading, to stop extended just outside the hero's own cheek (Jay, Nov 21). |
+| **Palm Down / Spear Hand** (Pinon 1, Jay Nov 20) | An open hand with the fingers together and the thumb tucked, thrusting straight out with the fingertips at the solar plexus, palm down. The other open hand presses down palm down and stays under the striking arm's elbow, tucked back close to the body (Jay, Nov 21). |
 | **Rear Leg Front Kick** | From front stance, the back knee lifts straight up in front, high (the chamber). The leg snaps out to the middle, striking with the ball of the foot (toes pulled back), and the knee comes straight back. The foot then lands in front. The sheet adds a "catch": both hands come to the hip on the kicking side before the kick. |
-| **Break the Hold** (David and Goliath step 12, from the sheet) | The left foot draws in to the right (heels together, toes out). Both arms rise palms up in a half circle, then come down sharply palms down, ending just outside the hips. |
+| **Break the Hold**, David and Goliath step 12 (the end of the kata; Jay, Nov 21) | The left foot draws in to the right (heels together, toes out). Both arms go up above the head, then drop sharply, the open hands crossing in front of the face, to finish palms down just outside the hips: striking down on the tops of the arms of whoever is reaching in. |
 
-## Questions for Jay
+## Questions for Jay (answered Nov 21)
 
-1. **Inside Block direction.** Some schools mean "the forearm swings from the inside of the body out" (drawn this way), others "from the outside in, across the body". Which is Action Zone's?
-2. **High Block height.** Is "fist about a fist above and in front of the forehead, forearm angled" right? The hero's big head makes it sit a little to the side.
-3. **Spear hand in Pinon 1.** Does the other hand press down under the elbow (drawn this way), or does it pull back to the hip? And is the spear hand at solar plexus height?
-4. **Knife Hand Blocks.** Do the hands finish at head height out to the sides (drawn), or in front of the shoulders?
-5. **Front stance width and weight.** Is "front knee over the ankle, back leg nearly straight, about 60/40 on the front leg" how you teach it?
-6. **Horse stance hands.** Fists chambered at the hips (drawn), or something else when the stance is held?
-7. **Open Leg Stance hands.** Fists in front of the belt (drawn), or at the sides?
+1. Inside Block: **outside to inside**, stopping just past the other cheek, away from the face.
+2. High Block: arm sloped up at about 45 degrees in front, fist a little above the head, elbow up but lower than the fist.
+3. Spear hand: the palm-down hand stays under the spear hand, tucked back a little closer.
+4. The double knife hand pose is **Break the Hold**.
+5–7. Front stance, horse hands and Open Leg hands: no changes asked, apart from the Open Leg fists sitting a little further out and the horse stance a touch wider.
 
 ## Sources (general karate references; read on Nov 20, 2026)
 

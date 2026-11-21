@@ -205,9 +205,9 @@ def nxt():
 
 # ================================================================== stances (loops)
 # Open Leg Stance (the kata ready stance): feet about shoulder width, toes turned out a little, knees soft,
-# fists closed in front of the belt about a fist apart, eyes ahead.
+# fists closed out in front of the belt (Jay: a little away from the body), about a fist apart, eyes ahead.
 OPEN_LEG = P(body(0.015, 0.0, 0.0), foot("L", 0.16, 0.0, turn_out=15), foot("R", 0.16, 0.0, turn_out=15),
-             hand("L", 0.075, 0.50, 0.13), hand("R", 0.075, 0.50, 0.13))
+             hand("L", 0.08, 0.51, 0.20), hand("R", 0.08, 0.51, 0.20))
 make("kata_open_leg", [(1, OPEN_LEG, "smooth"), (12, OPEN_LEG, "smooth")], 8, nxt(), loop=True, breathe=breathing(1.0, 12),
      info={"stance": "open-leg", "note": "Open Leg Stance (the kata ready stance) loop, 1.5 s: feet about shoulder width, toes turned out a little, knees soft, fists in front of the belt. Slow breathing; feet never move"})
 
@@ -218,7 +218,7 @@ make("stance_front", [(1, FRONT, "smooth"), (12, FRONT, "smooth")], 8, nxt(), lo
 
 # Horse stance (kiba dachi): feet wide and parallel (about two shoulder widths), knees bent and pushed out,
 # hips sunk straight down, back upright, both fists chambered at the hips.
-HORSE = P(body(0.13, 0.0, 0.0), foot("L", 0.23, 0.0, turn_out=2), foot("R", 0.23, 0.0, turn_out=2),
+HORSE = P(body(0.14, 0.0, 0.0), foot("L", 0.255, 0.0, turn_out=2), foot("R", 0.255, 0.0, turn_out=2),
           hand("L", 0.15, 0.555, -0.05), hand("R", 0.15, 0.555, -0.05), elbows((0.06, 0.0, 0.0), (0.06, 0.0, 0.0)), knees(0.45))
 make("stance_horse", [(1, HORSE, "smooth"), (12, HORSE, "smooth")], 8, nxt(), loop=True, breathe=breathing(1.0, 12),
      info={"stance": "horse", "note": "Horse stance loop, 1.5 s: feet wide and parallel, knees bent and pushed out, hips sunk, back upright, fists chambered at the hips"})
@@ -246,39 +246,40 @@ LB_DONE = P(front_stance(-30), hand("L", 0.18, 0.45, 0.31), HIP_R)
 tech("kata_low_block", [(1, START_GUARD, "smooth"), (4, LB_CHAMBER, "smooth"), (7, LB_DONE, "snap"), (10, LB_DONE, "smooth")],
      "impact:6", "Low Block: the left fist starts by the right ear, sweeps down and out to stop above the front knee; the right fist pulls to the hip", 7)
 
-# Inside block (uchi uke, shown inside to outside): the fist starts under the opposite armpit, the forearm
-# swings out until it stands upright in front of the shoulder, elbow bent about 90 degrees, a fist's width
-# in front of the body; the other fist to the hip.
-IB_CHAMBER = P(front_stance(-2), hand("L", -0.08, 0.64, 0.07), hand("R", 0.03, 0.72, 0.30))
-IB_DONE = P(front_stance(-28), hand("L", 0.17, 0.82, 0.24), HIP_R, elbows((0.0, -0.25, -0.3)))
+# Inside block, Action Zone's way (Jay, Nov 21): OUTSIDE to inside. The fist starts up and out by the same-side
+# ear, then the forearm swings across the body and stops upright just past the other cheek, out in front of the
+# face (not touching it); the other fist to the hip.
+IB_CHAMBER = P(front_stance(8), hand("L", 0.25, 0.90, 0.00), hand("R", 0.03, 0.72, 0.30), elbows((0.2, 0.2, -0.1)))
+IB_DONE = P(front_stance(-22), hand("L", -0.05, 0.93, 0.25), HIP_R, elbows((0.0, -0.1, 0.35)))
 tech("kata_inside_block", [(1, START_GUARD, "smooth"), (4, IB_CHAMBER, "smooth"), (7, IB_DONE, "snap"), (10, IB_DONE, "smooth")],
-     "impact:6", "Inside Block (inside to outside): the left fist starts under the right armpit and the forearm swings out to stand upright in front of the left shoulder; the right fist pulls to the hip", 7)
+     "impact:6", "Inside Block (outside to inside): the left fist starts up by the left ear and the forearm swings across to stop upright just past the right cheek, out in front of the face; the right fist pulls to the hip", 7)
 
 # Reverse inside block: the same block with the REAR hand (right hand while the left foot is forward), hips turned square.
-RIB_CHAMBER = P(front_stance(-25), hand("R", -0.08, 0.64, 0.07), hand("L", 0.03, 0.72, 0.32))
-RIB_DONE = P(front_stance(18), hand("R", 0.17, 0.82, 0.26), HIP_L, elbows(r=(0.0, -0.25, -0.3)))
+RIB_CHAMBER = P(front_stance(-28), hand("R", 0.25, 0.90, 0.00), hand("L", 0.03, 0.72, 0.32), elbows(r=(0.2, 0.2, -0.1)))
+RIB_DONE = P(front_stance(12), hand("R", -0.05, 0.93, 0.27), HIP_L, elbows(r=(0.0, -0.1, 0.35)))
 tech("kata_reverse_inside_block", [(1, START_GUARD, "smooth"), (4, RIB_CHAMBER, "smooth"), (7, RIB_DONE, "snap"), (10, RIB_DONE, "smooth")],
-     "impact:6", "Reverse Inside Block: the inside block with the rear (right) hand while the left foot is forward; the hips turn square, the left fist pulls to the hip", 7)
+     "impact:6", "Reverse Inside Block: the inside block (outside to inside) with the rear (right) hand while the left foot is forward; it stops just past the left cheek; the hips turn square, the left fist pulls to the hip", 7)
 
-# High block (rising block, age uke): the blocking fist starts low by the opposite hip while the other arm
-# rises in front; the blocking forearm rises across the face to stop angled above the forehead, a fist or so
-# in front of it, elbow out; the other fist to the hip.
+# High block, Action Zone's way (Jay, Nov 21): the blocking fist starts low by the opposite hip while the other
+# arm rises in front; the arm rises to slope up at about 45 degrees out in front, the fist a little higher than
+# the head, the elbow up too but lower than the fist; the other fist to the hip. (The hero's arms are short for
+# its big head, so the fist is as high as the arm can reach.)
 HB_CHAMBER = P(front_stance(-5), hand("L", -0.04, 0.56, 0.14), hand("R", 0.02, 0.92, 0.26))
-HB_DONE = P(front_stance(-25), hand("L", 0.11, 1.20, 0.14), HIP_R, elbows((0.35, 0.55, 0.1)))
+HB_DONE = P(front_stance(-22), hand("L", 0.05, 1.12, 0.31), HIP_R, elbows((0.12, 0.6, 0.5)))
 tech("kata_high_block", [(1, START_GUARD, "smooth"), (4, HB_CHAMBER, "smooth"), (7, HB_DONE, "snap"), (10, HB_DONE, "smooth")],
-     "impact:6", "High Block (rising block): the left forearm rises across the face to stop angled above the forehead, elbow out; the right fist pulls to the hip", 7)
+     "impact:6", "High Block: the left arm rises to slope up at about 45 degrees in front, the fist a little above the head and the elbow up but lower than the fist; the right fist pulls to the hip", 7)
 
-# Knife Hand Blocks (double, palms forward), from David and Goliath: from attention, both open hands rise up the
-# middle of the body, cross in front of the chest, and open out to the sides at head height, palms forward
-# (breaking a choke or shoulder hold).
+# Break the Hold, David and Goliath step 2 (Jay, Nov 21: this pose IS Break the Hold; the old name "Knife Hand
+# Blocks" is gone): from attention, both open hands rise up the middle of the body, cross in front of the chest,
+# and open out to the sides at head height, palms forward (breaking a choke or shoulder hold).
 ATTN = P(body(0.0, 0.0, 0.0), foot("L", 0.05, 0.0, turn_out=22), foot("R", 0.05, 0.0, turn_out=22))
 KH_START = P(ATTN, hand("L", 0.20, 0.52, 0.02), hand("R", 0.20, 0.52, 0.02))
 KH_CROSS = P(ATTN, hand("L", -0.03, 0.86, 0.16), hand("R", -0.03, 0.88, 0.14), hands(OPEN, OPEN, -90, -90))
 KH_DONE = P(body(0.02, 0.0, 0.0), foot("L", 0.05, 0.0, turn_out=22), foot("R", 0.05, 0.0, turn_out=22),
             hand("L", 0.25, 1.10, 0.14), hand("R", 0.25, 1.10, 0.14), hands(OPEN, OPEN, 0, 0),
             elbows((0.05, -0.45, 0.1), (0.05, -0.45, 0.1)))
-tech("kata_knife_hand_blocks", [(1, KH_START, "smooth"), (5, KH_CROSS, "smooth"), (8, KH_DONE, "snap"), (11, KH_DONE, "smooth")],
-     "impact:7", "Knife Hand Blocks (double, palms forward): from attention both open hands rise up the middle, cross in front of the chest and open out to the sides at head height, palms forward", 8)
+tech("kata_break_hold", [(1, KH_START, "smooth"), (5, KH_CROSS, "smooth"), (8, KH_DONE, "snap"), (11, KH_DONE, "smooth")],
+     "impact:7", "Break the Hold (David and Goliath step 2): from attention both open hands rise up the middle, cross in front of the chest and open out to the sides at head height, palms forward", 8)
 
 # Punch (straight punch, the front-leg side): the fist drives from the hip to the middle of the chest, turning
 # palm down at the end, while the other fist (which was out front) pulls back to the hip.
@@ -294,18 +295,18 @@ RP_DONE = P(front_stance(22, fwd=0.06), hand("R", 0.02, 0.69, 0.44), HIP_L)
 tech("kata_reverse_punch", [(1, START_GUARD, "smooth"), (3, RP_START, "smooth"), (6, RP_DONE, "snap"), (9, RP_DONE, "smooth")],
      "impact:5", "Reverse Punch: the right (rear) fist drives to the middle while the hips turn square and the left fist pulls back to the hip", 6)
 
-# Backfist (uraken): the fist starts by the opposite shoulder, elbow up, then the forearm snaps out like a whip
-# to the opponent's face, knuckles leading, and comes back a little.
-BF_CHAMBER = P(front_stance(-5), hand("L", -0.07, 0.83, 0.10), hand("R", 0.04, 0.62, 0.28), elbows((0.2, 0.3, -0.2)))
-BF_HIT = P(front_stance(-32), hand("L", 0.10, 0.93, 0.38), HIP_R, elbows((0.2, 0.3, -0.2)), hands(l_roll=90))
-BF_DONE = P(front_stance(-30), hand("L", 0.08, 0.90, 0.33), HIP_R, elbows((0.2, 0.3, -0.2)), hands(l_roll=90))
+# Backfist (uraken), Jay Nov 21: the fist "loads up" at the opposite shoulder, elbow up, then swings out like a
+# whip, knuckles leading, and stops extended just outside the hero's own cheek (face height, same side).
+BF_CHAMBER = P(front_stance(2), hand("L", -0.11, 0.87, 0.05), hand("R", 0.04, 0.62, 0.28), elbows((0.2, 0.35, -0.2)))
+BF_HIT = P(front_stance(-30), hand("L", 0.17, 0.97, 0.33), HIP_R, elbows((0.25, 0.35, -0.1)), hands(l_roll=90))
+BF_DONE = P(front_stance(-28), hand("L", 0.15, 0.96, 0.30), HIP_R, elbows((0.25, 0.35, -0.1)), hands(l_roll=90))
 tech("kata_backfist", [(1, START_GUARD, "smooth"), (4, BF_CHAMBER, "smooth"), (6, BF_HIT, "snap"), (8, BF_DONE, "smooth"), (10, BF_DONE, "smooth")],
-     "impact:5", "Backfist: the left fist starts by the right shoulder with the elbow up and snaps out to face height, knuckles leading, then comes back a little", 6)
+     "impact:5", "Backfist: the left fist loads up at the right shoulder with the elbow up, then swings out, knuckles leading, to stop extended just outside the left cheek", 6)
 
 # Palm Down / Spear Hand (nukite), for Pinon 1: the rear open hand presses down palm down to under the front elbow
 # while the front open hand thrusts straight out at the solar plexus, palm down, fingers together.
 SH_CHAMBER = P(front_stance(-5), hand("L", 0.10, 0.60, 0.00), hand("R", 0.02, 0.70, 0.34), hands(OPEN, OPEN, 0, 0))
-SH_DONE = P(front_stance(-18, fwd=0.06), hand("L", 0.01, 0.71, 0.46), hand("R", -0.01, 0.62, 0.22), hands(OPEN, OPEN, 0, 0))
+SH_DONE = P(front_stance(-18, fwd=0.06), hand("L", 0.01, 0.71, 0.46), hand("R", -0.01, 0.63, 0.15), hands(OPEN, OPEN, 0, 0))
 tech("kata_spear_hand", [(1, START_GUARD, "smooth"), (4, SH_CHAMBER, "smooth"), (7, SH_DONE, "snap"), (10, SH_DONE, "smooth")],
      "impact:6", "Palm Down / Spear Hand: the right open hand presses down palm down to under the left elbow while the left open hand thrusts out at the solar plexus, palm down, fingers together", 7)
 
@@ -323,17 +324,20 @@ tech("kata_rear_leg_front_kick", [(1, START_GUARD, "smooth"), (3, KK_CATCH, "smo
                                   (10, KK_CHAMBER, "smooth"), (13, KK_LAND, "smooth"), (15, KK_LAND, "smooth")],
      "impact:7", "Rear Leg Front Kick: hands catch at the right hip, the right knee lifts high, the leg snaps out to the middle and back, then lands in front (ends in a right front stance)", 8)
 
-# Break the Hold (David and Goliath, last step): the left foot draws in to the right (heels together, toes out),
-# both arms rise palms up in a half circle out to the sides, then come down sharply, palms down, ending just
-# outside the hips.
+# Break the Hold, David and Goliath step 12 (the end of the kata; Jay, Nov 21): the left foot draws in to the right
+# (heels together, toes out), both arms go up above the head, then drop sharply: the open hands cross in front of
+# the face on the way down and finish palms down just outside the hips, striking down on the tops of the arms of
+# whoever is reaching in.
 BH_START = P(body(0.08, 0.03, 10.0), foot("R", 0.10, 0.20, turn_out=5), foot("L", 0.10, -0.20, turn_out=30),
              hand("L", 0.15, 0.585, -0.04), hand("R", 0.06, 0.62, 0.30))
 BH_UP = P(body(0.0, 0.0, 0.0), foot("L", 0.05, 0.0, turn_out=22), foot("R", 0.05, 0.0, turn_out=22),
-          hand("L", 0.30, 0.98, 0.14), hand("R", 0.30, 0.98, 0.14), hands(OPEN, OPEN, 180, 180), elbows((0.15, -0.2, 0.0), (0.15, -0.2, 0.0)))
+          hand("L", 0.12, 1.19, 0.08), hand("R", 0.12, 1.19, 0.08), hands(OPEN, OPEN, 0, 0), elbows((0.15, 0.4, 0.0), (0.15, 0.4, 0.0)))
+BH_CROSS = P(body(0.0, 0.0, 0.0, lean=3), foot("L", 0.05, 0.0, turn_out=22), foot("R", 0.05, 0.0, turn_out=22),
+             hand("L", -0.05, 0.96, 0.23), hand("R", -0.05, 0.93, 0.21), hands(OPEN, OPEN, 0, 0), elbows((0.15, 0.1, 0.2), (0.15, 0.1, 0.2)))
 BH_DOWN = P(body(0.02, 0.0, 0.0), foot("L", 0.05, 0.0, turn_out=22), foot("R", 0.05, 0.0, turn_out=22),
             hand("L", 0.24, 0.52, 0.06), hand("R", 0.24, 0.52, 0.06), hands(OPEN, OPEN, 0, 0))
-tech("kata_break_hold", [(1, BH_START, "smooth"), (6, BH_UP, "smooth"), (9, BH_DOWN, "snap"), (12, BH_DOWN, "smooth")],
-     "impact:8", "Break the Hold: the left foot draws in to the right (heels together), both arms rise palms up in a half circle, then come down sharply palms down to just outside the hips", 9)
+tech("kata_break_hold_finish", [(1, BH_START, "smooth"), (6, BH_UP, "smooth"), (8, BH_CROSS, "lin"), (10, BH_DOWN, "snap"), (13, BH_DOWN, "smooth")],
+     "impact:9", "Break the Hold, David and Goliath step 12: the left foot draws in (heels together), both arms go up above the head, then drop sharply, the open hands crossing in front of the face, to finish palms down just outside the hips", 10)
 
 rig.animation_data.action = bpy.data.actions["idle"]
 bpy.ops.wm.save_as_mainfile(filepath=SAVE, copy=True)

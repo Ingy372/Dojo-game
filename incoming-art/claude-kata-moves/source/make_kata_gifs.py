@@ -47,7 +47,9 @@ for anim, info in J["animations"].items():
             ms += 900          # hold the finished pose before it replays
         durs.append(int(round(ms / 10.0)) * 10)
     frames[0].save(os.path.join(A.out, f"{anim}.gif"), save_all=True, append_images=frames[1:], duration=durs, loop=0)
-    finals.append((anim, [cellimg(anim, d, n - 1) for d in DIRS]))
+    # The still shows the finished pose; for the kick (which ends after landing) it shows the kick at full extension.
+    shown = info.get("keyFrames", {}).get("impact", n) - 1 if "kick" in anim else n - 1
+    finals.append((anim + (" (kick out)" if "kick" in anim else ""), [cellimg(anim, d, shown) for d in DIRS]))
     print("gif", anim)
 
 w, h = finals[0][1][0].size

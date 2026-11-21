@@ -539,7 +539,7 @@
       "keyFrames": {
         "impact": 7
       },
-      "note": "Inside Block (inside to outside): the left fist starts under the right armpit and the forearm swings out to stand upright in front of the left shoulder; the right fist pulls to the hip",
+      "note": "Inside Block (outside to inside): the left fist starts up by the left ear and the forearm swings across to stop upright just past the right cheek, out in front of the face; the right fist pulls to the hip",
       "side": "left foot forward; mirror for the right side"
     },
     "kata_reverse_inside_block": {
@@ -588,7 +588,7 @@
       "keyFrames": {
         "impact": 7
       },
-      "note": "Reverse Inside Block: the inside block with the rear (right) hand while the left foot is forward; the hips turn square, the left fist pulls to the hip",
+      "note": "Reverse Inside Block: the inside block (outside to inside) with the rear (right) hand while the left foot is forward; it stops just past the left cheek; the hips turn square, the left fist pulls to the hip",
       "side": "left foot forward; mirror for the right side"
     },
     "kata_high_block": {
@@ -637,56 +637,7 @@
       "keyFrames": {
         "impact": 7
       },
-      "note": "High Block (rising block): the left forearm rises across the face to stop angled above the forehead, elbow out; the right fist pulls to the hip",
-      "side": "left foot forward; mirror for the right side"
-    },
-    "kata_knife_hand_blocks": {
-      "frames": 11,
-      "fps": 20,
-      "durationSec": 0.55,
-      "loop": false,
-      "tags": {
-        "impact": "7"
-      },
-      "sheets": {
-        "body": "player-a_body_kata_knife_hand_blocks.png",
-        "skin": "player-a_skin_kata_knife_hand_blocks.png",
-        "gi": "player-a_gi_kata_knife_hand_blocks.png",
-        "belt": "player-a_belt_kata_knife_hand_blocks.png",
-        "belt-sheen": "player-a_belt-sheen_kata_knife_hand_blocks.png",
-        "belt-center": "player-a_belt-center_kata_knife_hand_blocks.png",
-        "belt-center-edge": "player-a_belt-center-edge_kata_knife_hand_blocks.png",
-        "belt-rim": "player-a_belt-rim_kata_knife_hand_blocks.png",
-        "belt-tape1-edge": "player-a_belt-tape1-edge_kata_knife_hand_blocks.png",
-        "belt-tape1": "player-a_belt-tape1_kata_knife_hand_blocks.png",
-        "belt-tape2-edge": "player-a_belt-tape2-edge_kata_knife_hand_blocks.png",
-        "belt-tape2": "player-a_belt-tape2_kata_knife_hand_blocks.png",
-        "prop-broom": "player-a_prop-broom_kata_knife_hand_blocks.png",
-        "prop-rag": "player-a_prop-rag_kata_knife_hand_blocks.png",
-        "face-01": "player-a_face-01_kata_knife_hand_blocks.png",
-        "face-02": "player-a_face-02_kata_knife_hand_blocks.png",
-        "face-03": "player-a_face-03_kata_knife_hand_blocks.png",
-        "face-04": "player-a_face-04_kata_knife_hand_blocks.png",
-        "face-05": "player-a_face-05_kata_knife_hand_blocks.png",
-        "face-06": "player-a_face-06_kata_knife_hand_blocks.png",
-        "hair-01": "player-a_hair-01_kata_knife_hand_blocks.png",
-        "hair-02": "player-a_hair-02_kata_knife_hand_blocks.png",
-        "hair-03": "player-a_hair-03_kata_knife_hand_blocks.png",
-        "hair-04": "player-a_hair-04_kata_knife_hand_blocks.png",
-        "hair-05": "player-a_hair-05_kata_knife_hand_blocks.png",
-        "hair-06": "player-a_hair-06_kata_knife_hand_blocks.png",
-        "hair-07": "player-a_hair-07_kata_knife_hand_blocks.png",
-        "hair-08": "player-a_hair-08_kata_knife_hand_blocks.png",
-        "hair-09": "player-a_hair-09_kata_knife_hand_blocks.png",
-        "hair-10": "player-a_hair-10_kata_knife_hand_blocks.png",
-        "hair-11": "player-a_hair-11_kata_knife_hand_blocks.png",
-        "hair-12": "player-a_hair-12_kata_knife_hand_blocks.png"
-      },
-      "holdLastFrame": true,
-      "keyFrames": {
-        "impact": 8
-      },
-      "note": "Knife Hand Blocks (double, palms forward): from attention both open hands rise up the middle, cross in front of the chest and open out to the sides at head height, palms forward",
+      "note": "High Block: the left arm rises to slope up at about 45 degrees in front, the fist a little above the head and the elbow up but lower than the fist; the right fist pulls to the hip",
       "side": "left foot forward; mirror for the right side"
     },
     "kata_punch": {
@@ -833,7 +784,7 @@
       "keyFrames": {
         "impact": 6
       },
-      "note": "Backfist: the left fist starts by the right shoulder with the elbow up and snaps out to face height, knuckles leading, then comes back a little",
+      "note": "Backfist: the left fist loads up at the right shoulder with the elbow up, then swings out, knuckles leading, to stop extended just outside the left cheek",
       "side": "left foot forward; mirror for the right side"
     },
     "kata_spear_hand": {
@@ -935,12 +886,12 @@
       "side": "left foot forward; mirror for the right side"
     },
     "kata_break_hold": {
-      "frames": 12,
+      "frames": 11,
       "fps": 20,
-      "durationSec": 0.6,
+      "durationSec": 0.55,
       "loop": false,
       "tags": {
-        "impact": "8"
+        "impact": "7"
       },
       "sheets": {
         "body": "player-a_body_kata_break_hold.png",
@@ -978,9 +929,58 @@
       },
       "holdLastFrame": true,
       "keyFrames": {
-        "impact": 9
+        "impact": 8
       },
-      "note": "Break the Hold: the left foot draws in to the right (heels together), both arms rise palms up in a half circle, then come down sharply palms down to just outside the hips",
+      "note": "Break the Hold (David and Goliath step 2): from attention both open hands rise up the middle, cross in front of the chest and open out to the sides at head height, palms forward",
+      "side": "left foot forward; mirror for the right side"
+    },
+    "kata_break_hold_finish": {
+      "frames": 13,
+      "fps": 20,
+      "durationSec": 0.65,
+      "loop": false,
+      "tags": {
+        "impact": "9"
+      },
+      "sheets": {
+        "body": "player-a_body_kata_break_hold_finish.png",
+        "skin": "player-a_skin_kata_break_hold_finish.png",
+        "gi": "player-a_gi_kata_break_hold_finish.png",
+        "belt": "player-a_belt_kata_break_hold_finish.png",
+        "belt-sheen": "player-a_belt-sheen_kata_break_hold_finish.png",
+        "belt-center": "player-a_belt-center_kata_break_hold_finish.png",
+        "belt-center-edge": "player-a_belt-center-edge_kata_break_hold_finish.png",
+        "belt-rim": "player-a_belt-rim_kata_break_hold_finish.png",
+        "belt-tape1-edge": "player-a_belt-tape1-edge_kata_break_hold_finish.png",
+        "belt-tape1": "player-a_belt-tape1_kata_break_hold_finish.png",
+        "belt-tape2-edge": "player-a_belt-tape2-edge_kata_break_hold_finish.png",
+        "belt-tape2": "player-a_belt-tape2_kata_break_hold_finish.png",
+        "prop-broom": "player-a_prop-broom_kata_break_hold_finish.png",
+        "prop-rag": "player-a_prop-rag_kata_break_hold_finish.png",
+        "face-01": "player-a_face-01_kata_break_hold_finish.png",
+        "face-02": "player-a_face-02_kata_break_hold_finish.png",
+        "face-03": "player-a_face-03_kata_break_hold_finish.png",
+        "face-04": "player-a_face-04_kata_break_hold_finish.png",
+        "face-05": "player-a_face-05_kata_break_hold_finish.png",
+        "face-06": "player-a_face-06_kata_break_hold_finish.png",
+        "hair-01": "player-a_hair-01_kata_break_hold_finish.png",
+        "hair-02": "player-a_hair-02_kata_break_hold_finish.png",
+        "hair-03": "player-a_hair-03_kata_break_hold_finish.png",
+        "hair-04": "player-a_hair-04_kata_break_hold_finish.png",
+        "hair-05": "player-a_hair-05_kata_break_hold_finish.png",
+        "hair-06": "player-a_hair-06_kata_break_hold_finish.png",
+        "hair-07": "player-a_hair-07_kata_break_hold_finish.png",
+        "hair-08": "player-a_hair-08_kata_break_hold_finish.png",
+        "hair-09": "player-a_hair-09_kata_break_hold_finish.png",
+        "hair-10": "player-a_hair-10_kata_break_hold_finish.png",
+        "hair-11": "player-a_hair-11_kata_break_hold_finish.png",
+        "hair-12": "player-a_hair-12_kata_break_hold_finish.png"
+      },
+      "holdLastFrame": true,
+      "keyFrames": {
+        "impact": 10
+      },
+      "note": "Break the Hold, David and Goliath step 12: the left foot draws in (heels together), both arms go up above the head, then drop sharply, the open hands crossing in front of the face, to finish palms down just outside the hips",
       "side": "left foot forward; mirror for the right side"
     }
   },

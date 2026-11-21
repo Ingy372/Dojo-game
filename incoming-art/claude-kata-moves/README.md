@@ -1,4 +1,4 @@
-# Claude's kata moves and stances draft (2026-11-20). NOT in the game yet
+# Claude's kata moves and stances draft (2026-11-20, Jay's notes applied Nov 21). NOT in the game yet
 
 Jay asked (Nov 20, overnight job): research every technique he named, then animate them in Blender, along with the
 front, horse and cat stances. **Nothing here is approved or wired into the game.** The game still uses stand-ins
@@ -8,21 +8,21 @@ front, horse and cat stances. **Nothing here is approved or wired into the game.
 
 | Animation | Frames, fps | What it shows |
 | --- | --- | --- |
-| `kata_open_leg` | 12 at 8, loop | **Open Leg Stance** (kata ready stance): feet about shoulder width, toes out a little, fists in front of the belt, slow breathing |
+| `kata_open_leg` | 12 at 8, loop | **Open Leg Stance** (kata ready stance): feet about shoulder width, toes out a little, fists out in front of the belt, a little away from the body, slow breathing |
 | `stance_front` | 12 at 8, loop | **Front stance**: left foot forward, front knee over the ankle, back leg nearly straight, back foot turned out; lead fist forward, rear fist at the hip |
-| `stance_horse` | 12 at 8, loop | **Horse stance**: feet wide and parallel, knees bent and pushed out, hips sunk, back upright, fists chambered at the hips |
+| `stance_horse` | 12 at 8, loop | **Horse stance**: feet wide (a touch wider, Jay Nov 21) and parallel, knees bent and pushed out, hips sunk, back upright, fists chambered at the hips |
 | `stance_cat` | 12 at 8, loop | **Cat stance**: nearly all the weight on the bent back leg, front foot on its ball with the heel up, forward guard |
 | `kata_low_block` | 10 at 20 | **Low Block**: fist starts by the opposite ear, sweeps down to stop above the front knee; other fist to the hip |
-| `kata_inside_block` | 10 at 20 | **Inside Block** (drawn inside to outside: see questions): fist under the opposite armpit, forearm swings out upright in front of the shoulder |
+| `kata_inside_block` | 10 at 20 | **Inside Block** (outside to inside, Jay Nov 21): fist starts out by the same-side ear, forearm swings across to stop upright just past the other cheek, away from the face |
 | `kata_reverse_inside_block` | 10 at 20 | **Reverse Inside Block**: the same block with the rear hand, hips square |
-| `kata_high_block` | 10 at 20 | **High Block** (rising block): forearm rises across the face to above the forehead, elbow out |
-| `kata_knife_hand_blocks` | 11 at 20 | **Knife Hand Blocks** (David and Goliath step 2): from attention, open hands rise up the middle, cross, and open out to head height, palms forward |
+| `kata_high_block` | 10 at 20 | **High Block**: arm slopes up at about 45 degrees in front, fist a little above the head, elbow up but lower than the fist |
+| `kata_break_hold` | 11 at 20 | **Break the Hold**, David and Goliath step 2 (was "Knife Hand Blocks"): from attention, open hands rise up the middle, cross, and open out to head height, palms forward |
 | `kata_punch` | 9 at 20 | **Punch**: front-side fist from the hip to the middle of the chest; other fist pulls back to the hip |
 | `kata_reverse_punch` | 9 at 20 | **Reverse Punch**: rear fist to the middle as the hips turn square |
-| `kata_backfist` | 10 at 20 | **Backfist**: fist by the opposite shoulder, elbow up, snaps out to face height, knuckles leading |
-| `kata_spear_hand` | 10 at 20 | **Palm Down / Spear Hand** (Pinon 1): rear open hand presses down palm down under the front elbow while the front open hand thrusts out at the solar plexus, palm down |
+| `kata_backfist` | 10 at 20 | **Backfist**: loads up at the opposite shoulder, elbow up, swings out to stop extended just outside the hero's own cheek, knuckles leading |
+| `kata_spear_hand` | 10 at 20 | **Palm Down / Spear Hand** (Pinon 1): rear open hand presses down palm down, tucked close under the front elbow, while the front open hand thrusts out at the solar plexus, palm down |
 | `kata_rear_leg_front_kick` | 15 at 20 | **Rear Leg Front Kick**: hands catch at the hip, back knee lifts high, leg snaps out and back, foot lands in front (ends in the other front stance) |
-| `kata_break_hold` | 12 at 20 | **Break the Hold** (David and Goliath step 12): left foot draws in (heels together), arms rise palms up in a half circle, then come down sharply palms down outside the hips |
+| `kata_break_hold_finish` | 13 at 20 | **Break the Hold**, David and Goliath step 12 (end of the kata): left foot draws in (heels together), arms go up above the head, then drop sharply, hands crossing in front of the face, to finish palms down outside the hips |
 
 - **Techniques are one-shots that end on the finished pose** (`holdLastFrame`), so the game can hold each move until the next tap.
 - **Every move is drawn with the left foot forward.** The right side is the same picture mirrored. The game can flip the sprite and use the mirrored direction row, so one render covers both sides of a kata.
@@ -31,7 +31,7 @@ front, horse and cat stances. **Nothing here is approved or wired into the game.
 
 ## Previews (look at these first)
 
-- `preview/game/all-moves-final-pose.png`: **start here.** The finished pose of every stance and move, in the game's real look (white gi, yellow belt), from the front, the corner and both sides.
+- `preview/game/all-moves-final-pose.png`: **start here.** The finished pose of every stance and move (the kick at full extension), in the game's real look (white gi, yellow belt), from the front, the corner and both sides.
 - `preview/game/<animation>.gif`: each one playing at game speed, from the same four views (moves hold their finished pose, then replay).
 - `preview/stances.png` and `preview/<move>.png`: quick pose-check pictures (plain white, bigger), every frame from the front (S), corner (SE) and side (E).
 
@@ -51,4 +51,4 @@ Only body A is rendered (`sprites/body-a`). Body B is built (`source/player_kata
 
 ## Questions for Jay
 
-See `docs/kata-technique-reference.md`, section "Questions for Jay".
+Answered by Jay on Nov 21 (`docs/kata-technique-reference.md`). In the game data, David and Goliath steps 2 and 12 both use the Break the Hold button; step 2 plays `kata_break_hold`, step 12 `kata_break_hold_finish`.
