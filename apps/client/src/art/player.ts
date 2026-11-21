@@ -2,9 +2,9 @@
 
 import Phaser from 'phaser';
 import { MOVEMENT, type BeltInfo } from '@dojo/sim';
-import { DEFAULT_LOOK, FACES, HAIRS, bigLookPack, lookPacks, type PlayerLook } from '../game/look';
+import { DEFAULT_LOOK, FACES, HAIRS, bigLookPack, kataPacks, lookPacks, type PlayerLook } from '../game/look';
 import { drawBelt, makeCharacter } from '../ui/belt';
-import { type CharacterArt, characterArt, characterTop, combineArt } from './art';
+import { type CharacterArt, addAnimations, characterArt, characterTop, combineArt } from './art';
 import { LayeredSprite } from './LayeredSprite';
 
 function rgb(color: string): number {
@@ -86,6 +86,14 @@ export function makePlayerSprite(scene: Phaser.Scene, belt: BeltInfo, stripes: n
   dressBelt(sprite, belt, stripes);
   sprite.update();
   return sprite;
+}
+
+/** Adds the kata moves (from `kataPacks`, already loaded) to the hero. False if a pack isn't loaded yet. */
+export function addKataMoves(scene: Phaser.Scene, sprite: LayeredSprite, look: PlayerLook): boolean {
+  const parts = kataPacks(look).map((pack) => characterArt(scene, pack, 'player'));
+  if (!parts.every((p): p is CharacterArt => !!p)) return false;
+  addAnimations(sprite.art, parts);
+  return true;
 }
 
 /** The idle for a Stance: the art's animation tagged with that Stance's id, else the plain guard idle. */

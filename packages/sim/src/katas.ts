@@ -19,6 +19,10 @@ export interface KataBeat {
   dir: Facing;
   move: string;
   kiai: boolean;
+  /** Which foot is forward after this beat ('L' or 'R'), from the school sheet; the art is drawn left foot forward. */
+  lead?: 'L' | 'R';
+  /** The hero animation for this beat when it isn't the move's usual one (e.g. the stacked-hands kick). */
+  anim?: string;
 }
 
 export interface KataDef {
@@ -47,7 +51,9 @@ export function parseKata(raw: unknown): KataDef {
     if (!Array.isArray(rawBeats)) throw new Error(`${where}: step ${s.n} beats must be a list`);
     const beats = rawBeats.map((b: Partial<KataBeat>, j) => {
       if (!FACINGS.includes(b?.dir as Facing) || typeof b.move !== 'string' || b.move === '') throw new Error(`${where}: step ${s.n} beat ${j + 1} needs a dir and a move`);
-      return { dir: b.dir as Facing, move: b.move, kiai: b.kiai === true };
+      if (b.lead !== undefined && b.lead !== 'L' && b.lead !== 'R') throw new Error(`${where}: step ${s.n} beat ${j + 1} lead must be L or R`);
+      if (b.anim !== undefined && (typeof b.anim !== 'string' || !b.anim)) throw new Error(`${where}: step ${s.n} beat ${j + 1} anim must be a name`);
+      return { dir: b.dir as Facing, move: b.move, kiai: b.kiai === true, ...(b.lead ? { lead: b.lead } : {}), ...(b.anim ? { anim: b.anim } : {}) };
     });
     const note = (s as { note?: unknown }).note;
     return { n: s.n, facing: [...s.facing], beats, ...(typeof note === 'string' ? { note } : {}) };

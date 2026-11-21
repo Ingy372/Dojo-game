@@ -1393,3 +1393,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Nov 21: Jay's notes applied (inside blocks outside to inside, sloped high block, backfist stops by the cheek, spear hand's palm-down hand tucked closer, open-leg hands further out, wider horse, Knife Hand Blocks relabelled Break the Hold, a new Break the Hold finish for step 12). Body A re-rendered.
 - Nov 21 (second round): high block laid along Jay's drawing (forearm across the face, fist above the opposite eyebrow), backfist arm nearly straight, front kick redone with the standing foot planted and the kicking foot landing one step ahead. Body A re-rendered for those three.
 - Nov 21 (third round): stacked-hands front kick added, and real left-leg versions of both front kicks (four kick animations in all). Body A rendered.
+
+## Kata moves wired into the game (2026-11-21, branch `claude/kata-moves-art`)
+- Kata practice now plays Claude's Blender moves (approved by Jay): Open Leg Stance, every technique, mirrored for right-foot-forward beats, real left-leg kicks, the stacked-hands kick where the sheet says "catch", and the kick's step forward. The art loads when Practice Kata is first tapped. 1,650 tests pass; type checks and both builds pass.
+- **Next:** Jay plays it on his phone; body B's kata art is imported once its render finishes (until then body B students see the hero hold the Open Leg Stance through the moves).

@@ -312,8 +312,8 @@
     "hair-11": "player-a_hair-11_kata_open_leg.png",
     "hair-12": "player-a_hair-12_kata_open_leg.png"
    },
-   "stance": "open-leg",
-   "note": "Open Leg Stance (the kata ready stance) loop, 1.5 s: feet about shoulder width, toes turned out a little, knees soft, fists in front of the belt. Slow breathing; feet never move"
+   "note": "Open Leg Stance (the kata ready stance) loop, 1.5 s: feet about shoulder width, toes turned out a little, knees soft, fists in front of the belt. Slow breathing; feet never move",
+   "kataStance": "open-leg"
   },
   "stance_front": {
    "frames": 12,
@@ -355,8 +355,8 @@
     "hair-11": "player-a_hair-11_stance_front.png",
     "hair-12": "player-a_hair-12_stance_front.png"
    },
-   "stance": "front",
-   "note": "Front stance loop, 1.5 s: left foot forward, front knee over the ankle, back leg nearly straight with the back foot turned out, hips low. Lead fist forward, rear fist at the hip"
+   "note": "Front stance loop, 1.5 s: left foot forward, front knee over the ankle, back leg nearly straight with the back foot turned out, hips low. Lead fist forward, rear fist at the hip",
+   "kataStance": "front"
   },
   "stance_horse": {
    "frames": 12,
@@ -398,8 +398,8 @@
     "hair-11": "player-a_hair-11_stance_horse.png",
     "hair-12": "player-a_hair-12_stance_horse.png"
    },
-   "stance": "horse",
-   "note": "Horse stance loop, 1.5 s: feet wide and parallel, knees bent and pushed out, hips sunk, back upright, fists chambered at the hips"
+   "note": "Horse stance loop, 1.5 s: feet wide and parallel, knees bent and pushed out, hips sunk, back upright, fists chambered at the hips",
+   "kataStance": "horse"
   },
   "stance_cat": {
    "frames": 12,
@@ -441,8 +441,8 @@
     "hair-11": "player-a_hair-11_stance_cat.png",
     "hair-12": "player-a_hair-12_stance_cat.png"
    },
-   "stance": "cat",
-   "note": "Cat stance loop, 1.5 s: left foot forward resting on its ball with the heel up, nearly all the weight on the bent back leg, hips set back, forward guard"
+   "note": "Cat stance loop, 1.5 s: left foot forward resting on its ball with the heel up, nearly all the weight on the bent back leg, hips set back, forward guard",
+   "kataStance": "cat"
   },
   "kata_low_block": {
    "frames": 10,

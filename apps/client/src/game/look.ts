@@ -79,6 +79,11 @@ export function lookPacks(look: PlayerLook): PackName[] {
   return [`player-${look.body}`, `player-${look.body}-faces`, `player-${look.body}-${look.hair}`];
 }
 
+/** The kata practice moves for a look (body, faces, the chosen hair), loaded only when kata practice starts. */
+export function kataPacks(look: PlayerLook): PackName[] {
+  return [`player-${look.body}-kata`, `player-${look.body}-kata-faces`, `player-${look.body}-kata-${look.hair}`];
+}
+
 /** The full-detail pack for big moments (the promotion ceremony, welcome screens). */
 export function bigLookPack(look: PlayerLook): PackName {
   return `player-${look.body}-big`;

@@ -3,7 +3,7 @@
   "name": "David and Goliath",
   "requirement": "green-kata",
   "stance": null,
-  "from": "drafts/content/katas/david-and-goliath.json, the school sheet. Nov 20 (Jay): kata practice shows the moves, so each step lists its beats: the direction the hero faces, then the technique (content/dojo/kata-moves.json). Turns, pivots, cat stances, chambers and catches happen by themselves. Waiting on Jay's check.",
+  "from": "drafts/content/katas/david-and-goliath.json, the school sheet. Nov 20 (Jay): kata practice shows the moves, so each step lists its beats: the direction the hero faces, then the technique (content/dojo/kata-moves.json). Turns, pivots, cat stances, chambers and catches happen by themselves. Waiting on Jay's check. Nov 21: each beat's `lead` is the foot forward after it (the art is drawn left foot forward; R is shown mirrored, and a right-foot-forward kick uses the left-leg art); `anim` picks a different animation (the stacked-hands kick where the sheet says \"catch\").",
   "steps": [
     {
       "n": 1,
@@ -34,15 +34,18 @@
         {
           "dir": "F",
           "move": "backfist",
-          "kiai": true
+          "kiai": true,
+          "lead": "R"
         },
         {
           "dir": "F",
-          "move": "low-block"
+          "move": "low-block",
+          "lead": "L"
         },
         {
           "dir": "F",
-          "move": "punch"
+          "move": "punch",
+          "lead": "R"
         }
       ]
     },
@@ -54,11 +57,13 @@
       "beats": [
         {
           "dir": "L",
-          "move": "low-block"
+          "move": "low-block",
+          "lead": "L"
         },
         {
           "dir": "L",
-          "move": "punch"
+          "move": "punch",
+          "lead": "R"
         }
       ]
     },
@@ -70,11 +75,13 @@
       "beats": [
         {
           "dir": "R",
-          "move": "low-block"
+          "move": "low-block",
+          "lead": "R"
         },
         {
           "dir": "R",
-          "move": "punch"
+          "move": "punch",
+          "lead": "L"
         }
       ]
     },
@@ -86,15 +93,18 @@
       "beats": [
         {
           "dir": "F",
-          "move": "backfist"
+          "move": "backfist",
+          "lead": "L"
         },
         {
           "dir": "F",
-          "move": "punch"
+          "move": "punch",
+          "lead": "R"
         },
         {
           "dir": "F",
-          "move": "reverse-punch"
+          "move": "reverse-punch",
+          "lead": "R"
         }
       ]
     },
@@ -106,11 +116,13 @@
       "beats": [
         {
           "dir": "L",
-          "move": "reverse-inside-block"
+          "move": "reverse-inside-block",
+          "lead": "L"
         },
         {
           "dir": "L",
-          "move": "reverse-punch"
+          "move": "reverse-punch",
+          "lead": "R"
         }
       ]
     },
@@ -122,11 +134,13 @@
       "beats": [
         {
           "dir": "R",
-          "move": "reverse-inside-block"
+          "move": "reverse-inside-block",
+          "lead": "R"
         },
         {
           "dir": "R",
-          "move": "reverse-punch"
+          "move": "reverse-punch",
+          "lead": "L"
         }
       ]
     },
@@ -138,19 +152,23 @@
       "beats": [
         {
           "dir": "B",
-          "move": "backfist"
+          "move": "backfist",
+          "lead": "R"
         },
         {
           "dir": "B",
-          "move": "punch"
+          "move": "punch",
+          "lead": "L"
         },
         {
           "dir": "B",
-          "move": "reverse-punch"
+          "move": "reverse-punch",
+          "lead": "L"
         },
         {
           "dir": "B",
-          "move": "reverse-punch"
+          "move": "reverse-punch",
+          "lead": "R"
         }
       ]
     },
@@ -162,15 +180,19 @@
       "beats": [
         {
           "dir": "R",
-          "move": "high-block"
+          "move": "high-block",
+          "lead": "L"
         },
         {
           "dir": "R",
-          "move": "rear-leg-front-kick"
+          "move": "rear-leg-front-kick",
+          "lead": "L",
+          "anim": "kata_front_kick_stacked"
         },
         {
           "dir": "R",
-          "move": "punch"
+          "move": "punch",
+          "lead": "R"
         }
       ]
     },
@@ -182,15 +204,19 @@
       "beats": [
         {
           "dir": "L",
-          "move": "high-block"
+          "move": "high-block",
+          "lead": "R"
         },
         {
           "dir": "L",
-          "move": "rear-leg-front-kick"
+          "move": "rear-leg-front-kick",
+          "lead": "R",
+          "anim": "kata_front_kick_stacked_left"
         },
         {
           "dir": "L",
-          "move": "punch"
+          "move": "punch",
+          "lead": "L"
         }
       ]
     },
@@ -202,7 +228,8 @@
       "beats": [
         {
           "dir": "F",
-          "move": "break-hold"
+          "move": "break-hold",
+          "anim": "kata_break_hold_finish"
         }
       ]
     }

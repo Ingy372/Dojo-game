@@ -34,6 +34,18 @@ describe('kata practice (Jay, Nov 20)', () => {
     }
   });
 
+  it('every stepping beat says which foot is forward; the catch kicks use the stacked-hands art', () => {
+    for (const k of katas.values()) {
+      for (const b of kataBeats(k)) {
+        if (b.move !== 'break-hold') expect(b.lead, `${k.id} step ${b.step} ${b.move}`).toMatch(/^[LR]$/);
+        // A right-foot-forward kick needs the left-leg art (the kick isn't mirrored).
+        if (b.move === 'rear-leg-front-kick' && b.lead === 'R') expect(b.anim, `${k.id} step ${b.step}`).toMatch(/_left$/);
+      }
+    }
+    const keon = katas.get('orange-kata')!;
+    expect(kataBeats(keon).filter((b) => b.anim?.startsWith('kata_front_kick_stacked')).length).toBe(2);
+  });
+
   it('Basic Form 1 is low blocks and punches only, with two kiai', () => {
     expect(kataMoveIds(bf1)).toEqual(['low-block', 'punch']);
     expect(kataBeats(bf1).filter((b) => b.kiai)).toHaveLength(2);

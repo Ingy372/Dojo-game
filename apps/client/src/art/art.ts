@@ -17,6 +17,13 @@ export interface ArtAnimation {
   keyFrames?: Record<string, number | string>;
   telegraphIntensity?: number[];
   layers: Record<string, number[][]>;
+  /** Which pack each layer's frames are in for this animation, when it came from a different pack than the rest. */
+  layerPack?: Record<string, PackName>;
+  /**
+   * A move that steps the character forward (the kata front kicks): `tiles` travelled; the picture starts
+   * `startOffset` tiles from the feet point and ends `endOffset` from it (drawn centred so it fits the frame).
+   */
+  travel?: { tiles: number; startOffset: number; endOffset: number };
 }
 
 export interface CharacterArt {
@@ -57,6 +64,22 @@ export function combineArt(parts: CharacterArt[]): CharacterArt {
   }
   layers.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
   return { ...first, layers, animations, layerPack };
+}
+
+/**
+ * Adds the animations of extra packs (e.g. the kata moves, loaded only when kata practice starts) to a character
+ * that's already built. The layers must already exist; each added animation remembers its own packs.
+ */
+export function addAnimations(art: CharacterArt, parts: CharacterArt[]): void {
+  for (const part of parts) {
+    for (const [name, anim] of Object.entries(part.animations)) {
+      const prev = art.animations[name];
+      const packs = Object.fromEntries(Object.keys(anim.layers).map((l) => [l, part.pack]));
+      art.animations[name] = prev?.layerPack
+        ? { ...prev, layers: { ...prev.layers, ...anim.layers }, layerPack: { ...prev.layerPack, ...packs } }
+        : { ...anim, layerPack: packs };
+    }
+  }
 }
 
 /** A room piece, prop or decoration: frame ids per layer, per frame. */
