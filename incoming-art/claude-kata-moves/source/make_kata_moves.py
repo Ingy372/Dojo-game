@@ -338,13 +338,52 @@ KK_KICK = P(body(0.04, 0.17, 4.0, lean=-9), foot("L", 0.10, 0.30, turn_out=8), f
 KK_LAND = P(body(0.11, 0.05 + KICK_TRAVEL, 20.0), foot("R", 0.10, 0.30 + KICK_TRAVEL, turn_out=5), foot("L", 0.10, 0.30, turn_out=35),
             hand("L", 0.15, 0.585, -0.06 + KICK_TRAVEL), hand("R", 0.06, 0.62, 0.30 + KICK_TRAVEL))
 H = -KICK_TRAVEL / 2
-make("kata_rear_leg_front_kick",
-     [(1, shift(START_GUARD, H), "smooth"), (3, shift(KK_CATCH, H), "smooth"), (6, shift(KK_CHAMBER, H), "smooth"),
-      (8, shift(KK_KICK, H), "snap"), (10, shift(KK_CHAMBER, H), "smooth"), (13, shift(KK_LAND, H), "smooth"), (15, shift(KK_LAND, H), "smooth")],
-     20, nxt(), tags="impact:7",
-     info=dict(HOLD, keyFrames={"impact": 8}, side="left foot forward; mirror for the right side",
-               travel={"tiles": KICK_TRAVEL, "startOffset": H, "endOffset": -H, "note": "drawn centred: the hero starts 0.28 tiles behind the usual stance spot and ends 0.28 ahead; the standing foot never moves on the ground"},
-               note="Rear Leg Front Kick: hands catch at the right hip, the left foot stays planted, the right knee lifts high, the leg snaps out to the middle and back, then the right foot lands one step ahead (ends in a right front stance)"))
+
+def mirror(pose):
+    """The same pose on the other side of the body (left and right swapped), for real left-leg renders."""
+    out = {}
+    for (bone, prop), v in pose.items():
+        nb = bone[:-1] + {"L": "R", "R": "L"}[bone[-1]] if bone[-2:] in (".L", ".R") else bone
+        if prop == "scale":
+            nv = v
+        elif prop == "location":
+            nv = (-v[0], v[1], v[2])
+        else:                                   # rotation_euler: the turn and the side tilt change sign
+            nv = (v[0], -v[1], -v[2])
+        out[(nb, prop)] = nv
+    return out
+
+def make_kick(name, catch, chamber, kick, land, note, left_leg=False):
+    keys = [(1, START_GUARD, "smooth"), (3, catch, "smooth"), (6, chamber, "smooth"), (8, kick, "snap"),
+            (10, chamber, "smooth"), (13, land, "smooth"), (15, land, "smooth")]
+    keys = [(f, shift(P(NEUTRAL, p), H), e) for f, p, e in keys]
+    if left_leg:
+        keys = [(f, mirror(p), e) for f, p, e in keys]
+    side = ("right foot forward, the LEFT leg kicks (a real left-leg render, not a flipped picture)" if left_leg
+            else "left foot forward, the RIGHT leg kicks")
+    make(name, keys, 20, nxt(), tags="impact:7",
+         info=dict(HOLD, keyFrames={"impact": 8}, side=side,
+                   travel={"tiles": KICK_TRAVEL, "startOffset": H, "endOffset": -H, "note": "drawn centred: the hero starts 0.28 tiles behind the usual stance spot and ends 0.28 ahead; the standing foot never moves on the ground"},
+                   note=note))
+
+make_kick("kata_rear_leg_front_kick", KK_CATCH, KK_CHAMBER, KK_KICK, KK_LAND,
+          "Rear Leg Front Kick (right leg): hands catch at the right hip, the left foot stays planted, the right knee lifts high, the leg snaps out to the middle and back, then the right foot lands one step ahead (ends in a right front stance)")
+make_kick("kata_rear_leg_front_kick_left", KK_CATCH, KK_CHAMBER, KK_KICK, KK_LAND,
+          "Rear Leg Front Kick (left leg): the same kick from a right front stance: hands catch at the left hip, the right foot stays planted, the left leg kicks and lands one step ahead (ends in a left front stance)", left_leg=True)
+
+# Stacked-hands version (Jay, Nov 21): the legs do exactly the same, but both fists stack one over the other at the
+# hip on the kicking side (the bottom fist at the hip, the other fist on top of it) through the chamber, the kick and
+# the landing, ready for the next technique.
+def stacked(hips_fwd):
+    return P(hand("R", 0.15, 0.60, hips_fwd - 0.05), hand("L", -0.14, 0.685, hips_fwd - 0.02))
+ST_CATCH = P(KK_CATCH, stacked(0.05))
+ST_CHAMBER = P(KK_CHAMBER, stacked(0.17))
+ST_KICK = P(KK_KICK, stacked(0.17))
+ST_LAND = P(KK_LAND, stacked(0.05 + KICK_TRAVEL))
+make_kick("kata_front_kick_stacked", ST_CATCH, ST_CHAMBER, ST_KICK, ST_LAND,
+          "Rear Leg Front Kick, hands stacked (right leg): both fists stack one over the other at the right hip and stay there while the right leg chambers, kicks and lands one step ahead")
+make_kick("kata_front_kick_stacked_left", ST_CATCH, ST_CHAMBER, ST_KICK, ST_LAND,
+          "Rear Leg Front Kick, hands stacked (left leg): both fists stack one over the other at the left hip and stay there while the left leg chambers, kicks and lands one step ahead", left_leg=True)
 
 # Break the Hold, David and Goliath step 12 (the end of the kata; Jay, Nov 21): the left foot draws in to the right
 # (heels together, toes out), both arms go up above the head, then drop sharply: the open hands cross in front of
