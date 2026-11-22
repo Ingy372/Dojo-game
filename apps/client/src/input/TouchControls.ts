@@ -5,6 +5,12 @@ import { view, DPR } from '../ui/theme';
 /** How far (in screen pixels) the stick knob can travel from its center. */
 const STICK_RADIUS = 56;
 const KNOB_RADIUS = 26;
+/**
+ * Playtest Nov 22: on a small phone the stick area is a big part of the floor, and a quick tap there (on a training
+ * dummy, say) did nothing. A press in the stick area that lets go this quickly, having barely moved, walks there.
+ */
+const QUICK_TAP_MS = 250;
+const QUICK_TAP_SLOP = 14;
 
 /**
  * Turns touches into movement requests for the rules package.
@@ -15,6 +21,7 @@ export class TouchControls {
   private stickPointer: number | null = null;
   private stickCenter = new Phaser.Math.Vector2();
   private stickVector = new Phaser.Math.Vector2();
+  private stickDown = { x: 0, y: 0, at: 0, moved: 0 };
   private tapPointer: number | null = null;
   private pendingTap: { x: number; y: number } | null = null;
   private off = false;
@@ -143,6 +150,7 @@ export class TouchControls {
     if (this.isButton((pointer.x / DPR), (pointer.y / DPR))) return;
     if (this.stickPointer === null && this.inStickZone((pointer.x / DPR), (pointer.y / DPR)) && !this.isTapTarget((pointer.x / DPR), (pointer.y / DPR))) {
       this.stickPointer = pointer.id;
+      this.stickDown = { x: pointer.x / DPR, y: pointer.y / DPR, at: this.scene.time.now, moved: 0 };
       // Keep the whole stick on screen even if the thumb lands near the edge.
       const { height } = view(this.scene);
       this.stickCenter.set(
@@ -160,7 +168,10 @@ export class TouchControls {
   }
 
   private onMove(pointer: Phaser.Input.Pointer): void {
-    if (pointer.id === this.stickPointer) this.updateStick(pointer);
+    if (pointer.id === this.stickPointer) {
+      this.stickDown.moved = Math.max(this.stickDown.moved, Math.hypot(pointer.x / DPR - this.stickDown.x, pointer.y / DPR - this.stickDown.y));
+      this.updateStick(pointer);
+    }
     else if (pointer.id === this.tapPointer && pointer.isDown) this.queueTap(pointer);
   }
 
@@ -169,6 +180,7 @@ export class TouchControls {
       this.stickPointer = null;
       this.stickVector.set(0, 0);
       this.showStick(false);
+      if (isQuickTap(this.scene.time.now - this.stickDown.at, this.stickDown.moved)) this.queueTap(pointer);
     } else if (pointer.id === this.tapPointer) {
       this.tapPointer = null;
     }
@@ -194,6 +206,11 @@ export class TouchControls {
     this.knob.setVisible(active);
     this.hint.setVisible(!active);
   }
+}
+
+/** A press in the stick area that counts as a tap to walk: let go quickly, having barely moved. */
+export function isQuickTap(heldMs: number, movedPx: number): boolean {
+  return heldMs <= QUICK_TAP_MS && movedPx <= QUICK_TAP_SLOP;
 }
 
 /** True on phones and tablets (and touch-screen computers). */
