@@ -45,7 +45,7 @@ const TABS: { id: Tab; icon: string; label: string }[] = [
   { id: 'face', icon: '👀', label: 'Eyes' },
   { id: 'hair', icon: '💇', label: 'Hairstyle' },
   { id: 'skin', icon: '✋', label: 'Skin' },
-  { id: 'hairColor', icon: '🎨', label: 'Hair colour' },
+  { id: 'hairColor', icon: '🎨', label: 'Hair color' },
   { id: 'gi', icon: '🥋', label: 'Gi' },
 ];
 
@@ -152,7 +152,9 @@ export class CreateScene extends Phaser.Scene {
     const firstName = this.training.firstName;
     const title = this.first ? `Welcome, ${firstName}!` : 'Your look';
     this.text(leftW / 2, pad - 2, title, 24, '#ffd166', true, 'Georgia, serif').setOrigin(0.5, 0).setStroke('#140d2b', 5);
-    const sub = this.first ? SCREENS.createLine.replace('{belt}', this.training.belt.name) : 'Change your look any time.';
+    // Playtest Nov 22: "you're a Orange Belt": a or an by the belt's first letter.
+    const belt = this.training.belt.name;
+    const sub = this.first ? SCREENS.createLine.replace('{aBelt}', `${/^[aeiou]/i.test(belt) ? 'an' : 'a'} ${belt}`).replace('{belt}', belt) : 'Change your look any time.';
     this.text(leftW / 2, pad + 30, sub, 13, INK).setOrigin(0.5, 0).setAlign('center').setWordWrapWidth(leftW - 24, true);
 
     const { x: cx, y: cy, r } = this.heroAt;
@@ -170,7 +172,9 @@ export class CreateScene extends Phaser.Scene {
     // Surprise me, plus Let's go (first time) or Back and Done (later).
     const row = leftW - 2 * pad;
     if (this.first) {
-      const sw = Math.round(row * 0.4);
+      // Playtest Nov 22: on a 667 px phone 40% was ~100 px and "🎲 Surprise me!" ran past its button. It gets at
+      // least 130 px, leaving Let's go! at least 110.
+      const sw = Math.round(Math.max(Math.min(130, row - 110 - S2), row * 0.4));
       this.button(pad, by, sw, MIN_TAP, '🎲 Surprise me!', 0x7a4fd1, 15, () => this.surprise());
       this.button(pad + sw + S2, by, row - sw - S2, MIN_TAP, "Let's go!", GREEN, 19, () => this.finish(true));
     } else {

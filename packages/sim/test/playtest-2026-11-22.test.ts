@@ -1,5 +1,6 @@
 // Fixes from the overnight playthrough of Nov 22 (docs/reviews/playtest-2026-11-22.md).
 import { describe, expect, it } from 'vitest';
+import screens from '../../../content/settings/screens.json';
 
 const files = import.meta.glob('../../../apps/client/src/**/*.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 const src = (f: string) => files[`../../../apps/client/src/${f}`];
@@ -37,5 +38,14 @@ describe('playtest Nov 22', () => {
     expect(t).toMatch(/me\.facing = \{ \.\.\.start \};\s*this\.hero\.face\(start\.x, start\.y\);/);
     // the bow out waits for waiting beats
     expect(t).toMatch(/if \(this\.kataQueued\.length \|\| this\.kataTurning\(\)\) this\.time\.delayedCall\(120, \(\) => whenFree\(fn\)\);/);
+  });
+
+  it('the welcome line says "an Orange Belt", not "a Orange Belt"', () => {
+    expect(screens.createLine).toContain("you're {aBelt},");
+    expect(src('scenes/CreateScene.ts')).toMatch(/replace\('\{aBelt\}', `\$\{\/\^\[aeiou\]\/i\.test\(belt\) \? 'an' : 'a'\} \$\{belt\}`\)/);
+  });
+
+  it('"Surprise me!" gets room for its label on a small phone', () => {
+    expect(src('scenes/CreateScene.ts')).toMatch(/const sw = Math\.round\(Math\.max\(Math\.min\(130, row - 110 - S2\), row \* 0\.4\)\);/);
   });
 });
