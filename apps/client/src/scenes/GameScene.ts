@@ -2528,6 +2528,11 @@ export class GameScene extends Phaser.Scene {
       const near = (q: Vec2, r: number) => Math.hypot(p.pos.x - q.x, p.pos.y - q.y) <= r;
       if (mat && p && !this.bowAsked && !this.menuOpen && (near(mat.at, BOW_MAT_REACH) || near(mat.door, BOW_DOOR_REACH))) {
         this.bowAsked = true;
+        // Playtest Nov 22: "Stand on the glowing mat by the door." stayed up under the Bow button; it's done now.
+        if (this.senseiText && !this.gotItBtn) {
+          this.senseiText.destroy();
+          this.senseiText = null;
+        }
         facePlayer(this.world, this.me, { x: mat.door.x - p.pos.x, y: mat.door.y - p.pos.y });
         this.controls.reset();
         this.askForBow();

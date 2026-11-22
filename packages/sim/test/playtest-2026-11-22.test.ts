@@ -1,6 +1,7 @@
 // Fixes from the overnight playthrough of Nov 22 (docs/reviews/playtest-2026-11-22.md).
 import { describe, expect, it } from 'vitest';
 import screens from '../../../content/settings/screens.json';
+import catalog from '../../../content/shop/catalog.json';
 
 const files = import.meta.glob('../../../apps/client/src/**/*.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 const src = (f: string) => files[`../../../apps/client/src/${f}`];
@@ -59,5 +60,11 @@ describe('playtest Nov 22', () => {
     expect(g).toMatch(/if \(!this\.run\?\.tutorial && this\.room\.chest && this\.room\.kind !== 'treasure'\) \{/);
     expect(g).toMatch(/if \(this\.room\.id !== roomAt \|\| this\.world\.progress\.chestOpened \|\| this\.world\.progress\.doorsOpen\) return;\s*this\.flashMessage\('Open the chest!'\);/);
     expect(g).toMatch(/const CHEST_HINT_DELAY_MS = 2500;/);
+  });
+
+  it('polish: the Shop says "◀ Back"; "Classes n of m" stays on one line; the mat tip goes when the bow is asked', () => {
+    expect(JSON.stringify(catalog)).toContain('"back":"◀ Back"');
+    expect(src('scenes/HomeScene.ts')).toMatch(/for \(let size = PATH_LABEL\.size; classesT\.getWrappedText\(\)\.length > 1 && size > 11; \) classesT\.setFontSize\(--size\);/);
+    expect(src('scenes/GameScene.ts')).toMatch(/this\.bowAsked = true;\s*\/\/ Playtest Nov 22: "Stand on the glowing mat by the door\." stayed up[^\n]*\n\s*if \(this\.senseiText && !this\.gotItBtn\) \{/);
   });
 });

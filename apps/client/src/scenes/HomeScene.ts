@@ -693,7 +693,9 @@ export class HomeScene extends Phaser.Scene {
     dial.lineStyle(2, 0x6b6478).strokeCircle(dx, ly, r);
     this.ui.add(dial);
     const classes = fill(PW.classes, { n: Math.min(g.classesInRank, g.classesBeforeTest), m: g.classesBeforeTest });
-    this.text(dx, labelY, classes, PATH_LABEL.size, '#b9ad99', false, FONT, half - 2).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
+    const classesT = this.text(dx, labelY, classes, PATH_LABEL.size, '#b9ad99', false, FONT, half - 2).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
+    // Playtest Nov 22: on a small phone "Classes 1 of 24" wrapped onto two lines; a size smaller keeps it on one.
+    for (let size = PATH_LABEL.size; classesT.getWrappedText().length > 1 && size > 11; ) classesT.setFontSize(--size);
     const kx = sx0 + half * 1.5;
     const seal = this.add.container(kx, ly);
     if (g.sealLit) seal.add(this.add.circle(0, 0, r + 4, 0xffd166, 0.35));
