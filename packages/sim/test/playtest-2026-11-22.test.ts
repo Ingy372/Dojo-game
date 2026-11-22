@@ -64,7 +64,7 @@ describe('playtest Nov 22', () => {
 
   it('polish: the Shop says "◀ Back"; "Classes n of m" stays on one line; the mat tip goes when the bow is asked', () => {
     expect(JSON.stringify(catalog)).toContain('"back":"◀ Back"');
-    expect(src('scenes/HomeScene.ts')).toMatch(/for \(let size = PATH_LABEL\.size; classesT\.getWrappedText\(\)\.length > 1 && size > 11; \) classesT\.setFontSize\(--size\);/);
+    expect(src('scenes/HomeScene.ts')).toMatch(/if \(classesT\.getWrappedText\(\)\.length > 1\) classesT\.setFontSize\(PATH_LABEL\.size\);/);
     expect(src('scenes/GameScene.ts')).toMatch(/this\.bowAsked = true;\s*\/\/ Playtest Nov 22: "Stand on the glowing mat by the door\." stayed up[^\n]*\n\s*if \(this\.senseiText && !this\.gotItBtn\) \{/);
   });
 });

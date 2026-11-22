@@ -694,8 +694,10 @@ export class HomeScene extends Phaser.Scene {
     this.ui.add(dial);
     const classes = fill(PW.classes, { n: Math.min(g.classesInRank, g.classesBeforeTest), m: g.classesBeforeTest });
     const classesT = this.text(dx, labelY, classes, PATH_LABEL.size, '#b9ad99', false, FONT, half - 2).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
-    // Playtest Nov 22: on a small phone "Classes 1 of 24" wrapped onto two lines; a size smaller keeps it on one.
-    for (let size = PATH_LABEL.size; classesT.getWrappedText().length > 1 && size > 11; ) classesT.setFontSize(--size);
+    // Playtest Nov 22: on a small phone "Classes 1 of 24" wrapped onto two lines. A size or two smaller keeps it on
+    // one line when that fits; if it still wraps, it keeps its normal size (two lines are allowed, like Test day).
+    for (let size = PATH_LABEL.size - 1; classesT.getWrappedText().length > 1 && size >= PATH_LABEL.size - 2; size--) classesT.setFontSize(size);
+    if (classesT.getWrappedText().length > 1) classesT.setFontSize(PATH_LABEL.size);
     const kx = sx0 + half * 1.5;
     const seal = this.add.container(kx, ly);
     if (g.sealLit) seal.add(this.add.circle(0, 0, r + 4, 0xffd166, 0.35));
