@@ -56,19 +56,19 @@ Only body A is rendered (`sprites/body-a`). Body B is built (`source/player_kata
 
 Answered by Jay on Nov 21 (`docs/kata-technique-reference.md`). In the game data, David and Goliath steps 2 and 12 both use the Break the Hold button; step 2 plays `kata_break_hold`, step 12 `kata_break_hold_finish`.
 
-## The special turn (Basic Forms 1 and 2, Jay Nov 21) — draft, waiting for Jay's OK
+## The special turn (Basic Forms 1 and 2, Jay Nov 21) — approved and in the game
 
 `kata_special_turn` (30 frames at 20 fps, 1.5 s, holds the last frame): after the kiai the left (back) leg first
-reaches behind to the rear right while the body still faces the kiai (eyes over the left shoulder), then the body
-spins a three-quarter turn to its left on the balls of the feet, the right foot swinging round into the back of the
-new stance, and the Low Block snaps. It is the first beat of steps 4 and 7 in both forms (`anim` in the kata data).
+reaches deep behind to the rear right (a long, low step back) while the body still faces the kiai, eyes over the left
+shoulder; then the body spins a three-quarter turn to its left on the balls of the feet, the right foot swinging round
+into the back of the new stance, and the Low Block snaps. It is the first beat of steps 4 and 7 in both forms (`anim`
+in the kata data).
 
 - Built by `source/make_special_turn.py` (on top of `make_kata_moves.py`'s helpers). It is the only action that
   turns the `root` bone, so it is a real render, never mirrored: each direction row starts facing that direction and
   ends facing 90 degrees clockwise on screen (row N ends facing E). `turn` in the JSON gives the offsets the game
   uses to keep the hero's spot under the picture.
-- Renders: `turn-draft/body-a`, `turn-draft/body-b` (not in `approved.json` yet). Preview: `preview/game/special_turn_preview.mp4`
+- Rendered into `sprites/body-a` and `sprites/body-b` like the other moves; preview `preview/game/special_turn_preview.mp4`
   (`source/make_turn_preview.py`).
-- **Once Jay approves:** merge the `kata_special_turn` entry and sheets into `sprites/body-a|b`, run the import
-  for the kata packs. The game already handles it (`InsideScene`: a `turn` animation plays from the starting
-  direction); until then those beats fall back to the plain Low Block.
+- Jay's notes: draft 1 "a bit stiff" (leg and body moved together) -> the leg reaches first, then the rest turns;
+  draft 2 -> "a deeper reach with the back leg and it's complete", turn speed good.

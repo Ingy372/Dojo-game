@@ -58,8 +58,8 @@ TURN = 270.0
 #     reached (it becomes the front foot) and the right foot swings round behind it to become the back foot.
 R0 = (-0.10, 0.30)
 L0 = (0.10, -0.26)
-L_REACH = (-0.28, -0.15)                            # behind the hero, to the right
-L_END = L_REACH
+L_REACH = (-0.34, -0.38)                            # deep behind the hero, to the right (Jay: a deeper reach)
+L_END = (-0.28, -0.15)                              # as the body spins, the left foot's ball draws in to its front-stance spot
 R_END = (L_END[0] + 0.56, L_END[1] - 0.20)          # one stance length behind the left foot in the new direction
 def mid_root(lw, rw, th):
     f = fwd_vec(th)
@@ -85,7 +85,7 @@ def lerp(a, b, t):
 # Upper body keys (local to the hero): the kiai, loading during the reach (left fist up by the right ear, right
 # fist to the hip, eyes over the left shoulder), the spin, the low block chamber, the low block.
 KIAI = mirror(P(NEUTRAL, PU_DONE))
-REACH = P(NEUTRAL, body(0.10, 0.0, 12.0, look=40.0), hand("L", -0.10, 0.82, 0.05), HIP_R)
+REACH = P(NEUTRAL, body(0.14, -0.03, 14.0, look=40.0, lean=3), hand("L", -0.10, 0.82, 0.05), HIP_R)
 SPIN = P(NEUTRAL, body(0.09, 0.02, 6.0, look=20.0), hand("L", -0.10, 0.82, 0.05), HIP_R)
 CHAMBER = P(NEUTRAL, LB_CHAMBER)
 BLOCK = P(NEUTRAL, LB_DONE)
@@ -116,6 +116,7 @@ for f in range(1, N + 1):
     # 1. the reach (frames 3-10): the left foot lifts a little and reaches behind to the rear right
     t = phase(f, 3, 10)
     lw = lerp(L0, L_REACH, t)
+    lw = lerp(lw, L_END, phase(f, 12, 21))
     l_up = 0.05 * math.sin(math.pi * t) if 0 < t < 1 else 0.0
     # 2. the turn (frames 10-22): both feet turn on their balls; from frame 15 the right foot swings round the left
     #    foot (the same distance from it all the way) to become the back foot

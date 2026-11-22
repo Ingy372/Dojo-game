@@ -1153,6 +1153,68 @@
    },
    "note": "Break the Hold, David and Goliath step 12: the left foot draws in (heels together), both arms go up above the head, then drop sharply, the open hands crossing in front of the face, to finish palms down just outside the hips",
    "side": "left foot forward; mirror for the right side"
+  },
+  "kata_special_turn": {
+   "frames": 30,
+   "fps": 20,
+   "durationSec": 1.5,
+   "loop": false,
+   "tags": {
+    "impact": "25"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_special_turn.png",
+    "skin": "player-b_skin_kata_special_turn.png",
+    "gi": "player-b_gi_kata_special_turn.png",
+    "belt": "player-b_belt_kata_special_turn.png",
+    "belt-sheen": "player-b_belt-sheen_kata_special_turn.png",
+    "belt-center": "player-b_belt-center_kata_special_turn.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_special_turn.png",
+    "belt-rim": "player-b_belt-rim_kata_special_turn.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_special_turn.png",
+    "belt-tape1": "player-b_belt-tape1_kata_special_turn.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_special_turn.png",
+    "belt-tape2": "player-b_belt-tape2_kata_special_turn.png",
+    "prop-broom": "player-b_prop-broom_kata_special_turn.png",
+    "prop-rag": "player-b_prop-rag_kata_special_turn.png",
+    "face-01": "player-b_face-01_kata_special_turn.png",
+    "face-02": "player-b_face-02_kata_special_turn.png",
+    "face-03": "player-b_face-03_kata_special_turn.png",
+    "face-04": "player-b_face-04_kata_special_turn.png",
+    "face-05": "player-b_face-05_kata_special_turn.png",
+    "face-06": "player-b_face-06_kata_special_turn.png",
+    "hair-01": "player-b_hair-01_kata_special_turn.png",
+    "hair-02": "player-b_hair-02_kata_special_turn.png",
+    "hair-03": "player-b_hair-03_kata_special_turn.png",
+    "hair-04": "player-b_hair-04_kata_special_turn.png",
+    "hair-05": "player-b_hair-05_kata_special_turn.png",
+    "hair-06": "player-b_hair-06_kata_special_turn.png",
+    "hair-07": "player-b_hair-07_kata_special_turn.png",
+    "hair-08": "player-b_hair-08_kata_special_turn.png",
+    "hair-09": "player-b_hair-09_kata_special_turn.png",
+    "hair-10": "player-b_hair-10_kata_special_turn.png",
+    "hair-11": "player-b_hair-11_kata_special_turn.png",
+    "hair-12": "player-b_hair-12_kata_special_turn.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 26
+   },
+   "side": "a real render, never mirrored: starts right foot forward (the kiai), ends left foot forward",
+   "turn": {
+    "degrees": -270.0,
+    "endFacing": "90 degrees clockwise on screen from the row's direction (row N ends facing E)",
+    "startOffset": {
+     "right": 0.003,
+     "forward": 0.037
+    },
+    "endOffset": {
+     "right": -0.017,
+     "forward": -0.212
+    },
+    "note": "offsets are tiles in the row's starting frame (right of and ahead of the way it faces at the start): the picture starts and ends that far from the hero's spot"
+   },
+   "note": "Special turn (Basic Forms 1 and 2, after the kiai of steps 3 and 6): first the left (back) leg reaches behind to the rear right while the body still faces the kiai and the eyes look over the left shoulder; then the body spins a three-quarter turn to its left on the balls of the feet, the right foot swinging round to become the back foot, and the hero lands in a left front stance doing the Low Block"
   }
  },
  "tintGuidance": {

@@ -1404,4 +1404,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## Special turn (2026-11-21, branch `claude/kata-moves-art`)
 - Jay's arrows for Basic Forms 1 and 2 are in (← → ↑ → ← ↓ ← →). The special turn after each kiai is built in Blender (draft 2, after Jay's "leg reaches first" note), rendered for both bodies, and wired into kata practice (it falls back to the plain Low Block until the art is imported). 1,651 tests pass; type checks and the build pass.
-- **Next:** Jay OKs the turn (preview `incoming-art/claude-kata-moves/preview/game/special_turn_preview.mp4`); then merge it into the kata sprites, import and push; Jay plays both forms on his phone.
+- Jay approved it with a deeper reach ("it's complete"); the final turn is rendered for both bodies and imported into the kata packs, so kata practice plays it.
+- **Next:** Jay plays Basic Forms 1 and 2 on his phone (the turn after each kiai).
