@@ -119,7 +119,7 @@ export class TownScene extends WalkScene {
   private tourStop(from: TownSceneData['from']): void {
     if (loadSave().homeTour !== 'town') return;
     const glowAt = (door: TownDoor) => {
-      const g = tourGlow(this, door.cue[0] * TILE, (door.cue[1] + 0.2) * TILE, TILE * 0.7);
+      const g = tourGlow(this, door.cue[0] * TILE, (door.cue[1] + 0.2) * TILE, TILE * 0.7, { shortArrow: true });
       this.worldLayer.add(g);
       return g;
     };

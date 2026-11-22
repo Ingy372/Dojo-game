@@ -48,4 +48,9 @@ describe('playtest Nov 22', () => {
   it('"Surprise me!" gets room for its label on a small phone', () => {
     expect(src('scenes/CreateScene.ts')).toMatch(/const sw = Math\.round\(Math\.max\(Math\.min\(130, row - 110 - S2\), row \* 0\.4\)\);/);
   });
+
+  it('town tour: the door pointer uses the short arrow, under the "My Dojo" sign', () => {
+    expect(src('ui/homeTour.ts')).toMatch(/const k = opts\.shortArrow \? 0\.62 : 1;/);
+    expect(src('scenes/TownScene.ts')).toMatch(/TILE \* 0\.7, \{ shortArrow: true \}\)/);
+  });
 });

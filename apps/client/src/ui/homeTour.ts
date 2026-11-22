@@ -73,20 +73,23 @@ export function senseiBubble(scene: Phaser.Scene, line: string, onNext?: () => v
  * The glowing "walk here" spot: a gold ring on the floor that breathes and a bouncing arrow above it.
  * Drawn at (x, y) in the parent's space; `r` is the ring's radius. Reduced motion keeps it still.
  */
-export function tourGlow(scene: Phaser.Scene, x: number, y: number, r: number): Phaser.GameObjects.Container {
+export function tourGlow(scene: Phaser.Scene, x: number, y: number, r: number, opts: { shortArrow?: boolean } = {}): Phaser.GameObjects.Container {
   const c = scene.add.container(x, y);
   const ring = scene.add.graphics();
   ring.fillStyle(0xffd166, 0.18).fillEllipse(0, 0, r * 2.2, r * 1.2);
   ring.lineStyle(4, 0xffd166, 0.95).strokeEllipse(0, 0, r * 2.2, r * 1.2);
   ring.lineStyle(2, 0xffffff, 0.7).strokeEllipse(0, 0, r * 1.5, r * 0.8);
   const arrow = scene.add.graphics();
-  arrow.fillStyle(0x14121c, 0.6).fillTriangle(-17, -r * 2.05, 17, -r * 2.05, 0, -r * 1.25);
-  arrow.fillStyle(0xffd166, 1).fillTriangle(-14, -r * 2.1, 14, -r * 2.1, 0, -r * 1.35);
-  arrow.fillRoundedRect(-6, -r * 2.75, 12, r * 0.7, 4);
+  // Playtest Nov 22: in the town the full arrow covered the door's "My Dojo" sign; `shortArrow` keeps it below the sign.
+  const k = opts.shortArrow ? 0.62 : 1;
+  const top = (v: number) => -r * (1.25 + (v - 1.25) * k);
+  arrow.fillStyle(0x14121c, 0.6).fillTriangle(-17, top(2.05), 17, top(2.05), 0, -r * 1.25);
+  arrow.fillStyle(0xffd166, 1).fillTriangle(-14, top(2.1), 14, top(2.1), 0, -r * 1.35);
+  arrow.fillRoundedRect(-6, top(2.75), 12, top(2.1) - top(2.75), 4);
   c.add([ring, arrow]);
   if (!reducedMotion()) {
     scene.tweens.add({ targets: ring, scaleX: 1.12, scaleY: 1.12, alpha: 0.7, duration: 650, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    scene.tweens.add({ targets: arrow, y: -10, duration: 420, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    scene.tweens.add({ targets: arrow, y: opts.shortArrow ? -5 : -10, duration: 420, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
   return c;
 }
