@@ -9,6 +9,10 @@ import {
   matBowHere,
   modsFrom,
   newMatGate,
+  practiceKatas,
+  recordKataRun,
+  type Facing as KataFacing,
+  type KataDef,
   type MatGate,
   type PlayerInput,
   type Room,
@@ -17,14 +21,17 @@ import {
 } from '@dojo/sim';
 import heavyBagJson from '../../../../content/dojo/action-zone/heavy-bag.json';
 import { INSIDE, INSIDE_PACK } from '../game/actionZone';
-import { CONTENT } from '../game/content';
+import { CONTENT, KATAS, KATA_MOVES } from '../game/content';
 import { reducedMotion } from '../game/motion';
-import { loadSave } from '../game/save';
+import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
-import { addStatic, staticArt, staticSprites } from '../art/art';
+import { kataPacks, loadLook } from '../game/look';
+import { addStatic, loadArt, staticArt, staticSprites } from '../art/art';
+import { addKataMoves } from '../art/player';
 import { sfx } from '../audio/Sfx';
 import { ActionButtons } from '../input/ActionButtons';
 import { closeX, openBoardReader } from '../ui/boardReader';
+import { KataMenu, KataPad } from '../ui/kataPractice';
 import { playBow } from '../ui/bow';
 import { addExitCue } from '../ui/exitCue';
 import { StarWall } from '../ui/starWall';
@@ -44,6 +51,8 @@ import { TILE, WalkScene, type Facing } from './WalkScene';
  * - Bow at the mat's edge: bow facing the mat to step on; turn back to the mat and bow to step off.
  * - Throw at the yellow targets: the Star Wall game.
  * - Train at a punching bag: the fight buttons appear and the bags take hits forever (like the practice dummy).
+ * - Practice Kata in the middle of the floor logo: pick a kata you have reached, then tap the direction and the
+ *   technique for each move while the hero performs it (ui/kataPractice.ts).
  */
 /**
  * Q-PREMIUM-2 QA: the exit glow's middle and height, in tiles. The exit rectangle (inside-room.json) starts 0.1 tile
@@ -57,8 +66,22 @@ const NEAR = 1.3;
 /** Bag practice ends by itself once the hero walks this far from every bag. */
 const TRAIN_LEAVE = 3.5;
 const HEAVY_BAG = loadEnemy(heavyBagJson);
+/** Kata practice: how far one beat steps the hero (tiles), how far from the logo's middle it may wander, and its speed. */
+const KATA_STEP = 0.3;
+const KATA_ROAM = 1.6;
+const KATA_SPEED = 0.09;
+/** The hero's Open Leg Stance for kata (the fight stance stands in if the kata art isn't loaded). */
+const KATA_READY_ANIM = 'kata_open_leg';
+const KATA_READY_FALLBACK = 'stance_rooted';
+const KATA_VEC: Record<KataFacing, Vec2> = { F: { x: 0, y: -1 }, B: { x: 0, y: 1 }, L: { x: -1, y: 0 }, R: { x: 1, y: 0 } };
 
-type Mode = 'walk' | 'bow' | 'read' | 'game' | 'train';
+/** Turns a direction clockwise on screen by `deg` degrees (negative = counter-clockwise). */
+function kataRotate(v: Vec2, deg: number): Vec2 {
+  const a = Math.atan2(v.y, v.x) + (deg * Math.PI) / 180;
+  return { x: Math.round(Math.cos(a) * 1e6) / 1e6, y: Math.round(Math.sin(a) * 1e6) / 1e6 };
+}
+
+type Mode = 'walk' | 'bow' | 'read' | 'game' | 'train' | 'kata';
 
 const distToRect = (p: Vec2, r: readonly [number, number, number, number]): number =>
   Math.hypot(Math.max(r[0] - p.x, 0, p.x - r[1]), Math.max(r[2] - p.y, 0, p.y - r[3]));
@@ -84,6 +107,14 @@ export class InsideScene extends WalkScene {
   private refusedHint = false;
   /** The room the rules step: the plain room, or (while training) the one with the bags as targets. */
   private activeRoom: Room = INSIDE.room;
+  /** Kata practice: the pad while playing, where the hero is stepping to, and whether it holds the Open Leg Stance. */
+  private kataPad: KataPad | null = null;
+  private kataTarget: Vec2 | null = null;
+  private kataReady = false;
+  /** A front kick's step forward still to hand over to the hero's position when the next move starts (tiles). */
+  private kataPendingStep: Vec2 | null = null;
+  /** The kata moves' art has been added to the hero (loaded when Practice Kata is first tapped). */
+  private kataArtReady = false;
 
   constructor() {
     super('ActionZoneInside');
@@ -103,6 +134,11 @@ export class InsideScene extends WalkScene {
     this.heroAction = null;
     this.combo = 0;
     this.refusedHint = false;
+    this.kataPad = null;
+    this.kataTarget = null;
+    this.kataReady = false;
+    this.kataPendingStep = null;
+    this.kataArtReady = false;
     super.create(data);
     this.walkUp = new WalkUpButton(this);
     this.comboText = this.add
@@ -175,6 +211,7 @@ export class InsideScene extends WalkScene {
       const show = heroRow < t.sortRow;
       for (const img of t.images) if (img.visible !== show) img.setVisible(show);
     }
+    if (this.mode === 'kata') this.kataPad?.update();
     if (this.mode === 'train') {
       this.buttons?.update(this.world.players.p1);
       if (this.combo > 0 && this.time.now - this.comboAt > 1800) {
@@ -193,6 +230,14 @@ export class InsideScene extends WalkScene {
   }
 
   protected heroBusy(): boolean {
+    if (this.mode === 'kata') {
+      // The hero holds each kata move's finished pose until the next tap (the moves end on it); before the first
+      // move it stands in the Open Leg Stance. Walking animations never play.
+      const holds = this.heroAction?.startsWith('kata_');
+      if (this.heroAction && (this.hero.current !== this.heroAction || (this.hero.finished && !holds))) this.heroAction = null;
+      if (!this.heroAction && this.kataReady) this.hero.play(this.hero.has(KATA_READY_ANIM) ? KATA_READY_ANIM : this.hero.has(KATA_READY_FALLBACK) ? KATA_READY_FALLBACK : 'idle');
+      return true;
+    }
     if (!this.heroAction) return false;
     if (this.hero.current === this.heroAction && !this.hero.finished) return true;
     this.heroAction = null;
@@ -223,6 +268,7 @@ export class InsideScene extends WalkScene {
       }
     }
     if (this.mode === 'train') this.trainTick();
+    if (this.mode === 'kata') this.kataTick();
 
     const [x0, x1, y0, y1] = INSIDE.exit;
     if (this.mode !== 'train' && p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1) {
@@ -242,6 +288,11 @@ export class InsideScene extends WalkScene {
     const bow = INSIDE.matBow ? matBowHere(INSIDE.matBow, this.gate, pos) : null;
     if (bow) {
       this.walkUp.show('Bow', () => this.bow(bow));
+      return;
+    }
+    const k = INSIDE.kataSpot;
+    if (k && Math.hypot(pos.x - k.center.x, pos.y - k.center.y) <= k.radius) {
+      this.walkUp.show('Practice\nKata', () => this.kataMenu());
       return;
     }
     let best: WalkUpSpot | null = null;
@@ -324,6 +375,233 @@ export class InsideScene extends WalkScene {
       this.paused = false;
       this.mode = 'walk';
     });
+  }
+
+  // ---------- kata practice ----------
+
+  private kataMenu(): void {
+    const training = currentTraining();
+    const katas = practiceKatas(KATAS, training.belts.map((b) => b.id), training.belt.id, KATA_MOVES);
+    if (katas.length === 0) {
+      this.say('Your kata will be here soon');
+      return;
+    }
+    this.mode = 'game';
+    this.paused = true;
+    this.world.players.p1.path = null;
+    this.controls.reset();
+    // The kata moves' art is only fetched the first time (it isn't needed anywhere else).
+    if (!this.kataArtReady) {
+      const look = loadLook();
+      if (addKataMoves(this, this.hero, look)) this.kataArtReady = true;
+      else {
+        this.say('Getting ready...');
+        loadArt(this, kataPacks(look));
+        this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+          this.kataArtReady = addKataMoves(this, this.hero, look);
+          if (this.mode === 'game') this.openKataMenu(katas, training);
+        });
+        this.load.start();
+        return;
+      }
+    }
+    this.openKataMenu(katas, training);
+  }
+
+  private openKataMenu(katas: KataDef[], training: ReturnType<typeof currentTraining>): void {
+    new KataMenu(
+      this,
+      katas,
+      new Map(katas.map((k) => [k.id, training.belts.find((b) => `${b.id}-kata` === k.requirement)])),
+      loadSave().kataBests,
+      (kata, timeTrial) => this.startKata(kata, timeTrial),
+      () => {
+        this.paused = false;
+        this.mode = 'walk';
+      },
+    );
+  }
+
+  /** The hero steps to the logo's middle, faces the front, bows in and takes the Open Leg Stance; then the pad shows. */
+  private startKata(kata: KataDef, timeTrial: boolean): void {
+    const k = INSIDE.kataSpot!;
+    const me = this.world.players.p1;
+    this.mode = 'kata';
+    this.paused = true;
+    this.controls.reset();
+    me.path = null;
+    me.facing = { ...KATA_VEC.F };
+    this.kataReady = false;
+    this.kataPendingStep = null;
+    this.hero.setMirrored(false);
+    this.kataTarget = { ...k.center };
+    const pad = new KataPad(this, kata, KATA_MOVES, timeTrial, {
+      face: (d) => {
+        me.facing = { ...KATA_VEC[d] };
+      },
+      beat: (beat, move, index) => {
+        me.facing = { ...KATA_VEC[beat.dir] };
+        this.kataSettleStep();
+        // A beat's own animation (e.g. the special turn) falls back to the move's usual one if its art isn't loaded.
+        const name = beat.anim && this.hero.has(beat.anim) ? beat.anim : move.anim;
+        const turn = this.hero.has(name) ? this.hero.art.animations[name]?.turn : undefined;
+        if (turn) {
+          // A move that turns the whole hero (the Basic Forms' special turn): it plays from the direction the hero
+          // faced before the turn (its row ends facing the beat's direction) and is never mirrored.
+          const start = kataRotate(KATA_VEC[beat.dir], -turn.degrees);
+          const right = kataRotate(start, 90);
+          const at = (o: { right: number; forward: number }): Vec2 => ({ x: right.x * o.right + start.x * o.forward, y: right.y * o.right + start.y * o.forward });
+          me.facing = { ...start };
+          this.hero.setMirrored(false);
+          this.heroDo(name);
+          const s = at(turn.startOffset);
+          this.kataStepBy({ x: -s.x, y: -s.y });
+          this.kataPendingStep = at(turn.endOffset);
+          this.sparks({ x: me.pos.x + KATA_VEC[beat.dir].x * 0.6, y: me.pos.y + KATA_VEC[beat.dir].y * 0.6 }, 5, 0xffffff);
+          return;
+        }
+        const travel = this.hero.art.animations[name]?.travel;
+        // The art is drawn left foot forward: a right-foot-forward beat shows its mirror image. (A kick picks its
+        // left- or right-leg art instead.)
+        this.hero.setMirrored(beat.lead === 'R' && !travel);
+        this.heroDo(name);
+        const v = KATA_VEC[beat.dir];
+        if (travel) {
+          // A front kick steps forward a whole stance: its picture starts behind the feet point, so the hero's spot
+          // moves up to meet it now, and the rest of the step is handed over when the next move starts.
+          this.kataStepBy({ x: -v.x * travel.startOffset, y: -v.y * travel.startOffset });
+          this.kataPendingStep = { x: v.x * travel.endOffset, y: v.y * travel.endOffset };
+        } else {
+          // Each move steps the hero a little the way it faces, staying on the logo.
+          const from = this.kataTarget ?? me.pos;
+          const nx = from.x + v.x * KATA_STEP;
+          const ny = from.y + v.y * KATA_STEP;
+          if (Math.hypot(nx - k.center.x, ny - k.center.y) <= KATA_ROAM) this.kataTarget = { x: nx, y: ny };
+        }
+        const at = { x: me.pos.x + v.x * 0.6, y: me.pos.y + v.y * 0.6 };
+        this.sparks(at, beat.kiai ? 14 : 5, beat.kiai ? 0xffd166 : 0xffffff);
+        if (beat.kiai) this.kiai();
+        else if (index % 2 === 1 && !reducedMotion()) this.cameras.main.shake(60, 0.0015);
+      },
+      done: (wrong, ms) => this.finishKata(kata, timeTrial, wrong, ms),
+      quit: () => this.stopKata(),
+    });
+    this.kataPad = pad;
+    // The camera puts the logo's middle in the open space between the arrow pad and the technique buttons.
+    this.lookAt = { x: k.center.x + (view(this).width / 2 - pad.freeCenterX) / (TILE * this.zoom), y: k.center.y };
+    // Bow in once the hero stands in the middle.
+    this.time.delayedCall(450, () => {
+      if (this.kataPad !== pad) return;
+      me.facing = { ...KATA_VEC.F };
+      this.heroAction = this.hero.has('bow') ? 'bow' : null;
+      playBow(
+        this,
+        this.player,
+        () => {
+          if (this.kataPad !== pad) return;
+          this.heroAction = null;
+          this.kataReady = true;
+          this.say('Open Leg Stance');
+          pad.start();
+        },
+        this.hero,
+      );
+    });
+  }
+
+  /** Moves the hero's spot at once (the picture already shows it there). */
+  private kataStepBy(d: Vec2): void {
+    const me = this.world.players.p1;
+    me.pos = { x: me.pos.x + d.x, y: me.pos.y + d.y };
+    if (this.kataTarget) this.kataTarget = { x: this.kataTarget.x + d.x, y: this.kataTarget.y + d.y };
+  }
+
+  /** Hands over the rest of a front kick's step (the held landing pose is drawn ahead of the hero's spot). */
+  private kataSettleStep(): void {
+    if (!this.kataPendingStep) return;
+    this.kataStepBy(this.kataPendingStep);
+    this.kataPendingStep = null;
+  }
+
+  private kataTick(): void {
+    const me = this.world.players.p1;
+    const t = this.kataTarget;
+    if (!t) return;
+    const dx = t.x - me.pos.x;
+    const dy = t.y - me.pos.y;
+    const d = Math.hypot(dx, dy);
+    if (d <= KATA_SPEED) me.pos = { ...t };
+    else me.pos = { x: me.pos.x + (dx / d) * KATA_SPEED, y: me.pos.y + (dy / d) * KATA_SPEED };
+  }
+
+  /** The spirit yell: big gold letters and a short shake. */
+  private kiai(): void {
+    const { width, height } = view(this);
+    const t = this.add
+      .text(width / 2, height * 0.32, 'KIAI!', { fontFamily: FONT, fontStyle: 'bold', fontSize: '44px', color: '#ffd166', stroke: '#14121c', strokeThickness: 8 })
+      .setOrigin(0.5)
+      .setResolution(crisp())
+      .setDepth(105);
+    if (reducedMotion()) {
+      this.time.delayedCall(700, () => t.destroy());
+      return;
+    }
+    this.cameras.main.shake(140, 0.004);
+    this.tweens.add({ targets: t, scale: { from: 1.6, to: 1 }, duration: 200, ease: 'Back.Out' });
+    this.tweens.add({ targets: t, alpha: 0, y: t.y - 16, delay: 600, duration: 300, onComplete: () => t.destroy() });
+  }
+
+  /** Back to the middle, face the front and bow out; then the result card. The bests are saved. */
+  private finishKata(kata: KataDef, timeTrial: boolean, wrong: number, ms: number | null): void {
+    const pad = this.kataPad;
+    if (!pad) return;
+    const profile = loadSave();
+    const result = recordKataRun(profile.kataBests[kata.id], wrong, ms);
+    profile.kataBests = { ...profile.kataBests, [kata.id]: result.best };
+    writeSave(profile);
+    const me = this.world.players.p1;
+    this.time.delayedCall(350, () => {
+      if (this.kataPad !== pad) return;
+      this.kataSettleStep();
+      this.kataTarget = { ...INSIDE.kataSpot!.center };
+      this.hero.setMirrored(false);
+      me.facing = { ...KATA_VEC.F };
+      this.kataReady = false;
+      this.heroAction = this.hero.has('bow') ? 'bow' : null;
+      playBow(
+        this,
+        this.player,
+        () => {
+          if (this.kataPad !== pad) return;
+          this.heroAction = null;
+          sfx.kataDone();
+          pad.showResult({
+            wrong,
+            ms,
+            ...result,
+            again: () => {
+              this.stopKata();
+              this.startKata(kata, timeTrial);
+            },
+            done: () => this.stopKata(),
+          });
+        },
+        this.hero,
+      );
+    });
+  }
+
+  private stopKata(): void {
+    this.kataPad?.destroy();
+    this.kataPad = null;
+    this.kataSettleStep();
+    this.hero.setMirrored(false);
+    this.kataTarget = null;
+    this.kataReady = false;
+    this.heroAction = null;
+    this.lookAt = null;
+    this.paused = false;
+    this.mode = 'walk';
   }
 
   // ---------- the punching bags ----------

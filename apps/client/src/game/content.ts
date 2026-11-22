@@ -1,7 +1,8 @@
 // All game content (rooms, enemies, Insights, loot), loaded from the content folder
 // and checked once when the game starts.
 
-import { loadContent, parseKata, type KataDef } from '@dojo/sim';
+import { loadContent, parseKata, parseKataMoves, type KataDef, type KataMoveDef } from '@dojo/sim';
+import kataMoves from '../../../../content/dojo/kata-moves.json';
 import insights from '../../../../content/insights/insights.json';
 import gear from '../../../../content/loot/gear.json';
 import drops from '../../../../content/loot/drops.json';
@@ -28,3 +29,6 @@ const katas = import.meta.glob('../../../../content/katas/*.json', { eager: true
 
 /** Kata cards for the Abilities tab (S3-P1), keyed by curriculum requirement id. */
 export const KATAS: ReadonlyMap<string, KataDef> = new Map(sorted(katas).map((raw) => parseKata(raw)).map((k) => [k.requirement, k]));
+
+/** Nov 20 (Jay): the technique buttons for kata practice. */
+export const KATA_MOVES: readonly KataMoveDef[] = parseKataMoves(kataMoves);

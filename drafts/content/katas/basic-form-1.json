@@ -41,7 +41,7 @@
       "n": 3,
       "text": "Raise LH fist (across body) to R ear, while (short) stepping to rear w/RF into cat stance, step forward w/LF, LH downward block (over LL), then RF step forward RH straight forward punch, LF step forward LH straight forward punch, RF step forward RH straight forward punch (kiai)",
       "facing": [
-        "R"
+        "F"
       ],
       "moves": [
         "stance.cat",
@@ -55,7 +55,7 @@
       "n": 4,
       "text": "With LF step (behind) 180-degrees now facing L w/LF forward, LH downward block, followed by step forward w/RF, RH straight forward punch",
       "facing": [
-        "L"
+        "R"
       ],
       "moves": [
         "turn.180",
@@ -69,7 +69,7 @@
       "n": 5,
       "text": "With RF step (behind) 180-degree now facing R w/RF forward, RH downward block, followed by step forward w/LF, LH straight forward punch",
       "facing": [
-        "R"
+        "L"
       ],
       "moves": [
         "turn.180",
@@ -83,7 +83,7 @@
       "n": 6,
       "text": "Raise LH fist (across body) to R ear while short stepping to rear w/RF into cat stance, followed by step forward w/LF, LH downward block, then RF step forward RH straight forward punch, LF step forward, LH straight forward punch, RF step forward, RH straight forward punch (kiai)",
       "facing": [
-        "R"
+        "B"
       ],
       "moves": [
         "stance.cat",

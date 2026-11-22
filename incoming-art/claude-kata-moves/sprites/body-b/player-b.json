@@ -1,0 +1,1401 @@
+{
+ "character": "player-b",
+ "frameWidth": 128,
+ "frameHeight": 160,
+ "anchor": {
+  "x": 64.0,
+  "y": 136.96,
+  "note": "feet / ground point of the character, in pixels from the frame's top-left"
+ },
+ "pixelsPerTile": 80.0,
+ "camera": {
+  "projection": "orthographic",
+  "elevationDeg": 35.0,
+  "orthoScaleTiles": 1.6,
+  "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+ },
+ "directions": [
+  "N",
+  "NE",
+  "E",
+  "SE",
+  "S",
+  "SW",
+  "W",
+  "NW"
+ ],
+ "directionVectors": {
+  "N": [
+   0,
+   -1
+  ],
+  "NE": [
+   0.7071,
+   -0.7071
+  ],
+  "E": [
+   1,
+   0
+  ],
+  "SE": [
+   0.7071,
+   0.7071
+  ],
+  "S": [
+   0,
+   1
+  ],
+  "SW": [
+   -0.7071,
+   0.7071
+  ],
+  "W": [
+   -1,
+   0
+  ],
+  "NW": [
+   -0.7071,
+   -0.7071
+  ]
+ },
+ "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+ "layers": [
+  {
+   "name": "body",
+   "order": 0,
+   "tint": false,
+   "optional": false
+  },
+  {
+   "name": "skin",
+   "order": 1,
+   "tint": true,
+   "optional": false
+  },
+  {
+   "name": "gi",
+   "order": 2,
+   "tint": true,
+   "optional": false
+  },
+  {
+   "name": "belt",
+   "order": 3,
+   "tint": true,
+   "optional": false
+  },
+  {
+   "name": "belt-sheen",
+   "order": 4,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-center",
+   "order": 5,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-center-edge",
+   "order": 6,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-rim",
+   "order": 7,
+   "tint": true,
+   "optional": false
+  },
+  {
+   "name": "belt-tape1-edge",
+   "order": 8,
+   "tint": false,
+   "optional": true
+  },
+  {
+   "name": "belt-tape1",
+   "order": 9,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-tape2-edge",
+   "order": 10,
+   "tint": false,
+   "optional": true
+  },
+  {
+   "name": "belt-tape2",
+   "order": 11,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "prop-broom",
+   "order": 12,
+   "tint": false,
+   "optional": false
+  },
+  {
+   "name": "prop-rag",
+   "order": 13,
+   "tint": false,
+   "optional": false
+  },
+  {
+   "name": "face-01",
+   "order": 14,
+   "tint": false,
+   "optional": false,
+   "group": "face"
+  },
+  {
+   "name": "face-02",
+   "order": 15,
+   "tint": false,
+   "optional": false,
+   "group": "face"
+  },
+  {
+   "name": "face-03",
+   "order": 16,
+   "tint": false,
+   "optional": false,
+   "group": "face"
+  },
+  {
+   "name": "face-04",
+   "order": 17,
+   "tint": false,
+   "optional": false,
+   "group": "face"
+  },
+  {
+   "name": "face-05",
+   "order": 18,
+   "tint": false,
+   "optional": false,
+   "group": "face"
+  },
+  {
+   "name": "face-06",
+   "order": 19,
+   "tint": false,
+   "optional": false,
+   "group": "face"
+  },
+  {
+   "name": "hair-01",
+   "order": 20,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-02",
+   "order": 21,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-03",
+   "order": 22,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-04",
+   "order": 23,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-05",
+   "order": 24,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-06",
+   "order": 25,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-07",
+   "order": 26,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-08",
+   "order": 27,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-09",
+   "order": 28,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-10",
+   "order": 29,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-11",
+   "order": 30,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  },
+  {
+   "name": "hair-12",
+   "order": 31,
+   "tint": true,
+   "optional": false,
+   "group": "hair"
+  }
+ ],
+ "animations": {
+  "kata_open_leg": {
+   "frames": 12,
+   "fps": 8,
+   "durationSec": 1.5,
+   "loop": true,
+   "tags": {},
+   "sheets": {
+    "body": "player-b_body_kata_open_leg.png",
+    "skin": "player-b_skin_kata_open_leg.png",
+    "gi": "player-b_gi_kata_open_leg.png",
+    "belt": "player-b_belt_kata_open_leg.png",
+    "belt-sheen": "player-b_belt-sheen_kata_open_leg.png",
+    "belt-center": "player-b_belt-center_kata_open_leg.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_open_leg.png",
+    "belt-rim": "player-b_belt-rim_kata_open_leg.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_open_leg.png",
+    "belt-tape1": "player-b_belt-tape1_kata_open_leg.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_open_leg.png",
+    "belt-tape2": "player-b_belt-tape2_kata_open_leg.png",
+    "prop-broom": "player-b_prop-broom_kata_open_leg.png",
+    "prop-rag": "player-b_prop-rag_kata_open_leg.png",
+    "face-01": "player-b_face-01_kata_open_leg.png",
+    "face-02": "player-b_face-02_kata_open_leg.png",
+    "face-03": "player-b_face-03_kata_open_leg.png",
+    "face-04": "player-b_face-04_kata_open_leg.png",
+    "face-05": "player-b_face-05_kata_open_leg.png",
+    "face-06": "player-b_face-06_kata_open_leg.png",
+    "hair-01": "player-b_hair-01_kata_open_leg.png",
+    "hair-02": "player-b_hair-02_kata_open_leg.png",
+    "hair-03": "player-b_hair-03_kata_open_leg.png",
+    "hair-04": "player-b_hair-04_kata_open_leg.png",
+    "hair-05": "player-b_hair-05_kata_open_leg.png",
+    "hair-06": "player-b_hair-06_kata_open_leg.png",
+    "hair-07": "player-b_hair-07_kata_open_leg.png",
+    "hair-08": "player-b_hair-08_kata_open_leg.png",
+    "hair-09": "player-b_hair-09_kata_open_leg.png",
+    "hair-10": "player-b_hair-10_kata_open_leg.png",
+    "hair-11": "player-b_hair-11_kata_open_leg.png",
+    "hair-12": "player-b_hair-12_kata_open_leg.png"
+   },
+   "note": "Open Leg Stance (the kata ready stance) loop, 1.5 s: feet about shoulder width, toes turned out a little, knees soft, fists in front of the belt. Slow breathing; feet never move",
+   "kataStance": "open-leg"
+  },
+  "stance_front": {
+   "frames": 12,
+   "fps": 8,
+   "durationSec": 1.5,
+   "loop": true,
+   "tags": {},
+   "sheets": {
+    "body": "player-b_body_stance_front.png",
+    "skin": "player-b_skin_stance_front.png",
+    "gi": "player-b_gi_stance_front.png",
+    "belt": "player-b_belt_stance_front.png",
+    "belt-sheen": "player-b_belt-sheen_stance_front.png",
+    "belt-center": "player-b_belt-center_stance_front.png",
+    "belt-center-edge": "player-b_belt-center-edge_stance_front.png",
+    "belt-rim": "player-b_belt-rim_stance_front.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_stance_front.png",
+    "belt-tape1": "player-b_belt-tape1_stance_front.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_stance_front.png",
+    "belt-tape2": "player-b_belt-tape2_stance_front.png",
+    "prop-broom": "player-b_prop-broom_stance_front.png",
+    "prop-rag": "player-b_prop-rag_stance_front.png",
+    "face-01": "player-b_face-01_stance_front.png",
+    "face-02": "player-b_face-02_stance_front.png",
+    "face-03": "player-b_face-03_stance_front.png",
+    "face-04": "player-b_face-04_stance_front.png",
+    "face-05": "player-b_face-05_stance_front.png",
+    "face-06": "player-b_face-06_stance_front.png",
+    "hair-01": "player-b_hair-01_stance_front.png",
+    "hair-02": "player-b_hair-02_stance_front.png",
+    "hair-03": "player-b_hair-03_stance_front.png",
+    "hair-04": "player-b_hair-04_stance_front.png",
+    "hair-05": "player-b_hair-05_stance_front.png",
+    "hair-06": "player-b_hair-06_stance_front.png",
+    "hair-07": "player-b_hair-07_stance_front.png",
+    "hair-08": "player-b_hair-08_stance_front.png",
+    "hair-09": "player-b_hair-09_stance_front.png",
+    "hair-10": "player-b_hair-10_stance_front.png",
+    "hair-11": "player-b_hair-11_stance_front.png",
+    "hair-12": "player-b_hair-12_stance_front.png"
+   },
+   "note": "Front stance loop, 1.5 s: left foot forward, front knee over the ankle, back leg nearly straight with the back foot turned out, hips low. Lead fist forward, rear fist at the hip",
+   "kataStance": "front"
+  },
+  "stance_horse": {
+   "frames": 12,
+   "fps": 8,
+   "durationSec": 1.5,
+   "loop": true,
+   "tags": {},
+   "sheets": {
+    "body": "player-b_body_stance_horse.png",
+    "skin": "player-b_skin_stance_horse.png",
+    "gi": "player-b_gi_stance_horse.png",
+    "belt": "player-b_belt_stance_horse.png",
+    "belt-sheen": "player-b_belt-sheen_stance_horse.png",
+    "belt-center": "player-b_belt-center_stance_horse.png",
+    "belt-center-edge": "player-b_belt-center-edge_stance_horse.png",
+    "belt-rim": "player-b_belt-rim_stance_horse.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_stance_horse.png",
+    "belt-tape1": "player-b_belt-tape1_stance_horse.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_stance_horse.png",
+    "belt-tape2": "player-b_belt-tape2_stance_horse.png",
+    "prop-broom": "player-b_prop-broom_stance_horse.png",
+    "prop-rag": "player-b_prop-rag_stance_horse.png",
+    "face-01": "player-b_face-01_stance_horse.png",
+    "face-02": "player-b_face-02_stance_horse.png",
+    "face-03": "player-b_face-03_stance_horse.png",
+    "face-04": "player-b_face-04_stance_horse.png",
+    "face-05": "player-b_face-05_stance_horse.png",
+    "face-06": "player-b_face-06_stance_horse.png",
+    "hair-01": "player-b_hair-01_stance_horse.png",
+    "hair-02": "player-b_hair-02_stance_horse.png",
+    "hair-03": "player-b_hair-03_stance_horse.png",
+    "hair-04": "player-b_hair-04_stance_horse.png",
+    "hair-05": "player-b_hair-05_stance_horse.png",
+    "hair-06": "player-b_hair-06_stance_horse.png",
+    "hair-07": "player-b_hair-07_stance_horse.png",
+    "hair-08": "player-b_hair-08_stance_horse.png",
+    "hair-09": "player-b_hair-09_stance_horse.png",
+    "hair-10": "player-b_hair-10_stance_horse.png",
+    "hair-11": "player-b_hair-11_stance_horse.png",
+    "hair-12": "player-b_hair-12_stance_horse.png"
+   },
+   "note": "Horse stance loop, 1.5 s: feet wide and parallel, knees bent and pushed out, hips sunk, back upright, fists chambered at the hips",
+   "kataStance": "horse"
+  },
+  "stance_cat": {
+   "frames": 12,
+   "fps": 8,
+   "durationSec": 1.5,
+   "loop": true,
+   "tags": {},
+   "sheets": {
+    "body": "player-b_body_stance_cat.png",
+    "skin": "player-b_skin_stance_cat.png",
+    "gi": "player-b_gi_stance_cat.png",
+    "belt": "player-b_belt_stance_cat.png",
+    "belt-sheen": "player-b_belt-sheen_stance_cat.png",
+    "belt-center": "player-b_belt-center_stance_cat.png",
+    "belt-center-edge": "player-b_belt-center-edge_stance_cat.png",
+    "belt-rim": "player-b_belt-rim_stance_cat.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_stance_cat.png",
+    "belt-tape1": "player-b_belt-tape1_stance_cat.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_stance_cat.png",
+    "belt-tape2": "player-b_belt-tape2_stance_cat.png",
+    "prop-broom": "player-b_prop-broom_stance_cat.png",
+    "prop-rag": "player-b_prop-rag_stance_cat.png",
+    "face-01": "player-b_face-01_stance_cat.png",
+    "face-02": "player-b_face-02_stance_cat.png",
+    "face-03": "player-b_face-03_stance_cat.png",
+    "face-04": "player-b_face-04_stance_cat.png",
+    "face-05": "player-b_face-05_stance_cat.png",
+    "face-06": "player-b_face-06_stance_cat.png",
+    "hair-01": "player-b_hair-01_stance_cat.png",
+    "hair-02": "player-b_hair-02_stance_cat.png",
+    "hair-03": "player-b_hair-03_stance_cat.png",
+    "hair-04": "player-b_hair-04_stance_cat.png",
+    "hair-05": "player-b_hair-05_stance_cat.png",
+    "hair-06": "player-b_hair-06_stance_cat.png",
+    "hair-07": "player-b_hair-07_stance_cat.png",
+    "hair-08": "player-b_hair-08_stance_cat.png",
+    "hair-09": "player-b_hair-09_stance_cat.png",
+    "hair-10": "player-b_hair-10_stance_cat.png",
+    "hair-11": "player-b_hair-11_stance_cat.png",
+    "hair-12": "player-b_hair-12_stance_cat.png"
+   },
+   "note": "Cat stance loop, 1.5 s: left foot forward resting on its ball with the heel up, nearly all the weight on the bent back leg, hips set back, forward guard",
+   "kataStance": "cat"
+  },
+  "kata_low_block": {
+   "frames": 10,
+   "fps": 20,
+   "durationSec": 0.5,
+   "loop": false,
+   "tags": {
+    "impact": "6"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_low_block.png",
+    "skin": "player-b_skin_kata_low_block.png",
+    "gi": "player-b_gi_kata_low_block.png",
+    "belt": "player-b_belt_kata_low_block.png",
+    "belt-sheen": "player-b_belt-sheen_kata_low_block.png",
+    "belt-center": "player-b_belt-center_kata_low_block.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_low_block.png",
+    "belt-rim": "player-b_belt-rim_kata_low_block.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_low_block.png",
+    "belt-tape1": "player-b_belt-tape1_kata_low_block.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_low_block.png",
+    "belt-tape2": "player-b_belt-tape2_kata_low_block.png",
+    "prop-broom": "player-b_prop-broom_kata_low_block.png",
+    "prop-rag": "player-b_prop-rag_kata_low_block.png",
+    "face-01": "player-b_face-01_kata_low_block.png",
+    "face-02": "player-b_face-02_kata_low_block.png",
+    "face-03": "player-b_face-03_kata_low_block.png",
+    "face-04": "player-b_face-04_kata_low_block.png",
+    "face-05": "player-b_face-05_kata_low_block.png",
+    "face-06": "player-b_face-06_kata_low_block.png",
+    "hair-01": "player-b_hair-01_kata_low_block.png",
+    "hair-02": "player-b_hair-02_kata_low_block.png",
+    "hair-03": "player-b_hair-03_kata_low_block.png",
+    "hair-04": "player-b_hair-04_kata_low_block.png",
+    "hair-05": "player-b_hair-05_kata_low_block.png",
+    "hair-06": "player-b_hair-06_kata_low_block.png",
+    "hair-07": "player-b_hair-07_kata_low_block.png",
+    "hair-08": "player-b_hair-08_kata_low_block.png",
+    "hair-09": "player-b_hair-09_kata_low_block.png",
+    "hair-10": "player-b_hair-10_kata_low_block.png",
+    "hair-11": "player-b_hair-11_kata_low_block.png",
+    "hair-12": "player-b_hair-12_kata_low_block.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 7
+   },
+   "note": "Low Block: the left fist starts by the right ear, sweeps down and out to stop above the front knee; the right fist pulls to the hip",
+   "side": "left foot forward; mirror for the right side"
+  },
+  "kata_inside_block": {
+   "frames": 10,
+   "fps": 20,
+   "durationSec": 0.5,
+   "loop": false,
+   "tags": {
+    "impact": "6"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_inside_block.png",
+    "skin": "player-b_skin_kata_inside_block.png",
+    "gi": "player-b_gi_kata_inside_block.png",
+    "belt": "player-b_belt_kata_inside_block.png",
+    "belt-sheen": "player-b_belt-sheen_kata_inside_block.png",
+    "belt-center": "player-b_belt-center_kata_inside_block.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_inside_block.png",
+    "belt-rim": "player-b_belt-rim_kata_inside_block.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_inside_block.png",
+    "belt-tape1": "player-b_belt-tape1_kata_inside_block.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_inside_block.png",
+    "belt-tape2": "player-b_belt-tape2_kata_inside_block.png",
+    "prop-broom": "player-b_prop-broom_kata_inside_block.png",
+    "prop-rag": "player-b_prop-rag_kata_inside_block.png",
+    "face-01": "player-b_face-01_kata_inside_block.png",
+    "face-02": "player-b_face-02_kata_inside_block.png",
+    "face-03": "player-b_face-03_kata_inside_block.png",
+    "face-04": "player-b_face-04_kata_inside_block.png",
+    "face-05": "player-b_face-05_kata_inside_block.png",
+    "face-06": "player-b_face-06_kata_inside_block.png",
+    "hair-01": "player-b_hair-01_kata_inside_block.png",
+    "hair-02": "player-b_hair-02_kata_inside_block.png",
+    "hair-03": "player-b_hair-03_kata_inside_block.png",
+    "hair-04": "player-b_hair-04_kata_inside_block.png",
+    "hair-05": "player-b_hair-05_kata_inside_block.png",
+    "hair-06": "player-b_hair-06_kata_inside_block.png",
+    "hair-07": "player-b_hair-07_kata_inside_block.png",
+    "hair-08": "player-b_hair-08_kata_inside_block.png",
+    "hair-09": "player-b_hair-09_kata_inside_block.png",
+    "hair-10": "player-b_hair-10_kata_inside_block.png",
+    "hair-11": "player-b_hair-11_kata_inside_block.png",
+    "hair-12": "player-b_hair-12_kata_inside_block.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 7
+   },
+   "note": "Inside Block (outside to inside): the left fist starts up by the left ear and the forearm swings across to stop upright just past the right cheek, out in front of the face; the right fist pulls to the hip",
+   "side": "left foot forward; mirror for the right side"
+  },
+  "kata_reverse_inside_block": {
+   "frames": 10,
+   "fps": 20,
+   "durationSec": 0.5,
+   "loop": false,
+   "tags": {
+    "impact": "6"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_reverse_inside_block.png",
+    "skin": "player-b_skin_kata_reverse_inside_block.png",
+    "gi": "player-b_gi_kata_reverse_inside_block.png",
+    "belt": "player-b_belt_kata_reverse_inside_block.png",
+    "belt-sheen": "player-b_belt-sheen_kata_reverse_inside_block.png",
+    "belt-center": "player-b_belt-center_kata_reverse_inside_block.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_reverse_inside_block.png",
+    "belt-rim": "player-b_belt-rim_kata_reverse_inside_block.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_reverse_inside_block.png",
+    "belt-tape1": "player-b_belt-tape1_kata_reverse_inside_block.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_reverse_inside_block.png",
+    "belt-tape2": "player-b_belt-tape2_kata_reverse_inside_block.png",
+    "prop-broom": "player-b_prop-broom_kata_reverse_inside_block.png",
+    "prop-rag": "player-b_prop-rag_kata_reverse_inside_block.png",
+    "face-01": "player-b_face-01_kata_reverse_inside_block.png",
+    "face-02": "player-b_face-02_kata_reverse_inside_block.png",
+    "face-03": "player-b_face-03_kata_reverse_inside_block.png",
+    "face-04": "player-b_face-04_kata_reverse_inside_block.png",
+    "face-05": "player-b_face-05_kata_reverse_inside_block.png",
+    "face-06": "player-b_face-06_kata_reverse_inside_block.png",
+    "hair-01": "player-b_hair-01_kata_reverse_inside_block.png",
+    "hair-02": "player-b_hair-02_kata_reverse_inside_block.png",
+    "hair-03": "player-b_hair-03_kata_reverse_inside_block.png",
+    "hair-04": "player-b_hair-04_kata_reverse_inside_block.png",
+    "hair-05": "player-b_hair-05_kata_reverse_inside_block.png",
+    "hair-06": "player-b_hair-06_kata_reverse_inside_block.png",
+    "hair-07": "player-b_hair-07_kata_reverse_inside_block.png",
+    "hair-08": "player-b_hair-08_kata_reverse_inside_block.png",
+    "hair-09": "player-b_hair-09_kata_reverse_inside_block.png",
+    "hair-10": "player-b_hair-10_kata_reverse_inside_block.png",
+    "hair-11": "player-b_hair-11_kata_reverse_inside_block.png",
+    "hair-12": "player-b_hair-12_kata_reverse_inside_block.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 7
+   },
+   "note": "Reverse Inside Block: the inside block (outside to inside) with the rear (right) hand while the left foot is forward; it stops just past the left cheek; the hips turn square, the left fist pulls to the hip",
+   "side": "left foot forward; mirror for the right side"
+  },
+  "kata_high_block": {
+   "frames": 10,
+   "fps": 20,
+   "durationSec": 0.5,
+   "loop": false,
+   "tags": {
+    "impact": "6"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_high_block.png",
+    "skin": "player-b_skin_kata_high_block.png",
+    "gi": "player-b_gi_kata_high_block.png",
+    "belt": "player-b_belt_kata_high_block.png",
+    "belt-sheen": "player-b_belt-sheen_kata_high_block.png",
+    "belt-center": "player-b_belt-center_kata_high_block.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_high_block.png",
+    "belt-rim": "player-b_belt-rim_kata_high_block.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_high_block.png",
+    "belt-tape1": "player-b_belt-tape1_kata_high_block.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_high_block.png",
+    "belt-tape2": "player-b_belt-tape2_kata_high_block.png",
+    "prop-broom": "player-b_prop-broom_kata_high_block.png",
+    "prop-rag": "player-b_prop-rag_kata_high_block.png",
+    "face-01": "player-b_face-01_kata_high_block.png",
+    "face-02": "player-b_face-02_kata_high_block.png",
+    "face-03": "player-b_face-03_kata_high_block.png",
+    "face-04": "player-b_face-04_kata_high_block.png",
+    "face-05": "player-b_face-05_kata_high_block.png",
+    "face-06": "player-b_face-06_kata_high_block.png",
+    "hair-01": "player-b_hair-01_kata_high_block.png",
+    "hair-02": "player-b_hair-02_kata_high_block.png",
+    "hair-03": "player-b_hair-03_kata_high_block.png",
+    "hair-04": "player-b_hair-04_kata_high_block.png",
+    "hair-05": "player-b_hair-05_kata_high_block.png",
+    "hair-06": "player-b_hair-06_kata_high_block.png",
+    "hair-07": "player-b_hair-07_kata_high_block.png",
+    "hair-08": "player-b_hair-08_kata_high_block.png",
+    "hair-09": "player-b_hair-09_kata_high_block.png",
+    "hair-10": "player-b_hair-10_kata_high_block.png",
+    "hair-11": "player-b_hair-11_kata_high_block.png",
+    "hair-12": "player-b_hair-12_kata_high_block.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 7
+   },
+   "note": "High Block: the left forearm rises to slope up across the front of the face, elbow out and lower by the left cheek, fist higher just above the right eyebrow; the right fist pulls to the hip",
+   "side": "left foot forward; mirror for the right side"
+  },
+  "kata_punch": {
+   "frames": 9,
+   "fps": 20,
+   "durationSec": 0.45,
+   "loop": false,
+   "tags": {
+    "impact": "5"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_punch.png",
+    "skin": "player-b_skin_kata_punch.png",
+    "gi": "player-b_gi_kata_punch.png",
+    "belt": "player-b_belt_kata_punch.png",
+    "belt-sheen": "player-b_belt-sheen_kata_punch.png",
+    "belt-center": "player-b_belt-center_kata_punch.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_punch.png",
+    "belt-rim": "player-b_belt-rim_kata_punch.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_punch.png",
+    "belt-tape1": "player-b_belt-tape1_kata_punch.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_punch.png",
+    "belt-tape2": "player-b_belt-tape2_kata_punch.png",
+    "prop-broom": "player-b_prop-broom_kata_punch.png",
+    "prop-rag": "player-b_prop-rag_kata_punch.png",
+    "face-01": "player-b_face-01_kata_punch.png",
+    "face-02": "player-b_face-02_kata_punch.png",
+    "face-03": "player-b_face-03_kata_punch.png",
+    "face-04": "player-b_face-04_kata_punch.png",
+    "face-05": "player-b_face-05_kata_punch.png",
+    "face-06": "player-b_face-06_kata_punch.png",
+    "hair-01": "player-b_hair-01_kata_punch.png",
+    "hair-02": "player-b_hair-02_kata_punch.png",
+    "hair-03": "player-b_hair-03_kata_punch.png",
+    "hair-04": "player-b_hair-04_kata_punch.png",
+    "hair-05": "player-b_hair-05_kata_punch.png",
+    "hair-06": "player-b_hair-06_kata_punch.png",
+    "hair-07": "player-b_hair-07_kata_punch.png",
+    "hair-08": "player-b_hair-08_kata_punch.png",
+    "hair-09": "player-b_hair-09_kata_punch.png",
+    "hair-10": "player-b_hair-10_kata_punch.png",
+    "hair-11": "player-b_hair-11_kata_punch.png",
+    "hair-12": "player-b_hair-12_kata_punch.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 6
+   },
+   "note": "Punch: the left (front-side) fist drives from the hip to the middle of the chest while the right fist pulls back to the hip",
+   "side": "left foot forward; mirror for the right side"
+  },
+  "kata_reverse_punch": {
+   "frames": 9,
+   "fps": 20,
+   "durationSec": 0.45,
+   "loop": false,
+   "tags": {
+    "impact": "5"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_reverse_punch.png",
+    "skin": "player-b_skin_kata_reverse_punch.png",
+    "gi": "player-b_gi_kata_reverse_punch.png",
+    "belt": "player-b_belt_kata_reverse_punch.png",
+    "belt-sheen": "player-b_belt-sheen_kata_reverse_punch.png",
+    "belt-center": "player-b_belt-center_kata_reverse_punch.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_reverse_punch.png",
+    "belt-rim": "player-b_belt-rim_kata_reverse_punch.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_reverse_punch.png",
+    "belt-tape1": "player-b_belt-tape1_kata_reverse_punch.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_reverse_punch.png",
+    "belt-tape2": "player-b_belt-tape2_kata_reverse_punch.png",
+    "prop-broom": "player-b_prop-broom_kata_reverse_punch.png",
+    "prop-rag": "player-b_prop-rag_kata_reverse_punch.png",
+    "face-01": "player-b_face-01_kata_reverse_punch.png",
+    "face-02": "player-b_face-02_kata_reverse_punch.png",
+    "face-03": "player-b_face-03_kata_reverse_punch.png",
+    "face-04": "player-b_face-04_kata_reverse_punch.png",
+    "face-05": "player-b_face-05_kata_reverse_punch.png",
+    "face-06": "player-b_face-06_kata_reverse_punch.png",
+    "hair-01": "player-b_hair-01_kata_reverse_punch.png",
+    "hair-02": "player-b_hair-02_kata_reverse_punch.png",
+    "hair-03": "player-b_hair-03_kata_reverse_punch.png",
+    "hair-04": "player-b_hair-04_kata_reverse_punch.png",
+    "hair-05": "player-b_hair-05_kata_reverse_punch.png",
+    "hair-06": "player-b_hair-06_kata_reverse_punch.png",
+    "hair-07": "player-b_hair-07_kata_reverse_punch.png",
+    "hair-08": "player-b_hair-08_kata_reverse_punch.png",
+    "hair-09": "player-b_hair-09_kata_reverse_punch.png",
+    "hair-10": "player-b_hair-10_kata_reverse_punch.png",
+    "hair-11": "player-b_hair-11_kata_reverse_punch.png",
+    "hair-12": "player-b_hair-12_kata_reverse_punch.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 6
+   },
+   "note": "Reverse Punch: the right (rear) fist drives to the middle while the hips turn square and the left fist pulls back to the hip",
+   "side": "left foot forward; mirror for the right side"
+  },
+  "kata_backfist": {
+   "frames": 10,
+   "fps": 20,
+   "durationSec": 0.5,
+   "loop": false,
+   "tags": {
+    "impact": "5"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_backfist.png",
+    "skin": "player-b_skin_kata_backfist.png",
+    "gi": "player-b_gi_kata_backfist.png",
+    "belt": "player-b_belt_kata_backfist.png",
+    "belt-sheen": "player-b_belt-sheen_kata_backfist.png",
+    "belt-center": "player-b_belt-center_kata_backfist.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_backfist.png",
+    "belt-rim": "player-b_belt-rim_kata_backfist.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_backfist.png",
+    "belt-tape1": "player-b_belt-tape1_kata_backfist.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_backfist.png",
+    "belt-tape2": "player-b_belt-tape2_kata_backfist.png",
+    "prop-broom": "player-b_prop-broom_kata_backfist.png",
+    "prop-rag": "player-b_prop-rag_kata_backfist.png",
+    "face-01": "player-b_face-01_kata_backfist.png",
+    "face-02": "player-b_face-02_kata_backfist.png",
+    "face-03": "player-b_face-03_kata_backfist.png",
+    "face-04": "player-b_face-04_kata_backfist.png",
+    "face-05": "player-b_face-05_kata_backfist.png",
+    "face-06": "player-b_face-06_kata_backfist.png",
+    "hair-01": "player-b_hair-01_kata_backfist.png",
+    "hair-02": "player-b_hair-02_kata_backfist.png",
+    "hair-03": "player-b_hair-03_kata_backfist.png",
+    "hair-04": "player-b_hair-04_kata_backfist.png",
+    "hair-05": "player-b_hair-05_kata_backfist.png",
+    "hair-06": "player-b_hair-06_kata_backfist.png",
+    "hair-07": "player-b_hair-07_kata_backfist.png",
+    "hair-08": "player-b_hair-08_kata_backfist.png",
+    "hair-09": "player-b_hair-09_kata_backfist.png",
+    "hair-10": "player-b_hair-10_kata_backfist.png",
+    "hair-11": "player-b_hair-11_kata_backfist.png",
+    "hair-12": "player-b_hair-12_kata_backfist.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 6
+   },
+   "note": "Backfist: the left fist loads up at the right shoulder with the elbow up, then swings out, knuckles leading, to stop extended just outside the left cheek",
+   "side": "left foot forward; mirror for the right side"
+  },
+  "kata_spear_hand": {
+   "frames": 10,
+   "fps": 20,
+   "durationSec": 0.5,
+   "loop": false,
+   "tags": {
+    "impact": "6"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_spear_hand.png",
+    "skin": "player-b_skin_kata_spear_hand.png",
+    "gi": "player-b_gi_kata_spear_hand.png",
+    "belt": "player-b_belt_kata_spear_hand.png",
+    "belt-sheen": "player-b_belt-sheen_kata_spear_hand.png",
+    "belt-center": "player-b_belt-center_kata_spear_hand.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_spear_hand.png",
+    "belt-rim": "player-b_belt-rim_kata_spear_hand.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_spear_hand.png",
+    "belt-tape1": "player-b_belt-tape1_kata_spear_hand.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_spear_hand.png",
+    "belt-tape2": "player-b_belt-tape2_kata_spear_hand.png",
+    "prop-broom": "player-b_prop-broom_kata_spear_hand.png",
+    "prop-rag": "player-b_prop-rag_kata_spear_hand.png",
+    "face-01": "player-b_face-01_kata_spear_hand.png",
+    "face-02": "player-b_face-02_kata_spear_hand.png",
+    "face-03": "player-b_face-03_kata_spear_hand.png",
+    "face-04": "player-b_face-04_kata_spear_hand.png",
+    "face-05": "player-b_face-05_kata_spear_hand.png",
+    "face-06": "player-b_face-06_kata_spear_hand.png",
+    "hair-01": "player-b_hair-01_kata_spear_hand.png",
+    "hair-02": "player-b_hair-02_kata_spear_hand.png",
+    "hair-03": "player-b_hair-03_kata_spear_hand.png",
+    "hair-04": "player-b_hair-04_kata_spear_hand.png",
+    "hair-05": "player-b_hair-05_kata_spear_hand.png",
+    "hair-06": "player-b_hair-06_kata_spear_hand.png",
+    "hair-07": "player-b_hair-07_kata_spear_hand.png",
+    "hair-08": "player-b_hair-08_kata_spear_hand.png",
+    "hair-09": "player-b_hair-09_kata_spear_hand.png",
+    "hair-10": "player-b_hair-10_kata_spear_hand.png",
+    "hair-11": "player-b_hair-11_kata_spear_hand.png",
+    "hair-12": "player-b_hair-12_kata_spear_hand.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 7
+   },
+   "note": "Palm Down / Spear Hand: the right open hand presses down palm down to under the left elbow while the left open hand thrusts out at the solar plexus, palm down, fingers together",
+   "side": "left foot forward; mirror for the right side"
+  },
+  "kata_rear_leg_front_kick": {
+   "frames": 15,
+   "fps": 20,
+   "durationSec": 0.75,
+   "loop": false,
+   "tags": {
+    "impact": "7"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_rear_leg_front_kick.png",
+    "skin": "player-b_skin_kata_rear_leg_front_kick.png",
+    "gi": "player-b_gi_kata_rear_leg_front_kick.png",
+    "belt": "player-b_belt_kata_rear_leg_front_kick.png",
+    "belt-sheen": "player-b_belt-sheen_kata_rear_leg_front_kick.png",
+    "belt-center": "player-b_belt-center_kata_rear_leg_front_kick.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_rear_leg_front_kick.png",
+    "belt-rim": "player-b_belt-rim_kata_rear_leg_front_kick.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_rear_leg_front_kick.png",
+    "belt-tape1": "player-b_belt-tape1_kata_rear_leg_front_kick.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_rear_leg_front_kick.png",
+    "belt-tape2": "player-b_belt-tape2_kata_rear_leg_front_kick.png",
+    "prop-broom": "player-b_prop-broom_kata_rear_leg_front_kick.png",
+    "prop-rag": "player-b_prop-rag_kata_rear_leg_front_kick.png",
+    "face-01": "player-b_face-01_kata_rear_leg_front_kick.png",
+    "face-02": "player-b_face-02_kata_rear_leg_front_kick.png",
+    "face-03": "player-b_face-03_kata_rear_leg_front_kick.png",
+    "face-04": "player-b_face-04_kata_rear_leg_front_kick.png",
+    "face-05": "player-b_face-05_kata_rear_leg_front_kick.png",
+    "face-06": "player-b_face-06_kata_rear_leg_front_kick.png",
+    "hair-01": "player-b_hair-01_kata_rear_leg_front_kick.png",
+    "hair-02": "player-b_hair-02_kata_rear_leg_front_kick.png",
+    "hair-03": "player-b_hair-03_kata_rear_leg_front_kick.png",
+    "hair-04": "player-b_hair-04_kata_rear_leg_front_kick.png",
+    "hair-05": "player-b_hair-05_kata_rear_leg_front_kick.png",
+    "hair-06": "player-b_hair-06_kata_rear_leg_front_kick.png",
+    "hair-07": "player-b_hair-07_kata_rear_leg_front_kick.png",
+    "hair-08": "player-b_hair-08_kata_rear_leg_front_kick.png",
+    "hair-09": "player-b_hair-09_kata_rear_leg_front_kick.png",
+    "hair-10": "player-b_hair-10_kata_rear_leg_front_kick.png",
+    "hair-11": "player-b_hair-11_kata_rear_leg_front_kick.png",
+    "hair-12": "player-b_hair-12_kata_rear_leg_front_kick.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 8
+   },
+   "side": "left foot forward, the RIGHT leg kicks",
+   "travel": {
+    "tiles": 0.56,
+    "startOffset": -0.28,
+    "endOffset": 0.28,
+    "note": "drawn centred: the hero starts 0.28 tiles behind the usual stance spot and ends 0.28 ahead; the standing foot never moves on the ground"
+   },
+   "note": "Rear Leg Front Kick (right leg): hands catch at the right hip, the left foot stays planted, the right knee lifts high, the leg snaps out to the middle and back, then the right foot lands one step ahead (ends in a right front stance)"
+  },
+  "kata_rear_leg_front_kick_left": {
+   "frames": 15,
+   "fps": 20,
+   "durationSec": 0.75,
+   "loop": false,
+   "tags": {
+    "impact": "7"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_rear_leg_front_kick_left.png",
+    "skin": "player-b_skin_kata_rear_leg_front_kick_left.png",
+    "gi": "player-b_gi_kata_rear_leg_front_kick_left.png",
+    "belt": "player-b_belt_kata_rear_leg_front_kick_left.png",
+    "belt-sheen": "player-b_belt-sheen_kata_rear_leg_front_kick_left.png",
+    "belt-center": "player-b_belt-center_kata_rear_leg_front_kick_left.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_rear_leg_front_kick_left.png",
+    "belt-rim": "player-b_belt-rim_kata_rear_leg_front_kick_left.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_rear_leg_front_kick_left.png",
+    "belt-tape1": "player-b_belt-tape1_kata_rear_leg_front_kick_left.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_rear_leg_front_kick_left.png",
+    "belt-tape2": "player-b_belt-tape2_kata_rear_leg_front_kick_left.png",
+    "prop-broom": "player-b_prop-broom_kata_rear_leg_front_kick_left.png",
+    "prop-rag": "player-b_prop-rag_kata_rear_leg_front_kick_left.png",
+    "face-01": "player-b_face-01_kata_rear_leg_front_kick_left.png",
+    "face-02": "player-b_face-02_kata_rear_leg_front_kick_left.png",
+    "face-03": "player-b_face-03_kata_rear_leg_front_kick_left.png",
+    "face-04": "player-b_face-04_kata_rear_leg_front_kick_left.png",
+    "face-05": "player-b_face-05_kata_rear_leg_front_kick_left.png",
+    "face-06": "player-b_face-06_kata_rear_leg_front_kick_left.png",
+    "hair-01": "player-b_hair-01_kata_rear_leg_front_kick_left.png",
+    "hair-02": "player-b_hair-02_kata_rear_leg_front_kick_left.png",
+    "hair-03": "player-b_hair-03_kata_rear_leg_front_kick_left.png",
+    "hair-04": "player-b_hair-04_kata_rear_leg_front_kick_left.png",
+    "hair-05": "player-b_hair-05_kata_rear_leg_front_kick_left.png",
+    "hair-06": "player-b_hair-06_kata_rear_leg_front_kick_left.png",
+    "hair-07": "player-b_hair-07_kata_rear_leg_front_kick_left.png",
+    "hair-08": "player-b_hair-08_kata_rear_leg_front_kick_left.png",
+    "hair-09": "player-b_hair-09_kata_rear_leg_front_kick_left.png",
+    "hair-10": "player-b_hair-10_kata_rear_leg_front_kick_left.png",
+    "hair-11": "player-b_hair-11_kata_rear_leg_front_kick_left.png",
+    "hair-12": "player-b_hair-12_kata_rear_leg_front_kick_left.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 8
+   },
+   "side": "right foot forward, the LEFT leg kicks (a real left-leg render, not a flipped picture)",
+   "travel": {
+    "tiles": 0.56,
+    "startOffset": -0.28,
+    "endOffset": 0.28,
+    "note": "drawn centred: the hero starts 0.28 tiles behind the usual stance spot and ends 0.28 ahead; the standing foot never moves on the ground"
+   },
+   "note": "Rear Leg Front Kick (left leg): the same kick from a right front stance: hands catch at the left hip, the right foot stays planted, the left leg kicks and lands one step ahead (ends in a left front stance)"
+  },
+  "kata_front_kick_stacked": {
+   "frames": 15,
+   "fps": 20,
+   "durationSec": 0.75,
+   "loop": false,
+   "tags": {
+    "impact": "7"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_front_kick_stacked.png",
+    "skin": "player-b_skin_kata_front_kick_stacked.png",
+    "gi": "player-b_gi_kata_front_kick_stacked.png",
+    "belt": "player-b_belt_kata_front_kick_stacked.png",
+    "belt-sheen": "player-b_belt-sheen_kata_front_kick_stacked.png",
+    "belt-center": "player-b_belt-center_kata_front_kick_stacked.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_front_kick_stacked.png",
+    "belt-rim": "player-b_belt-rim_kata_front_kick_stacked.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_front_kick_stacked.png",
+    "belt-tape1": "player-b_belt-tape1_kata_front_kick_stacked.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_front_kick_stacked.png",
+    "belt-tape2": "player-b_belt-tape2_kata_front_kick_stacked.png",
+    "prop-broom": "player-b_prop-broom_kata_front_kick_stacked.png",
+    "prop-rag": "player-b_prop-rag_kata_front_kick_stacked.png",
+    "face-01": "player-b_face-01_kata_front_kick_stacked.png",
+    "face-02": "player-b_face-02_kata_front_kick_stacked.png",
+    "face-03": "player-b_face-03_kata_front_kick_stacked.png",
+    "face-04": "player-b_face-04_kata_front_kick_stacked.png",
+    "face-05": "player-b_face-05_kata_front_kick_stacked.png",
+    "face-06": "player-b_face-06_kata_front_kick_stacked.png",
+    "hair-01": "player-b_hair-01_kata_front_kick_stacked.png",
+    "hair-02": "player-b_hair-02_kata_front_kick_stacked.png",
+    "hair-03": "player-b_hair-03_kata_front_kick_stacked.png",
+    "hair-04": "player-b_hair-04_kata_front_kick_stacked.png",
+    "hair-05": "player-b_hair-05_kata_front_kick_stacked.png",
+    "hair-06": "player-b_hair-06_kata_front_kick_stacked.png",
+    "hair-07": "player-b_hair-07_kata_front_kick_stacked.png",
+    "hair-08": "player-b_hair-08_kata_front_kick_stacked.png",
+    "hair-09": "player-b_hair-09_kata_front_kick_stacked.png",
+    "hair-10": "player-b_hair-10_kata_front_kick_stacked.png",
+    "hair-11": "player-b_hair-11_kata_front_kick_stacked.png",
+    "hair-12": "player-b_hair-12_kata_front_kick_stacked.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 8
+   },
+   "side": "left foot forward, the RIGHT leg kicks",
+   "travel": {
+    "tiles": 0.56,
+    "startOffset": -0.28,
+    "endOffset": 0.28,
+    "note": "drawn centred: the hero starts 0.28 tiles behind the usual stance spot and ends 0.28 ahead; the standing foot never moves on the ground"
+   },
+   "note": "Rear Leg Front Kick, hands stacked (right leg): both fists stack one over the other at the right hip and stay there while the right leg chambers, kicks and lands one step ahead"
+  },
+  "kata_front_kick_stacked_left": {
+   "frames": 15,
+   "fps": 20,
+   "durationSec": 0.75,
+   "loop": false,
+   "tags": {
+    "impact": "7"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_front_kick_stacked_left.png",
+    "skin": "player-b_skin_kata_front_kick_stacked_left.png",
+    "gi": "player-b_gi_kata_front_kick_stacked_left.png",
+    "belt": "player-b_belt_kata_front_kick_stacked_left.png",
+    "belt-sheen": "player-b_belt-sheen_kata_front_kick_stacked_left.png",
+    "belt-center": "player-b_belt-center_kata_front_kick_stacked_left.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_front_kick_stacked_left.png",
+    "belt-rim": "player-b_belt-rim_kata_front_kick_stacked_left.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_front_kick_stacked_left.png",
+    "belt-tape1": "player-b_belt-tape1_kata_front_kick_stacked_left.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_front_kick_stacked_left.png",
+    "belt-tape2": "player-b_belt-tape2_kata_front_kick_stacked_left.png",
+    "prop-broom": "player-b_prop-broom_kata_front_kick_stacked_left.png",
+    "prop-rag": "player-b_prop-rag_kata_front_kick_stacked_left.png",
+    "face-01": "player-b_face-01_kata_front_kick_stacked_left.png",
+    "face-02": "player-b_face-02_kata_front_kick_stacked_left.png",
+    "face-03": "player-b_face-03_kata_front_kick_stacked_left.png",
+    "face-04": "player-b_face-04_kata_front_kick_stacked_left.png",
+    "face-05": "player-b_face-05_kata_front_kick_stacked_left.png",
+    "face-06": "player-b_face-06_kata_front_kick_stacked_left.png",
+    "hair-01": "player-b_hair-01_kata_front_kick_stacked_left.png",
+    "hair-02": "player-b_hair-02_kata_front_kick_stacked_left.png",
+    "hair-03": "player-b_hair-03_kata_front_kick_stacked_left.png",
+    "hair-04": "player-b_hair-04_kata_front_kick_stacked_left.png",
+    "hair-05": "player-b_hair-05_kata_front_kick_stacked_left.png",
+    "hair-06": "player-b_hair-06_kata_front_kick_stacked_left.png",
+    "hair-07": "player-b_hair-07_kata_front_kick_stacked_left.png",
+    "hair-08": "player-b_hair-08_kata_front_kick_stacked_left.png",
+    "hair-09": "player-b_hair-09_kata_front_kick_stacked_left.png",
+    "hair-10": "player-b_hair-10_kata_front_kick_stacked_left.png",
+    "hair-11": "player-b_hair-11_kata_front_kick_stacked_left.png",
+    "hair-12": "player-b_hair-12_kata_front_kick_stacked_left.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 8
+   },
+   "side": "right foot forward, the LEFT leg kicks (a real left-leg render, not a flipped picture)",
+   "travel": {
+    "tiles": 0.56,
+    "startOffset": -0.28,
+    "endOffset": 0.28,
+    "note": "drawn centred: the hero starts 0.28 tiles behind the usual stance spot and ends 0.28 ahead; the standing foot never moves on the ground"
+   },
+   "note": "Rear Leg Front Kick, hands stacked (left leg): both fists stack one over the other at the left hip and stay there while the left leg chambers, kicks and lands one step ahead"
+  },
+  "kata_break_hold": {
+   "frames": 11,
+   "fps": 20,
+   "durationSec": 0.55,
+   "loop": false,
+   "tags": {
+    "impact": "7"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_break_hold.png",
+    "skin": "player-b_skin_kata_break_hold.png",
+    "gi": "player-b_gi_kata_break_hold.png",
+    "belt": "player-b_belt_kata_break_hold.png",
+    "belt-sheen": "player-b_belt-sheen_kata_break_hold.png",
+    "belt-center": "player-b_belt-center_kata_break_hold.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_break_hold.png",
+    "belt-rim": "player-b_belt-rim_kata_break_hold.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_break_hold.png",
+    "belt-tape1": "player-b_belt-tape1_kata_break_hold.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_break_hold.png",
+    "belt-tape2": "player-b_belt-tape2_kata_break_hold.png",
+    "prop-broom": "player-b_prop-broom_kata_break_hold.png",
+    "prop-rag": "player-b_prop-rag_kata_break_hold.png",
+    "face-01": "player-b_face-01_kata_break_hold.png",
+    "face-02": "player-b_face-02_kata_break_hold.png",
+    "face-03": "player-b_face-03_kata_break_hold.png",
+    "face-04": "player-b_face-04_kata_break_hold.png",
+    "face-05": "player-b_face-05_kata_break_hold.png",
+    "face-06": "player-b_face-06_kata_break_hold.png",
+    "hair-01": "player-b_hair-01_kata_break_hold.png",
+    "hair-02": "player-b_hair-02_kata_break_hold.png",
+    "hair-03": "player-b_hair-03_kata_break_hold.png",
+    "hair-04": "player-b_hair-04_kata_break_hold.png",
+    "hair-05": "player-b_hair-05_kata_break_hold.png",
+    "hair-06": "player-b_hair-06_kata_break_hold.png",
+    "hair-07": "player-b_hair-07_kata_break_hold.png",
+    "hair-08": "player-b_hair-08_kata_break_hold.png",
+    "hair-09": "player-b_hair-09_kata_break_hold.png",
+    "hair-10": "player-b_hair-10_kata_break_hold.png",
+    "hair-11": "player-b_hair-11_kata_break_hold.png",
+    "hair-12": "player-b_hair-12_kata_break_hold.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 8
+   },
+   "note": "Break the Hold (David and Goliath step 2): from attention both open hands rise up the middle, cross in front of the chest and open out to the sides at head height, palms forward",
+   "side": "left foot forward; mirror for the right side"
+  },
+  "kata_break_hold_finish": {
+   "frames": 13,
+   "fps": 20,
+   "durationSec": 0.65,
+   "loop": false,
+   "tags": {
+    "impact": "9"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_break_hold_finish.png",
+    "skin": "player-b_skin_kata_break_hold_finish.png",
+    "gi": "player-b_gi_kata_break_hold_finish.png",
+    "belt": "player-b_belt_kata_break_hold_finish.png",
+    "belt-sheen": "player-b_belt-sheen_kata_break_hold_finish.png",
+    "belt-center": "player-b_belt-center_kata_break_hold_finish.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_break_hold_finish.png",
+    "belt-rim": "player-b_belt-rim_kata_break_hold_finish.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_break_hold_finish.png",
+    "belt-tape1": "player-b_belt-tape1_kata_break_hold_finish.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_break_hold_finish.png",
+    "belt-tape2": "player-b_belt-tape2_kata_break_hold_finish.png",
+    "prop-broom": "player-b_prop-broom_kata_break_hold_finish.png",
+    "prop-rag": "player-b_prop-rag_kata_break_hold_finish.png",
+    "face-01": "player-b_face-01_kata_break_hold_finish.png",
+    "face-02": "player-b_face-02_kata_break_hold_finish.png",
+    "face-03": "player-b_face-03_kata_break_hold_finish.png",
+    "face-04": "player-b_face-04_kata_break_hold_finish.png",
+    "face-05": "player-b_face-05_kata_break_hold_finish.png",
+    "face-06": "player-b_face-06_kata_break_hold_finish.png",
+    "hair-01": "player-b_hair-01_kata_break_hold_finish.png",
+    "hair-02": "player-b_hair-02_kata_break_hold_finish.png",
+    "hair-03": "player-b_hair-03_kata_break_hold_finish.png",
+    "hair-04": "player-b_hair-04_kata_break_hold_finish.png",
+    "hair-05": "player-b_hair-05_kata_break_hold_finish.png",
+    "hair-06": "player-b_hair-06_kata_break_hold_finish.png",
+    "hair-07": "player-b_hair-07_kata_break_hold_finish.png",
+    "hair-08": "player-b_hair-08_kata_break_hold_finish.png",
+    "hair-09": "player-b_hair-09_kata_break_hold_finish.png",
+    "hair-10": "player-b_hair-10_kata_break_hold_finish.png",
+    "hair-11": "player-b_hair-11_kata_break_hold_finish.png",
+    "hair-12": "player-b_hair-12_kata_break_hold_finish.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 10
+   },
+   "note": "Break the Hold, David and Goliath step 12: the left foot draws in (heels together), both arms go up above the head, then drop sharply, the open hands crossing in front of the face, to finish palms down just outside the hips",
+   "side": "left foot forward; mirror for the right side"
+  },
+  "kata_special_turn": {
+   "frames": 30,
+   "fps": 20,
+   "durationSec": 1.5,
+   "loop": false,
+   "tags": {
+    "impact": "25"
+   },
+   "sheets": {
+    "body": "player-b_body_kata_special_turn.png",
+    "skin": "player-b_skin_kata_special_turn.png",
+    "gi": "player-b_gi_kata_special_turn.png",
+    "belt": "player-b_belt_kata_special_turn.png",
+    "belt-sheen": "player-b_belt-sheen_kata_special_turn.png",
+    "belt-center": "player-b_belt-center_kata_special_turn.png",
+    "belt-center-edge": "player-b_belt-center-edge_kata_special_turn.png",
+    "belt-rim": "player-b_belt-rim_kata_special_turn.png",
+    "belt-tape1-edge": "player-b_belt-tape1-edge_kata_special_turn.png",
+    "belt-tape1": "player-b_belt-tape1_kata_special_turn.png",
+    "belt-tape2-edge": "player-b_belt-tape2-edge_kata_special_turn.png",
+    "belt-tape2": "player-b_belt-tape2_kata_special_turn.png",
+    "prop-broom": "player-b_prop-broom_kata_special_turn.png",
+    "prop-rag": "player-b_prop-rag_kata_special_turn.png",
+    "face-01": "player-b_face-01_kata_special_turn.png",
+    "face-02": "player-b_face-02_kata_special_turn.png",
+    "face-03": "player-b_face-03_kata_special_turn.png",
+    "face-04": "player-b_face-04_kata_special_turn.png",
+    "face-05": "player-b_face-05_kata_special_turn.png",
+    "face-06": "player-b_face-06_kata_special_turn.png",
+    "hair-01": "player-b_hair-01_kata_special_turn.png",
+    "hair-02": "player-b_hair-02_kata_special_turn.png",
+    "hair-03": "player-b_hair-03_kata_special_turn.png",
+    "hair-04": "player-b_hair-04_kata_special_turn.png",
+    "hair-05": "player-b_hair-05_kata_special_turn.png",
+    "hair-06": "player-b_hair-06_kata_special_turn.png",
+    "hair-07": "player-b_hair-07_kata_special_turn.png",
+    "hair-08": "player-b_hair-08_kata_special_turn.png",
+    "hair-09": "player-b_hair-09_kata_special_turn.png",
+    "hair-10": "player-b_hair-10_kata_special_turn.png",
+    "hair-11": "player-b_hair-11_kata_special_turn.png",
+    "hair-12": "player-b_hair-12_kata_special_turn.png"
+   },
+   "holdLastFrame": true,
+   "keyFrames": {
+    "impact": 26
+   },
+   "side": "a real render, never mirrored: starts right foot forward (the kiai), ends left foot forward",
+   "turn": {
+    "degrees": -270.0,
+    "endFacing": "90 degrees clockwise on screen from the row's direction (row N ends facing E)",
+    "startOffset": {
+     "right": 0.003,
+     "forward": 0.037
+    },
+    "endOffset": {
+     "right": -0.017,
+     "forward": -0.212
+    },
+    "note": "offsets are tiles in the row's starting frame (right of and ahead of the way it faces at the start): the picture starts and ends that far from the hero's spot"
+   },
+   "note": "Special turn (Basic Forms 1 and 2, after the kiai of steps 3 and 6): first the left (back) leg reaches behind to the rear right while the body still faces the kiai and the eyes look over the left shoulder; then the body spins a three-quarter turn to its left on the balls of the feet, the right foot swinging round to become the back foot, and the hero lands in a left front stance doing the Low Block"
+  }
+ },
+ "tintGuidance": {
+  "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
+  "gi": "gi colour (current placeholder #f2e9d8)",
+  "belt": "the profile's belt.color; a dark (black) belt.color is drawn as #26272f",
+  "belt-center": "two-colour belts only: belt.color2; a dark (black) color2 is drawn as deep black #111116 (it sits between two coloured bands, not next to the outline)",
+  "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
+  "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)",
+  "belt-sheen": "dark (black) belt.color only: tint #a2a6b6, a bright top edge so black reads as a belt, not as outline; skip on other belts",
+  "belt-center-edge": "optional separator around the centre stripe; NOT used in the chosen style (skip it). Tint #ece6d8 if a future style wants it",
+  "belt-rim": "ALWAYS draw it, after belt-center: tint #2e2a3a (dark rim) on every belt except a dark (black) belt.color, which gets light #c9ccd6",
+  "skin": "multiply by a palettes.skin colour (the layer is a light neutral grey)",
+  "hair": "multiply every hair-* layer by a palettes.hair colour (light neutral grey)"
+ },
+ "beltStyles": {
+  "note": "chosen belt style (belt revision, option C): tint per layer for each Action Zone belt (fixtures/); a layer that is not listed is not drawn (belt-center-edge is never drawn in this style). Tape stripes keep the belt.ts rule",
+  "White": {
+   "belt": "#f4f1ea",
+   "belt-rim": "#2e2a3a"
+  },
+  "Yellow": {
+   "belt": "#f5d22e",
+   "belt-rim": "#2e2a3a"
+  },
+  "Orange": {
+   "belt": "#f08a24",
+   "belt-rim": "#2e2a3a"
+  },
+  "Green": {
+   "belt": "#3aa655",
+   "belt-rim": "#2e2a3a"
+  },
+  "Blue": {
+   "belt": "#2f6fd6",
+   "belt-rim": "#2e2a3a"
+  },
+  "Red": {
+   "belt": "#d8352a",
+   "belt-rim": "#2e2a3a"
+  },
+  "Red/Black": {
+   "belt": "#d8352a",
+   "belt-center": "#111116",
+   "belt-rim": "#2e2a3a"
+  },
+  "Brown": {
+   "belt": "#7a4a26",
+   "belt-rim": "#2e2a3a"
+  },
+  "Brown/Black": {
+   "belt": "#7a4a26",
+   "belt-center": "#111116",
+   "belt-rim": "#2e2a3a"
+  },
+  "Black": {
+   "belt": "#26272f",
+   "belt-sheen": "#a2a6b6",
+   "belt-rim": "#c9ccd6"
+  }
+ },
+ "palettes": {
+  "skin": [
+   "#f6d7c3",
+   "#efc3a4",
+   "#e0a984",
+   "#c98e65",
+   "#b07650",
+   "#946042",
+   "#7a4b32",
+   "#603926",
+   "#4a2c1f",
+   "#38221a"
+  ],
+  "hair": [
+   "#403b52",
+   "#3a2519",
+   "#5c3a22",
+   "#8a5f3b",
+   "#d9b26a",
+   "#b5482a",
+   "#8a3a26",
+   "#9a9aa2",
+   "#3f6fd1",
+   "#7d4cc2"
+  ],
+  "gi": [
+   "#f2f2f2",
+   "#4a4a55",
+   "#24345e",
+   "#3a6ea5",
+   "#b8322a",
+   "#8a8d99",
+   "#3f7a4a",
+   "#e9dfc9",
+   "#7fb2e0",
+   "#7a2a33"
+  ],
+  "note": "Recommended swatches (hex), shown by the game in this order. They are multiply tints for the tinted layers (skin, hair-*, gi). Skin runs from light to deep. The ids in palettesDraftLabels are placeholders for the Content Writer, not names"
+ },
+ "palettesDraftLabels": {
+  "skin": [
+   "skin-01",
+   "skin-02",
+   "skin-03",
+   "skin-04",
+   "skin-05",
+   "skin-06",
+   "skin-07",
+   "skin-08",
+   "skin-09",
+   "skin-10"
+  ],
+  "hair": [
+   "black",
+   "dark-brown",
+   "brown",
+   "light-brown",
+   "blonde",
+   "red",
+   "auburn",
+   "grey",
+   "blue",
+   "purple"
+  ],
+  "gi": [
+   "white",
+   "charcoal",
+   "navy",
+   "blue",
+   "red",
+   "grey",
+   "green",
+   "unbleached",
+   "sky",
+   "maroon"
+  ]
+ },
+ "groups": {
+  "face": [
+   "face-01",
+   "face-02",
+   "face-03",
+   "face-04",
+   "face-05",
+   "face-06"
+  ],
+  "hair": [
+   "hair-01",
+   "hair-02",
+   "hair-03",
+   "hair-04",
+   "hair-05",
+   "hair-06",
+   "hair-07",
+   "hair-08",
+   "hair-09",
+   "hair-10",
+   "hair-11",
+   "hair-12"
+  ],
+  "note": "draw exactly one layer of each group, after the base layers (face, then hair)"
+ },
+ "optionNotes": {
+  "face-01": "the approved face of Batch 1: oval eyes with a shine, friendly brows, a small smile",
+  "face-02": "big round eyes, soft high brows, a wider smile",
+  "face-03": "calm almond eyes, straight brows, a small smile",
+  "face-04": "oval eyes with small lashes at the outer corner, a happy smile",
+  "face-05": "bold thick brows, determined but friendly",
+  "face-06": "oval eyes and freckles across the cheeks",
+  "hair-01": "very short (close crop): a thin cap that follows the head",
+  "hair-02": "short: the approved Batch 1 hair (cap, back, sideburns, a short fringe and a tuft)",
+  "hair-03": "curly: a rounder cap made of soft curls",
+  "hair-04": "afro: a rounded shape built from soft coil clumps with light tops, a natural hairline above the brows",
+  "hair-05": "braids: a smooth cap with two braids hanging behind the ears to the shoulders",
+  "hair-06": "ponytail: cap pulled back to a tie at the back of the head, a short tail (above the belt)",
+  "hair-07": "bun: cap with a round bun on top towards the back",
+  "hair-08": "tied back: smooth hair combed back to a low knot at the nape",
+  "hair-09": "two puffs: hair parted down the middle and gathered into two round coil puffs high on the head",
+  "hair-10": "short twists: a soft cap covered in short, rounded twists that point up and out (they never reach the eyes)",
+  "hair-11": "cornrows into braids: neat raised rows from the hairline to the back, ending in braids that hang behind the shoulders",
+  "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils"
+ }
+}

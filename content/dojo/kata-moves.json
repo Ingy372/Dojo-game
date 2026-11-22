@@ -1,0 +1,75 @@
+{
+  "note": "Nov 20 (Jay): the technique buttons for kata practice. Each kata step in content/katas lists its beats (a direction, then one of these moves); a kata only shows the buttons it uses. 'icon' picks the button's code-drawn picture (its first word picks the colour family); 'anim' is the hero animation (Claude's Blender art, approved by Jay Nov 21; incoming-art/claude-kata-moves). Names follow Jay's terms (Nov 20). Nov 21 (Jay): the double knife hand pose in David and Goliath is Break the Hold, so 'Knife Hand Blocks' is gone; Break the Hold is used at steps 2 and 12, each with its own motion.",
+  "moves": [
+    {
+      "id": "low-block",
+      "name": "Low Block",
+      "icon": "block-low",
+      "anim": "kata_low_block",
+      "standIn": false
+    },
+    {
+      "id": "inside-block",
+      "name": "Inside Block",
+      "icon": "block-inside",
+      "anim": "kata_inside_block",
+      "standIn": false
+    },
+    {
+      "id": "reverse-inside-block",
+      "name": "Reverse Inside Block",
+      "icon": "block-reverse-inside",
+      "anim": "kata_reverse_inside_block",
+      "standIn": false
+    },
+    {
+      "id": "high-block",
+      "name": "High Block",
+      "icon": "block-high",
+      "anim": "kata_high_block",
+      "standIn": false
+    },
+    {
+      "id": "punch",
+      "name": "Punch",
+      "icon": "punch",
+      "anim": "kata_punch",
+      "standIn": false
+    },
+    {
+      "id": "reverse-punch",
+      "name": "Reverse Punch",
+      "icon": "punch-reverse",
+      "anim": "kata_reverse_punch",
+      "standIn": false
+    },
+    {
+      "id": "backfist",
+      "name": "Backfist",
+      "icon": "backfist",
+      "anim": "kata_backfist",
+      "standIn": false
+    },
+    {
+      "id": "spear-hand",
+      "name": "Palm Down / Spear Hand",
+      "icon": "spear-hand",
+      "anim": "kata_spear_hand",
+      "standIn": false
+    },
+    {
+      "id": "rear-leg-front-kick",
+      "name": "Rear Leg Front Kick",
+      "icon": "kick",
+      "anim": "kata_rear_leg_front_kick",
+      "standIn": false
+    },
+    {
+      "id": "break-hold",
+      "name": "Break the Hold",
+      "icon": "break-hold",
+      "anim": "kata_break_hold",
+      "standIn": false
+    }
+  ]
+}

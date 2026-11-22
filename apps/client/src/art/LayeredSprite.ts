@@ -28,6 +28,8 @@ export class LayeredSprite {
   private manualFrame: number | null = null;
   private shown = -1;
   private baseTints = new Map<string, number | null>();
+  /** Drawn as its own mirror image (kata moves on the right side use the left-side art flipped). */
+  private mirrored = false;
   private flashing: string | null = null;
 
   constructor(
@@ -108,6 +110,22 @@ export class LayeredSprite {
     return this;
   }
 
+  /**
+   * Draws the character as its mirror image: the art of the mirrored direction (E for W, NE for NW...), flipped
+   * left to right. Kata moves are drawn with the left foot forward; the right side is this mirror.
+   */
+  setMirrored(on: boolean): this {
+    if (on === this.mirrored) return this;
+    this.mirrored = on;
+    this.container.scaleX = Math.abs(this.container.scaleX) * (on ? -1 : 1);
+    this.shown = -1;
+    return this;
+  }
+
+  get isMirrored(): boolean {
+    return this.mirrored;
+  }
+
   /** Shows or hides a layer (it's also hidden in frames where it has nothing to draw). */
   setLayer(name: string, visible: boolean): this {
     if (visible) this.hidden.delete(name);
@@ -165,13 +183,15 @@ export class LayeredSprite {
   /** Call every frame: puts the right picture on each layer. */
   update(): void {
     const frame = this.frame;
-    const key = frame * 8 + this.dir;
+    // N, NE, E, SE, S, SW, W, NW seen in a mirror: N, NW, W, SW, S, SE, E, NE.
+    const dir = this.mirrored ? (8 - this.dir) % 8 : this.dir;
+    const key = frame * 8 + dir;
     if (key === this.shown) return;
     this.shown = key;
     for (const [name, img] of this.images) {
       const ids = this.anim.layers[name];
-      const id = ids && !this.hidden.has(name) ? ids[this.dir]?.[frame] ?? -1 : -1;
-      const f = frameOf(this.scene, this.art.layerPack?.[name] ?? this.art.pack, id);
+      const id = ids && !this.hidden.has(name) ? ids[dir]?.[frame] ?? -1 : -1;
+      const f = frameOf(this.scene, this.anim.layerPack?.[name] ?? this.art.layerPack?.[name] ?? this.art.pack, id);
       if (f) img.setTexture(f[0], f[1]);
       img.setVisible(!!f);
     }

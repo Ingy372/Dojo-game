@@ -41,6 +41,14 @@ export interface InsideRoom {
   foregroundSprites: ForegroundSprite[];
   /** Where the hero bows on and off the mat (Jay, Nov 20); null when the room has no mat line. */
   matBow: MatBow | null;
+  /** Nov 20 (Jay): the middle of the school logo on the floor, where "Practice Kata" is offered; null if the room has none. */
+  kataSpot: KataSpot | null;
+}
+
+/** A circle on the floor (tiles): standing inside it offers kata practice. */
+export interface KataSpot {
+  center: Vec2;
+  radius: number;
 }
 
 /**
@@ -228,7 +236,16 @@ export function loadInsideRoom(data: unknown): InsideRoom {
     });
     matBow = { line, gaps };
   }
-  return { room, spawn, exit, spots, foregroundSprites, matBow };
+  let kataSpot: KataSpot | null = null;
+  if (raw.kataSpot !== undefined) {
+    const k = raw.kataSpot as { center?: unknown; radius?: unknown };
+    if (!Array.isArray(k.center) || k.center.length !== 2) fail('kataSpot.center must be [x, y]');
+    const c = k.center as unknown[];
+    const radius = num(k.radius, 'kataSpot.radius');
+    if (radius <= 0) fail('kataSpot.radius must be above 0');
+    kataSpot = { center: { x: num(c[0], 'kataSpot.center[0]'), y: num(c[1], 'kataSpot.center[1]') }, radius };
+  }
+  return { room, spawn, exit, spots, foregroundSprites, matBow, kataSpot };
 }
 
 export type ZoneFacing = 'north' | 'south' | 'east' | 'west';

@@ -46,7 +46,7 @@ export abstract class WalkScene extends Phaser.Scene {
   protected bounds: [number, number, number, number] = [0, 1, 0, 1];
   private prevPos: Vec2 = { x: 0, y: 0 };
   private cam: Vec2 = { x: 0, y: 0 };
-  private zoom = 1;
+  protected zoom = 1;
   private elapsed = 0;
   protected leaving = false;
   /** While true (a Sensei bubble with a Next button is up), presses don't walk the hero. */

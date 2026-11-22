@@ -7,18 +7,21 @@ import type { BeltInfo } from '@dojo/sim';
 
 const OUTLINE = 0x14121c;
 
+/** All a belt drawing needs: its colour, and a second colour for two-colour belts. */
+export type BeltColors = Pick<BeltInfo, 'color' | 'color2'>;
+
 export function hex(color: string): number {
   return Phaser.Display.Color.HexStringToColor(color).color;
 }
 
 /** Stripe tape color: white on dark belts, black on light ones. */
-function tapeColor(belt: BeltInfo): number {
+function tapeColor(belt: BeltColors): number {
   const c = Phaser.Display.Color.HexStringToColor(belt.color);
   return c.red * 0.3 + c.green * 0.59 + c.blue * 0.11 < 90 ? 0xf4f1ea : 0x1a1a1a;
 }
 
 /** Draws a belt centered on (x, y) into `g` (cleared first). */
-export function drawBelt(g: Phaser.GameObjects.Graphics, x: number, y: number, w: number, h: number, belt: BeltInfo, stripes: number): void {
+export function drawBelt(g: Phaser.GameObjects.Graphics, x: number, y: number, w: number, h: number, belt: BeltColors, stripes: number): void {
   g.clear();
   g.fillStyle(hex(belt.color)).fillRect(x - w / 2, y - h / 2, w, h);
   // Two-color belts (like red/black) get a center line.

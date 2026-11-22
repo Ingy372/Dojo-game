@@ -1379,3 +1379,30 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - New in the room: Read (creed and belt board large, X top right), Bow on and off the mat, the Star Wall throwing star game, and Train at the three bags (unlimited hits). Details in decisions.md.
 - 1,641 tests pass; type checks and both builds pass. Copied onto `main` (the live link) with Jay's OK ("Yes, copy to live"), after the checks passed.
 - **Next:** Jay's notes from playing it on his phone (he may redesign the Star Wall).
+
+## Kata practice (2026-11-20, branch `claude/kata-practice`)
+- Stand in the middle of the logo on the Action Zone mat: "Practice Kata" opens a menu of the katas you've reached, with a Time Trial switch. The hero bows in, takes the Open Leg Stance, and you tap the arrow, then the move, for every beat. Misses are counted with a gentle buzz, right moves get a satisfying sound, and the right button glows after two misses. Small finish card with bests. Details in decisions.md (D1 lifted).
+- Beats written for Basic Form 1, Basic Form 2, Keon, and David and Goliath, from the school sheet. 1,649 tests pass; type checks and both builds pass. Not on `main` yet.
+- **Next:** Jay checks the beats for the four katas and plays it on his phone; Jay sends Pinon 1–3, Nahanchi and Possi; Blender work for the real kata moves (Open Leg Stance, the blocks, Reverse Punch, Backfist, Palm Down / Spear Hand, Rear Leg Front Kick, Break the Hold).
+- Jay's notes (Nov 20): menu polished (belt badge per kata, step count, gold frame, a Time Trial slider, a star for a no-miss run); Jay's terms used everywhere (Open Leg Stance, High Block, Rear Leg Front Kick, Break the Hold); new buttons Reverse Inside Block (now in Keon and David and Goliath, as the sheet says) and Palm Down / Spear Hand (waiting for a kata that uses it).
+
+## Kata moves art draft (2026-11-20 overnight, branch `claude/kata-moves-art`)
+- Researched every kata technique and the three stances (`docs/kata-technique-reference.md`, with 7 questions for Jay).
+- Animated in Blender on the approved hero: Open Leg Stance, front, horse and cat stances (loops), plus Low Block, Inside Block, Reverse Inside Block, High Block, Punch, Reverse Punch, Backfist, Palm Down / Spear Hand, Rear Leg Front Kick and Break the Hold (two versions: David and Goliath step 2 and step 12). Body A rendered; previews in `incoming-art/claude-kata-moves/preview/`. Not in the game.
+- **Next:** Jay reviews the previews and answers the questions; once approved, render body B, import the sheets and swap the stand-ins in `content/dojo/kata-moves.json` (the game holds each move's last frame and flips the sprite for right-side moves).
+- Nov 21: Jay's notes applied (inside blocks outside to inside, sloped high block, backfist stops by the cheek, spear hand's palm-down hand tucked closer, open-leg hands further out, wider horse, Knife Hand Blocks relabelled Break the Hold, a new Break the Hold finish for step 12). Body A re-rendered.
+- Nov 21 (second round): high block laid along Jay's drawing (forearm across the face, fist above the opposite eyebrow), backfist arm nearly straight, front kick redone with the standing foot planted and the kicking foot landing one step ahead. Body A re-rendered for those three.
+- Nov 21 (third round): stacked-hands front kick added, and real left-leg versions of both front kicks (four kick animations in all). Body A rendered.
+
+## Kata moves wired into the game (2026-11-21, branch `claude/kata-moves-art`)
+- Kata practice now plays Claude's Blender moves (approved by Jay): Open Leg Stance, every technique, mirrored for right-foot-forward beats, real left-leg kicks, the stacked-hands kick where the sheet says "catch", and the kick's step forward. The art loads when Practice Kata is first tapped. 1,650 tests pass; type checks and both builds pass.
+- **Next:** Jay plays it on his phone; body B's kata art is imported once its render finishes (until then body B students saw the hero hold the Open Leg Stance through the moves). Done: body B imported the same day.
+
+## Kata facing fix: Basic Forms 1 and 2 (2026-11-21, branch `claude/kata-moves-art`)
+- From Jay's video: steps 3 and 6 of Basic Forms 1 and 2 now go up (F) and down (B) the middle instead of right. Details in decisions.md. 1,650 tests pass; type checks and the build pass.
+- **Next:** Jay plays both forms on his phone and checks the turns.
+
+## Special turn (2026-11-21, branch `claude/kata-moves-art`)
+- Jay's arrows for Basic Forms 1 and 2 are in (← → ↑ → ← ↓ ← →). The special turn after each kiai is built in Blender (draft 2, after Jay's "leg reaches first" note), rendered for both bodies, and wired into kata practice (it falls back to the plain Low Block until the art is imported). 1,651 tests pass; type checks and the build pass.
+- Jay approved it with a deeper reach ("it's complete"); the final turn is rendered for both bodies and imported into the kata packs, so kata practice plays it.
+- **Next:** Jay plays Basic Forms 1 and 2 on his phone (the turn after each kiai).
