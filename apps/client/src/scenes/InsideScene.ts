@@ -75,6 +75,12 @@ const KATA_READY_ANIM = 'kata_open_leg';
 const KATA_READY_FALLBACK = 'stance_rooted';
 const KATA_VEC: Record<KataFacing, Vec2> = { F: { x: 0, y: -1 }, B: { x: 0, y: 1 }, L: { x: -1, y: 0 }, R: { x: 1, y: 0 } };
 
+/** Turns a direction clockwise on screen by `deg` degrees (negative = counter-clockwise). */
+function kataRotate(v: Vec2, deg: number): Vec2 {
+  const a = Math.atan2(v.y, v.x) + (deg * Math.PI) / 180;
+  return { x: Math.round(Math.cos(a) * 1e6) / 1e6, y: Math.round(Math.sin(a) * 1e6) / 1e6 };
+}
+
 type Mode = 'walk' | 'bow' | 'read' | 'game' | 'train' | 'kata';
 
 const distToRect = (p: Vec2, r: readonly [number, number, number, number]): number =>
@@ -436,7 +442,24 @@ export class InsideScene extends WalkScene {
       beat: (beat, move, index) => {
         me.facing = { ...KATA_VEC[beat.dir] };
         this.kataSettleStep();
-        const name = beat.anim ?? move.anim;
+        // A beat's own animation (e.g. the special turn) falls back to the move's usual one if its art isn't loaded.
+        const name = beat.anim && this.hero.has(beat.anim) ? beat.anim : move.anim;
+        const turn = this.hero.has(name) ? this.hero.art.animations[name]?.turn : undefined;
+        if (turn) {
+          // A move that turns the whole hero (the Basic Forms' special turn): it plays from the direction the hero
+          // faced before the turn (its row ends facing the beat's direction) and is never mirrored.
+          const start = kataRotate(KATA_VEC[beat.dir], -turn.degrees);
+          const right = kataRotate(start, 90);
+          const at = (o: { right: number; forward: number }): Vec2 => ({ x: right.x * o.right + start.x * o.forward, y: right.y * o.right + start.y * o.forward });
+          me.facing = { ...start };
+          this.hero.setMirrored(false);
+          this.heroDo(name);
+          const s = at(turn.startOffset);
+          this.kataStepBy({ x: -s.x, y: -s.y });
+          this.kataPendingStep = at(turn.endOffset);
+          this.sparks({ x: me.pos.x + KATA_VEC[beat.dir].x * 0.6, y: me.pos.y + KATA_VEC[beat.dir].y * 0.6 }, 5, 0xffffff);
+          return;
+        }
         const travel = this.hero.art.animations[name]?.travel;
         // The art is drawn left foot forward: a right-foot-forward beat shows its mirror image. (A kick picks its
         // left- or right-leg art instead.)

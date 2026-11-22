@@ -24,6 +24,16 @@ export interface ArtAnimation {
    * `startOffset` tiles from the feet point and ends `endOffset` from it (drawn centred so it fits the frame).
    */
   travel?: { tiles: number; startOffset: number; endOffset: number };
+  /**
+   * A move that turns the whole character (the kata special turn): `degrees` clockwise on screen (negative = to
+   * the left), so each direction row starts facing its direction and ends turned. Offsets are tiles to the right
+   * of and ahead of the row's starting direction: where the picture starts and ends from the feet point.
+   */
+  turn?: {
+    degrees: number;
+    startOffset: { right: number; forward: number };
+    endOffset: { right: number; forward: number };
+  };
 }
 
 export interface CharacterArt {

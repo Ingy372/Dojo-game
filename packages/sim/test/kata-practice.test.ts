@@ -46,6 +46,21 @@ describe('kata practice (Jay, Nov 20)', () => {
     expect(kataBeats(keon).filter((b) => b.anim?.startsWith('kata_front_kick_stacked')).length).toBe(2);
   });
 
+  it('Basic Forms 1 and 2: the special turn after each kiai, into the low block facing right, then left', () => {
+    for (const id of ['white-kata', 'yellow-kata']) {
+      const beats = kataBeats(katas.get(id)!);
+      const turns = beats.flatMap((b, i) => (b.anim === 'kata_special_turn' ? [i] : []));
+      expect(turns.map((i) => beats[i].step), id).toEqual([4, 7]);
+      for (const i of turns) {
+        // the beat before is the kiai punch, right foot forward; the turn lands in a left-foot-forward low block
+        expect(beats[i - 1]).toMatchObject({ kiai: true, lead: 'R' });
+        expect(beats[i]).toMatchObject({ move: 'low-block', lead: 'L' });
+      }
+      expect(beats[turns[0]].dir).toBe('R');
+      expect(beats[turns[1]].dir).toBe('L');
+    }
+  });
+
   it('Basic Form 1 is low blocks and punches only, with two kiai', () => {
     expect(kataMoveIds(bf1)).toEqual(['low-block', 'punch']);
     expect(kataBeats(bf1).filter((b) => b.kiai)).toHaveLength(2);
