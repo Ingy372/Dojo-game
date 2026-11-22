@@ -12,7 +12,7 @@ Last updated: 2026-11-18 by Claude Code.
 
 | ID | What | Unblocks |
 |---|---|---|
-| B-ACCT | Create the Apple Developer and Google Play Console accounts (steps in the Nov 17 session summary; see also decisions.md, Nov 17). | Phone app builds, TestFlight, Play testing |
+| B-ACCT | Create the Apple Developer and Google Play Console accounts: step by step in `docs/store-accounts.md` (Nov 22). | Phone app builds, TestFlight, Play testing |
 | B-LAW | Book the lawyer; show them `drafts/planning/BETA-parent-note.md` and `BETA-privacy-page.md`. | Store builds |
 | B-TESTERS | Pick 5–10 families; each parent's Apple or Google email and their OK. | Beta invites |
 | J13 | The after-work curriculum list (self-defense #36–40, kick combos 8–12, kata character lines, Lock group names, founding story). Not blocking. | Kata powers, Seals #36–40, quests |
