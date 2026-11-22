@@ -55,7 +55,7 @@
       "n": 4,
       "text": "With LF step (behind) 180-degrees now facing L w/LF forward, LH downward block, followed by step forward w/RF, RH straight forward punch",
       "facing": [
-        "L"
+        "R"
       ],
       "moves": [
         "turn.180",
@@ -69,7 +69,7 @@
       "n": 5,
       "text": "With RF step (behind) 180-degree now facing R w/RF forward, RH downward block, followed by step forward w/LF, LH straight forward punch",
       "facing": [
-        "R"
+        "L"
       ],
       "moves": [
         "turn.180",
