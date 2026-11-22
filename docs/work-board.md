@@ -54,7 +54,7 @@ Jay has a few more visuals to list here.
 
 | ID | What | Status |
 |---|---|---|
-| ART-CHEST | Treasure chest: redo in Blender so it feels special (Jay: "bland and boring"). The chest's code effects stay as they are until then. | Later |
+| ART-CHEST | Treasure chest: redo in Blender so it feels special (Jay: "bland and boring"). | Chest v2 built Nov 18 and in the game (new Blender chest, coins, charge ring, reveal card); waiting for Jay to look at it on a phone (Nov 22) |
 
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
