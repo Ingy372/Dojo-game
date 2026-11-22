@@ -675,7 +675,9 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
   const goal = world.goal;
   if (goal && !goal.reached) {
     const p = world.players[ids[0]];
-    if (p && distance(p.pos, goal.pos) <= GOAL_RADIUS) {
+    // Playtest Nov 22: the glowing spot marks the end of the path by the doors. A kid who walks round it straight to
+    // a door (level with it or past it) has arrived too; they were stuck with nothing happening.
+    if (p && (distance(p.pos, goal.pos) <= GOAL_RADIUS || p.pos.y <= goal.pos.y)) {
       goal.reached = true;
       world.events.push({ kind: 'goalReached' });
     }

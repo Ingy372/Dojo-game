@@ -111,4 +111,14 @@ describe('TUT-B1 falling stones', () => {
     expect({ x: spot.x - p.x, y: spot.y - p.y }).toEqual({ x: 2, y: 0 });
     expect(Math.hypot(spot.x - p.x, spot.y - p.y)).toBeGreaterThan(STONES.radius);
   });
+
+  it('playtest Nov 22: walking round the glowing spot to a side door still counts as reaching it', () => {
+    const tiles2 = ['#D#D#D#', '#.....#', '#..G..#', '#.....#', '#.....#', '#..P..#', '#######'];
+    const r = loadRoom({ id: 'g', name: 'G', kind: 'battle', tutorial: true, tiles: tiles2, enemies: [], hazards: { stones: [{ fillSeconds: 1, spots: [{ column: 5, row: 5 }] }] } });
+    const w = createWorld(r, ['p1']);
+    expect(w.goal && !w.goal.reached).toBe(true);
+    // up the left side (x = 1.5), never within reach of the spot at (3.5, 2.5), to the left door's row
+    const evs = run(w, 6 * TICKS_PER_SECOND, (x) => ({ kind: 'moveTo', ...(x.players.p1.pos.x > 1.6 ? { x: 1.5, y: 5.5 } : { x: 1.5, y: 1.5 }) }), r);
+    expect(evs.some((e) => e.kind === 'goalReached')).toBe(true);
+  });
 });
