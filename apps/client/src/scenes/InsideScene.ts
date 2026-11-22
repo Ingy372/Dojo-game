@@ -13,8 +13,10 @@ import {
   recordKataRun,
   type Facing as KataFacing,
   type KataDef,
+  type KataMoveDef,
   type MatGate,
   type PlayerInput,
+  type PracticeBeat,
   type Room,
   type Vec2,
   type WalkUpSpot,
@@ -75,6 +77,9 @@ const KATA_READY_ANIM = 'kata_open_leg';
 const KATA_READY_FALLBACK = 'stance_rooted';
 const KATA_VEC: Record<KataFacing, Vec2> = { F: { x: 0, y: -1 }, B: { x: 0, y: 1 }, L: { x: -1, y: 0 }, R: { x: 1, y: 0 } };
 
+/** Playtest Nov 22: beats that waited for the special turn play this far apart, so each one shows. */
+const KATA_QUEUE_GAP_MS = 260;
+
 /** Turns a direction clockwise on screen by `deg` degrees (negative = counter-clockwise). */
 function kataRotate(v: Vec2, deg: number): Vec2 {
   const a = Math.atan2(v.y, v.x) + (deg * Math.PI) / 180;
@@ -113,6 +118,9 @@ export class InsideScene extends WalkScene {
   private kataReady = false;
   /** A front kick's step forward still to hand over to the hero's position when the next move starts (tiles). */
   private kataPendingStep: Vec2 | null = null;
+  /** Beats tapped while the special turn was still playing; they play in order once it finishes, a moment apart. */
+  private kataQueued: Array<() => void> = [];
+  private kataQueuedAt = 0;
   /** The kata moves' art has been added to the hero (loaded when Practice Kata is first tapped). */
   private kataArtReady = false;
 
@@ -138,6 +146,7 @@ export class InsideScene extends WalkScene {
     this.kataTarget = null;
     this.kataReady = false;
     this.kataPendingStep = null;
+    this.kataQueued = [];
     this.kataArtReady = false;
     super.create(data);
     this.walkUp = new WalkUpButton(this);
@@ -233,6 +242,10 @@ export class InsideScene extends WalkScene {
     if (this.mode === 'kata') {
       // The hero holds each kata move's finished pose until the next tap (the moves end on it); before the first
       // move it stands in the Open Leg Stance. Walking animations never play.
+      if (this.kataQueued.length && !this.kataTurning() && this.time.now - this.kataQueuedAt >= KATA_QUEUE_GAP_MS) {
+        this.kataQueuedAt = this.time.now;
+        this.kataQueued.shift()!();
+      }
       const holds = this.heroAction?.startsWith('kata_');
       if (this.heroAction && (this.hero.current !== this.heroAction || (this.hero.finished && !holds))) this.heroAction = null;
       if (!this.heroAction && this.kataReady) this.hero.play(this.hero.has(KATA_READY_ANIM) ? KATA_READY_ANIM : this.hero.has(KATA_READY_FALLBACK) ? KATA_READY_FALLBACK : 'idle');
@@ -242,6 +255,12 @@ export class InsideScene extends WalkScene {
     if (this.hero.current === this.heroAction && !this.hero.finished) return true;
     this.heroAction = null;
     return false;
+  }
+
+  /** A whole-body turn (the special turn) is playing and hasn't finished. */
+  private kataTurning(): boolean {
+    const a = this.heroAction;
+    return !!a && this.hero.current === a && !this.hero.finished && !!this.hero.art.animations[a]?.turn;
   }
 
   private heroDo(name: string, from?: number): void {
@@ -433,56 +452,71 @@ export class InsideScene extends WalkScene {
     me.facing = { ...KATA_VEC.F };
     this.kataReady = false;
     this.kataPendingStep = null;
+    this.kataQueued = [];
     this.hero.setMirrored(false);
     this.kataTarget = { ...k.center };
+    // Playtest Nov 22: a move tapped while the special turn is still playing waits for the turn to finish (it cut off
+    // the Low Block at the end of the turn).
+    const beatFn = (beat: PracticeBeat, move: KataMoveDef, index: number, fromQueue = false): void => {
+      if (!fromQueue && (this.kataTurning() || this.kataQueued.length)) {
+        this.kataQueued.push(() => beatFn(beat, move, index, true));
+        return;
+      }
+      me.facing = { ...KATA_VEC[beat.dir] };
+      // Playtest Nov 22: face the new way at once, so the move's first frame isn't drawn facing the old way.
+      this.hero.face(me.facing.x, me.facing.y);
+      this.kataSettleStep();
+      // A beat's own animation (e.g. the special turn) falls back to the move's usual one if its art isn't loaded.
+      const name = beat.anim && this.hero.has(beat.anim) ? beat.anim : move.anim;
+      const turn = this.hero.has(name) ? this.hero.art.animations[name]?.turn : undefined;
+      if (turn) {
+        // A move that turns the whole hero (the Basic Forms' special turn): it plays from the direction the hero
+        // faced before the turn (its row ends facing the beat's direction) and is never mirrored.
+        const start = kataRotate(KATA_VEC[beat.dir], -turn.degrees);
+        const right = kataRotate(start, 90);
+        const at = (o: { right: number; forward: number }): Vec2 => ({ x: right.x * o.right + start.x * o.forward, y: right.y * o.right + start.y * o.forward });
+        me.facing = { ...start };
+        this.hero.face(start.x, start.y);
+        this.hero.setMirrored(false);
+        this.heroDo(name);
+        const s = at(turn.startOffset);
+        this.kataStepBy({ x: -s.x, y: -s.y });
+        this.kataPendingStep = at(turn.endOffset);
+        this.sparks({ x: me.pos.x + KATA_VEC[beat.dir].x * 0.6, y: me.pos.y + KATA_VEC[beat.dir].y * 0.6 }, 5, 0xffffff);
+        return;
+      }
+      const travel = this.hero.art.animations[name]?.travel;
+      // The art is drawn left foot forward: a right-foot-forward beat shows its mirror image. (A kick picks its
+      // left- or right-leg art instead.)
+      this.hero.setMirrored(beat.lead === 'R' && !travel);
+      this.heroDo(name);
+      const v = KATA_VEC[beat.dir];
+      if (travel) {
+        // A front kick steps forward a whole stance: its picture starts behind the feet point, so the hero's spot
+        // moves up to meet it now, and the rest of the step is handed over when the next move starts.
+        this.kataStepBy({ x: -v.x * travel.startOffset, y: -v.y * travel.startOffset });
+        this.kataPendingStep = { x: v.x * travel.endOffset, y: v.y * travel.endOffset };
+      } else {
+        // Each move steps the hero a little the way it faces, staying on the logo.
+        const from = this.kataTarget ?? me.pos;
+        const nx = from.x + v.x * KATA_STEP;
+        const ny = from.y + v.y * KATA_STEP;
+        if (Math.hypot(nx - k.center.x, ny - k.center.y) <= KATA_ROAM) this.kataTarget = { x: nx, y: ny };
+      }
+      const at = { x: me.pos.x + v.x * 0.6, y: me.pos.y + v.y * 0.6 };
+      this.sparks(at, beat.kiai ? 14 : 5, beat.kiai ? 0xffd166 : 0xffffff);
+      if (beat.kiai) this.kiai();
+      else if (index % 2 === 1 && !reducedMotion()) this.cameras.main.shake(60, 0.0015);
+      };
     const pad = new KataPad(this, kata, KATA_MOVES, timeTrial, {
-      face: (d) => {
+      face: (d, beat) => {
+        // Playtest Nov 22: a special turn plays from the way the hero already faces, so its arrow doesn't turn the
+        // hero first (the kiai pose flicked right, then the turn started facing away); and an arrow tapped while a
+        // turn is still playing waits (it switched the picture to the end direction mid-spin).
+        if (this.kataTurning() || this.kataQueued.length || (beat.anim && this.hero.has(beat.anim) && this.hero.art.animations[beat.anim]?.turn)) return;
         me.facing = { ...KATA_VEC[d] };
       },
-      beat: (beat, move, index) => {
-        me.facing = { ...KATA_VEC[beat.dir] };
-        this.kataSettleStep();
-        // A beat's own animation (e.g. the special turn) falls back to the move's usual one if its art isn't loaded.
-        const name = beat.anim && this.hero.has(beat.anim) ? beat.anim : move.anim;
-        const turn = this.hero.has(name) ? this.hero.art.animations[name]?.turn : undefined;
-        if (turn) {
-          // A move that turns the whole hero (the Basic Forms' special turn): it plays from the direction the hero
-          // faced before the turn (its row ends facing the beat's direction) and is never mirrored.
-          const start = kataRotate(KATA_VEC[beat.dir], -turn.degrees);
-          const right = kataRotate(start, 90);
-          const at = (o: { right: number; forward: number }): Vec2 => ({ x: right.x * o.right + start.x * o.forward, y: right.y * o.right + start.y * o.forward });
-          me.facing = { ...start };
-          this.hero.setMirrored(false);
-          this.heroDo(name);
-          const s = at(turn.startOffset);
-          this.kataStepBy({ x: -s.x, y: -s.y });
-          this.kataPendingStep = at(turn.endOffset);
-          this.sparks({ x: me.pos.x + KATA_VEC[beat.dir].x * 0.6, y: me.pos.y + KATA_VEC[beat.dir].y * 0.6 }, 5, 0xffffff);
-          return;
-        }
-        const travel = this.hero.art.animations[name]?.travel;
-        // The art is drawn left foot forward: a right-foot-forward beat shows its mirror image. (A kick picks its
-        // left- or right-leg art instead.)
-        this.hero.setMirrored(beat.lead === 'R' && !travel);
-        this.heroDo(name);
-        const v = KATA_VEC[beat.dir];
-        if (travel) {
-          // A front kick steps forward a whole stance: its picture starts behind the feet point, so the hero's spot
-          // moves up to meet it now, and the rest of the step is handed over when the next move starts.
-          this.kataStepBy({ x: -v.x * travel.startOffset, y: -v.y * travel.startOffset });
-          this.kataPendingStep = { x: v.x * travel.endOffset, y: v.y * travel.endOffset };
-        } else {
-          // Each move steps the hero a little the way it faces, staying on the logo.
-          const from = this.kataTarget ?? me.pos;
-          const nx = from.x + v.x * KATA_STEP;
-          const ny = from.y + v.y * KATA_STEP;
-          if (Math.hypot(nx - k.center.x, ny - k.center.y) <= KATA_ROAM) this.kataTarget = { x: nx, y: ny };
-        }
-        const at = { x: me.pos.x + v.x * 0.6, y: me.pos.y + v.y * 0.6 };
-        this.sparks(at, beat.kiai ? 14 : 5, beat.kiai ? 0xffd166 : 0xffffff);
-        if (beat.kiai) this.kiai();
-        else if (index % 2 === 1 && !reducedMotion()) this.cameras.main.shake(60, 0.0015);
-      },
+      beat: (beat, move, index) => beatFn(beat, move, index),
       done: (wrong, ms) => this.finishKata(kata, timeTrial, wrong, ms),
       quit: () => this.stopKata(),
     });
@@ -521,6 +555,7 @@ export class InsideScene extends WalkScene {
     if (!this.kataPendingStep) return;
     this.kataStepBy(this.kataPendingStep);
     this.kataPendingStep = null;
+    this.kataQueued = [];
   }
 
   private kataTick(): void {
@@ -560,7 +595,13 @@ export class InsideScene extends WalkScene {
     profile.kataBests = { ...profile.kataBests, [kata.id]: result.best };
     writeSave(profile);
     const me = this.world.players.p1;
-    this.time.delayedCall(350, () => {
+    // Playtest Nov 22: beats still waiting for the special turn play first, then the bow out.
+    const whenFree = (fn: () => void): void => {
+      if (this.kataPad !== pad) return;
+      if (this.kataQueued.length || this.kataTurning()) this.time.delayedCall(120, () => whenFree(fn));
+      else fn();
+    };
+    this.time.delayedCall(350, () => whenFree(() => {
       if (this.kataPad !== pad) return;
       this.kataSettleStep();
       this.kataTarget = { ...INSIDE.kataSpot!.center };
@@ -588,7 +629,7 @@ export class InsideScene extends WalkScene {
         },
         this.hero,
       );
-    });
+    }));
   }
 
   private stopKata(): void {

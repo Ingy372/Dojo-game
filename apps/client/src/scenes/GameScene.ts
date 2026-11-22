@@ -156,6 +156,8 @@ const NO_DEFEAT_FADE_MS = 600;
 const SUCCESS_ALONE_MS = 1500;
 /** TUT-T3: how close (in tiles) the hero must stand to the bow mat's middle. */
 const BOW_MAT_REACH = 0.7;
+/** Playtest Nov 22: how close to the Tower door (tiles) also brings the tutorial bow. */
+const BOW_DOOR_REACH = 1.6;
 /** T5 (fix C): the wind-up "!" badge's size (1 = the old big badge); Guided keeps it a little bigger. */
 const CUE_SCALE = 0.6;
 const CUE_SCALE_GUIDED = 0.75;
@@ -2487,7 +2489,10 @@ export class GameScene extends Phaser.Scene {
     if (id === 'tutorial-bow') {
       const mat = this.bowMat;
       const p = this.world.players[this.me];
-      if (mat && p && !this.bowAsked && !this.menuOpen && Math.hypot(p.pos.x - mat.at.x, p.pos.y - mat.at.y) <= BOW_MAT_REACH) {
+      // Playtest Nov 22: a kid who walks straight past the mat to the open door was stuck there ("The door is open!"
+      // but nothing happened). Reaching the door itself brings the bow too.
+      const near = (q: Vec2, r: number) => Math.hypot(p.pos.x - q.x, p.pos.y - q.y) <= r;
+      if (mat && p && !this.bowAsked && !this.menuOpen && (near(mat.at, BOW_MAT_REACH) || near(mat.door, BOW_DOOR_REACH))) {
         this.bowAsked = true;
         facePlayer(this.world, this.me, { x: mat.door.x - p.pos.x, y: mat.door.y - p.pos.y });
         this.controls.reset();

@@ -269,8 +269,8 @@ function star(g: Phaser.GameObjects.Graphics, x: number, y: number, r: number, c
 // ---------------------------------------------------------------- the pad
 
 export interface KataPadHooks {
-  /** The right arrow was tapped: the hero turns to face it. */
-  face(dir: Facing): void;
+  /** The right arrow was tapped for `beat`: the hero turns to face it. */
+  face(dir: Facing, beat: PracticeBeat): void;
   /** A beat was played right: the hero does the move. `index` counts beats from 0. */
   beat(beat: PracticeBeat, move: KataMoveDef, index: number): void;
   /** The last beat was played. The scene bows out, then calls `showResult`. */
@@ -459,11 +459,12 @@ export class KataPad {
     if (!this.active) return;
     sfx.unlock();
     this.startClock();
+    const beat = this.run.beats[this.run.index];
     const r = tapKataDir(this.run, d);
     if (r === 'ok') {
       sfx.kataArrow();
       this.press(d);
-      this.hooks.face(d);
+      this.hooks.face(d, beat);
     } else if (r === 'wrong') this.miss(d);
     this.refresh();
   }
