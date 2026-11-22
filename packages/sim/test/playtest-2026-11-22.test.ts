@@ -53,4 +53,11 @@ describe('playtest Nov 22', () => {
     expect(src('ui/homeTour.ts')).toMatch(/const k = opts\.shortArrow \? 0\.62 : 1;/);
     expect(src('scenes/TownScene.ts')).toMatch(/TILE \* 0\.7, \{ shortArrow: true \}\)/);
   });
+
+  it('after a fight, a shut chest that holds the doors gets an "Open the chest!" nudge', () => {
+    const g = src('scenes/GameScene.ts');
+    expect(g).toMatch(/if \(!this\.run\?\.tutorial && this\.room\.chest && this\.room\.kind !== 'treasure'\) \{/);
+    expect(g).toMatch(/if \(this\.room\.id !== roomAt \|\| this\.world\.progress\.chestOpened \|\| this\.world\.progress\.doorsOpen\) return;\s*this\.flashMessage\('Open the chest!'\);/);
+    expect(g).toMatch(/const CHEST_HINT_DELAY_MS = 2500;/);
+  });
 });

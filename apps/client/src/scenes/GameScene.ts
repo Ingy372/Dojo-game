@@ -155,6 +155,10 @@ const NO_DEFEAT_FADE_MS = 600;
 /** TUT-B4: how long a tutorial success line shows alone before the next tip. */
 const SUCCESS_ALONE_MS = 1500;
 /** TUT-T3: how close (in tiles) the hero must stand to the bow mat's middle. */
+/** Playtest Nov 22: how long after a fight the "Open the chest!" line shows if the chest is still shut. */
+const CHEST_HINT_DELAY_MS = 2500;
+/** ...then again this often, three times in all, while it stays shut. */
+const CHEST_HINT_REPEAT_MS = 8000;
 const BOW_MAT_REACH = 0.7;
 /** Playtest Nov 22: how close to the Tower door (tiles) also brings the tutorial bow. */
 const BOW_DOOR_REACH = 1.6;
@@ -1754,6 +1758,19 @@ export class GameScene extends Phaser.Scene {
         }
         case 'roomCleared':
           if (this.room.kind !== 'treasure' && this.room.kind !== 'rest') sfx.roomClear();
+          // Playtest Nov 22: after the boss, the doors stay shut until the chest is opened, and the chest can be off
+          // screen; a kid stood at the HOME door with nothing happening. The treasure room's line says what to do.
+          if (!this.run?.tutorial && this.room.chest && this.room.kind !== 'treasure') {
+            const roomAt = this.room.id;
+            const nudge = (left: number): void => {
+              this.time.delayedCall(left === 3 ? CHEST_HINT_DELAY_MS : CHEST_HINT_REPEAT_MS, () => {
+                if (this.room.id !== roomAt || this.world.progress.chestOpened || this.world.progress.doorsOpen) return;
+                this.flashMessage('Open the chest!');
+                if (left > 1) nudge(left - 1);
+              });
+            };
+            nudge(3);
+          }
           if (this.run?.tutorial && this.room.kind === 'boss') this.tutorialDid('defeatBoss');
           // K24a: if the fights end before a step's try, that step ends quietly.
           const until = TUTORIAL_ROOM_STEPS[this.room.id]?.until;
@@ -2332,6 +2349,23 @@ export class GameScene extends Phaser.Scene {
         this.applyCameraZoom();
       }),
     );
+  }
+
+  /** A short goal line in the room-name banner that fades after a few seconds. */
+  private flashMessage(text: string): void {
+    this.tweens.killTweensOf(this.message);
+    this.message.setText(text).setFontSize(26).setVisible(true).setAlpha(1);
+    this.placeMessage();
+    this.tweens.add({
+      targets: this.message,
+      alpha: 0,
+      delay: 2600,
+      duration: 500,
+      onComplete: () => {
+        this.message.setVisible(false).setAlpha(1).setFontSize(28);
+        this.placeMessage();
+      },
+    });
   }
 
   /** The room's name (and challenge rule) when entering. */
