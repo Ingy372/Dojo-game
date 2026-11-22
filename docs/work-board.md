@@ -24,7 +24,7 @@ Last updated: 2026-11-18 by Claude Code.
 |---|---|---|
 | CW-1 | Line endings, the type-check error, automatic checks on GitHub, Class Chest gear limit. | Done (branch `claude/first-week-fixes`) |
 | CW-2 | CLAUDE.md, this board, decisions and progress updated for the hand-over. | Done |
-| CW-3 | Full hands-on playthrough on small and large phone sizes (new student, White, Yellow, Orange profiles); list every bug and rough spot. | Next |
+| CW-3 | Full hands-on playthrough on small and large phone sizes (new student, White, Yellow, Orange profiles); list every bug and rough spot. | Done Nov 22: `docs/reviews/playtest-2026-11-22.md` (8 fixes on branch `claude/playthrough-fixes`, 7 polish items for Jay) |
 | CW-4 | Measure the download and what loads at start; load art per belt if it isn't already. | Next |
 
 ## 2a. Jay's overnight list (Nov 17-18)

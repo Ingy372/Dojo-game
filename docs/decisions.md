@@ -2124,3 +2124,10 @@ Jay's answers to the Fable review's questions (Nov 14, board section 000) applie
 - **Jay's note on the first draft ("a bit stiff"): the leg reaches first, then the rest turns.** Draft 2: the left leg reaches behind to the rear right while the body still faces the kiai, then the body spins on the balls of the feet and the right foot swings round; then the Low Block (1.5 s in all).
 - **In the game it is the first beat's animation** (`anim: kata_special_turn` on the Low Block beat of steps 4 and 7): the student still taps the arrow (→, then ← for step 7), then Low Block; there is no extra button. It is a real render that turns the whole hero, never mirrored, played from the direction the hero faced before the turn; `turn` offsets in its art keep the hero's spot under the picture (like the front kicks' `travel`). If the art isn't loaded the beat plays the plain Low Block.
 - **Jay on draft 2: "a deeper reach with the back leg and it's complete. The turn speed is good."** Final: the left leg reaches deep behind to the rear right (a long, low step back), then the spin and the Low Block; 1.5 s. Rendered for both bodies and imported into the kata packs (approved).
+
+## Playthrough fixes (2026-11-22, Claude, overnight; Jay asked for the work list to be done while he slept)
+- Touch: a quick tap (0.25 s, under 14 px of movement) in the stick area walks to that spot; holding and dragging is still the stick (the stick area itself, Jay-approved, is unchanged).
+- Tutorial: the stones' safe spot avoids the bottom-right quarter (the buttons); reaching the Tower door brings the bow as well as the mat; being level with the glowing spot or past it counts as reaching it.
+- Kata practice: arrows never re-face the hero around a special turn; moves tapped during the turn wait in order (260 ms apart) and the bow out waits for them.
+- Tower: "Open the chest!" (the treasure room's existing line) shows after a fight when the room's doors wait for its chest.
+- Town tour: the door pointer uses a shorter arrow under the "My Dojo" sign. Character screen: "a"/"an" by the belt name ("{aBelt}" in screens.json), Surprise me! at least 130 px, "Hair color".

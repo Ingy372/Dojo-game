@@ -1407,3 +1407,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Jay approved it with a deeper reach ("it's complete"); the final turn is rendered for both bodies and imported into the kata packs, so kata practice plays it.
 - **On the live link (Nov 22, Jay's OK):** merged into `main` (pull request #548); checks and the live build passed.
 - **Next:** Jay plays Basic Forms 1 and 2 on his phone (the turn after each kiai).
+
+## Overnight playthrough and fixes (2026-11-22, branch `claude/playthrough-fixes`)
+- CW-3 done: Claude played the game in a real browser on a small (667 × 375) and a large (932 × 430) phone with the new white, yellow and orange profiles: tutorial, dojo, town, board, Tower runs (white and orange floors, Hearth Cook), kata practice and Street Smarts. Notes: `docs/reviews/playtest-2026-11-22.md`.
+- Fixed with tests (B-FIX): the tutorial safe spot under STRIKE, quick taps in the stick area, the tutorial bow at the door, the special turn with fast tapping (4 issues), the glowing spot missed on a big phone, the "Open the chest!" nudge, the town pointer over the sign, and the character screen (an Orange Belt, Surprise me!, Hair color).
+- **Next:** Jay reads the notes, answers the Shihan/Shinan question and picks which polish items to do; then copy the branch to `main` with his OK.
