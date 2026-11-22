@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { STONES, TICKS_PER_SECOND, createWorld, loadRoom, secondsToTicks, stepWorld, RoomError, type CombatEvent, type PlayerInput, type Room, type WorldState } from '../src';
+import { SAFE_SPOT_BUTTON_CORNER_PENALTY, STONES, TICKS_PER_SECOND, createWorld, safeSpot, loadRoom, secondsToTicks, stepWorld, RoomError, type CombatEvent, type PlayerInput, type Room, type WorldState } from '../src';
 
 // A tutorial room: stones fall at (4,3), then (2,3)+(6,3), then three spots.
-const tiles = ['#DDD#####', '#.......#', '#...P...#', '#.......#', '#..S....#', '#.......#', '#########'];
+const tiles = ['#DDD#####', '#.......#', '#...P...#', '#.......#', '#.......#', '#S......#', '#########'];
 const hazards = {
   stones: [
     { fillSeconds: 1.5, spots: [{ column: 5, row: 3 }] },
@@ -95,5 +95,20 @@ describe('TUT-B1 falling stones', () => {
     const warns = run(w, 15 * TICKS_PER_SECOND, () => IDLE, named).filter((e): e is Extract<CombatEvent, { kind: 'stoneWarn' }> => e.kind === 'stoneWarn');
     expect(warns[2].safeSpot).toEqual({ x: 1.5, y: 1.5 });
     expect(() => loadRoom({ id: 'x', name: 'X', kind: 'rest', tutorial: true, tiles, hazards: { stones: [{ fillSeconds: 1, spots: [{ column: 5, row: 3 }], safeSpot: { column: 5, row: 3 } }] } })).toThrow(/clear of every red circle/);
+  });
+
+  it('playtest Nov 22: the safe spot avoids the bottom-right quarter, where the phone buttons sit', () => {
+    const open = ['#DDD#####', '#.......#', '#.......#', '#.......#', '#...P...#', '#.......#', '#.......#', '#S......#', '#########'];
+    const r = loadRoom({ id: 'y', name: 'Y', kind: 'rest', tutorial: true, tiles: open });
+    const w = createWorld(r, ['p1']);
+    const p = w.players.p1.pos;
+    // Stones on the hero, above it, and down-left of it: the nearest clear tile is one down and one right (under the
+    // buttons on a small phone); two to the right is the next best.
+    const spots = [{ ...p }, { x: p.x - 2, y: p.y + 1 }, { x: p.x, y: p.y - 1 }];
+    const spot = safeSpot(w, r, spots, ['p1'])!;
+    expect(SAFE_SPOT_BUTTON_CORNER_PENALTY).toBeGreaterThan(0);
+    expect(spot.x - p.x > 0.25 && spot.y - p.y > 0.25).toBe(false);
+    expect({ x: spot.x - p.x, y: spot.y - p.y }).toEqual({ x: 2, y: 0 });
+    expect(Math.hypot(spot.x - p.x, spot.y - p.y)).toBeGreaterThan(STONES.radius);
   });
 });

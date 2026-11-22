@@ -95,17 +95,25 @@ function dropSpots(world: WorldState, room: Room, wave: Room['stoneWaves'][numbe
   return out;
 }
 
+/**
+ * Playtest Nov 22: on a small phone the action buttons sit at the bottom right of the screen, so a safe spot down and
+ * to the right of the hero can end up under STRIKE, where a tap presses the button instead of walking there. Spots
+ * in that quarter count as this many tiles further away, so a free spot elsewhere wins when there is one.
+ */
+export const SAFE_SPOT_BUTTON_CORNER_PENALTY = 2;
+
 /** The floor tile centre nearest the first player that is clear of every circle (with room for the body). */
-function safeSpot(world: WorldState, room: Room, spots: Vec2[], ids: PlayerId[]): Vec2 | null {
+export function safeSpot(world: WorldState, room: Room, spots: Vec2[], ids: PlayerId[]): Vec2 | null {
   const from = world.players[ids[0]]?.pos ?? room.playerStart;
   const clearance = STONES.radius + MOVEMENT.playerRadius;
+  const cost = (c: Vec2): number => distance(c, from) + (c.x - from.x > 0.25 && c.y - from.y > 0.25 ? SAFE_SPOT_BUTTON_CORNER_PENALTY : 0);
   let best: Vec2 | null = null;
   for (let y = 0; y < room.height; y++) {
     for (let x = 0; x < room.width; x++) {
       if (room.walls[y][x]) continue;
       const c = { x: x + 0.5, y: y + 0.5 };
       if (spots.some((s) => distance(c, s) <= clearance)) continue;
-      if (!best || distance(c, from) < distance(best, from)) best = c;
+      if (!best || cost(c) < cost(best)) best = c;
     }
   }
   return best;
