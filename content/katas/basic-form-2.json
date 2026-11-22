@@ -3,7 +3,7 @@
   "name": "Basic Form 2",
   "requirement": "yellow-kata",
   "stance": null,
-  "from": "drafts/content/katas/basic-form-2.json, the school sheet. Nov 20 (Jay): kata practice shows the moves, so each step lists its beats: the direction the hero faces, then the technique (content/dojo/kata-moves.json). Turns, pivots, cat stances, chambers and catches happen by themselves. Waiting on Jay's check. Nov 21: each beat's `lead` is the foot forward after it (the art is drawn left foot forward; R is shown mirrored, and a right-foot-forward kick uses the left-leg art); `anim` picks a different animation (the stacked-hands kick where the sheet says \"catch\").",
+  "from": "drafts/content/katas/basic-form-2.json, the school sheet. Nov 20 (Jay): kata practice shows the moves, so each step lists its beats: the direction the hero faces, then the technique (content/dojo/kata-moves.json). Turns, pivots, cat stances, chambers and catches happen by themselves. Waiting on Jay's check. Nov 21: each beat's `lead` is the foot forward after it (the art is drawn left foot forward; R is shown mirrored, and a right-foot-forward kick uses the left-leg art); `anim` picks a different animation (the stacked-hands kick where the sheet says \"catch\"). Nov 21 (Jay's video of Basic Form 1, and Jay: Basic Form 2 faces the same way): steps 3 and 6 go up and down the middle of the floor, not right: step 3 faces F (away from the camera) and step 6 faces B (toward it).",
   "steps": [
     {
       "n": 1,
@@ -65,44 +65,44 @@
     {
       "n": 3,
       "facing": [
-        "R"
+        "F"
       ],
       "beats": [
         {
-          "dir": "R",
+          "dir": "F",
           "move": "low-block",
           "lead": "L"
         },
         {
-          "dir": "R",
+          "dir": "F",
           "move": "rear-leg-front-kick",
           "lead": "L",
           "anim": "kata_front_kick_stacked"
         },
         {
-          "dir": "R",
+          "dir": "F",
           "move": "punch",
           "lead": "R"
         },
         {
-          "dir": "R",
+          "dir": "F",
           "move": "rear-leg-front-kick",
           "lead": "R",
           "anim": "kata_front_kick_stacked_left"
         },
         {
-          "dir": "R",
+          "dir": "F",
           "move": "punch",
           "lead": "L"
         },
         {
-          "dir": "R",
+          "dir": "F",
           "move": "rear-leg-front-kick",
           "lead": "L",
           "anim": "kata_front_kick_stacked"
         },
         {
-          "dir": "R",
+          "dir": "F",
           "move": "punch",
           "kiai": true,
           "lead": "R"
@@ -169,44 +169,44 @@
     {
       "n": 6,
       "facing": [
-        "R"
+        "B"
       ],
       "beats": [
         {
-          "dir": "R",
+          "dir": "B",
           "move": "low-block",
           "lead": "L"
         },
         {
-          "dir": "R",
+          "dir": "B",
           "move": "rear-leg-front-kick",
           "lead": "L",
           "anim": "kata_front_kick_stacked"
         },
         {
-          "dir": "R",
+          "dir": "B",
           "move": "punch",
           "lead": "R"
         },
         {
-          "dir": "R",
+          "dir": "B",
           "move": "rear-leg-front-kick",
           "lead": "R",
           "anim": "kata_front_kick_stacked_left"
         },
         {
-          "dir": "R",
+          "dir": "B",
           "move": "punch",
           "lead": "L"
         },
         {
-          "dir": "R",
+          "dir": "B",
           "move": "rear-leg-front-kick",
           "lead": "L",
           "anim": "kata_front_kick_stacked"
         },
         {
-          "dir": "R",
+          "dir": "B",
           "move": "punch",
           "kiai": true,
           "lead": "R"

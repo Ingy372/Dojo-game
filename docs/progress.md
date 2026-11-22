@@ -1397,3 +1397,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## Kata moves wired into the game (2026-11-21, branch `claude/kata-moves-art`)
 - Kata practice now plays Claude's Blender moves (approved by Jay): Open Leg Stance, every technique, mirrored for right-foot-forward beats, real left-leg kicks, the stacked-hands kick where the sheet says "catch", and the kick's step forward. The art loads when Practice Kata is first tapped. 1,650 tests pass; type checks and both builds pass.
 - **Next:** Jay plays it on his phone; body B's kata art is imported once its render finishes (until then body B students saw the hero hold the Open Leg Stance through the moves). Done: body B imported the same day.
+
+## Kata facing fix: Basic Forms 1 and 2 (2026-11-21, branch `claude/kata-moves-art`)
+- From Jay's video: steps 3 and 6 of Basic Forms 1 and 2 now go up (F) and down (B) the middle instead of right. Details in decisions.md. 1,650 tests pass; type checks and the build pass.
+- **Next:** Jay plays both forms on his phone and checks the turns.
