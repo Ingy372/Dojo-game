@@ -2309,6 +2309,94 @@
           "json": "incoming-art/claude-hero-v2/shop-icons/static.json"
         }
       ]
+    },
+    "pets-big": {
+      "scale": 1.0,
+      "note": "Shop preview pets: idle facing down-left at twice the game's resolution (Nov 22, Jay: the pets looked pixelated). Loaded only by the shop.",
+      "sources": [
+        {
+          "id": "pet-baby-dragon",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites-stage/baby-dragon/pet-baby-dragon.json"
+        },
+        {
+          "id": "pet-little-turtle",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites-stage/little-turtle/pet-little-turtle.json"
+        },
+        {
+          "id": "pet-lucky-koi",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites-stage/lucky-koi/pet-lucky-koi.json"
+        },
+        {
+          "id": "pet-red-panda",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites-stage/red-panda/pet-red-panda.json"
+        },
+        {
+          "id": "pet-spirit-fox",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites-stage/spirit-fox/pet-spirit-fox.json"
+        },
+        {
+          "id": "pet-wise-owl",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites-stage/wise-owl/pet-wise-owl.json"
+        }
+      ]
+    },
+    "player-a-stage": {
+      "scale": 1.0,
+      "note": "Shop preview, body A: the idle facing the camera at twice the game's resolution, every face and hair (Nov 22, Jay: the preview looked pixelated). Loaded only by the shop.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-stage/body-a/player-a.json",
+          "skipLayers": [
+            "prop-broom",
+            "prop-rag"
+          ]
+        }
+      ]
+    },
+    "player-a-stage-skins": {
+      "scale": 1.0,
+      "note": "Shop preview skins, body A (same pose and size as player-a-stage). Loaded only by the shop.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-stage-skins/body-a/player-a.json"
+        }
+      ]
+    },
+    "player-b-stage": {
+      "scale": 1.0,
+      "note": "Shop preview, body B: the idle facing the camera at twice the game's resolution, every face and hair (Nov 22, Jay: the preview looked pixelated). Loaded only by the shop.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-stage/body-b/player-b.json",
+          "skipLayers": [
+            "prop-broom",
+            "prop-rag"
+          ]
+        }
+      ]
+    },
+    "player-b-stage-skins": {
+      "scale": 1.0,
+      "note": "Shop preview skins, body B (same pose and size as player-b-stage). Loaded only by the shop.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-stage-skins/body-b/player-b.json"
+        }
+      ]
     }
   }
 }

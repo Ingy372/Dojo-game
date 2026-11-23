@@ -178,7 +178,7 @@ export function characterTop(scene: Phaser.Scene, art: CharacterArt, layers?: st
   for (const [name, ids] of Object.entries(anim.layers)) {
     if (layers && !layers.includes(name)) continue;
     const data = register(scene, art.layerPack?.[name] ?? art.pack);
-    const id = ids[4]?.[0] ?? -1;
+    const id = ids[ids.length === 1 ? 0 : 4]?.[0] ?? -1;
     if (id >= 0 && data) top = Math.min(top, data.frames[id][6]);
   }
   return art.anchor.y - top;

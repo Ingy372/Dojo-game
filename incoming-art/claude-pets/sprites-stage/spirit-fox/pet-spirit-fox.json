@@ -1,0 +1,47 @@
+{
+  "character": "pet-spirit-fox",
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "anchor": {
+    "x": 96.0,
+    "y": 153.6,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 160.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.2,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "SW"
+  ],
+  "directionVectors": {
+    "SW": [
+      -0.7071,
+      0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "pet",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 12,
+      "fps": 10,
+      "durationSec": 1.2,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "pet": "pet-spirit-fox_pet_idle.png"
+      }
+    }
+  }
+}

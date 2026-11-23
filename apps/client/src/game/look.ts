@@ -97,6 +97,14 @@ export function kataPacks(look: PlayerLook): PackName[] {
   return [`player-${look.body}-kata`, `player-${look.body}-kata-faces`, `player-${look.body}-kata-${look.hair}`];
 }
 
+/** The shop's big preview (Nov 22): the idle facing the camera at twice the game's resolution, and its skins. */
+export function stagePack(body: PlayerLook['body']): PackName {
+  return `player-${body}-stage`;
+}
+export function stageSkinPack(body: PlayerLook['body']): PackName {
+  return `player-${body}-stage-skins`;
+}
+
 /** The full-detail pack for big moments (the promotion ceremony, welcome screens). */
 export function bigLookPack(look: PlayerLook): PackName {
   return `player-${look.body}-big`;

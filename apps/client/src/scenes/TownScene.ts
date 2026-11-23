@@ -176,6 +176,10 @@ export class TownScene extends WalkScene {
   /** The Shop button, top right (redrawn when the screen changes size). */
   private drawShopButton(): void {
     this.shopButton?.destroy();
+    this.shopButton = null;
+    this.shopRect = null;
+    // Not during Sensei's town tour: one thing at a time (the button shows on the next visit).
+    if (loadSave().homeTour === 'town') return;
     const { width } = view(this);
     const box = this.add.container(0, 0).setDepth(50);
     const b = roundButton(this, { x: width - S2 - SHOP_W, y: S2, w: SHOP_W, h: MIN_TAP, label: SHOP_WORDS.button, color: SHOP_GOLD, size: TYPE.body, onTap: () => this.openTownShop() }, box);

@@ -10,8 +10,8 @@ import { addStatic, loadArt, staticArt } from '../art/art';
 import { makeStandingCharacter, ownColor } from '../art/player';
 import { AuraFx } from '../fx/aura';
 import { drawShape, playFx } from '../fx/shopFx';
-import { makePetSprite, petPack } from '../game/companion';
-import { loadLook, skinPack, type PlayerLook } from '../game/look';
+import { PETS_BIG_PACK, makePetSprite } from '../game/companion';
+import { loadLook, skinPack, stagePack, stageSkinPack, type PlayerLook } from '../game/look';
 import { reducedMotion } from '../game/motion';
 import { writeSave } from '../game/save';
 import { SHOP, SHOP_WORDS as W } from '../game/shop';
@@ -100,7 +100,8 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
   }
 
   // Everything the cards and the stage can show: pets, skin icons, decorations. Fetched once, in the background.
-  const wanted = [ICON_PACK, DECOR_PACK, ...SHOP.items.flatMap((i) => (i.pet ? [petPack(i.pet)] : []))];
+  // Nov 22 (Jay: the big preview looked pixelated): the stage draws skins and pets from full-detail packs.
+  const wanted = [ICON_PACK, DECOR_PACK, PETS_BIG_PACK, stagePack(body), stageSkinPack(body)];
   const missing = wanted.filter((p) => !scene.cache.json.exists(`art:${p}`) && !TRIED.has(p));
   for (const p of missing) TRIED.add(p);
   if (missing.length) {
@@ -144,6 +145,7 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
   /** Loads a skin's art for the stage the first time it's picked, then redraws. */
   const ensureSkin = (item: ShopItem | null): boolean => {
     if (!item?.layer) return true;
+    if (scene.cache.json.exists(`art:${stageSkinPack(body)}`) && scene.textures.exists(`art:${stageSkinPack(body)}:0`)) return true;
     const pack = skinPack(body, item.layer);
     if (scene.cache.json.exists(`art:${pack}`) && scene.textures.exists(`art:${pack}:0`)) return true;
     // Only ask once: a pack that isn't there (or failed) is never fetched again, so the shop can't loop.
@@ -242,11 +244,11 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
       }
       const ready = ensureSkin(item);
       const shown = ready ? previewLook(look, slot, item) : look;
-      layer.add(makeStandingCharacter(scene, cx, top + S2 + r * 1.55, r * 1.05, t.belt, t.stripesThisBelt, shown).container);
+      layer.add(makeStandingCharacter(scene, cx, top + S2 + r * 1.55, r * 1.05, t.belt, t.stripesThisBelt, shown, true).container);
       if (item?.pet) {
-        const pet = makePetSprite(scene, item.pet);
+        const pet = makePetSprite(scene, item.pet, true);
         if (pet) {
-          pet.container.setScale((r * 3.2) / 48).setPosition(cx + r * 1.6, feet + 4);
+          pet.container.setScale((r * 3.84) / pet.art.frameWidth).setPosition(cx + r * 1.6, feet + 4);
           pet.setDirection(5);
           layer.add(pet.container);
         }
@@ -456,9 +458,9 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
         g.fillStyle(cols[k % cols.length]).fillCircle(ix + Math.cos(a) * ir * 0.7, iy - ir * 0.15 + Math.sin(a) * ir * 0.35 - k * 2, 3.5);
       }
     } else if (it?.pet) {
-      const pet = makePetSprite(scene, it.pet);
+      const pet = makePetSprite(scene, it.pet, true);
       if (pet) {
-        pet.container.setScale((ir * 4) / 48).setPosition(ix, iy + ir * 0.8);
+        pet.container.setScale((ir * 4.8) / pet.art.frameWidth).setPosition(ix, iy + ir * 0.8);
         pet.setDirection(5);
         parent.add(pet.container);
       } else g.fillStyle(hex(it.color)).fillCircle(ix, iy, ir * 0.7);

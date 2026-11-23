@@ -2,7 +2,7 @@
 
 import Phaser from 'phaser';
 import { MOVEMENT, type BeltInfo } from '@dojo/sim';
-import { DEFAULT_LOOK, FACES, HAIRS, bigLookPack, kataPacks, lookPacks, skinLayers, type PlayerLook } from '../game/look';
+import { DEFAULT_LOOK, FACES, HAIRS, bigLookPack, stagePack, stageSkinPack, kataPacks, lookPacks, skinLayers, type PlayerLook } from '../game/look';
 import { drawBelt, makeCharacter } from '../ui/belt';
 import { type CharacterArt, addAnimations, characterArt, characterTop, combineArt } from './art';
 import { LayeredSprite } from './LayeredSprite';
@@ -139,9 +139,16 @@ export function makeStandingCharacter(
   belt: BeltInfo,
   stripes: number,
   look: PlayerLook = DEFAULT_LOOK,
+  /** The shop's preview: the sharp idle-only art when the shop has loaded it (it has no other animations). */
+  stage = false,
 ): StandingCharacter {
-  // The full-detail pack has no skins: a hero wearing one is drawn from the room packs (which carry the skins).
-  const art = (skinLayers(look).length ? roomArt(scene, look) : null) ?? characterArt(scene, bigLookPack(look), 'player') ?? roomArt(scene, look);
+  // The shop's stage uses its own sharp art (Nov 22, Jay: the preview looked pixelated). Elsewhere: the full-detail
+  // pack, which has no skins, so a hero wearing one is drawn from the room packs (which carry every skin).
+  const worn = skinLayers(look).length > 0;
+  const sharp = stage ? characterArt(scene, stagePack(look.body), 'player') : null;
+  const sharpSkins = stage && worn ? characterArt(scene, stageSkinPack(look.body), 'player') : null;
+  const staged = sharp && (!worn || sharpSkins) ? (sharpSkins ? combineArt([sharp, sharpSkins]) : sharp) : null;
+  const art = staged ?? (worn ? roomArt(scene, look) : null) ?? characterArt(scene, bigLookPack(look), 'player') ?? roomArt(scene, look);
   if (!art) {
     const ch = makeCharacter(scene, x, y, r, belt, stripes);
     return { container: ch.container, sprite: null, retie: (b, n) => drawBelt(ch.belt, 0, r * 0.15, r * 1.9, r * 0.3, b, n) };

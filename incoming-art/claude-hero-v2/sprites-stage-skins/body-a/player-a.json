@@ -1,0 +1,413 @@
+{
+  "character": "player-a",
+  "frameWidth": 256,
+  "frameHeight": 320,
+  "anchor": {
+    "x": 128.0,
+    "y": 273.92,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 160.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.6,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "S"
+  ],
+  "directionVectors": {
+    "S": [
+      0,
+      1
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "outfit-crimson-dragon",
+      "order": 40,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-shadow-ninja",
+      "order": 41,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-frost-guardian",
+      "order": 42,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-iron-samurai",
+      "order": 43,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-temple-monk",
+      "order": 44,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-thunder-tiger",
+      "order": 45,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-panda-pal",
+      "order": 46,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-phoenix-flame",
+      "order": 47,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-starlight",
+      "order": 48,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-jade-guardian",
+      "order": 49,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "hat-red-headband",
+      "order": 60,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-tiger-hood",
+      "order": 61,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-panda-hood",
+      "order": 62,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-ninja-hood",
+      "order": 63,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-samurai-helmet",
+      "order": 64,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-straw-hat",
+      "order": 65,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-dragon-horns",
+      "order": 66,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-frost-crown",
+      "order": 67,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-fox-mask",
+      "order": 68,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "back-hero-cape",
+      "order": 80,
+      "tint": false,
+      "optional": false,
+      "group": "back"
+    },
+    {
+      "name": "back-phoenix-wings",
+      "order": 81,
+      "tint": false,
+      "optional": false,
+      "group": "back"
+    },
+    {
+      "name": "back-dragon-tail",
+      "order": 82,
+      "tint": false,
+      "optional": false,
+      "group": "back"
+    },
+    {
+      "name": "back-master-scroll",
+      "order": 83,
+      "tint": false,
+      "optional": false,
+      "group": "back"
+    },
+    {
+      "name": "back-bo-staff",
+      "order": 84,
+      "tint": false,
+      "optional": false,
+      "group": "back"
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_idle.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_idle.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_idle.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_idle.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_idle.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_idle.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_idle.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_idle.png",
+        "outfit-starlight": "player-a_outfit-starlight_idle.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_idle.png",
+        "hat-red-headband": "player-a_hat-red-headband_idle.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_idle.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_idle.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_idle.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_idle.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_idle.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_idle.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_idle.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_idle.png",
+        "back-hero-cape": "player-a_back-hero-cape_idle.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_idle.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_idle.png",
+        "back-master-scroll": "player-a_back-master-scroll_idle.png",
+        "back-bo-staff": "player-a_back-bo-staff_idle.png"
+      }
+    }
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
+    "gi": "gi colour (current placeholder #f2e9d8)",
+    "belt": "the profile's belt.color; a dark (black) belt.color is drawn as #26272f",
+    "belt-center": "two-colour belts only: belt.color2; a dark (black) color2 is drawn as deep black #111116 (it sits between two coloured bands, not next to the outline)",
+    "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
+    "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)",
+    "belt-sheen": "dark (black) belt.color only: tint #a2a6b6, a bright top edge so black reads as a belt, not as outline; skip on other belts",
+    "belt-center-edge": "optional separator around the centre stripe; NOT used in the chosen style (skip it). Tint #ece6d8 if a future style wants it",
+    "belt-rim": "ALWAYS draw it, after belt-center: tint #2e2a3a (dark rim) on every belt except a dark (black) belt.color, which gets light #c9ccd6",
+    "skin": "multiply by a palettes.skin colour (the layer is a light neutral grey)",
+    "hair": "multiply every hair-* layer by a palettes.hair colour (light neutral grey)"
+  },
+  "beltStyles": {
+    "note": "chosen belt style (belt revision, option C): tint per layer for each Action Zone belt (fixtures/); a layer that is not listed is not drawn (belt-center-edge is never drawn in this style). Tape stripes keep the belt.ts rule",
+    "White": {
+      "belt": "#f4f1ea",
+      "belt-rim": "#2e2a3a"
+    },
+    "Yellow": {
+      "belt": "#f5d22e",
+      "belt-rim": "#2e2a3a"
+    },
+    "Orange": {
+      "belt": "#f08a24",
+      "belt-rim": "#2e2a3a"
+    },
+    "Green": {
+      "belt": "#3aa655",
+      "belt-rim": "#2e2a3a"
+    },
+    "Blue": {
+      "belt": "#2f6fd6",
+      "belt-rim": "#2e2a3a"
+    },
+    "Red": {
+      "belt": "#d8352a",
+      "belt-rim": "#2e2a3a"
+    },
+    "Red/Black": {
+      "belt": "#d8352a",
+      "belt-center": "#111116",
+      "belt-rim": "#2e2a3a"
+    },
+    "Brown": {
+      "belt": "#7a4a26",
+      "belt-rim": "#2e2a3a"
+    },
+    "Brown/Black": {
+      "belt": "#7a4a26",
+      "belt-center": "#111116",
+      "belt-rim": "#2e2a3a"
+    },
+    "Black": {
+      "belt": "#26272f",
+      "belt-sheen": "#a2a6b6",
+      "belt-rim": "#c9ccd6"
+    }
+  },
+  "palettes": {
+    "skin": [
+      "#f6d7c3",
+      "#efc3a4",
+      "#e0a984",
+      "#c98e65",
+      "#b07650",
+      "#946042",
+      "#7a4b32",
+      "#603926",
+      "#4a2c1f",
+      "#38221a"
+    ],
+    "hair": [
+      "#403b52",
+      "#3a2519",
+      "#5c3a22",
+      "#8a5f3b",
+      "#d9b26a",
+      "#b5482a",
+      "#8a3a26",
+      "#9a9aa2",
+      "#3f6fd1",
+      "#7d4cc2"
+    ],
+    "gi": [
+      "#f2f2f2",
+      "#4a4a55",
+      "#24345e",
+      "#3a6ea5",
+      "#b8322a",
+      "#8a8d99",
+      "#3f7a4a",
+      "#e9dfc9",
+      "#7fb2e0",
+      "#7a2a33"
+    ],
+    "note": "Recommended swatches (hex), shown by the game in this order. They are multiply tints for the tinted layers (skin, hair-*, gi). Skin runs from light to deep. The ids in palettesDraftLabels are placeholders for the Content Writer, not names"
+  },
+  "palettesDraftLabels": {
+    "skin": [
+      "skin-01",
+      "skin-02",
+      "skin-03",
+      "skin-04",
+      "skin-05",
+      "skin-06",
+      "skin-07",
+      "skin-08",
+      "skin-09",
+      "skin-10"
+    ],
+    "hair": [
+      "black",
+      "dark-brown",
+      "brown",
+      "light-brown",
+      "blonde",
+      "red",
+      "auburn",
+      "grey",
+      "blue",
+      "purple"
+    ],
+    "gi": [
+      "white",
+      "charcoal",
+      "navy",
+      "blue",
+      "red",
+      "grey",
+      "green",
+      "unbleached",
+      "sky",
+      "maroon"
+    ]
+  },
+  "groups": {
+    "face": [
+      "face-01",
+      "face-02",
+      "face-03",
+      "face-04",
+      "face-05",
+      "face-06"
+    ],
+    "hair": [
+      "hair-01",
+      "hair-02",
+      "hair-03",
+      "hair-04",
+      "hair-05",
+      "hair-06",
+      "hair-07",
+      "hair-08",
+      "hair-09",
+      "hair-10",
+      "hair-11",
+      "hair-12"
+    ],
+    "note": "draw exactly one layer of each group, after the base layers (face, then hair)"
+  },
+  "optionNotes": {
+    "face-01": "the approved face of Batch 1: oval eyes with a shine, friendly brows, a small smile",
+    "face-02": "big round eyes, soft high brows, a wider smile",
+    "face-03": "calm almond eyes, straight brows, a small smile",
+    "face-04": "oval eyes with small lashes at the outer corner, a happy smile",
+    "face-05": "bold thick brows, determined but friendly",
+    "face-06": "oval eyes and freckles across the cheeks",
+    "hair-01": "very short (close crop): a thin cap that follows the head",
+    "hair-02": "short: the approved Batch 1 hair (cap, back, sideburns, a short fringe and a tuft)",
+    "hair-03": "curly: a rounder cap made of soft curls",
+    "hair-04": "afro: a rounded shape built from soft coil clumps with light tops, a natural hairline above the brows",
+    "hair-05": "braids: a smooth cap with two braids hanging behind the ears to the shoulders",
+    "hair-06": "ponytail: cap pulled back to a tie at the back of the head, a short tail (above the belt)",
+    "hair-07": "bun: cap with a round bun on top towards the back",
+    "hair-08": "tied back: smooth hair combed back to a low knot at the nape",
+    "hair-09": "two puffs: hair parted down the middle and gathered into two round coil puffs high on the head",
+    "hair-10": "short twists: a soft cap covered in short, rounded twists that point up and out (they never reach the eyes)",
+    "hair-11": "cornrows into braids: neat raised rows from the hairline to the back, ending in braids that hang behind the shoulders",
+    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils"
+  }
+}

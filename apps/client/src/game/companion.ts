@@ -24,9 +24,15 @@ export function companionPacks(): string[] {
   return pet ? [petPack(pet)] : [];
 }
 
-/** A pet sprite standing on its own (the shop preview), or null if its art isn't loaded. */
-export function makePetSprite(scene: Phaser.Scene, pet: string): LayeredSprite | null {
-  const art = characterArt(scene, petPack(pet), 'pet');
+/** Every pet in full detail, idle and facing down-left: the shop's cards and big preview only (Nov 22). */
+export const PETS_BIG_PACK = 'pets-big';
+
+/**
+ * A pet sprite standing on its own (the shop), or null if its art isn't loaded. `big` uses the full-detail pack,
+ * which only has the idle facing down-left (direction 5).
+ */
+export function makePetSprite(scene: Phaser.Scene, pet: string, big = false): LayeredSprite | null {
+  const art = big ? characterArt(scene, PETS_BIG_PACK, pet) : characterArt(scene, petPack(pet), 'pet');
   if (!art) return null;
   const s = new LayeredSprite(scene, art);
   s.container.addAt(addShadow(scene, art.frameWidth * 0.5), 0);

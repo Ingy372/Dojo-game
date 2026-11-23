@@ -203,7 +203,8 @@ export class LayeredSprite {
     this.shown = key;
     for (const [name, img] of this.images) {
       const ids = this.anim.layers[name];
-      const id = ids && !this.hidden.has(name) ? ids[dir]?.[frame] ?? -1 : -1;
+      // Art rendered facing one way only (the shop's sharp preview) has one row, used for every direction.
+      const id = ids && !this.hidden.has(name) ? ids[ids.length === 1 ? 0 : dir]?.[frame] ?? -1 : -1;
       const f = frameOf(this.scene, this.anim.layerPack?.[name] ?? this.art.layerPack?.[name] ?? this.art.pack, id);
       if (f) img.setTexture(f[0], f[1]);
       img.setVisible(!!f);
