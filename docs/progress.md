@@ -1419,4 +1419,5 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - **Skins:** 10 outfits, 9 hats and hoods, 5 back pieces, on the same rig (belt always in front). Lineup: `incoming-art/claude-hero-v2/preview/skins_lineup.png`.
 - **Shop redesign** with tabs Skins, Colors, Effects, Pets, Dojo; 10 auras (code), 6 pets (Blender), 16 shop decorations; 10 achievement trophies for the dojo.
 - **Bosses:** Hearth Cook → Inferno Hearth (phase 2-3), Floor Keeper → Warden Unbound (half health), the final Guardian's three forms (rendered, not in a fight until belt 10 rooms exist). Transformation flash, embers and shake in the game.
+- **Late Nov 22:** all hero v2 renders finished and are in the game (base, kata, stance idles, 48 skin packs, shop icons); tests, type checks and build pass; checked in the browser (both bodies, hairstyles, a worn hood + cape + aura + pet, the belt visible on every outfit). Branch pushed for a preview link.
 - **Next:** Jay looks at the previews and plays the preview link; OK (or changes) for the art, names and prices; decide whether the Floor Keeper should also pause (can't be hurt) while it transforms.
