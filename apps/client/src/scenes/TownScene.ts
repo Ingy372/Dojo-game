@@ -8,7 +8,8 @@ import { reducedMotion } from '../game/motion';
 import { loadLook, SWATCHES } from '../game/look';
 import { currentTraining } from '../game/student';
 import { addExitCue } from '../ui/exitCue';
-import { FONT, MIN_TAP, S2, TYPE, crisp, view } from '../ui/theme';
+import { DPR, FONT, MIN_TAP, S2, TYPE, crisp, view } from '../ui/theme';
+import { TownSocial, type SocialPlayer } from '../ui/townSocial';
 import { button as roundButton } from '../ui/button';
 import { openShop, type ShopScreen } from '../ui/shop';
 import { SHOP_WORDS } from '../game/shop';
@@ -68,11 +69,19 @@ const SHOP_W = 96;
 
 /** A pretend classmate for the crowd test (`?crowd=N`): walks between open spots, never blocks anyone. */
 interface Walker {
+  id: string;
+  name: string;
+  belt: number;
   sprite: LayeredSprite;
   box: Phaser.GameObjects.Container;
+  label: Phaser.GameObjects.Text;
   pos: Vec2;
   path: Vec2[];
   rest: number;
+  /** Pretend classmates are bots (they answer on their own). */
+  bot: true;
+  /** Nov 23: a party member following its leader (the social layer sets it); null = wander. */
+  follow: Vec2 | null;
 }
 
 const CROWD_NAMES = ['Ava M.', 'Leo R.', 'Mia T.', 'Kai B.', 'Zoe L.', 'Eli P.', 'Ivy C.', 'Max D.', 'Ana S.', 'Ben W.', 'Lily G.', 'Noah F.', 'Ruby H.', 'Sam K.', 'Nia J.', 'Owen V.', 'Maya N.', 'Theo A.', 'Isla Q.', 'Jude Y.'];
@@ -95,6 +104,8 @@ export class TownScene extends WalkScene {
   private shopButton: Phaser.GameObjects.Container | null = null;
   private shopRect: Phaser.Geom.Rectangle | null = null;
   private shop: ShopScreen | null = null;
+  /** Nov 23 (Jay): phrases and parties in town. */
+  private social: TownSocial | null = null;
 
   constructor() {
     super('ActionZoneTown');
@@ -127,6 +138,7 @@ export class TownScene extends WalkScene {
     this.scale.on(Phaser.Scale.Events.RESIZE, this.drawShopButton, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.drawShopButton, this));
     this.makeCrowd(Math.min(30, Math.max(0, Number(testFlags().get('crowd')) || 0)));
+    this.makeSocial();
     this.tourStop((data as TownSceneData | undefined)?.from);
   }
 
@@ -192,6 +204,7 @@ export class TownScene extends WalkScene {
     const { width, height } = view(this);
     this.paused = true;
     this.shopButton?.setVisible(false);
+    this.social?.setHidden(true);
     const before = JSON.stringify(loadSave().shop.wearing);
     this.shop = openShop(this, width, height, loadSave(), currentTraining(), () => {
       this.shop?.layer.destroy();
@@ -204,11 +217,72 @@ export class TownScene extends WalkScene {
       }
       this.paused = false;
       this.shopButton?.setVisible(true);
+      this.social?.setHidden(false);
     });
   }
 
   protected overUi(x: number, y: number): boolean {
-    return !!this.shop || (!!this.shopRect && this.shopRect.contains(x, y));
+    if (this.shop || (this.shopRect && this.shopRect.contains(x, y))) return true;
+    // Nov 23: the Say / Party buttons and their cards, and a tap on a classmate (opens their card, doesn't walk)
+    return !!this.social && (this.social.hits(x, y) || this.social.playerAt(x, y) !== null);
+  }
+
+  /**
+   * Phrases and parties (Jay, Nov 23). A tap on a classmate opens their card; tap-to-move keeps working everywhere
+   * else, and the stick's corner always steers. Hidden during Sensei's town tour.
+   */
+  private makeSocial(): void {
+    const social = new TownSocial({
+      scene: this,
+      world: this.worldLayer,
+      tile: TILE,
+      myPos: () => this.world.players.p1.pos,
+      myName: () => currentTraining().firstName,
+      others: (): SocialPlayer[] => this.walkers,
+      toScreen: (p) => ({ x: this.worldLayer.x + p.x * TILE * this.zoom, y: this.worldLayer.y + p.y * TILE * this.zoom }),
+      setPaused: (on) => {
+        this.paused = on;
+        if (on) {
+          this.world.players.p1.path = null;
+          this.controls.reset();
+        }
+      },
+      botGoTo: (id, to) => {
+        const w = this.walkers.find((x) => x.id === id);
+        if (!w) return;
+        w.follow = to;
+        if (to) {
+          w.path = findPath(this.roomAt, w.pos, to, MOVEMENT.playerRadius) ?? [];
+          w.rest = 0.4;
+        }
+      },
+      setNameColour: (id, colour) => this.walkers.find((x) => x.id === id)?.label.setColor(colour),
+    });
+    this.social = social;
+    if (loadSave().homeTour === 'town') social.setHidden(true);
+    let downAt: { x: number; y: number } | null = null;
+    // A tap that starts on a button or card belongs to it, even if the card closes before the finger lifts.
+    const down = (p: Phaser.Input.Pointer) => {
+      const x = p.x / DPR;
+      const y = p.y / DPR;
+      downAt = social.hits(x, y) || (this.shopRect?.contains(x, y) ?? false) ? null : { x, y };
+    };
+    const up = (p: Phaser.Input.Pointer) => {
+      const x = p.x / DPR;
+      const y = p.y / DPR;
+      const from = downAt;
+      downAt = null;
+      if (!from || Math.hypot(x - from.x, y - from.y) > 12 || this.paused || this.shop || this.leaving) return;
+      const who = social.playerAt(x, y);
+      if (who) social.tapPlayer(who);
+    };
+    this.input.on('pointerdown', down);
+    this.input.on('pointerup', up);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.input.off('pointerdown', down);
+      this.input.off('pointerup', up);
+      this.social = null;
+    });
   }
 
   protected spawn(data: unknown): { pos: Vec2; facing: Facing } {
@@ -399,13 +473,14 @@ export class TownScene extends WalkScene {
       });
       if (!sprite) return;
       const name = this.add
-        .text(0, -TILE * 1.55, CROWD_NAMES[i % CROWD_NAMES.length], { fontFamily: FONT, fontSize: '11px', color: '#ffffff', stroke: '#14121c', strokeThickness: 3 })
+        .text(0, -TILE * 1.55, CROWD_NAMES[i % CROWD_NAMES.length], { fontFamily: FONT, fontStyle: 'bold', fontSize: '11px', color: '#ffffff', stroke: '#14121c', strokeThickness: 3 })
         .setOrigin(0.5, 1)
         .setResolution(crisp() * 2);
       if (this.night) nightLight(sprite, NIGHT_HERO_TINT);
       const box = this.add.container(pick.x * TILE, pick.y * TILE, [sprite.container, name]);
       this.standLayer.add(box);
-      this.walkers.push({ sprite, box, pos: { ...pick }, path: [], rest: Math.random() * 2 });
+      const beltColour = Phaser.Display.Color.HexStringToColor(belt.color).color;
+      this.walkers.push({ id: `c${i}`, name: CROWD_NAMES[i % CROWD_NAMES.length], belt: beltColour, sprite, box, label: name, pos: { ...pick }, path: [], rest: Math.random() * 2, bot: true, follow: null });
     }
   }
 
@@ -428,6 +503,7 @@ export class TownScene extends WalkScene {
       this.refreshZoom();
     }
     super.update(time, delta);
+    this.social?.update();
     if (!this.walkers.length) return;
     const dt = Math.min(delta, 100) / 1000;
     const speed = MOVEMENT.speedTilesPerSecond * 0.7;
@@ -442,13 +518,21 @@ export class TownScene extends WalkScene {
         if (d <= step) {
           w.pos = { ...t };
           w.path.shift();
-          if (!w.path.length) w.rest = 1 + Math.random() * 4;
+          if (!w.path.length) w.rest = w.follow ? 0.3 : 1 + Math.random() * 4;
         } else {
           w.pos = { x: w.pos.x + (dx / d) * step, y: w.pos.y + (dy / d) * step };
           w.sprite.face(dx, dy);
         }
         moving = true;
       } else if ((w.rest -= dt) <= 0) {
+        if (w.follow) {
+          // a party member waits by its leader until the leader walks off again
+          w.rest = 0.5;
+          w.box.setPosition(w.pos.x * TILE, w.pos.y * TILE).setDepth(w.pos.y * TILE);
+          playLocomotion(w.sprite, 0);
+          w.sprite.update();
+          continue;
+        }
         const to = this.openCells[Math.floor(Math.random() * this.openCells.length)];
         w.path = findPath(this.roomAt, w.pos, to, MOVEMENT.playerRadius) ?? [];
         if (!w.path.length) w.rest = 0.5;
