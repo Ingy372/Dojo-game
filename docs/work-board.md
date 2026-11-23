@@ -67,7 +67,7 @@ Jay has a few more visuals to list here.
 | VO-5 | 16 shop decorations, 10 achievement trophies | Done, on `main` (Jay OK'd Nov 23) |
 
 
-## 2e. Pro shop, social town and coins (Jay, Nov 23; branch )
+## 2e. Pro shop, social town and coins (Jay, Nov 23; branch `claude/shop-hub`)
 
 | ID | What | Status |
 |---|---|---|
