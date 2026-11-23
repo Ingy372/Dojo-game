@@ -10,6 +10,8 @@ import { currentTraining } from '../game/student';
 import { addExitCue } from '../ui/exitCue';
 import { DPR, FONT, MIN_TAP, S2, TYPE, crisp, view } from '../ui/theme';
 import { TownSocial, type SocialPlayer } from '../ui/townSocial';
+import { playIntro } from '../ui/introCutscene';
+import type { RunState } from '@dojo/sim';
 import { button as roundButton } from '../ui/button';
 import { openShop, type ShopScreen } from '../ui/shop';
 import { SHOP_WORDS } from '../game/shop';
@@ -60,6 +62,8 @@ function nightLight(sprite: LayeredSprite, colour: number): void {
 /** Where the hero came from: out of their own dojo (home), or out of the Action Zone (outside). */
 export interface TownSceneData {
   from?: 'home' | 'outside';
+  /** Nov 23: play the opening cutscene here, then start this tutorial run. */
+  intro?: { run: RunState };
   /** Back from the shop: stand here again (tiles), so the new look shows where the hero was. */
   at?: Vec2;
 }
@@ -106,6 +110,9 @@ export class TownScene extends WalkScene {
   private shop: ShopScreen | null = null;
   /** Nov 23 (Jay): phrases and parties in town. */
   private social: TownSocial | null = null;
+  /** Nov 23: the opening cutscene is playing (the camera and the hero belong to it). */
+  private intro: { run: RunState } | null = null;
+  private introRows = 7;
 
   constructor() {
     super('ActionZoneTown');
@@ -124,11 +131,17 @@ export class TownScene extends WalkScene {
     if ((input.kind === 'stick' && input.y < -0.3) || (input.kind === 'moveTo' && input.y < pos.y - 0.2)) this.arm('home-door');
   }
 
+  /** Read before preload, so the cutscene's art (the Shades) loads with the town. */
+  init(data?: unknown): void {
+    this.intro = (data as TownSceneData | undefined)?.intro ?? null;
+  }
+
   create(data?: unknown): void {
     this.tourHomeWait = false;
     this.lifted = false;
-    this.stage = currentTownStage();
-    this.night = isTownNight();
+    // The cutscene shows the town at its first stage, in daylight.
+    this.stage = this.intro ? 1 : currentTownStage();
+    this.night = this.intro ? false : isTownNight();
     this.rowsNow = 7;
     this.roomAt = townRoom(WALK, this.stage);
     super.create(data);
@@ -137,6 +150,10 @@ export class TownScene extends WalkScene {
     this.drawShopButton();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.drawShopButton, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.drawShopButton, this));
+    if (this.intro) {
+      this.startIntro(this.intro.run);
+      return;
+    }
     this.makeCrowd(Math.min(30, Math.max(0, Number(testFlags().get('crowd')) || 0)));
     this.makeSocial();
     this.tourStop((data as TownSceneData | undefined)?.from);
@@ -177,7 +194,46 @@ export class TownScene extends WalkScene {
   }
 
   protected roomPacks(): string[] {
-    return [TOWN_PACK];
+    // the cutscene's Shades come from the white belt monsters
+    return this.intro ? [TOWN_PACK, 'enemies-t1'] : [TOWN_PACK];
+  }
+
+  /** The opening cutscene (Jay, Nov 23), then the tutorial run. */
+  private startIntro(run: RunState): void {
+    this.paused = true;
+    this.shopButton?.destroy();
+    this.shopButton = null;
+    this.shopRect = null;
+    // four kids training in the practice yard
+    this.makeCrowd(4);
+    const yard = [{ x: 35.6, y: 6.2 }, { x: 37.4, y: 6.2 }, { x: 39.2, y: 6.2 }, { x: 36.5, y: 7.6 }];
+    this.walkers.forEach((w, i) => {
+      w.pos = { ...yard[i % yard.length] };
+      w.path = [];
+      w.rest = 1e9;
+      w.label.setVisible(false);
+      w.box.setPosition(w.pos.x * TILE, w.pos.y * TILE).setDepth(w.pos.y * TILE);
+    });
+    const me = this.world.players.p1;
+    playIntro({
+      scene: this,
+      world: this.worldLayer,
+      tile: TILE,
+      look: (p, rows) => {
+        this.lookAt = p;
+        this.introRows = rows;
+      },
+      heroVisible: (on) => this.player.setVisible(on),
+      placeHero: (p, face) => {
+        me.pos = { ...p };
+        me.path = null;
+        me.facing = { ...face };
+      },
+      walkHero: (path) => (me.path = path.map((p) => ({ ...p }))),
+      heroPos: () => me.pos,
+      kids: this.walkers.map((w) => w.sprite),
+      done: () => this.scene.start('Game', { run, skipStory: true }),
+    });
   }
 
   protected viewRows(): number {
@@ -491,8 +547,8 @@ export class TownScene extends WalkScene {
     // Near the buildings along the main street the camera looks a little higher, so the Action Zone's sign shows.
     // On the Tower path it pulls back and up, so the Tower rises above the gate.
     const p = this.world?.players.p1.pos;
-    let rows = 7;
-    if (p && (this.lookAt === null || this.lifted)) {
+    let rows = this.intro ? this.introRows : 7;
+    if (p && !this.intro && (this.lookAt === null || this.lifted)) {
       const onPath = p.x >= TOWER_PATH[0] && p.x <= TOWER_PATH[1] && p.y < TOWER_PATH[2];
       this.lifted = p.y < 12.5 && !this.paused;
       if (this.lifted && onPath) rows = TOWER_LOOK.rows;

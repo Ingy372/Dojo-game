@@ -2463,6 +2463,354 @@
           ]
         }
       ]
+    },
+    "player-a-hair-13": {
+      "note": "One hair style (only the chosen one is loaded), hair-13 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-13"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-14": {
+      "note": "One hair style (only the chosen one is loaded), hair-14 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-14"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-15": {
+      "note": "One hair style (only the chosen one is loaded), hair-15 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-15"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-16": {
+      "note": "One hair style (only the chosen one is loaded), hair-16 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-16"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-17": {
+      "note": "One hair style (only the chosen one is loaded), hair-17 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-17"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-18": {
+      "note": "One hair style (only the chosen one is loaded), hair-18 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-18"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-kata-hair-13": {
+      "note": "Kata practice moves and stances, hair-13 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-a/player-a.json",
+          "layers": [
+            "hair-13"
+          ]
+        }
+      ]
+    },
+    "player-a-kata-hair-14": {
+      "note": "Kata practice moves and stances, hair-14 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-a/player-a.json",
+          "layers": [
+            "hair-14"
+          ]
+        }
+      ]
+    },
+    "player-a-kata-hair-15": {
+      "note": "Kata practice moves and stances, hair-15 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-a/player-a.json",
+          "layers": [
+            "hair-15"
+          ]
+        }
+      ]
+    },
+    "player-a-kata-hair-16": {
+      "note": "Kata practice moves and stances, hair-16 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-a/player-a.json",
+          "layers": [
+            "hair-16"
+          ]
+        }
+      ]
+    },
+    "player-a-kata-hair-17": {
+      "note": "Kata practice moves and stances, hair-17 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-a/player-a.json",
+          "layers": [
+            "hair-17"
+          ]
+        }
+      ]
+    },
+    "player-a-kata-hair-18": {
+      "note": "Kata practice moves and stances, hair-18 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-a/player-a.json",
+          "layers": [
+            "hair-18"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-13": {
+      "note": "One hair style (only the chosen one is loaded), hair-13 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-13"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-14": {
+      "note": "One hair style (only the chosen one is loaded), hair-14 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-14"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-15": {
+      "note": "One hair style (only the chosen one is loaded), hair-15 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-15"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-16": {
+      "note": "One hair style (only the chosen one is loaded), hair-16 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-16"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-17": {
+      "note": "One hair style (only the chosen one is loaded), hair-17 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-17"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-18": {
+      "note": "One hair style (only the chosen one is loaded), hair-18 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-18"
+          ],
+          "mergeAnimations": [
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-13": {
+      "note": "Kata practice moves and stances, hair-13 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-b/player-b.json",
+          "layers": [
+            "hair-13"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-14": {
+      "note": "Kata practice moves and stances, hair-14 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-b/player-b.json",
+          "layers": [
+            "hair-14"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-15": {
+      "note": "Kata practice moves and stances, hair-15 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-b/player-b.json",
+          "layers": [
+            "hair-15"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-16": {
+      "note": "Kata practice moves and stances, hair-16 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-b/player-b.json",
+          "layers": [
+            "hair-16"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-17": {
+      "note": "Kata practice moves and stances, hair-17 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-b/player-b.json",
+          "layers": [
+            "hair-17"
+          ]
+        }
+      ]
+    },
+    "player-b-kata-hair-18": {
+      "note": "Kata practice moves and stances, hair-18 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/claude-hero-v2/sprites-kata/body-b/player-b.json",
+          "layers": [
+            "hair-18"
+          ]
+        }
+      ]
     }
   }
 }

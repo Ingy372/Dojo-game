@@ -10,6 +10,9 @@ import { reducedMotion } from '../game/motion';
 import { markSavedNoteSeen, needsSavedNote, testFlags } from '../game/beta';
 import SAFE_TEXT from '../../../../content/settings/safety.json';
 import { GREEN } from '../ui/tokens';
+import { startTowerRun } from '../game/tower';
+import { loadSave } from '../game/save';
+import { currentTraining } from '../game/student';
 
 export class TitleScene extends Phaser.Scene {
   private title!: Phaser.GameObjects.Text;
@@ -98,6 +101,8 @@ export class TitleScene extends Phaser.Scene {
       if (params.get('room') === 'training') this.scene.start('Game');
       // Test link: ?room=town opens the town straight away (add &townstage=1-10 for a belt's town, &crowd=20 for classmates).
       else if (params.get('room') === 'town') this.scene.start('ActionZoneTown', { from: 'home' });
+      // Test link: ?room=intro plays the opening cutscene, then the tutorial floor (Nov 23).
+      else if (params.get('room') === 'intro') this.scene.start('ActionZoneTown', { intro: { run: startTowerRun(loadSave(), currentTraining(), { replayTutorial: true }) } });
       // Test link: ?room=dojo opens the Action Zone inside room straight away.
       else if (params.get('room') === 'dojo') this.scene.start('ActionZoneInside');
       // Test link: ?street=store-separated opens a Street Smarts scenario straight away.

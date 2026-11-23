@@ -415,7 +415,8 @@ export class CreateScene extends Phaser.Scene {
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
         // A brand-new player goes straight onto the tutorial floor (M7-P2); everyone else goes home.
         const profile = loadSave();
-        if (this.first && save && getsTutorialFloor(profile)) this.scene.start('Game', { run: startTowerRun(profile, this.training) });
+        // Nov 23: the opening cutscene plays in the town first, then the tutorial floor starts.
+        if (this.first && save && getsTutorialFloor(profile)) this.scene.start('ActionZoneTown', { intro: { run: startTowerRun(profile, this.training) } });
         else this.scene.start('Dojo');
       });
     });

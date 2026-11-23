@@ -18,9 +18,9 @@ a = ap.parse_args(argv)
 STAFF = {
     "jay": dict(face="03", grin=0.090, hair="02", skin="#f0c4a4", hairc="#8a6440", gi="#2b2b33", lapel="#2b2b33", belt="#1b1b1f",
                 iris="#6d8aa3", glasses=True, beard="#9a6a42", mustache=True, goatee=True, quiff=True),
-    "hannah": dict(face="06", long=True, grin=0.060, hair="05", skin="#f2cdb6", hairc="#3a2a26", gi="#2f6fc4", lapel="#2f6fc4", belt="#1b1b1f",
+    "hannah": dict(face="06", grin=0.060, hair="15", skin="#f2cdb6", hairc="#3a2a26", gi="#2f6fc4", lapel="#2f6fc4", belt="#1b1b1f",
                    iris="#7f98ab", tips="#7b4fc2"),
-    "michael": dict(face="05", grin=0.100, hair="03", skin="#c98c62", hairc="#4a403b", gi="#f4f4f4", lapel="#e8e8e8", belt="#1b1b1f",
+    "michael": dict(face="05", grin=0.100, buff=True, hair="03", skin="#c98c62", hairc="#4a403b", gi="#f4f4f4", lapel="#e8e8e8", belt="#1b1b1f",
                     iris="#4a3020", beard="#a59e96", mustache=True, smile=True),
 }
 P = STAFF[a.who]
@@ -387,6 +387,25 @@ if P.get("tips"):
                 poly.material_index = ipur
             elif z < cut:
                 poly.material_index = imid
+
+# ---- Michael (Jay, Nov 23): "a bit more muscley, but don't overdo it": fuller chest, shoulders and arms
+if P.get("buff"):
+    BUFF = {"gi_torso": (1.10, 1.0, 1.0), "gi_shoulder": (1.16, 1.16, 1.12), "gi_upper_arm": (1.14, 1.14, 1.0), "gi_elbow": (1.1, 1.1, 1.0),
+            "gi_sleeve": (1.1, 1.1, 1.0), "forearm": (1.12, 1.12, 1.0), "fist": (1.06, 1.06, 1.06), "neck": (1.12, 1.12, 1.0)}
+    for ob in [o for o in bpy.data.objects if o.type == "MESH" and not o.name.endswith("_outline")]:
+        key = ob.name.split(".")[0]
+        if key not in BUFF:
+            continue
+        sx, sy, sz = BUFF[key]
+        pts = [ob.matrix_world @ v.co for v in ob.data.vertices]
+        c = sum(pts, Vector()) / len(pts)
+        for o2 in (ob, bpy.data.objects.get(ob.name + "_outline")):
+            if not o2:
+                continue
+            mw = o2.matrix_world; inv = mw.inverted()
+            for v in o2.data.vertices:
+                w = mw @ v.co
+                v.co = inv @ Vector((c.x + (w.x - c.x) * sx, c.y + (w.y - c.y) * sy, c.z + (w.z - c.z) * sz))
 
 # ---- one flattened layer: every L_ collection merged into L_staff
 staff = bpy.data.collections.new("L_staff"); sc.collection.children.link(staff)
