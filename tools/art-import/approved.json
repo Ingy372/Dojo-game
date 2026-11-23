@@ -1204,30 +1204,22 @@
       ]
     },
     "enemy-hearth-cook-p2": {
-      "note": "Hearth Cook Guardian, phase 2 rig (Jay approved; B-T3). B-T3-TUNE-2b (#299, Jay OK'd): pin wind-up and attack plus the lid layer merged in.",
+      "note": "Hearth Cook phase 2 = INFERNO HEARTH (Claude, Nov 22, waiting on Jay's OK): the total transformation Jay asked for (a cast-iron stove giant with a fire crown). Same rig, moves, lid layer and timings as the approved cook. Old art: incoming-art/tier3-orange-guardian/hearth-cook/p2 + hearth-cook-2b.",
       "sources": [
         {
           "id": "hearth-cook-p2",
           "type": "character",
-          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p2/sprites/hearth-cook-p2.json",
-          "mergeAnimations": [
-            "incoming-art/hearth-cook-2b/p2-pin/sprites/hearth-cook-p2-pin.json",
-            "incoming-art/hearth-cook-2b/lid/p2/hearth-cook-p2.json"
-          ]
+          "json": "incoming-art/claude-guardians/inferno-p2/sprites/inferno-p2.json"
         }
       ]
     },
     "enemy-hearth-cook-p3": {
-      "note": "Hearth Cook Guardian, phase 3 rig (Jay approved; B-T3). B-T3-TUNE-2b (#299, Jay OK'd): bonk wind-up and attack plus the lid layer merged in.",
+      "note": "Hearth Cook phase 3 = INFERNO HEARTH (Claude, Nov 22, waiting on Jay's OK): the total transformation Jay asked for (a cast-iron stove giant with a fire crown). Same rig, moves, lid layer and timings as the approved cook. Old art: incoming-art/tier3-orange-guardian/hearth-cook/p3 + hearth-cook-2b.",
       "sources": [
         {
           "id": "hearth-cook-p3",
           "type": "character",
-          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p3/sprites/hearth-cook-p3.json",
-          "mergeAnimations": [
-            "incoming-art/hearth-cook-2b/p3-bonk/sprites/hearth-cook-p3-bonk.json",
-            "incoming-art/hearth-cook-2b/lid/p3/hearth-cook-p3.json"
-          ]
+          "json": "incoming-art/claude-guardians/inferno-p3/sprites/inferno-p3.json"
         }
       ]
     },
@@ -1526,6 +1518,16 @@
           "id": "pet",
           "type": "character",
           "json": "incoming-art/claude-pets/sprites/little-turtle/pet-little-turtle.json"
+        }
+      ]
+    },
+    "enemy-floor-keeper-f2": {
+      "note": "Floor Keeper phase 2 = WARDEN UNBOUND (Claude, Nov 22, waiting on Jay's OK), shown from half health. Rendered at 160 px per tile like Shades v2 (ART_BOOST).",
+      "sources": [
+        {
+          "id": "floor-keeper-f2",
+          "type": "character",
+          "json": "incoming-art/claude-guardians/keeper-f2/sprites/floor-keeper-f2.json"
         }
       ]
     }

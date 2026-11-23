@@ -1249,12 +1249,49 @@ export class GameScene extends Phaser.Scene {
       // It waits until the current wind-up and attack are over: the next rig may not have that attack's art.
       const v = this.enemyViews.get(e.id);
       const rig = enemyArt(e.def.id, e.health / e.def.maxHealth)?.id;
+      let transformed = false;
       if (v && rig && v.rig !== rig && e.mode !== 'defeated' && e.mode !== 'windup' && e.mode !== 'recover') {
         v.container.destroy();
         this.enemyViews.delete(e.id);
+        transformed = true;
       }
       if (!this.enemyViews.has(e.id)) this.makeEnemy(e);
+      if (transformed) this.transformBurst(e);
     }
+  }
+
+  /**
+   * Visual overhaul (Nov 22): a Guardian's new form appears with a white flash, a ring of embers and a short shake.
+   * Kept smaller than any real promotion celebration; with reduced motion only the flash shows.
+   */
+  private transformBurst(e: EnemyState): void {
+    const v = this.enemyViews.get(e.id);
+    if (!v) return;
+    v.sprite.flash(0xffffff, true);
+    this.time.delayedCall(140, () => v.sprite.flash(null));
+    if (reducedMotion()) return;
+    this.cameras.main.shake(220, 0.005);
+    const x = e.pos.x * TILE;
+    const y = (e.pos.y - 0.5) * TILE;
+    const g = this.addWorld(this.add.graphics().setDepth(8));
+    const n = 18;
+    const cols = [0xffd36b, 0xffb020, 0xfff1b8];
+    const start = this.time.now;
+    const step = () => {
+      const k = Math.min(1, (this.time.now - start) / 600);
+      g.clear();
+      g.lineStyle(4 * (1 - k) + 1, 0xffe9a8, 0.8 * (1 - k)).strokeCircle(x, y, TILE * (0.4 + 1.6 * k));
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2;
+        const d = TILE * (0.3 + 1.8 * k * (0.7 + 0.3 * ((i * 7) % 5) / 5));
+        g.fillStyle(cols[i % 3], 1 - k).fillCircle(x + Math.cos(a) * d, y + Math.sin(a) * d * 0.7, 5 * (1 - k) + 1);
+      }
+      if (k >= 1) {
+        g.destroy();
+        this.events.off(Phaser.Scenes.Events.UPDATE, step);
+      }
+    };
+    this.events.on(Phaser.Scenes.Events.UPDATE, step);
   }
 
   private makeEnemy(e: EnemyState): void {

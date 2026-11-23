@@ -1412,3 +1412,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - CW-3 done: Claude played the game in a real browser on a small (667 × 375) and a large (932 × 430) phone with the new white, yellow and orange profiles: tutorial, dojo, town, board, Tower runs (white and orange floors, Hearth Cook), kata practice and Street Smarts. Notes: `docs/reviews/playtest-2026-11-22.md`.
 - Fixed with tests (B-FIX): the tutorial safe spot under STRIKE, quick taps in the stick area, the tutorial bow at the door, the special turn with fast tapping (4 issues), the glowing spot missed on a big phone, the "Open the chest!" nudge, the town pointer over the sign, and the character screen (an Orange Belt, Surprise me!, Hair color).
 - **Next:** Jay reads the notes, answers the Shihan/Shinan question and picks which polish items to do; then copy the branch to `main` with his OK.
+
+## Visual overhaul (2026-11-22, branch `claude/visual-overhaul`; Jay away, nothing on `main`)
+Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-change boss phases, dojo decorations (to buy or earn). Details in decisions.md.
+- **Hero v2:** chibi head, big glossy eyes, soft shading with rim light, bolder outline; every animation (base, run, kata, stance idles) re-rendered for both bodies. Before/after: `incoming-art/claude-hero-v2/preview/`.
+- **Skins:** 10 outfits, 9 hats and hoods, 5 back pieces, on the same rig (belt always in front). Lineup: `incoming-art/claude-hero-v2/preview/skins_lineup.png`.
+- **Shop redesign** with tabs Skins, Colors, Effects, Pets, Dojo; 10 auras (code), 6 pets (Blender), 16 shop decorations; 10 achievement trophies for the dojo.
+- **Bosses:** Hearth Cook → Inferno Hearth (phase 2-3), Floor Keeper → Warden Unbound (half health), the final Guardian's three forms (rendered, not in a fight until belt 10 rooms exist). Transformation flash, embers and shake in the game.
+- **Next:** Jay looks at the previews and plays the preview link; OK (or changes) for the art, names and prices; decide whether the Floor Keeper should also pause (can't be hurt) while it transforms.

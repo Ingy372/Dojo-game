@@ -56,6 +56,16 @@ Jay has a few more visuals to list here.
 |---|---|---|
 | ART-CHEST | Treasure chest: redo in Blender so it feels special (Jay: "bland and boring"). | Chest v2 built Nov 18 and in the game (new Blender chest, coins, charge ring, reveal card); waiting for Jay to look at it on a phone (Nov 22) |
 
+## 2d. Visual overhaul (Jay, Nov 22; branch `claude/visual-overhaul`)
+
+| ID | What | Status |
+|---|---|---|
+| VO-1 | Hero v2 look (all animations, both bodies) | Built, waits on Jay's OK |
+| VO-2 | Skins: 10 outfits, 9 hats, 5 back pieces | Built, waits on Jay's OK (names, prices) |
+| VO-3 | Shop redesign, 10 auras, 6 pets | Built, waits on Jay's OK |
+| VO-4 | Boss forms: Inferno Hearth, Warden Unbound, the final Guardian's 3 forms | Built, waits on Jay's OK; the Floor Keeper's transformation pause is Jay's call |
+| VO-5 | 16 shop decorations, 10 achievement trophies | Built, waits on Jay's OK |
+
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 

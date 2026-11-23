@@ -53,8 +53,14 @@ const HEARTH_COOK_RIGS: Array<{ atHealth: number; pack: PackName; id: string }> 
   { atHealth: 0, pack: 'enemy-hearth-cook-p3', id: 'hearth-cook-p3' },
 ];
 
+/**
+ * Visual overhaul (Nov 22): the Floor Keeper transforms at half health (WARDEN UNBOUND), when it calls its helpers.
+ * Drawing only: its fight rules are unchanged. It keeps the Shades v2 drawing boost (same 160 px per tile art).
+ */
+const FLOOR_KEEPER_FORM2 = { atHealth: 0.5, pack: 'enemy-floor-keeper-f2' as PackName, id: 'floor-keeper-f2' };
+
 /** Every pack ENEMY_PACKS or a phase rig can use, for loading. */
-export const ENEMY_ART_PACKS: PackName[] = [...new Set([...Object.values(ENEMY_PACKS).map((p) => p.pack), ...HEARTH_COOK_RIGS.map((r) => r.pack)])];
+export const ENEMY_ART_PACKS: PackName[] = [...new Set([...Object.values(ENEMY_PACKS).map((p) => p.pack), ...HEARTH_COOK_RIGS.map((r) => r.pack), FLOOR_KEEPER_FORM2.pack])];
 
 /**
  * Shades v2 (Jay, Nov 18: "draw them sharper and bigger"). The White belt monsters (pack enemies-t1) are rendered at
@@ -73,6 +79,7 @@ export function artScale(def: { id: string; scale: number }): number {
 /** The art (pack, id) for an enemy at this share of health; phase bosses change rig as they lose health. */
 export function enemyArt(enemyId: string, healthShare: number): { pack: PackName; id: string } | undefined {
   if (enemyId === 'hearth-cook') return HEARTH_COOK_RIGS.find((r) => healthShare >= r.atHealth) ?? HEARTH_COOK_RIGS[2];
+  if (enemyId === 'floor-keeper' && healthShare < FLOOR_KEEPER_FORM2.atHealth) return { pack: FLOOR_KEEPER_FORM2.pack, id: FLOOR_KEEPER_FORM2.id };
   return ENEMY_PACKS[enemyId];
 }
 
