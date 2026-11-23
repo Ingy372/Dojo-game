@@ -17,6 +17,7 @@ export * from './fakeStudent';
 export * from './content';
 export * from './run';
 export * from './profile';
+export * from './social';
 export * from './feed';
 export * from './abilities';
 export * from './training';

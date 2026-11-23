@@ -1,0 +1,20 @@
+{
+  "_note": "Preset phrases players can say in town (Jay, Nov 23: 10-15 phrases to communicate and build relations, nothing that can be abused). Claude's DRAFT list, waiting on Jay's OK: change any text here. No free text ever. icon = a small emoji-free symbol drawn in code: wave, star, heart, team, arrow, wait, fist, bow, check, clock, sun.",
+  "phrases": [
+    { "id": "hello", "text": "Hello!", "icon": "wave" },
+    { "id": "goodbye", "text": "Goodbye!", "icon": "wave" },
+    { "id": "good-job", "text": "Good job!", "icon": "star" },
+    { "id": "thank-you", "text": "Thank you!", "icon": "heart" },
+    { "id": "welcome", "text": "You're welcome!", "icon": "heart" },
+    { "id": "team-up", "text": "Want to team up?", "icon": "team" },
+    { "id": "follow-me", "text": "Follow me!", "icon": "arrow" },
+    { "id": "wait", "text": "Wait for me!", "icon": "wait" },
+    { "id": "train", "text": "Let's train!", "icon": "fist" },
+    { "id": "ready", "text": "Ready!", "icon": "check" },
+    { "id": "great-kata", "text": "Great kata!", "icon": "star" },
+    { "id": "nice-look", "text": "Nice look!", "icon": "star" },
+    { "id": "good-game", "text": "Good game!", "icon": "bow" },
+    { "id": "brb", "text": "Be right back!", "icon": "clock" },
+    { "id": "see-you", "text": "See you in class!", "icon": "sun" }
+  ]
+}

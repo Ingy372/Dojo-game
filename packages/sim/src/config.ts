@@ -339,6 +339,26 @@ export const SELL_PRICE: Readonly<Record<Rarity, number>> = {
 };
 
 /**
+ * Town social rules (Jay, Nov 23): preset phrases and parties. Ticks are 20 per second.
+ */
+export const SOCIAL = {
+  /** A player may say a phrase once every 3 seconds (no spamming the town). */
+  phraseCooldownTicks: 60,
+  /** How long a phrase bubble shows (ms, drawn by the client). */
+  bubbleMs: 3000,
+  /** How many phrases the list may hold, and the longest one (letters). */
+  phrasesMin: 8,
+  phrasesMax: 20,
+  phraseMaxChars: 24,
+  /** Players in one party, the leader included. */
+  partyMax: 4,
+  /** An invite waits 30 seconds for an answer, then quietly goes away. */
+  inviteTicks: 600,
+  /** The same player can't be invited again by the same player for 10 seconds (after a no, or an expired invite). */
+  reinviteTicks: 200,
+} as const;
+
+/**
  * Class Chests after a long time away: every class still counts and still pays its coins and its
  * Home Dojo piece, but one visit adds at most this many pieces of gear to the bag. The rest of
  * those chests hold coins only, so 200 classes never flood the bag with 200 items.
