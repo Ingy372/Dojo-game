@@ -39,6 +39,11 @@ import { addExitCue } from '../ui/exitCue';
 import { StarWall } from '../ui/starWall';
 import { FONT, crisp, view } from '../ui/theme';
 import { WalkUpButton } from '../ui/walkUpButton';
+import { openShop } from '../ui/shop';
+import { makeStaffSprite, staffIn, staffLine, type StaffLine, type StaffMember } from '../game/staff';
+import { speechBubble, type Bubble } from '../ui/speechBubble';
+import type { LayeredSprite } from '../art/LayeredSprite';
+import { SHOP_WORDS } from '../game/shop';
 import { TILE, WalkScene, type Facing } from './WalkScene';
 
 /**
@@ -86,7 +91,7 @@ function kataRotate(v: Vec2, deg: number): Vec2 {
   return { x: Math.round(Math.cos(a) * 1e6) / 1e6, y: Math.round(Math.sin(a) * 1e6) / 1e6 };
 }
 
-type Mode = 'walk' | 'bow' | 'read' | 'game' | 'train' | 'kata';
+type Mode = 'walk' | 'bow' | 'read' | 'game' | 'train' | 'kata' | 'shop';
 
 const distToRect = (p: Vec2, r: readonly [number, number, number, number]): number =>
   Math.hypot(Math.max(r[0] - p.x, 0, p.x - r[1]), Math.max(r[2] - p.y, 0, p.y - r[3]));
@@ -123,6 +128,13 @@ export class InsideScene extends WalkScene {
   private kataQueuedAt = 0;
   /** The kata moves' art has been added to the hero (loaded when Practice Kata is first tapped). */
   private kataArtReady = false;
+  /** Hannah behind the pro shop counter (Jay, Nov 23), her speech bubble, and whether she said hello this visit. */
+  private shopkeeper: { who: StaffMember; sprite: LayeredSprite } | null = null;
+  private shopBubble: Bubble | null = null;
+  private greeted = false;
+  /** The camera is looking up at the counter (so walking away hands the camera back to the hero). */
+  private counterLook = false;
+  private lineCount = 0;
 
   constructor() {
     super('ActionZoneInside');
@@ -148,7 +160,12 @@ export class InsideScene extends WalkScene {
     this.kataPendingStep = null;
     this.kataQueued = [];
     this.kataArtReady = false;
+    this.shopkeeper = null;
+    this.shopBubble = null;
+    this.counterLook = false;
+    this.greeted = (data as { from?: string } | undefined)?.from === 'shop';
     super.create(data);
+    this.placeStaff();
     this.walkUp = new WalkUpButton(this);
     this.comboText = this.add
       .text(0, 0, '', { fontFamily: FONT, fontStyle: 'bold', fontSize: '26px', color: '#fff6e0', stroke: '#14121c', strokeThickness: 6 })
@@ -171,10 +188,15 @@ export class InsideScene extends WalkScene {
   }
 
   protected roomPacks(): string[] {
-    return [INSIDE_PACK];
+    return [INSIDE_PACK, ...staffIn('inside').map((s) => s.pack)];
   }
 
-  protected spawn(): { pos: Vec2; facing: Facing } {
+  protected spawn(data?: unknown): { pos: Vec2; facing: Facing } {
+    // Back from the shop with a new look on: stand at the counter again.
+    if ((data as { from?: string } | undefined)?.from === 'shop') {
+      const counter = INSIDE.spots.find((s) => s.kind === 'shop');
+      if (counter) return { pos: { x: counter.approachTile.x + 0.5, y: counter.approachTile.y + 0.5 }, facing: 'north' };
+    }
     return { pos: INSIDE.spawn, facing: 'north' };
   }
 
@@ -231,6 +253,7 @@ export class InsideScene extends WalkScene {
   }
 
   protected overUi(x: number, y: number): boolean {
+    if (this.mode === 'shop') return true;
     if (this.walkUp?.contains(x, y)) return true;
     if (this.mode !== 'train') return false;
     if (this.buttons?.contains(x, y)) return true;
@@ -300,6 +323,14 @@ export class InsideScene extends WalkScene {
 
   /** Shows the button for what the hero stands at (the mat's edge first), or hides it. */
   private offerButton(pos: Vec2): void {
+    // At the pro shop the camera looks up a little, so Hannah and her words are on screen (lookAt is only ours here).
+    const counter = INSIDE.spots.find((s) => s.kind === 'shop');
+    const atCounter = !!counter && this.shopkeeper !== null && distToRect(pos, counter.footprint) < NEAR + 0.6;
+    if (this.mode === 'walk' || this.mode === 'shop') {
+      if (atCounter) this.lookAt = { x: pos.x, y: pos.y - 2.0 };
+      else if (this.counterLook) this.lookAt = null;
+      this.counterLook = atCounter;
+    }
     if (this.mode !== 'walk' || this.leaving) {
       this.walkUp.hide();
       return;
@@ -317,7 +348,7 @@ export class InsideScene extends WalkScene {
     let best: WalkUpSpot | null = null;
     let bestD = NEAR;
     for (const s of INSIDE.spots) {
-      if (s.kind !== 'read' && s.kind !== 'target-wall' && s.kind !== 'heavy-bag') continue;
+      if (s.kind !== 'read' && s.kind !== 'target-wall' && s.kind !== 'heavy-bag' && s.kind !== 'shop') continue;
       const d = distToRect(pos, s.footprint);
       if (d < bestD) {
         best = s;
@@ -326,10 +357,14 @@ export class InsideScene extends WalkScene {
     }
     if (!best) {
       this.walkUp.hide();
+      // Walked away from the counter: Hannah says hello again next time.
+      if (counter && distToRect(pos, counter.footprint) > 3) this.greeted = false;
       return;
     }
     const spot = best;
+    if (spot.kind === 'shop') this.greet();
     if (spot.kind === 'read') this.walkUp.show('Read', () => this.read(spot));
+    else if (spot.kind === 'shop') this.walkUp.show(SHOP_WORDS.button, () => this.openCounterShop());
     else if (spot.kind === 'target-wall') this.walkUp.show('Throw', () => this.starWall());
     else this.walkUp.show('Train', () => this.train());
   }
@@ -344,6 +379,66 @@ export class InsideScene extends WalkScene {
       .setDepth(1e6);
     this.worldLayer.add(t);
     this.tweens.add({ targets: t, y: t.y - 10, alpha: { from: 1, to: 0 }, delay: 1300, duration: 500, onComplete: () => t.destroy() });
+  }
+
+  // ---------- the pro shop (Jay, Nov 23: the shop lives at the Action Zone's pro shop counter) ----------
+
+  private openCounterShop(): void {
+    if (this.mode !== 'walk' || this.leaving) return;
+    this.mode = 'shop';
+    this.paused = true;
+    this.world.players.p1.path = null;
+    this.controls.reset();
+    this.walkUp.hide();
+    const { width, height } = view(this);
+    const before = JSON.stringify(loadSave().shop.wearing);
+    let said: StaffLine = 'bye';
+    this.shopBubble?.dismiss();
+    const shop = openShop(this, width, height, loadSave(), currentTraining(), () => {
+      shop.layer.destroy();
+      this.staffSays(said, said === 'bye' ? 'bow' : 'npc_wave');
+      // A new look needs its art loaded: come back to the counter with it on.
+      if (JSON.stringify(loadSave().shop.wearing) !== before) {
+        this.scene.restart({ from: 'shop' });
+        return;
+      }
+      this.paused = false;
+      this.mode = 'walk';
+    }, (e) => (said = e));
+  }
+
+  /** Puts the staff who work in this room at their spots (Hannah behind the pro shop counter). */
+  private placeStaff(): void {
+    const who = staffIn('inside').find((s) => s.role === 'shop');
+    if (!who) return;
+    const sprite = makeStaffSprite(this, who);
+    if (!sprite) return;
+    sprite.container.setPosition(who.spot[0] * TILE, who.spot[1] * TILE).setDepth(who.spot[1] * TILE);
+    this.standLayer.add(sprite.container);
+    this.shopkeeper = { who, sprite };
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => sprite.destroy());
+  }
+
+  /** Hannah waves and says hello, once per visit to the counter. */
+  private greet(): void {
+    if (this.greeted) return;
+    this.greeted = true;
+    this.staffSays('hello', 'npc_wave');
+  }
+
+  /** The shopkeeper says a line of a kind over her head, playing a short animation, then goes back to her idle. */
+  private staffSays(kind: StaffLine, anim: 'npc_wave' | 'bow'): void {
+    const k = this.shopkeeper;
+    if (!k) return;
+    this.shopBubble?.dismiss();
+    const line = staffLine(k.who, kind, this.lineCount++ + Math.floor(this.time.now / 997));
+    const top = (k.who.spot[1] - 1.72) * TILE;
+    this.shopBubble = speechBubble(this, this.worldLayer, k.who.spot[0] * TILE, top, line, { name: k.who.name, holdMs: 2800 });
+    if (k.sprite.has(anim)) {
+      k.sprite.play(anim, { restart: true });
+      const ms = anim === 'bow' ? 1900 : 1600;
+      this.time.delayedCall(ms, () => k.sprite.play('npc_idle'));
+    }
   }
 
   // ---------- the bow at the mat ----------

@@ -447,7 +447,7 @@
       ]
     },
     "player-a-big": {
-      "scale": 1.0,
+      "scale": 1,
       "note": "Full detail, facing the camera, every face and hair: for the promotion ceremony and other big moments. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
       "sources": [
         {
@@ -911,7 +911,7 @@
       ]
     },
     "player-b-big": {
-      "scale": 1.0,
+      "scale": 1,
       "note": "Full detail, facing the camera, every face and hair: for the promotion ceremony and other big moments. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
       "sources": [
         {
@@ -2311,7 +2311,7 @@
       ]
     },
     "pets-big": {
-      "scale": 1.0,
+      "scale": 1,
       "note": "Shop preview pets: idle facing down-left at twice the game's resolution (Nov 22, Jay: the pets looked pixelated). Loaded only by the shop.",
       "sources": [
         {
@@ -2347,7 +2347,7 @@
       ]
     },
     "player-a-stage": {
-      "scale": 1.0,
+      "scale": 1,
       "note": "Shop preview, body A: the idle facing the camera at twice the game's resolution, every face and hair (Nov 22, Jay: the preview looked pixelated). Loaded only by the shop.",
       "sources": [
         {
@@ -2362,7 +2362,7 @@
       ]
     },
     "player-a-stage-skins": {
-      "scale": 1.0,
+      "scale": 1,
       "note": "Shop preview skins, body A (same pose and size as player-a-stage). Loaded only by the shop.",
       "sources": [
         {
@@ -2373,7 +2373,7 @@
       ]
     },
     "player-b-stage": {
-      "scale": 1.0,
+      "scale": 1,
       "note": "Shop preview, body B: the idle facing the camera at twice the game's resolution, every face and hair (Nov 22, Jay: the preview looked pixelated). Loaded only by the shop.",
       "sources": [
         {
@@ -2388,13 +2388,43 @@
       ]
     },
     "player-b-stage-skins": {
-      "scale": 1.0,
+      "scale": 1,
       "note": "Shop preview skins, body B (same pose and size as player-b-stage). Loaded only by the shop.",
       "sources": [
         {
           "id": "player",
           "type": "character",
           "json": "incoming-art/claude-hero-v2/sprites-stage-skins/body-b/player-b.json"
+        }
+      ]
+    },
+    "staff-jay": {
+      "note": "Action Zone staff NPC (Claude, Nov 23, from Jay's photos, waiting on Jay's OK): npc_idle, npc_wave and bow, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "staff",
+          "type": "character",
+          "json": "incoming-art/claude-staff/sprites/jay/staff-jay.json"
+        }
+      ]
+    },
+    "staff-hannah": {
+      "note": "Action Zone staff NPC (Claude, Nov 23, from Jay's photos, waiting on Jay's OK): npc_idle, npc_wave and bow, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "staff",
+          "type": "character",
+          "json": "incoming-art/claude-staff/sprites/hannah/staff-hannah.json"
+        }
+      ]
+    },
+    "staff-michael": {
+      "note": "Action Zone staff NPC (Claude, Nov 23, from Jay's photos, waiting on Jay's OK): npc_idle, npc_wave and bow, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "staff",
+          "type": "character",
+          "json": "incoming-art/claude-staff/sprites/michael/staff-michael.json"
         }
       ]
     }

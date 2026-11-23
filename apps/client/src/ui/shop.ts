@@ -81,7 +81,18 @@ function cardTexture(scene: Phaser.Scene, w: number, h: number, key: string, c: 
   return tex;
 }
 
-export function openShop(scene: Phaser.Scene, width: number, height: number, profile: Profile, t: TrainingState, onClose: () => void): ShopScreen {
+/** What happened in the shop, for the shopkeeper's last word (Hannah, Nov 23). */
+export type ShopEvent = 'bought' | 'sold';
+
+export function openShop(
+  scene: Phaser.Scene,
+  width: number,
+  height: number,
+  profile: Profile,
+  t: TrainingState,
+  onClose: () => void,
+  onEvent: (e: ShopEvent) => void = () => {},
+): ShopScreen {
   const layer = scene.add.container(0, 0).setDepth(60);
   const tier = t.belt.tier;
   const onShelf = new Set(shelf(SHOP, tier).map((i) => i.id));
@@ -306,6 +317,7 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
       act(fill(W.price, { n: item.price }), short > 0 ? null : () => {
         if (!buyLook(profile, SHOP, item.id, tier)) return;
         writeSave(profile);
+        onEvent('bought');
         sfx.chest();
         toast = W.got;
         celebrate(cx, feet - r * 1.5, item.rarity ?? 'common');

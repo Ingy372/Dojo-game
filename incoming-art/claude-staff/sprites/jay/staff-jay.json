@@ -1,0 +1,118 @@
+{
+  "character": "staff-jay",
+  "frameWidth": 128,
+  "frameHeight": 192,
+  "anchor": {
+    "x": 64.0,
+    "y": 168.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.6,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "staff",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "npc_idle": {
+      "frames": 12,
+      "fps": 6,
+      "durationSec": 2.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "staff": "staff-jay_staff_npc_idle.png"
+      }
+    },
+    "npc_wave": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "staff": "staff-jay_staff_npc_wave.png"
+      }
+    },
+    "bow": {
+      "frames": 22,
+      "fps": 16,
+      "durationSec": 1.375,
+      "loop": false,
+      "tags": {
+        "feet_together": "3",
+        "bow_down": "5-9",
+        "bow_hold": "9-13",
+        "rise": "14-18",
+        "upright": "18"
+      },
+      "sheets": {
+        "staff": "staff-jay_staff_bow.png"
+      },
+      "keyFrames": {
+        "feet_together": 3,
+        "bow_down": "5-9",
+        "bow_hold": "9-13",
+        "rise": "14-18",
+        "upright": 18
+      },
+      "note": "22 frames = 1.375 s; legs straight (knees soft, not locked) once the feet are together, the 30-degree bend is only from the hips; the head stays up, eyes on the partner; frames 0-3 step the feet together, 19-21 return to the guard. For the game's current 0.9 s, play frames 3-18 at 16 fps (1.0 s) or the whole bow at 24 fps"
+    }
+  },
+  "staff": "jay",
+  "note": "Action Zone staff NPC (Claude, Nov 23). One flattened layer, no tints."
+}
