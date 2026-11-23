@@ -69,7 +69,7 @@ describe('A4-DOJO-hotfix bug 3: a fresh load reaches the tutorial', () => {
     expect(tap).toContain("else if (!hasLook()) this.scene.start('Create', { first: true })");
     expect(tap).toContain("else this.scene.start('Dojo')");
     const create = file('scenes/CreateScene.ts');
-    expect(create).toContain("if (this.first && save && getsTutorialFloor(profile)) this.scene.start('Game', { run: startTowerRun(profile, this.training) })");
+    expect(create).toContain("if (this.first && save && getsTutorialFloor(profile)) this.scene.start('ActionZoneTown', { intro: { run: startTowerRun(profile, this.training) } })");
   });
 
   it('the practice room (Game with no run) is only the ?room=training test link', () => {

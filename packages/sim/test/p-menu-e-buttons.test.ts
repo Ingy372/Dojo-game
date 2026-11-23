@@ -55,7 +55,8 @@ describe('P-MENU-e: Dojo popups, the resume offer and the Gate use button()', ()
 describe('P-MENU-e: CreateScene buttons are drawn at least 44 tall', () => {
   it('Boy / Girl, the arrows, Surprise, Done and Back are at least MIN_TAP tall (Nov 18 redesign)', () => {
     const calls = [...create.matchAll(/this\.button\(([^;]*)\);/g)].map((m) => m[1]);
-    expect(calls.length).toBe(8);
+    // Nov 23: + the two turn arrows beside the hero
+    expect(calls.length).toBe(10);
     for (const c of calls) expect(c).toMatch(/, (MIN_TAP|h), /);
     // Every h used for a button is at least MIN_TAP.
     for (const m of create.matchAll(/const h = ([^;]*);/g)) expect(m[1]).toMatch(/^Math\.max\(MIN_TAP, /);

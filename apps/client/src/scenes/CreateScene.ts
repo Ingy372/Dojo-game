@@ -115,9 +115,8 @@ export class CreateScene extends Phaser.Scene {
       this.input.off('pointerup', up);
     });
     // round arrow buttons beside the hero, for a tap instead of a drag
-    const aw = 40;
-    this.button(cx - r * 1.75 - aw / 2, cy - aw / 2, aw, aw, '◀', 0x4a3a7a, 18, () => this.turn(1));
-    this.button(cx + r * 1.75 - aw / 2, cy - aw / 2, aw, aw, '▶', 0x4a3a7a, 18, () => this.turn(-1));
+    this.button(cx - r * 1.75 - MIN_TAP / 2, cy - MIN_TAP / 2, MIN_TAP, MIN_TAP, '◀', 0x4a3a7a, 18, () => this.turn(1));
+    this.button(cx + r * 1.75 - MIN_TAP / 2, cy - MIN_TAP / 2, MIN_TAP, MIN_TAP, '▶', 0x4a3a7a, 18, () => this.turn(-1));
   }
 
   create(): void {
