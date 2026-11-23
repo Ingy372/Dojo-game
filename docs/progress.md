@@ -1423,3 +1423,10 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - **Jay's first look (Nov 22):** the shop couldn't be reached from town, and the hero turned all white in town. Fixed: a Shop button at the top right of the town (wearing a new look reloads the town at the same spot); the night light in town (7 pm-6 am) now darkens each layer's own colour instead of replacing it, for the hero and the classmates.
 - **Jay's second look (Nov 22, desktop):** the shop's big preview looked pixelated, the pets most. It was the small in-game art stretched up. Now the preview has its own art: the idle facing the camera rendered at twice the game's resolution for the hero (every face and hair), every skin and every pet (`render_stage.sh`; packs `player-{a,b}-stage`, `player-{a,b}-stage-skins`, `pets-big`, about 1.7 MB, loaded only when the shop opens). The town's Shop button is also hidden during Sensei's town tour (his bubble was covering the shop).
 - **Next:** Jay looks at the previews and plays the preview link; OK (or changes) for the art, names and prices; decide whether the Floor Keeper should also pause (can't be hurt) while it transforms.
+
+## One menu look: U-KIT (2026-11-23, branch `claude/unified-ui`, from `claude/visual-overhaul`)
+- Jay's playthrough note: the menus looked like three different games. Jay approved the unified mockup (Archero 2 / Survivor.io style), the two fonts, and all menus. Details in decisions.md (U-KIT).
+- New `ui/kit.ts` (the one look), Lilita One + Nunito bundled, every button restyled through `button()`, and every menu moved onto the kit (list in decisions.md).
+- Checked in a real browser on a small (667 × 375) and a large (932 × 430) phone: Training Board, My Path, the Book, Equipment, Practice Kata, the Shop, the Look screen, Street Smarts, the title.
+- 1,685 tests pass (16 new); type checks and both builds pass. Not on `main`.
+- **Next:** Jay plays the menus on his phone and says what to change; then copy to `main` with his OK.
