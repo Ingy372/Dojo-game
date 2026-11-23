@@ -68,8 +68,11 @@ export function ownColor(scene: Phaser.Scene, look: PlayerLook, slot: 'gi' | 'ha
 
 /** The character for walking around rooms, put together from its packs, or null if one isn't loaded. */
 function roomArt(scene: Phaser.Scene, look: PlayerLook): CharacterArt | null {
-  const parts = lookPacks(look).map((pack) => characterArt(scene, pack, 'player'));
-  return parts.every((p): p is CharacterArt => !!p) ? combineArt(parts) : null;
+  // The base, faces and hair must be there; a skin pack that is missing or failed is just left off (Nov 22).
+  const packs = lookPacks(look);
+  const parts = packs.map((pack) => characterArt(scene, pack, 'player'));
+  if (!parts.slice(0, 3).every((p) => !!p)) return null;
+  return combineArt(parts.filter((p): p is CharacterArt => !!p));
 }
 
 /** A soft round shadow under a character's feet (the art has no cast shadows). */

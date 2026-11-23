@@ -637,11 +637,6 @@ export class GameScene extends Phaser.Scene {
     this.cues = this.add.graphics().setDepth(9.5);
     this.marker = this.add.circle(0, 0, TILE * 0.22).setStrokeStyle(3, COLORS.marker, 0.9).setVisible(false).setDepth(2);
     this.player = this.makePlayer();
-    // Nov 22: the shop's pet and aura (looks only; the aura is drawn at the shop effects' depth, under every danger mark).
-    {
-      const p0 = this.world.players[this.me].pos;
-      this.companions = new Companions(this, p0.x * TILE, p0.y * TILE, TILE, 1, this.fxPlace(), (c) => this.addWorld(c));
-    }
 
     // Two cameras: one follows the character through the room, one holds the on-screen controls.
     const cam = this.cameras.main;
@@ -655,6 +650,11 @@ export class GameScene extends Phaser.Scene {
     hiDpi(this.uiCamera);
     // The Guarding tether is world art too, or the screen camera draws a ghost copy (elites QA bug 1).
     this.uiCamera.ignore([...roomGfx, ...objects, this.tether, this.danger, this.cues, this.marker, this.player]);
+    // Nov 22: the shop's pet and aura (looks only; made after the screen camera so it can ignore them; the aura is drawn at the shop effects' depth, under every danger mark).
+    {
+      const p0 = this.world.players[this.me].pos;
+      this.companions = new Companions(this, p0.x * TILE, p0.y * TILE, TILE, 1, this.fxPlace(), (c) => this.addWorld(c));
+    }
 
     for (const e of this.world.enemies) this.makeEnemy(e);
 
