@@ -20,7 +20,7 @@ import { reducedMotion } from '../game/motion';
 import { loadSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
-import { FONT, crisp, view, hiDpi } from '../ui/theme';
+import { DPR, FONT, crisp, view, hiDpi } from '../ui/theme';
 import { button } from '../ui/button';
 import { GREEN, MIN_TAP, S2 } from '../ui/tokens';
 
@@ -60,6 +60,8 @@ export class CreateScene extends Phaser.Scene {
   private tab: Tab = 'body';
   private leaving = false;
   private shuffling = false;
+  /** Nov 23 (Jay: "touch and move your character so you can see other hair styles"): the way the hero faces. */
+  private dir = 4;
 
   constructor() {
     super('Create');
@@ -75,6 +77,49 @@ export class CreateScene extends Phaser.Scene {
     loadArt(this, ['player-a-big', 'player-b-big']);
   }
 
+  /** The turn-around art (every direction) loads in the background after the screen shows. */
+  private loadTurnArt(): void {
+    const want = ['player-a-turn', 'player-b-turn'].filter((p) => !this.cache.json.exists(`art:${p}`));
+    if (!want.length) return;
+    loadArt(this, want);
+    this.load.once(Phaser.Loader.Events.COMPLETE, () => this.scene.isActive() && this.dir !== 4 && this.render());
+    this.load.start();
+  }
+
+  /** Turns the hero one step (+1 = clockwise as seen from above), drawing from the turn-around art. */
+  private turn(step: number): void {
+    this.dir = (this.dir + step + 8) % 8;
+    this.render();
+  }
+
+  /** Drag left or right on the hero (or tap the arrows) to turn them around. */
+  private addTurning(): void {
+    const { x: cx, y: cy, r } = this.heroAt;
+    const zone = this.add.zone(cx, cy, r * 3.4, r * 3.6).setInteractive({ useHandCursor: true });
+    this.ui.add(zone);
+    let fromX: number | null = null;
+    zone.on('pointerdown', (p: Phaser.Input.Pointer) => (fromX = p.x));
+    const move = (p: Phaser.Input.Pointer) => {
+      if (fromX === null || !p.isDown) return;
+      const step = 34 * DPR;
+      const dx = p.x - fromX;
+      if (Math.abs(dx) < step) return;
+      fromX = p.x;
+      this.turn(dx > 0 ? -1 : 1);
+    };
+    const up = () => (fromX = null);
+    this.input.on('pointermove', move);
+    this.input.on('pointerup', up);
+    zone.once(Phaser.GameObjects.Events.DESTROY, () => {
+      this.input.off('pointermove', move);
+      this.input.off('pointerup', up);
+    });
+    // round arrow buttons beside the hero, for a tap instead of a drag
+    const aw = 40;
+    this.button(cx - r * 1.75 - aw / 2, cy - aw / 2, aw, aw, '◀', 0x4a3a7a, 18, () => this.turn(1));
+    this.button(cx + r * 1.75 - aw / 2, cy - aw / 2, aw, aw, '▶', 0x4a3a7a, 18, () => this.turn(-1));
+  }
+
   create(): void {
     hiDpi(this.cameras.main);
     // LP-B4: shop dyes are left off here, so the colour choices show as they are.
@@ -85,7 +130,9 @@ export class CreateScene extends Phaser.Scene {
     this.tab = 'body';
     this.bg = this.add.container(0, 0);
     this.ui = this.add.container(0, 0);
+    this.dir = 4;
     this.layout();
+    this.loadTurnArt();
     this.cameras.main.fadeIn(300, 10, 8, 16);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this));
@@ -158,8 +205,12 @@ export class CreateScene extends Phaser.Scene {
     this.text(leftW / 2, pad + 30, sub, 13, INK).setOrigin(0.5, 0).setAlign('center').setWordWrapWidth(leftW - 24, true);
 
     const { x: cx, y: cy, r } = this.heroAt;
-    this.character = makeStandingCharacter(this, cx, cy, r, this.training.belt, this.training.stripesThisBelt, this.look);
+    const turnPack = `player-${this.look.body}-turn`;
+    const turned = this.dir !== 4 && !!characterArt(this, turnPack, 'player');
+    this.character = makeStandingCharacter(this, cx, cy, r, this.training.belt, this.training.stripesThisBelt, this.look, false, turned ? turnPack : undefined);
+    if (turned) this.character.sprite?.setDirection(this.dir);
     this.ui.add(this.character.container);
+    this.addTurning();
     // Name plate: a little banner on the pedestal's front.
     const plate = `${this.training.displayName}  ·  ${this.training.belt.name}`;
     const by = height - pad - MIN_TAP;
