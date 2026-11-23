@@ -1522,14 +1522,15 @@
       ]
     },
     "enemy-floor-keeper-f2": {
-      "note": "Floor Keeper phase 2 = WARDEN UNBOUND (Claude, Nov 22, waiting on Jay's OK), shown from half health. Rendered at 160 px per tile like Shades v2 (ART_BOOST).",
+      "note": "Floor Keeper phase 2 = WARDEN UNBOUND (Claude, Nov 22, waiting on Jay's OK), shown from half health. Rendered at 160 px per tile like Shades v2 (ART_BOOST). Packed at 0.45 (72 px per tile) to keep the download down; RIG_BOOST draws it at the same size.",
       "sources": [
         {
           "id": "floor-keeper-f2",
           "type": "character",
           "json": "incoming-art/claude-guardians/keeper-f2/sprites/floor-keeper-f2.json"
         }
-      ]
+      ],
+      "scale": 0.45
     }
   }
 }

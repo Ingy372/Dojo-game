@@ -115,7 +115,7 @@ import { type PackName, addStatic, characterArt, characterTop, frameOf, loadArt,
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
-import { DUMMY_ART, ENEMY_ART_PACKS, TUTORIAL_PACK, artScale, attackAnim, auraId, enemyArt, testAura, towerPack } from '../art/tiers';
+import { DUMMY_ART, ENEMY_ART_PACKS, TUTORIAL_PACK, artScale, attackAnim, auraId, enemyArt, rigBoost, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { streakAura } from '../ui/classChest';
 import { loadLook, playerPacks } from '../game/look';
@@ -924,10 +924,10 @@ export class GameScene extends Phaser.Scene {
         alpha = 1 - t;
       }
       // The dissolve is drawn a little bigger and glowing, and its shadow fades with it.
-      s.container.setScale(artScale(e.def) * (1 + 0.3 * Math.min(1, t * 3)));
+      s.container.setScale(((s.container.getData('baseScale') as number | undefined) ?? artScale(e.def)) * (1 + 0.3 * Math.min(1, t * 3)));
       (s.container.list[0] as Phaser.GameObjects.Ellipse | undefined)?.setAlpha(1 - t);
     } else if (e.mode === 'waiting') {
-      s.container.setScale(artScale(e.def));
+      s.container.setScale((s.container.getData('baseScale') as number | undefined) ?? artScale(e.def));
       (s.container.list[0] as Phaser.GameObjects.Ellipse | undefined)?.setAlpha(1);
       // TUT-B3: a practice dummy is just standing there, so it stands solid.
       alpha = e.def.passive ? 1 : 1 - (e.modeTicks / COMBAT.enemySpawnWaitTicks) * 0.8;
@@ -1307,8 +1307,8 @@ export class GameScene extends Phaser.Scene {
     // GUARD-SCALE-01: a Guardian's art is drawn `scale` times bigger (the sim's radius already is). The shadow
     // sits inside the scaled container, so it is made at the body size / scale.
     // Shades v2: the White belt monsters are also drawn 25% bigger than their hit circle (ART_BOOST).
-    const scale = artScale(e.def);
-    sprite.container.setScale(scale);
+    const scale = artScale(e.def) * (own && characterArt(this, own.pack, own.id) ? rigBoost(own.id) : 1);
+    sprite.container.setScale(scale).setData('baseScale', scale);
     sprite.container.addAt(addShadow(this, (r * 2.2) / scale), 0);
     sprite.setLayer('telegraph', false).setLayerTint('telegraph', TELEGRAPH_TINT).setLayer('lid', false);
     const top = characterTop(this, art) * scale;

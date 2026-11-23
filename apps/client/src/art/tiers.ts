@@ -71,6 +71,12 @@ const SHARP_PACK = 0.5;
 const BIGGER = 1.25;
 export const ART_BOOST: Record<string, number> = { swarmer: SHARP_PACK * BIGGER, shield: SHARP_PACK * BIGGER, brute: SHARP_PACK * BIGGER, 'floor-keeper': SHARP_PACK * BIGGER };
 
+/** Rigs packed at a different pixel size than their enemy's usual art: drawn this much bigger to match (Nov 22). */
+const RIG_BOOST: Record<string, number> = { 'floor-keeper-f2': 0.6 / 0.45 };
+export function rigBoost(rigId: string | undefined): number {
+  return (rigId && RIG_BOOST[rigId]) || 1;
+}
+
 /** How big an enemy's art is drawn: its Guardian scale times any drawing boost. */
 export function artScale(def: { id: string; scale: number }): number {
   return def.scale * (ART_BOOST[def.id] ?? 1);
