@@ -1,0 +1,895 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "decor-v2-lucky-cat": {
+      "size": [
+        104,
+        122
+      ],
+      "layers": [
+        "decor-v2-lucky-cat"
+      ],
+      "files": {
+        "decor-v2-lucky-cat": "decor-v2-lucky-cat_decor-v2-lucky-cat.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.4,
+      "anchorPx": [
+        52.0,
+        112.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-glow-lantern": {
+      "size": [
+        104,
+        138
+      ],
+      "layers": [
+        "decor-v2-glow-lantern"
+      ],
+      "files": {
+        "decor-v2-glow-lantern": "decor-v2-glow-lantern_decor-v2-glow-lantern.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        52.0,
+        128.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-koi-pond": {
+      "size": [
+        184,
+        178
+      ],
+      "layers": [
+        "decor-v2-koi-pond"
+      ],
+      "files": {
+        "decor-v2-koi-pond": "decor-v2-koi-pond_decor-v2-koi-pond.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 2.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.1,
+      "anchorPx": [
+        92.0,
+        168.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        2,
+        2
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-cherry-tree": {
+      "size": [
+        104,
+        170
+      ],
+      "layers": [
+        "decor-v2-cherry-tree"
+      ],
+      "files": {
+        "decor-v2-cherry-tree": "decor-v2-cherry-tree_decor-v2-cherry-tree.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.0,
+      "anchorPx": [
+        52.0,
+        160.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-bamboo": {
+      "size": [
+        104,
+        186
+      ],
+      "layers": [
+        "decor-v2-bamboo"
+      ],
+      "files": {
+        "decor-v2-bamboo": "decor-v2-bamboo_decor-v2-bamboo.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.2,
+      "anchorPx": [
+        52.0,
+        176.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-gong": {
+      "size": [
+        104,
+        162
+      ],
+      "layers": [
+        "decor-v2-gong"
+      ],
+      "files": {
+        "decor-v2-gong": "decor-v2-gong_decor-v2-gong.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.9,
+      "anchorPx": [
+        52.0,
+        152.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-taiko": {
+      "size": [
+        104,
+        130
+      ],
+      "layers": [
+        "decor-v2-taiko"
+      ],
+      "files": {
+        "decor-v2-taiko": "decor-v2-taiko_decor-v2-taiko.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.5,
+      "anchorPx": [
+        52.0,
+        120.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-paper-lantern": {
+      "size": [
+        80,
+        152
+      ],
+      "layers": [
+        "decor-v2-paper-lantern"
+      ],
+      "files": {
+        "decor-v2-paper-lantern": "decor-v2-paper-lantern_decor-v2-paper-lantern.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.9,
+      "anchorPx": [
+        40.0,
+        152.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "note": "wall item: anchorPx = bottom-centre of its top-wall cell",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-jade-dragon": {
+      "size": [
+        104,
+        146
+      ],
+      "layers": [
+        "decor-v2-jade-dragon"
+      ],
+      "files": {
+        "decor-v2-jade-dragon": "decor-v2-jade-dragon_decor-v2-jade-dragon.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.7,
+      "anchorPx": [
+        52.0,
+        136.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-wing-dummy": {
+      "size": [
+        104,
+        162
+      ],
+      "layers": [
+        "decor-v2-wing-dummy"
+      ],
+      "files": {
+        "decor-v2-wing-dummy": "decor-v2-wing-dummy_decor-v2-wing-dummy.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.9,
+      "anchorPx": [
+        52.0,
+        152.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-zen-garden": {
+      "size": [
+        184,
+        98
+      ],
+      "layers": [
+        "decor-v2-zen-garden"
+      ],
+      "files": {
+        "decor-v2-zen-garden": "decor-v2-zen-garden_decor-v2-zen-garden.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.1,
+      "anchorPx": [
+        92.0,
+        88.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        2,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-tea-set": {
+      "size": [
+        184,
+        106
+      ],
+      "layers": [
+        "decor-v2-tea-set"
+      ],
+      "files": {
+        "decor-v2-tea-set": "decor-v2-tea-set_decor-v2-tea-set.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        92.0,
+        96.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        2,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-grand-bonsai": {
+      "size": [
+        104,
+        130
+      ],
+      "layers": [
+        "decor-v2-grand-bonsai"
+      ],
+      "files": {
+        "decor-v2-grand-bonsai": "decor-v2-grand-bonsai_decor-v2-grand-bonsai.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.5,
+      "anchorPx": [
+        52.0,
+        120.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-bamboo-fountain": {
+      "size": [
+        104,
+        122
+      ],
+      "layers": [
+        "decor-v2-bamboo-fountain"
+      ],
+      "files": {
+        "decor-v2-bamboo-fountain": "decor-v2-bamboo-fountain_decor-v2-bamboo-fountain.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.4,
+      "anchorPx": [
+        52.0,
+        112.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-mountain-painting": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "decor-v2-mountain-painting"
+      ],
+      "files": {
+        "decor-v2-mountain-painting": "decor-v2-mountain-painting_decor-v2-mountain-painting.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        40.0,
+        128.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "note": "wall item: anchorPx = bottom-centre of its top-wall cell",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-torii": {
+      "size": [
+        104,
+        146
+      ],
+      "layers": [
+        "decor-v2-torii"
+      ],
+      "files": {
+        "decor-v2-torii": "decor-v2-torii_decor-v2-torii.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.7,
+      "anchorPx": [
+        52.0,
+        136.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-golden-fist": {
+      "size": [
+        104,
+        130
+      ],
+      "layers": [
+        "decor-v2-golden-fist"
+      ],
+      "files": {
+        "decor-v2-golden-fist": "decor-v2-golden-fist_decor-v2-golden-fist.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.5,
+      "anchorPx": [
+        52.0,
+        120.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-counter-medal": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "decor-v2-counter-medal"
+      ],
+      "files": {
+        "decor-v2-counter-medal": "decor-v2-counter-medal_decor-v2-counter-medal.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        40.0,
+        128.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "note": "wall item: anchorPx = bottom-centre of its top-wall cell",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-climber-banner": {
+      "size": [
+        80,
+        152
+      ],
+      "layers": [
+        "decor-v2-climber-banner"
+      ],
+      "files": {
+        "decor-v2-climber-banner": "decor-v2-climber-banner_decor-v2-climber-banner.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.9,
+      "anchorPx": [
+        40.0,
+        152.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "note": "wall item: anchorPx = bottom-centre of its top-wall cell",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-kata-plaque": {
+      "size": [
+        80,
+        120
+      ],
+      "layers": [
+        "decor-v2-kata-plaque"
+      ],
+      "files": {
+        "decor-v2-kata-plaque": "decor-v2-kata-plaque_decor-v2-kata-plaque.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.5,
+      "anchorPx": [
+        40.0,
+        120.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "note": "wall item: anchorPx = bottom-centre of its top-wall cell",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-star-champion": {
+      "size": [
+        104,
+        146
+      ],
+      "layers": [
+        "decor-v2-star-champion"
+      ],
+      "files": {
+        "decor-v2-star-champion": "decor-v2-star-champion_decor-v2-star-champion.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.7,
+      "anchorPx": [
+        52.0,
+        136.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-collector-cabinet": {
+      "size": [
+        104,
+        162
+      ],
+      "layers": [
+        "decor-v2-collector-cabinet"
+      ],
+      "files": {
+        "decor-v2-collector-cabinet": "decor-v2-collector-cabinet_decor-v2-collector-cabinet.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.9,
+      "anchorPx": [
+        52.0,
+        152.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-hundred-bell": {
+      "size": [
+        104,
+        162
+      ],
+      "layers": [
+        "decor-v2-hundred-bell"
+      ],
+      "files": {
+        "decor-v2-hundred-bell": "decor-v2-hundred-bell_decor-v2-hundred-bell.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.9,
+      "anchorPx": [
+        52.0,
+        152.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-guardian-seal": {
+      "size": [
+        104,
+        138
+      ],
+      "layers": [
+        "decor-v2-guardian-seal"
+      ],
+      "files": {
+        "decor-v2-guardian-seal": "decor-v2-guardian-seal_decor-v2-guardian-seal.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        52.0,
+        128.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-level-statue": {
+      "size": [
+        104,
+        138
+      ],
+      "layers": [
+        "decor-v2-level-statue"
+      ],
+      "files": {
+        "decor-v2-level-statue": "decor-v2-level-statue_decor-v2-level-statue.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        52.0,
+        128.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    },
+    "decor-v2-champion-cup": {
+      "size": [
+        104,
+        130
+      ],
+      "layers": [
+        "decor-v2-champion-cup"
+      ],
+      "files": {
+        "decor-v2-champion-cup": "decor-v2-champion-cup_decor-v2-champion-cup.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.5,
+      "anchorPx": [
+        52.0,
+        120.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint",
+      "info": {
+        "set": "decor-v2"
+      }
+    }
+  }
+}

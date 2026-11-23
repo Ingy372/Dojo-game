@@ -17,8 +17,22 @@ export type DecorationClean = 'mat' | 'rack';
  * Tier 1 set (A6): random (tinted pieces), class (real classes), keeper (first clear of a floor),
  * trophy (Monster Journal), bonus (the folding screen). How these are earned comes later.
  */
-export type DecorationSource = 'starter' | 'tower' | 'named' | 'random' | 'class' | 'keeper' | 'trophy' | 'bonus';
-const SOURCES: readonly DecorationSource[] = ['starter', 'tower', 'named', 'random', 'class', 'keeper', 'trophy', 'bonus'];
+export type DecorationSource = 'starter' | 'tower' | 'named' | 'random' | 'class' | 'keeper' | 'trophy' | 'bonus' | 'shop' | 'achievement';
+const SOURCES: readonly DecorationSource[] = ['starter', 'tower', 'named', 'random', 'class', 'keeper', 'trophy', 'bonus', 'shop', 'achievement'];
+
+/**
+ * Nov 22 (Jay): decorations unlocked by in-game achievements. Each stat only ever goes up, so a piece once earned
+ * stays earned. Real-life achievements (stripes, promotions, class days) are NOT here: those are the certified
+ * trophies of milestone 12, dated from DojoForge.
+ */
+export const ACHIEVEMENT_STATS = ['runs', 'floors', 'combo', 'perfects', 'kataClean', 'starWall', 'journal', 'guardians', 'level'] as const;
+export type AchievementStat = (typeof ACHIEVEMENT_STATS)[number];
+export interface AchievementRule {
+  stat: AchievementStat;
+  atLeast: number;
+  /** What to do, shown on the locked card ("Land a 30-hit combo"). */
+  goal: string;
+}
 
 export interface DecorationDef {
   id: string;
@@ -46,6 +60,8 @@ export interface DecorationDef {
   silhouette?: string;
   /** Keeper statues: given the first time the Floor Keeper is beaten at this belt tier. */
   keeperFloor?: number;
+  /** Achievement pieces: what earns it. */
+  achievement?: AchievementRule;
 }
 
 export interface DojoContent {
@@ -186,6 +202,12 @@ export function loadDojoContent(roomData: unknown, decorationsData: unknown): Do
     const kf = tierNum('keeperFloor');
     if (kf !== undefined) def.keeperFloor = kf;
     if (source === 'trophy' && (!def.monster || def.journalTier === undefined)) throw new DojoError(`${where} is a trophy, so it needs a "monster" and a "journalTier"`);
+    if (source === 'achievement') {
+      const a = it.achievement as Partial<AchievementRule> | undefined;
+      if (!a || !ACHIEVEMENT_STATS.includes(a.stat as AchievementStat) || typeof a.atLeast !== 'number' || !Number.isInteger(a.atLeast) || a.atLeast < 1 || typeof a.goal !== 'string' || !a.goal)
+        throw new DojoError(`${where} is an achievement piece, so it needs "achievement": { "stat", "atLeast", "goal" }`);
+      def.achievement = { stat: a.stat as AchievementStat, atLeast: a.atLeast, goal: a.goal };
+    } else if (it.achievement !== undefined) throw new DojoError(`${where} has "achievement" but its source isn't achievement`);
     if (source === 'keeper' && def.keeperFloor === undefined) throw new DojoError(`${where} is a keeper statue, so it needs a "keeperFloor"`);
     if (def.mustTouchWall && place !== 'floor') throw new DojoError(`${where} has mustTouchWall, so it must be a floor decoration`);
     if (place === 'wall' && (def.height !== 1 || def.solid || clean)) throw new DojoError(`${where} hangs on the wall, so it must be 1 tall, not solid, and need no cleaning`);

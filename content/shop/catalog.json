@@ -2,49 +2,576 @@
   "_note": "LP-B4/LP-B4b (L13 Stage 1) PLACEHOLDERS for Content: the looks shop. Gi dyes from R-SHOP 3.3 (colours as listed there); hair dyes from R-SHOP 3.4 (their colours are placeholders picked by the Programmer). Prices from LP-P1 (#494). belt = the belt tier where it goes on the shelf. Looks only: a dye changes the gi or hair colour, never the belt and never a fight. Words: no money signs, no 'buy coins', no timers or 'only today'. LP-B4b: effects and wall paint from R-SHOP 3.3 (names, prices, belts); their colours and fx recipes are placeholders picked by the Programmer. fx: shape (one of 16 drawn in code), colors, count (at most 24), lifeMs (trail 800, puff and hit 400, win 3000 at most), size and spread in tiles, motion drift/burst/fall/rise. tab = the Shop tab the group shows under.",
   "groups": [
     {
+      "id": "outfit",
+      "name": "Outfits",
+      "slot": "outfit",
+      "tab": "Skins"
+    },
+    {
+      "id": "hat",
+      "name": "Hats and Hoods",
+      "slot": "hat",
+      "tab": "Skins"
+    },
+    {
+      "id": "back",
+      "name": "On Your Back",
+      "slot": "back",
+      "tab": "Skins"
+    },
+    {
       "id": "gi-dye",
       "name": "Gi Colors",
       "slot": "gi",
-      "tab": "Looks"
+      "tab": "Colors"
     },
     {
       "id": "hair-dye",
       "name": "Hair Colors",
       "slot": "hair",
-      "tab": "Looks"
+      "tab": "Colors"
+    },
+    {
+      "id": "aura",
+      "name": "Auras",
+      "slot": "aura",
+      "tab": "Effects"
     },
     {
       "id": "walk-trail",
       "name": "Walk Trails",
       "slot": "trail",
-      "tab": "Trails"
+      "tab": "Effects"
     },
     {
       "id": "dash-puff",
       "name": "Dash Puffs",
       "slot": "puff",
-      "tab": "Trails"
+      "tab": "Effects"
     },
     {
       "id": "hit-pop",
       "name": "Hit Pops",
       "slot": "hit",
-      "tab": "Pops"
+      "tab": "Effects"
     },
     {
       "id": "win-burst",
       "name": "Win Bursts",
       "slot": "win",
-      "tab": "Pops"
+      "tab": "Effects"
+    },
+    {
+      "id": "pet",
+      "name": "Pets",
+      "slot": "pet",
+      "tab": "Pets"
     },
     {
       "id": "wall-paint",
       "name": "Wall Paint",
       "slot": "wall",
       "tab": "Dojo"
+    },
+    {
+      "id": "dojo-decor",
+      "name": "Decorations",
+      "slot": "decor",
+      "tab": "Dojo"
     }
   ],
   "items": [
+    {
+      "id": "skin-crimson-dragon",
+      "group": "outfit",
+      "name": "Crimson Dragon",
+      "price": 3000,
+      "belt": 3,
+      "rarity": "epic",
+      "color": "#c8202c",
+      "layer": "outfit-crimson-dragon"
+    },
+    {
+      "id": "skin-shadow-ninja",
+      "group": "outfit",
+      "name": "Shadow Ninja",
+      "price": 2000,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#2b2838",
+      "layer": "outfit-shadow-ninja"
+    },
+    {
+      "id": "skin-frost-guardian",
+      "group": "outfit",
+      "name": "Frost Guardian",
+      "price": 3000,
+      "belt": 4,
+      "rarity": "epic",
+      "color": "#3f86d6",
+      "layer": "outfit-frost-guardian"
+    },
+    {
+      "id": "skin-iron-samurai",
+      "group": "outfit",
+      "name": "Iron Samurai",
+      "price": 4000,
+      "belt": 6,
+      "rarity": "legendary",
+      "color": "#2e3f78",
+      "layer": "outfit-iron-samurai"
+    },
+    {
+      "id": "skin-temple-monk",
+      "group": "outfit",
+      "name": "Temple Monk",
+      "price": 1500,
+      "belt": 1,
+      "rarity": "rare",
+      "color": "#f2a024",
+      "layer": "outfit-temple-monk"
+    },
+    {
+      "id": "skin-thunder-tiger",
+      "group": "outfit",
+      "name": "Thunder Tiger",
+      "price": 2000,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#f5b52a",
+      "layer": "outfit-thunder-tiger"
+    },
+    {
+      "id": "skin-panda-pal",
+      "group": "outfit",
+      "name": "Panda Pal",
+      "price": 1500,
+      "belt": 1,
+      "rarity": "rare",
+      "color": "#f4f4f4",
+      "layer": "outfit-panda-pal"
+    },
+    {
+      "id": "skin-phoenix-flame",
+      "group": "outfit",
+      "name": "Phoenix Flame",
+      "price": 4000,
+      "belt": 5,
+      "rarity": "legendary",
+      "color": "#ff7a1f",
+      "layer": "outfit-phoenix-flame"
+    },
+    {
+      "id": "skin-starlight",
+      "group": "outfit",
+      "name": "Starlight",
+      "price": 2500,
+      "belt": 3,
+      "rarity": "epic",
+      "color": "#1f2a5c",
+      "layer": "outfit-starlight"
+    },
+    {
+      "id": "skin-jade-guardian",
+      "group": "outfit",
+      "name": "Jade Guardian",
+      "price": 2500,
+      "belt": 4,
+      "rarity": "epic",
+      "color": "#2f8f5b",
+      "layer": "outfit-jade-guardian"
+    },
+    {
+      "id": "hat-red-headband",
+      "group": "hat",
+      "name": "Red Headband",
+      "price": 500,
+      "belt": 1,
+      "rarity": "common",
+      "color": "#e0302c",
+      "layer": "hat-red-headband"
+    },
+    {
+      "id": "hat-tiger-hood",
+      "group": "hat",
+      "name": "Tiger Hood",
+      "price": 1200,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#f5b52a",
+      "layer": "hat-tiger-hood",
+      "hidesHair": true
+    },
+    {
+      "id": "hat-panda-hood",
+      "group": "hat",
+      "name": "Panda Hood",
+      "price": 1200,
+      "belt": 1,
+      "rarity": "rare",
+      "color": "#f4f4f4",
+      "layer": "hat-panda-hood",
+      "hidesHair": true
+    },
+    {
+      "id": "hat-ninja-hood",
+      "group": "hat",
+      "name": "Ninja Hood",
+      "price": 1200,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#2b2838",
+      "layer": "hat-ninja-hood",
+      "hidesHair": true
+    },
+    {
+      "id": "hat-samurai-helmet",
+      "group": "hat",
+      "name": "Samurai Helmet",
+      "price": 2000,
+      "belt": 6,
+      "rarity": "legendary",
+      "color": "#2e3f78",
+      "layer": "hat-samurai-helmet",
+      "hidesHair": true
+    },
+    {
+      "id": "hat-straw-hat",
+      "group": "hat",
+      "name": "Straw Hat",
+      "price": 800,
+      "belt": 1,
+      "rarity": "common",
+      "color": "#e2b862",
+      "layer": "hat-straw-hat"
+    },
+    {
+      "id": "hat-dragon-horns",
+      "group": "hat",
+      "name": "Dragon Horns",
+      "price": 1500,
+      "belt": 3,
+      "rarity": "epic",
+      "color": "#f2c14e",
+      "layer": "hat-dragon-horns"
+    },
+    {
+      "id": "hat-frost-crown",
+      "group": "hat",
+      "name": "Frost Crown",
+      "price": 1500,
+      "belt": 4,
+      "rarity": "epic",
+      "color": "#9fe8ff",
+      "layer": "hat-frost-crown"
+    },
+    {
+      "id": "hat-fox-mask",
+      "group": "hat",
+      "name": "Fox Mask",
+      "price": 1000,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#fbf6ee",
+      "layer": "hat-fox-mask"
+    },
+    {
+      "id": "back-hero-cape",
+      "group": "back",
+      "name": "Hero Cape",
+      "price": 1200,
+      "belt": 1,
+      "rarity": "rare",
+      "color": "#c8202c",
+      "layer": "back-hero-cape"
+    },
+    {
+      "id": "back-phoenix-wings",
+      "group": "back",
+      "name": "Phoenix Wings",
+      "price": 2500,
+      "belt": 5,
+      "rarity": "legendary",
+      "color": "#ff5a1f",
+      "layer": "back-phoenix-wings"
+    },
+    {
+      "id": "back-dragon-tail",
+      "group": "back",
+      "name": "Dragon Tail",
+      "price": 1500,
+      "belt": 3,
+      "rarity": "epic",
+      "color": "#c8202c",
+      "layer": "back-dragon-tail"
+    },
+    {
+      "id": "back-master-scroll",
+      "group": "back",
+      "name": "Master's Scroll",
+      "price": 900,
+      "belt": 2,
+      "rarity": "common",
+      "color": "#f3e6c4",
+      "layer": "back-master-scroll"
+    },
+    {
+      "id": "back-bo-staff",
+      "group": "back",
+      "name": "Bo Staff",
+      "price": 900,
+      "belt": 1,
+      "rarity": "common",
+      "color": "#9a5b32",
+      "layer": "back-bo-staff"
+    },
+    {
+      "id": "aura-ember-ring",
+      "group": "aura",
+      "name": "Ember Ring",
+      "price": 1500,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#ff7a1f",
+      "aura": {
+        "style": "flame",
+        "colors": [
+          "#ff7a1f",
+          "#ffd23f",
+          "#ff4a2a"
+        ],
+        "motes": 10,
+        "size": 0.9
+      }
+    },
+    {
+      "id": "aura-frost-mist",
+      "group": "aura",
+      "name": "Frost Mist",
+      "price": 1500,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#9fe8ff",
+      "aura": {
+        "style": "frost",
+        "colors": [
+          "#9fe8ff",
+          "#ffffff"
+        ],
+        "motes": 10,
+        "size": 0.9
+      }
+    },
+    {
+      "id": "aura-leaf-dance",
+      "group": "aura",
+      "name": "Leaf Dance",
+      "price": 1200,
+      "belt": 1,
+      "rarity": "common",
+      "color": "#7cc46a",
+      "aura": {
+        "style": "leaf",
+        "colors": [
+          "#7cc46a",
+          "#c8e86a"
+        ],
+        "motes": 8,
+        "size": 0.85
+      }
+    },
+    {
+      "id": "aura-thunder-spark",
+      "group": "aura",
+      "name": "Thunder Spark",
+      "price": 2000,
+      "belt": 3,
+      "rarity": "epic",
+      "color": "#ffe14a",
+      "aura": {
+        "style": "spark",
+        "colors": [
+          "#ffe14a",
+          "#8fd8ff"
+        ],
+        "motes": 8,
+        "size": 0.9
+      }
+    },
+    {
+      "id": "aura-shadow-smoke",
+      "group": "aura",
+      "name": "Shadow Smoke",
+      "price": 2000,
+      "belt": 3,
+      "rarity": "epic",
+      "color": "#7b4fd6",
+      "aura": {
+        "style": "smoke",
+        "colors": [
+          "#7b4fd6",
+          "#3a2f5a"
+        ],
+        "motes": 10,
+        "size": 1.0
+      }
+    },
+    {
+      "id": "aura-golden-ki",
+      "group": "aura",
+      "name": "Golden Ki",
+      "price": 3000,
+      "belt": 5,
+      "rarity": "legendary",
+      "color": "#ffd166",
+      "aura": {
+        "style": "gold",
+        "colors": [
+          "#ffd166",
+          "#fff1b8",
+          "#ffb020"
+        ],
+        "motes": 14,
+        "size": 1.0
+      }
+    },
+    {
+      "id": "aura-sakura-swirl",
+      "group": "aura",
+      "name": "Sakura Swirl",
+      "price": 1200,
+      "belt": 1,
+      "rarity": "common",
+      "color": "#f6b8c8",
+      "aura": {
+        "style": "petal",
+        "colors": [
+          "#f6b8c8",
+          "#ffffff"
+        ],
+        "motes": 10,
+        "size": 0.9
+      }
+    },
+    {
+      "id": "aura-rainbow-halo",
+      "group": "aura",
+      "name": "Rainbow Halo",
+      "price": 3500,
+      "belt": 6,
+      "rarity": "legendary",
+      "color": "#ff6b6b",
+      "aura": {
+        "style": "rainbow",
+        "colors": [
+          "#ff6b6b",
+          "#ffd166",
+          "#7cd67c",
+          "#5cc8d6",
+          "#9b7bea"
+        ],
+        "motes": 12,
+        "size": 1.1
+      }
+    },
+    {
+      "id": "aura-koi-ripple",
+      "group": "aura",
+      "name": "Koi Ripple",
+      "price": 1500,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#5cc8d6",
+      "aura": {
+        "style": "water",
+        "colors": [
+          "#5cc8d6",
+          "#c8eefa",
+          "#ff9a4a"
+        ],
+        "motes": 6,
+        "size": 1.0
+      }
+    },
+    {
+      "id": "aura-starfall",
+      "group": "aura",
+      "name": "Starfall",
+      "price": 2500,
+      "belt": 4,
+      "rarity": "epic",
+      "color": "#ffd166",
+      "aura": {
+        "style": "star",
+        "colors": [
+          "#ffd166",
+          "#b9a2dc",
+          "#ffffff"
+        ],
+        "motes": 12,
+        "size": 1.0
+      }
+    },
+    {
+      "id": "pet-red-panda",
+      "group": "pet",
+      "name": "Red Panda",
+      "price": 2000,
+      "belt": 1,
+      "rarity": "rare",
+      "color": "#d8642a",
+      "pet": "pet-red-panda"
+    },
+    {
+      "id": "pet-baby-dragon",
+      "group": "pet",
+      "name": "Baby Dragon",
+      "price": 4000,
+      "belt": 4,
+      "rarity": "legendary",
+      "color": "#3fae6a",
+      "pet": "pet-baby-dragon"
+    },
+    {
+      "id": "pet-spirit-fox",
+      "group": "pet",
+      "name": "Spirit Fox",
+      "price": 3000,
+      "belt": 3,
+      "rarity": "epic",
+      "color": "#f4f1ff",
+      "pet": "pet-spirit-fox"
+    },
+    {
+      "id": "pet-lucky-koi",
+      "group": "pet",
+      "name": "Lucky Koi",
+      "price": 2500,
+      "belt": 2,
+      "rarity": "epic",
+      "color": "#ff8a3d",
+      "pet": "pet-lucky-koi"
+    },
+    {
+      "id": "pet-wise-owl",
+      "group": "pet",
+      "name": "Wise Owl",
+      "price": 2000,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#9a7a5a",
+      "pet": "pet-wise-owl"
+    },
+    {
+      "id": "pet-little-turtle",
+      "group": "pet",
+      "name": "Little Turtle",
+      "price": 1500,
+      "belt": 1,
+      "rarity": "rare",
+      "color": "#6fb86a",
+      "pet": "pet-little-turtle"
+    },
     {
       "id": "gi-rose",
       "group": "gi-dye",
@@ -823,6 +1350,166 @@
       "price": 400,
       "belt": 2,
       "color": "#e9a9b6"
+    },
+    {
+      "id": "decor-lucky-cat",
+      "group": "dojo-decor",
+      "name": "Lucky Cat",
+      "price": 400,
+      "belt": 1,
+      "rarity": "common",
+      "color": "#d2a878",
+      "decor": "decor-v2-lucky-cat"
+    },
+    {
+      "id": "decor-glow-lantern",
+      "group": "dojo-decor",
+      "name": "Glowing Stone Lantern",
+      "price": 600,
+      "belt": 1,
+      "rarity": "common",
+      "color": "#d2a878",
+      "decor": "decor-v2-glow-lantern"
+    },
+    {
+      "id": "decor-koi-pond",
+      "group": "dojo-decor",
+      "name": "Koi Pond",
+      "price": 1500,
+      "belt": 2,
+      "rarity": "epic",
+      "color": "#d2a878",
+      "decor": "decor-v2-koi-pond"
+    },
+    {
+      "id": "decor-cherry-tree",
+      "group": "dojo-decor",
+      "name": "Cherry Blossom Tree",
+      "price": 900,
+      "belt": 1,
+      "rarity": "rare",
+      "color": "#d2a878",
+      "decor": "decor-v2-cherry-tree"
+    },
+    {
+      "id": "decor-bamboo",
+      "group": "dojo-decor",
+      "name": "Bamboo Grove",
+      "price": 500,
+      "belt": 1,
+      "rarity": "common",
+      "color": "#d2a878",
+      "decor": "decor-v2-bamboo"
+    },
+    {
+      "id": "decor-gong",
+      "group": "dojo-decor",
+      "name": "Temple Gong",
+      "price": 1200,
+      "belt": 3,
+      "rarity": "rare",
+      "color": "#d2a878",
+      "decor": "decor-v2-gong"
+    },
+    {
+      "id": "decor-taiko",
+      "group": "dojo-decor",
+      "name": "Taiko Drum",
+      "price": 1000,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#d2a878",
+      "decor": "decor-v2-taiko"
+    },
+    {
+      "id": "decor-paper-lantern",
+      "group": "dojo-decor",
+      "name": "Paper Lantern",
+      "price": 300,
+      "belt": 1,
+      "rarity": "common",
+      "color": "#d2a878",
+      "decor": "decor-v2-paper-lantern"
+    },
+    {
+      "id": "decor-jade-dragon",
+      "group": "dojo-decor",
+      "name": "Jade Dragon Statue",
+      "price": 2500,
+      "belt": 4,
+      "rarity": "legendary",
+      "color": "#d2a878",
+      "decor": "decor-v2-jade-dragon"
+    },
+    {
+      "id": "decor-wing-dummy",
+      "group": "dojo-decor",
+      "name": "Wooden Training Dummy",
+      "price": 1200,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#d2a878",
+      "decor": "decor-v2-wing-dummy"
+    },
+    {
+      "id": "decor-zen-garden",
+      "group": "dojo-decor",
+      "name": "Sand Garden",
+      "price": 1400,
+      "belt": 3,
+      "rarity": "epic",
+      "color": "#d2a878",
+      "decor": "decor-v2-zen-garden"
+    },
+    {
+      "id": "decor-tea-set",
+      "group": "dojo-decor",
+      "name": "Tea Table",
+      "price": 1100,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#d2a878",
+      "decor": "decor-v2-tea-set"
+    },
+    {
+      "id": "decor-grand-bonsai",
+      "group": "dojo-decor",
+      "name": "Grand Bonsai",
+      "price": 800,
+      "belt": 1,
+      "rarity": "rare",
+      "color": "#d2a878",
+      "decor": "decor-v2-grand-bonsai"
+    },
+    {
+      "id": "decor-bamboo-fountain",
+      "group": "dojo-decor",
+      "name": "Bamboo Fountain",
+      "price": 900,
+      "belt": 2,
+      "rarity": "rare",
+      "color": "#d2a878",
+      "decor": "decor-v2-bamboo-fountain"
+    },
+    {
+      "id": "decor-mountain-painting",
+      "group": "dojo-decor",
+      "name": "Mountain Painting",
+      "price": 500,
+      "belt": 1,
+      "rarity": "common",
+      "color": "#d2a878",
+      "decor": "decor-v2-mountain-painting"
+    },
+    {
+      "id": "decor-torii",
+      "group": "dojo-decor",
+      "name": "Little Torii Gate",
+      "price": 1800,
+      "belt": 3,
+      "rarity": "epic",
+      "color": "#d2a878",
+      "decor": "decor-v2-torii"
     }
   ],
   "_noteWords": "words: the Shop screen. {n}, {name}, {before}, {after} are filled in by the game. Kid lines 8 words or fewer. PLACEHOLDERS for Content.",
@@ -845,6 +1532,20 @@
     "plain": "None",
     "plainLine": "No effect.",
     "wood": "Plain wood",
-    "woodLine": "The dojo's own wood."
-  }
+    "woodLine": "The dojo's own wood.",
+    "tabSkins": "Skins",
+    "wearNone": "Take off",
+    "none": "None",
+    "noneLine": "Nothing extra.",
+    "decorGet": "Get it",
+    "decorOwned": "In your dojo storage!",
+    "decorLine": "Goes to your Home Dojo.",
+    "rarity": {
+      "common": "Common",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary"
+    }
+  },
+  "_noteSkins": "Visual overhaul (Claude, Nov 22, Jay's request): skins (outfits, hats, back pieces), auras and pets. Bought only with coins earned in play (OV-P6). Looks only, never power. The belt is never covered or sold. Names, prices and belts are Claude's picks, waiting on Jay's OK. Rarity is only the card's frame colour: every price is fixed and nothing is random."
 }

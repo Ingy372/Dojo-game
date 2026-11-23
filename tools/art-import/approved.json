@@ -1458,6 +1458,16 @@
           "json": "incoming-art/claude-town/sprites/static.json"
         }
       ]
+    },
+    "decor-v2": {
+      "note": "Home Dojo decorations v2 (Claude, Nov 22, waiting on Jay's OK): 16 shop pieces (bought with earned coins) and 10 achievement trophies.",
+      "sources": [
+        {
+          "id": "decor-v2",
+          "type": "static",
+          "json": "incoming-art/claude-decor-v2/sprites/static.json"
+        }
+      ]
     }
   }
 }

@@ -76,7 +76,7 @@ describe('coins a run pays (LP-P1 #494)', () => {
     delete old.shop;
     const p = loadProfile(old);
     expect(p.coins).toBe(0);
-    expect(p.shop).toEqual({ owned: [], wearing: { gi: null, hair: null, trail: null, puff: null, hit: null, win: null, wall: null } });
+    expect(p.shop).toEqual({ owned: [], wearing: { gi: null, hair: null, trail: null, puff: null, hit: null, win: null, wall: null, outfit: null, hat: null, back: null, aura: null, pet: null, decor: null } });
     expect(loadProfile({ ...old, coins: -40 }).coins).toBe(0);
     p.coins = 350;
     expect(buyLook(p, CATALOG, 'gi-rose', 1)).toBe(true);
@@ -169,7 +169,7 @@ describe('buying and wearing', () => {
   it('looks never reach a fight: stats are the same with every dye worn, and no run code reads the shop', () => {
     const p = newProfile();
     const before = JSON.stringify(playerStats(p));
-    p.coins = 99999;
+    p.coins = 9999999;
     for (const i of CATALOG.items) buyLook(p, CATALOG, i.id, 9);
     expect(p.shop.owned).toHaveLength(CATALOG.items.length);
     expect(JSON.stringify(playerStats(p))).toBe(before);

@@ -9,7 +9,24 @@ import type { Profile } from './profile';
 import type { RunSummary } from './run';
 
 /** What a shop item changes (the belt is never a slot). One item is worn in each slot. */
-export type ShopSlot = 'gi' | 'hair' | 'trail' | 'puff' | 'hit' | 'win' | 'wall';
+export type ShopSlot = 'gi' | 'hair' | 'trail' | 'puff' | 'hit' | 'win' | 'wall' | SkinSlot | 'aura' | 'pet' | 'decor';
+/** Visual overhaul (Nov 22): skins are art layers on the hero (a costume, a hat, something on the back). */
+export type SkinSlot = 'outfit' | 'hat' | 'back';
+export const SKIN_SLOTS: readonly SkinSlot[] = ['outfit', 'hat', 'back'];
+/** How rare a look feels on its shop card (frame colour only; every price is fixed and nothing is random). */
+export type LookRarity = 'common' | 'rare' | 'epic' | 'legendary';
+const LOOK_RARITIES: readonly LookRarity[] = ['common', 'rare', 'epic', 'legendary'];
+/** Auras: a glow under the hero's feet with motes, drawn in code (never in a fight's danger marks). */
+export const AURA_STYLES = ['flame', 'frost', 'leaf', 'spark', 'smoke', 'gold', 'petal', 'rainbow', 'water', 'star'] as const;
+export type AuraStyle = (typeof AURA_STYLES)[number];
+export interface AuraRecipe {
+  style: AuraStyle;
+  colors: string[];
+  /** Motes alive at once (0 to 16). */
+  motes: number;
+  /** The ground ring's size, in tiles across (0.5 to 1.4). */
+  size: number;
+}
 export type FxSlot = 'trail' | 'puff' | 'hit' | 'win';
 
 export interface ShopGroup {
@@ -55,6 +72,17 @@ export interface ShopItem {
   color: string;
   /** Effects only: how it is drawn. */
   fx?: FxRecipe;
+  rarity?: LookRarity;
+  /** Skins: the hero art layer it shows ("outfit-crimson-dragon"). */
+  layer?: string;
+  /** Hats: hides the hair under it (hoods and helmets). */
+  hidesHair?: boolean;
+  /** Auras: how the glow is drawn. */
+  aura?: AuraRecipe;
+  /** Pets: the pet's art id ("pet-red-panda"). */
+  pet?: string;
+  /** Dojo decorations sold in the shop: the decoration id (content/dojo/decorations.json). Bought once, kept forever. */
+  decor?: string;
 }
 
 export interface ShopCatalog {
@@ -68,10 +96,10 @@ export interface ShopSave {
   wearing: Record<ShopSlot, string | null>;
 }
 
-const SLOTS: readonly ShopSlot[] = ['gi', 'hair', 'trail', 'puff', 'hit', 'win', 'wall'];
+const SLOTS: readonly ShopSlot[] = ['gi', 'hair', 'trail', 'puff', 'hit', 'win', 'wall', 'outfit', 'hat', 'back', 'aura', 'pet', 'decor'];
 
 export function newShopSave(): ShopSave {
-  return { owned: [], wearing: { gi: null, hair: null, trail: null, puff: null, hit: null, win: null, wall: null } };
+  return { owned: [], wearing: { gi: null, hair: null, trail: null, puff: null, hit: null, win: null, wall: null, outfit: null, hat: null, back: null, aura: null, pet: null, decor: null } };
 }
 
 export function readShopSave(v: unknown): ShopSave {
@@ -114,9 +142,40 @@ export function loadShopCatalog(raw: unknown): ShopCatalog {
     const item: ShopItem = { id: i.id, group: i.group as string, name: i.name, price: i.price as number, belt: i.belt as number, color: i.color.toLowerCase() };
     if (isFx(slot)) item.fx = readFx(i.fx, slot, bad);
     else if (i.fx !== undefined) throw bad('fx on a look');
+    if (i.rarity !== undefined) {
+      if (!LOOK_RARITIES.includes(i.rarity as LookRarity)) throw bad('rarity');
+      item.rarity = i.rarity as LookRarity;
+    }
+    if ((SKIN_SLOTS as readonly string[]).includes(slot)) {
+      if (typeof i.layer !== 'string' || !i.layer.startsWith(`${slot}-`) || !ID.test(i.layer)) throw bad(`layer (must start with "${slot}-")`);
+      item.layer = i.layer;
+      if (i.hidesHair !== undefined) {
+        if (slot !== 'hat' || typeof i.hidesHair !== 'boolean') throw bad('hidesHair (hats only)');
+        item.hidesHair = i.hidesHair;
+      }
+    } else if (i.layer !== undefined || i.hidesHair !== undefined) throw bad('layer on a non-skin');
+    if (slot === 'aura') item.aura = readAura(i.aura, bad);
+    else if (i.aura !== undefined) throw bad('aura on a non-aura');
+    if (slot === 'pet') {
+      if (typeof i.pet !== 'string' || !i.pet.startsWith('pet-') || !ID.test(i.pet)) throw bad('pet (must start with "pet-")');
+      item.pet = i.pet;
+    } else if (i.pet !== undefined) throw bad('pet on a non-pet');
+    if (slot === 'decor') {
+      if (typeof i.decor !== 'string' || !i.decor) throw bad('decor');
+      item.decor = i.decor;
+    } else if (i.decor !== undefined) throw bad('decor on a non-decoration');
     return item;
   });
   return { groups, items };
+}
+
+function readAura(v: unknown, bad: (why: string) => Error): AuraRecipe {
+  const f = v as Partial<AuraRecipe> | undefined;
+  if (!f || !AURA_STYLES.includes(f.style as AuraStyle)) throw bad('aura style');
+  if (!Array.isArray(f.colors) || f.colors.length === 0 || !f.colors.every((c) => typeof c === 'string' && HEX.test(c))) throw bad('aura colors');
+  if (!Number.isInteger(f.motes) || (f.motes as number) < 0 || (f.motes as number) > 16) throw bad('aura motes (0 to 16)');
+  if (typeof f.size !== 'number' || f.size < 0.5 || f.size > 1.4) throw bad('aura size (0.5 to 1.4)');
+  return { style: f.style as AuraStyle, colors: f.colors.map((c) => c.toLowerCase()), motes: f.motes as number, size: f.size };
 }
 
 function readFx(v: unknown, slot: FxSlot, bad: (why: string) => Error): FxRecipe {
@@ -157,7 +216,8 @@ export function buyLook(profile: Profile, catalog: ShopCatalog, id: string, tier
   if (!item || profile.shop.owned.includes(id) || profile.coins < item.price) return false;
   profile.coins -= item.price;
   profile.shop.owned.push(id);
-  profile.shop.wearing[slotOf(catalog, item)] = id;
+  // A decoration goes to the Home Dojo's storage (the client adds it); it is never "worn".
+  if (slotOf(catalog, item) !== 'decor') profile.shop.wearing[slotOf(catalog, item)] = id;
   return true;
 }
 
@@ -168,7 +228,7 @@ export function wearLook(profile: Profile, catalog: ShopCatalog, slot: ShopSlot,
     return true;
   }
   const item = catalog.items.find((i) => i.id === id);
-  if (!item || !profile.shop.owned.includes(id) || slotOf(catalog, item) !== slot) return false;
+  if (slot === 'decor' || !item || !profile.shop.owned.includes(id) || slotOf(catalog, item) !== slot) return false;
   profile.shop.wearing[slot] = id;
   return true;
 }
@@ -189,4 +249,15 @@ export function wornShopItem(profile: Pick<Profile, 'shop'>, catalog: ShopCatalo
 export function wornFx(profile: Pick<Profile, 'shop'>, catalog: ShopCatalog): Record<FxSlot, FxRecipe | null> {
   const fx = (slot: FxSlot) => wornShopItem(profile, catalog, slot)?.fx ?? null;
   return { trail: fx('trail'), puff: fx('puff'), hit: fx('hit'), win: fx('win') };
+}
+
+/** The skin layers worn now (null = none), and whether the hat hides the hair. */
+export function wornSkins(profile: Pick<Profile, 'shop'>, catalog: ShopCatalog): { outfit: string | null; hat: string | null; back: string | null; hidesHair: boolean } {
+  const layer = (slot: SkinSlot) => wornShopItem(profile, catalog, slot)?.layer ?? null;
+  return { outfit: layer('outfit'), hat: layer('hat'), back: layer('back'), hidesHair: !!wornShopItem(profile, catalog, 'hat')?.hidesHair };
+}
+
+/** The aura and pet worn now, or null. */
+export function wornExtras(profile: Pick<Profile, 'shop'>, catalog: ShopCatalog): { aura: AuraRecipe | null; pet: string | null } {
+  return { aura: wornShopItem(profile, catalog, 'aura')?.aura ?? null, pet: wornShopItem(profile, catalog, 'pet')?.pet ?? null };
 }

@@ -22,7 +22,9 @@ describe('the effects and wall paint in the catalog', () => {
       expect(by(g).map((i) => i.price)).toEqual(want.belts.map(() => want.price));
       expect(by(g).map((i) => i.belt)).toEqual(want.belts);
     }
-    expect(CATALOG.items).toHaveLength(20 + 10 + 4 + 8 + 6 + 6);
+    // Nov 22: skins, auras, pets and decorations joined the catalog; R-SHOP 3.3's groups keep their counts.
+    const rShop = ['gi-dye', 'hair-dye', 'walk-trail', 'dash-puff', 'hit-pop', 'win-burst', 'wall-paint'];
+    expect(CATALOG.items.filter((i) => rShop.includes(i.group))).toHaveLength(20 + 10 + 4 + 8 + 6 + 6);
   });
 
   it('every effect stays inside the caps; wall paint is a colour and no effect', () => {

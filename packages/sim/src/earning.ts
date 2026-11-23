@@ -11,7 +11,7 @@
 
 import { CLASS_CHEST, COINS } from './config';
 import type { Content } from './content';
-import { addDecorations, type DecorationDef, type DojoState, type DropBelt, type NewDecoration } from './dojo';
+import { addDecorations, type AchievementStat, type DecorationDef, type DojoState, type DropBelt, type NewDecoration } from './dojo';
 import { makeItem, rollRarity, type GearItem } from './loot';
 import type { Profile } from './profile';
 import { createRng } from './rng';
@@ -175,4 +175,43 @@ export function journalKinds(content: Content, given: readonly string[]): Journa
     .map((d, i) => ({ d, i }))
     .sort((a, b) => (a.d.journalTier ?? 1) - (b.d.journalTier ?? 1) || a.i - b.i)
     .map(({ d }) => ({ monster: d.monster!, trophy: d, met: given.includes(d.id) }));
+}
+
+/** Nov 22: how far the student is on an achievement stat (each only goes up). */
+export function achievementValue(profile: Profile, stat: AchievementStat): number {
+  switch (stat) {
+    case 'runs':
+      return profile.runsPlayed;
+    case 'floors':
+      return profile.floorsCleared;
+    case 'combo':
+      return profile.bests.longestCombo;
+    case 'perfects':
+      return profile.bests.mostPerfects;
+    case 'kataClean':
+      return Object.values(profile.kataBests).filter((b) => b.fewestWrong === 0).length;
+    case 'starWall':
+      return profile.starWallBest;
+    case 'journal':
+      return Object.values(profile.monsterJournal).filter((e) => e.beaten).length;
+    case 'guardians':
+      // One keeper statue per floor Guardian beaten (FLOOR_GUARDIANS give the statue of their belt tier).
+      return profile.decorEarning.given.filter((g) => g.startsWith('decor-a6-keeper-statue')).length;
+    case 'level':
+      return profile.level;
+  }
+}
+
+/** The achievement pieces earned and not yet given: adds them to the dojo's storage (each once) and returns their ids. */
+export function giveAchievementPieces(profile: Profile, dojo: DojoState, content: Content): string[] {
+  const out: string[] = [];
+  for (const def of content.dojo.decorations) {
+    const a = def.achievement;
+    if (!a || profile.decorEarning.given.includes(def.id)) continue;
+    if (achievementValue(profile, a.stat) < a.atLeast) continue;
+    profile.decorEarning.given.push(def.id);
+    out.push(def.id);
+  }
+  if (out.length) addDecorations(dojo, out);
+  return out;
 }
