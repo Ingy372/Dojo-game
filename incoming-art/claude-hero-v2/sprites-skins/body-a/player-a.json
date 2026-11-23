@@ -1,0 +1,944 @@
+{
+  "character": "player-a",
+  "frameWidth": 128,
+  "frameHeight": 160,
+  "anchor": {
+    "x": 64.0,
+    "y": 136.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.6,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "outfit-crimson-dragon",
+      "order": 40,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-shadow-ninja",
+      "order": 41,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-frost-guardian",
+      "order": 42,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-iron-samurai",
+      "order": 43,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-temple-monk",
+      "order": 44,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-thunder-tiger",
+      "order": 45,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-panda-pal",
+      "order": 46,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-phoenix-flame",
+      "order": 47,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-starlight",
+      "order": 48,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "outfit-jade-guardian",
+      "order": 49,
+      "tint": false,
+      "optional": false,
+      "group": "outfit"
+    },
+    {
+      "name": "hat-red-headband",
+      "order": 60,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-tiger-hood",
+      "order": 61,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-panda-hood",
+      "order": 62,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-ninja-hood",
+      "order": 63,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-samurai-helmet",
+      "order": 64,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-straw-hat",
+      "order": 65,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-dragon-horns",
+      "order": 66,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-frost-crown",
+      "order": 67,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "hat-fox-mask",
+      "order": 68,
+      "tint": false,
+      "optional": false,
+      "group": "hat"
+    },
+    {
+      "name": "back-hero-cape",
+      "order": 80,
+      "tint": false,
+      "optional": false,
+      "group": "back"
+    },
+    {
+      "name": "back-phoenix-wings",
+      "order": 81,
+      "tint": false,
+      "optional": false,
+      "group": "back"
+    },
+    {
+      "name": "back-dragon-tail",
+      "order": 82,
+      "tint": false,
+      "optional": false,
+      "group": "back"
+    },
+    {
+      "name": "back-master-scroll",
+      "order": 83,
+      "tint": false,
+      "optional": false,
+      "group": "back"
+    },
+    {
+      "name": "back-bo-staff",
+      "order": 84,
+      "tint": false,
+      "optional": false,
+      "group": "back"
+    }
+  ],
+  "animations": {
+    "bow": {
+      "frames": 22,
+      "fps": 16,
+      "durationSec": 1.375,
+      "loop": false,
+      "tags": {
+        "feet_together": "3",
+        "bow_down": "5-9",
+        "bow_hold": "9-13",
+        "rise": "14-18",
+        "upright": "18"
+      },
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_bow.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_bow.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_bow.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_bow.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_bow.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_bow.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_bow.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_bow.png",
+        "outfit-starlight": "player-a_outfit-starlight_bow.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_bow.png",
+        "hat-red-headband": "player-a_hat-red-headband_bow.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_bow.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_bow.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_bow.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_bow.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_bow.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_bow.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_bow.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_bow.png",
+        "back-hero-cape": "player-a_back-hero-cape_bow.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_bow.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_bow.png",
+        "back-master-scroll": "player-a_back-master-scroll_bow.png",
+        "back-bo-staff": "player-a_back-bo-staff_bow.png"
+      },
+      "keyFrames": {
+        "feet_together": 3,
+        "bow_down": "5-9",
+        "bow_hold": "9-13",
+        "rise": "14-18",
+        "upright": 18
+      },
+      "note": "22 frames = 1.375 s; legs straight (knees soft, not locked) once the feet are together, the 30-degree bend is only from the hips; the head stays up, eyes on the partner; frames 0-3 step the feet together, 19-21 return to the guard. For the game's current 0.9 s, play frames 3-18 at 16 fps (1.0 s) or the whole bow at 24 fps"
+    },
+    "celebrate": {
+      "frames": 24,
+      "fps": 16,
+      "durationSec": 1.5,
+      "loop": false,
+      "tags": {
+        "jump": "4-7",
+        "arms_up": "4-12",
+        "proud": "18"
+      },
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_celebrate.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_celebrate.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_celebrate.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_celebrate.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_celebrate.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_celebrate.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_celebrate.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_celebrate.png",
+        "outfit-starlight": "player-a_outfit-starlight_celebrate.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_celebrate.png",
+        "hat-red-headband": "player-a_hat-red-headband_celebrate.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_celebrate.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_celebrate.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_celebrate.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_celebrate.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_celebrate.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_celebrate.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_celebrate.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_celebrate.png",
+        "back-hero-cape": "player-a_back-hero-cape_celebrate.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_celebrate.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_celebrate.png",
+        "back-master-scroll": "player-a_back-master-scroll_celebrate.png",
+        "back-bo-staff": "player-a_back-bo-staff_celebrate.png"
+      },
+      "keyFrames": {
+        "arms_up": "4-12",
+        "hop_top": 5,
+        "proud": 18
+      },
+      "holdLastFrame": true,
+      "note": "promotion ceremony, 24 frames = 1.5 s, then hold the last frame (proud stance, fists at the hips so the new belt is in full view)"
+    },
+    "counter": {
+      "frames": 12,
+      "fps": 16,
+      "durationSec": 0.75,
+      "loop": false,
+      "tags": {
+        "block": "0-7",
+        "block_hold": "3-7",
+        "counter_hit": "8"
+      },
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_counter.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_counter.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_counter.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_counter.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_counter.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_counter.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_counter.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_counter.png",
+        "outfit-starlight": "player-a_outfit-starlight_counter.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_counter.png",
+        "hat-red-headband": "player-a_hat-red-headband_counter.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_counter.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_counter.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_counter.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_counter.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_counter.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_counter.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_counter.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_counter.png",
+        "back-hero-cape": "player-a_back-hero-cape_counter.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_counter.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_counter.png",
+        "back-master-scroll": "player-a_back-master-scroll_counter.png",
+        "back-bo-staff": "player-a_back-bo-staff_counter.png"
+      }
+    },
+    "dash": {
+      "frames": 8,
+      "fps": 20,
+      "durationSec": 0.4,
+      "loop": false,
+      "tags": {
+        "push": "1",
+        "travel": "1-5",
+        "land": "5",
+        "recover": "6-7"
+      },
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_dash.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_dash.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_dash.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_dash.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_dash.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_dash.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_dash.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_dash.png",
+        "outfit-starlight": "player-a_outfit-starlight_dash.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_dash.png",
+        "hat-red-headband": "player-a_hat-red-headband_dash.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_dash.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_dash.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_dash.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_dash.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_dash.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_dash.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_dash.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_dash.png",
+        "back-hero-cape": "player-a_back-hero-cape_dash.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_dash.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_dash.png",
+        "back-master-scroll": "player-a_back-master-scroll_dash.png",
+        "back-bo-staff": "player-a_back-bo-staff_dash.png"
+      },
+      "keyFrames": {
+        "push": 1,
+        "travel": "1-5",
+        "land": 5,
+        "recover": "6-7"
+      },
+      "note": "8 frames = 0.4 s. Played in place; the game moves him 2.5 tiles during frames 1-5 (0.25 s). Ends on the guard"
+    },
+    "defeat": {
+      "frames": 16,
+      "fps": 12,
+      "durationSec": 1.3333,
+      "loop": false,
+      "tags": {
+        "ouch": "1",
+        "sink": "5-10",
+        "hold": "15"
+      },
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_defeat.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_defeat.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_defeat.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_defeat.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_defeat.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_defeat.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_defeat.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_defeat.png",
+        "outfit-starlight": "player-a_outfit-starlight_defeat.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_defeat.png",
+        "hat-red-headband": "player-a_hat-red-headband_defeat.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_defeat.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_defeat.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_defeat.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_defeat.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_defeat.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_defeat.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_defeat.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_defeat.png",
+        "back-hero-cape": "player-a_back-hero-cape_defeat.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_defeat.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_defeat.png",
+        "back-master-scroll": "player-a_back-master-scroll_defeat.png",
+        "back-bo-staff": "player-a_back-bo-staff_defeat.png"
+      },
+      "keyFrames": {
+        "ouch": 1,
+        "sink": "5-10",
+        "kneel": 11,
+        "hold": 15
+      },
+      "holdLastFrame": true,
+      "note": "play once, then hold the last frame during the fade and 'Ouch! Back to the start.'"
+    },
+    "hit": {
+      "frames": 5,
+      "fps": 20,
+      "durationSec": 0.25,
+      "loop": false,
+      "tags": {
+        "recoil": "1",
+        "back": "4"
+      },
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_hit.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_hit.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_hit.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_hit.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_hit.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_hit.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_hit.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_hit.png",
+        "outfit-starlight": "player-a_outfit-starlight_hit.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_hit.png",
+        "hat-red-headband": "player-a_hat-red-headband_hit.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_hit.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_hit.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_hit.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_hit.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_hit.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_hit.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_hit.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_hit.png",
+        "back-hero-cape": "player-a_back-hero-cape_hit.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_hit.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_hit.png",
+        "back-master-scroll": "player-a_back-master-scroll_hit.png",
+        "back-bo-staff": "player-a_back-bo-staff_hit.png"
+      },
+      "keyFrames": {
+        "recoil": 1,
+        "back": 4
+      },
+      "note": "hit flinch, 5 frames = 0.25 s, small head/shoulder recoil, ends on the guard"
+    },
+    "idle": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_idle.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_idle.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_idle.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_idle.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_idle.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_idle.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_idle.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_idle.png",
+        "outfit-starlight": "player-a_outfit-starlight_idle.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_idle.png",
+        "hat-red-headband": "player-a_hat-red-headband_idle.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_idle.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_idle.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_idle.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_idle.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_idle.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_idle.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_idle.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_idle.png",
+        "back-hero-cape": "player-a_back-hero-cape_idle.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_idle.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_idle.png",
+        "back-master-scroll": "player-a_back-master-scroll_idle.png",
+        "back-bo-staff": "player-a_back-bo-staff_idle.png"
+      }
+    },
+    "jab": {
+      "frames": 6,
+      "fps": 20,
+      "durationSec": 0.3,
+      "loop": false,
+      "tags": {
+        "impact": "2"
+      },
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_jab.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_jab.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_jab.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_jab.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_jab.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_jab.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_jab.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_jab.png",
+        "outfit-starlight": "player-a_outfit-starlight_jab.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_jab.png",
+        "hat-red-headband": "player-a_hat-red-headband_jab.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_jab.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_jab.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_jab.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_jab.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_jab.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_jab.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_jab.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_jab.png",
+        "back-hero-cape": "player-a_back-hero-cape_jab.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_jab.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_jab.png",
+        "back-master-scroll": "player-a_back-master-scroll_jab.png",
+        "back-bo-staff": "player-a_back-bo-staff_jab.png"
+      },
+      "keyFrames": {
+        "impact": 2
+      },
+      "repeatEverySec": 0.6,
+      "endsOn": "guard",
+      "note": "basic attack: play once per attack (0.3 s); the last frame flows back into idle frame 0"
+    },
+    "straighten": {
+      "frames": 14,
+      "fps": 12,
+      "durationSec": 1.1667,
+      "loop": false,
+      "tags": {
+        "reach": "3-4",
+        "adjust": "4-7",
+        "nod": "10"
+      },
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_straighten.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_straighten.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_straighten.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_straighten.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_straighten.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_straighten.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_straighten.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_straighten.png",
+        "outfit-starlight": "player-a_outfit-starlight_straighten.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_straighten.png",
+        "hat-red-headband": "player-a_hat-red-headband_straighten.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_straighten.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_straighten.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_straighten.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_straighten.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_straighten.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_straighten.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_straighten.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_straighten.png",
+        "back-hero-cape": "player-a_back-hero-cape_straighten.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_straighten.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_straighten.png",
+        "back-master-scroll": "player-a_back-master-scroll_straighten.png",
+        "back-bo-staff": "player-a_back-bo-staff_straighten.png"
+      },
+      "keyFrames": {
+        "reach": "3-4",
+        "adjust": "4-7",
+        "nod": 10
+      },
+      "note": "one-shot, 14 frames = 1.17 s: reach out at chest height and set the item level (weapon rack), ends on the guard"
+    },
+    "strike": {
+      "frames": 8,
+      "fps": 16,
+      "durationSec": 0.5,
+      "loop": false,
+      "tags": {
+        "impact": "4"
+      },
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_strike.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_strike.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_strike.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_strike.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_strike.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_strike.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_strike.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_strike.png",
+        "outfit-starlight": "player-a_outfit-starlight_strike.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_strike.png",
+        "hat-red-headband": "player-a_hat-red-headband_strike.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_strike.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_strike.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_strike.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_strike.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_strike.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_strike.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_strike.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_strike.png",
+        "back-hero-cape": "player-a_back-hero-cape_strike.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_strike.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_strike.png",
+        "back-master-scroll": "player-a_back-master-scroll_strike.png",
+        "back-bo-staff": "player-a_back-bo-staff_strike.png"
+      },
+      "keyFrames": {
+        "impact": 4
+      },
+      "note": "Batch 1: small lunge, hips and shoulders turn so it reads from the front"
+    },
+    "sweep": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_sweep.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_sweep.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_sweep.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_sweep.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_sweep.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_sweep.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_sweep.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_sweep.png",
+        "outfit-starlight": "player-a_outfit-starlight_sweep.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_sweep.png",
+        "hat-red-headband": "player-a_hat-red-headband_sweep.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_sweep.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_sweep.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_sweep.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_sweep.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_sweep.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_sweep.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_sweep.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_sweep.png",
+        "back-hero-cape": "player-a_back-hero-cape_sweep.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_sweep.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_sweep.png",
+        "back-master-scroll": "player-a_back-master-scroll_sweep.png",
+        "back-bo-staff": "player-a_back-bo-staff_sweep.png"
+      },
+      "props": [
+        "prop-broom"
+      ],
+      "note": "loop, 0.8 s; draw prop-broom (no tint). One loop = two strokes"
+    },
+    "walk": {
+      "frames": 12,
+      "fps": 36,
+      "durationSec": 0.3333,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_walk.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_walk.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_walk.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_walk.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_walk.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_walk.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_walk.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_walk.png",
+        "outfit-starlight": "player-a_outfit-starlight_walk.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_walk.png",
+        "hat-red-headband": "player-a_hat-red-headband_walk.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_walk.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_walk.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_walk.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_walk.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_walk.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_walk.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_walk.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_walk.png",
+        "back-hero-cape": "player-a_back-hero-cape_walk.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_walk.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_walk.png",
+        "back-master-scroll": "player-a_back-master-scroll_walk.png",
+        "back-bo-staff": "player-a_back-bo-staff_walk.png"
+      },
+      "groundMotion": {
+        "strideTilesPerLoop": 1.5,
+        "stridePxPerLoop": 120.0,
+        "designSpeedTilesPerSec": 4.5,
+        "fpsPerTilePerSec": 8.0,
+        "note": "planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above"
+      }
+    },
+    "wipe": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "outfit-crimson-dragon": "player-a_outfit-crimson-dragon_wipe.png",
+        "outfit-shadow-ninja": "player-a_outfit-shadow-ninja_wipe.png",
+        "outfit-frost-guardian": "player-a_outfit-frost-guardian_wipe.png",
+        "outfit-iron-samurai": "player-a_outfit-iron-samurai_wipe.png",
+        "outfit-temple-monk": "player-a_outfit-temple-monk_wipe.png",
+        "outfit-thunder-tiger": "player-a_outfit-thunder-tiger_wipe.png",
+        "outfit-panda-pal": "player-a_outfit-panda-pal_wipe.png",
+        "outfit-phoenix-flame": "player-a_outfit-phoenix-flame_wipe.png",
+        "outfit-starlight": "player-a_outfit-starlight_wipe.png",
+        "outfit-jade-guardian": "player-a_outfit-jade-guardian_wipe.png",
+        "hat-red-headband": "player-a_hat-red-headband_wipe.png",
+        "hat-tiger-hood": "player-a_hat-tiger-hood_wipe.png",
+        "hat-panda-hood": "player-a_hat-panda-hood_wipe.png",
+        "hat-ninja-hood": "player-a_hat-ninja-hood_wipe.png",
+        "hat-samurai-helmet": "player-a_hat-samurai-helmet_wipe.png",
+        "hat-straw-hat": "player-a_hat-straw-hat_wipe.png",
+        "hat-dragon-horns": "player-a_hat-dragon-horns_wipe.png",
+        "hat-frost-crown": "player-a_hat-frost-crown_wipe.png",
+        "hat-fox-mask": "player-a_hat-fox-mask_wipe.png",
+        "back-hero-cape": "player-a_back-hero-cape_wipe.png",
+        "back-phoenix-wings": "player-a_back-phoenix-wings_wipe.png",
+        "back-dragon-tail": "player-a_back-dragon-tail_wipe.png",
+        "back-master-scroll": "player-a_back-master-scroll_wipe.png",
+        "back-bo-staff": "player-a_back-bo-staff_wipe.png"
+      },
+      "props": [
+        "prop-rag"
+      ],
+      "note": "loop, 1.0 s, one circle per loop; draw prop-rag (no tint). Play while the player taps Wipe"
+    }
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
+    "gi": "gi colour (current placeholder #f2e9d8)",
+    "belt": "the profile's belt.color; a dark (black) belt.color is drawn as #26272f",
+    "belt-center": "two-colour belts only: belt.color2; a dark (black) color2 is drawn as deep black #111116 (it sits between two coloured bands, not next to the outline)",
+    "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
+    "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)",
+    "belt-sheen": "dark (black) belt.color only: tint #a2a6b6, a bright top edge so black reads as a belt, not as outline; skip on other belts",
+    "belt-center-edge": "optional separator around the centre stripe; NOT used in the chosen style (skip it). Tint #ece6d8 if a future style wants it",
+    "belt-rim": "ALWAYS draw it, after belt-center: tint #2e2a3a (dark rim) on every belt except a dark (black) belt.color, which gets light #c9ccd6",
+    "skin": "multiply by a palettes.skin colour (the layer is a light neutral grey)",
+    "hair": "multiply every hair-* layer by a palettes.hair colour (light neutral grey)"
+  },
+  "beltStyles": {
+    "note": "chosen belt style (belt revision, option C): tint per layer for each Action Zone belt (fixtures/); a layer that is not listed is not drawn (belt-center-edge is never drawn in this style). Tape stripes keep the belt.ts rule",
+    "White": {
+      "belt": "#f4f1ea",
+      "belt-rim": "#2e2a3a"
+    },
+    "Yellow": {
+      "belt": "#f5d22e",
+      "belt-rim": "#2e2a3a"
+    },
+    "Orange": {
+      "belt": "#f08a24",
+      "belt-rim": "#2e2a3a"
+    },
+    "Green": {
+      "belt": "#3aa655",
+      "belt-rim": "#2e2a3a"
+    },
+    "Blue": {
+      "belt": "#2f6fd6",
+      "belt-rim": "#2e2a3a"
+    },
+    "Red": {
+      "belt": "#d8352a",
+      "belt-rim": "#2e2a3a"
+    },
+    "Red/Black": {
+      "belt": "#d8352a",
+      "belt-center": "#111116",
+      "belt-rim": "#2e2a3a"
+    },
+    "Brown": {
+      "belt": "#7a4a26",
+      "belt-rim": "#2e2a3a"
+    },
+    "Brown/Black": {
+      "belt": "#7a4a26",
+      "belt-center": "#111116",
+      "belt-rim": "#2e2a3a"
+    },
+    "Black": {
+      "belt": "#26272f",
+      "belt-sheen": "#a2a6b6",
+      "belt-rim": "#c9ccd6"
+    }
+  },
+  "palettes": {
+    "skin": [
+      "#f6d7c3",
+      "#efc3a4",
+      "#e0a984",
+      "#c98e65",
+      "#b07650",
+      "#946042",
+      "#7a4b32",
+      "#603926",
+      "#4a2c1f",
+      "#38221a"
+    ],
+    "hair": [
+      "#403b52",
+      "#3a2519",
+      "#5c3a22",
+      "#8a5f3b",
+      "#d9b26a",
+      "#b5482a",
+      "#8a3a26",
+      "#9a9aa2",
+      "#3f6fd1",
+      "#7d4cc2"
+    ],
+    "gi": [
+      "#f2f2f2",
+      "#4a4a55",
+      "#24345e",
+      "#3a6ea5",
+      "#b8322a",
+      "#8a8d99",
+      "#3f7a4a",
+      "#e9dfc9",
+      "#7fb2e0",
+      "#7a2a33"
+    ],
+    "note": "Recommended swatches (hex), shown by the game in this order. They are multiply tints for the tinted layers (skin, hair-*, gi). Skin runs from light to deep. The ids in palettesDraftLabels are placeholders for the Content Writer, not names"
+  },
+  "palettesDraftLabels": {
+    "skin": [
+      "skin-01",
+      "skin-02",
+      "skin-03",
+      "skin-04",
+      "skin-05",
+      "skin-06",
+      "skin-07",
+      "skin-08",
+      "skin-09",
+      "skin-10"
+    ],
+    "hair": [
+      "black",
+      "dark-brown",
+      "brown",
+      "light-brown",
+      "blonde",
+      "red",
+      "auburn",
+      "grey",
+      "blue",
+      "purple"
+    ],
+    "gi": [
+      "white",
+      "charcoal",
+      "navy",
+      "blue",
+      "red",
+      "grey",
+      "green",
+      "unbleached",
+      "sky",
+      "maroon"
+    ]
+  },
+  "groups": {
+    "face": [
+      "face-01",
+      "face-02",
+      "face-03",
+      "face-04",
+      "face-05",
+      "face-06"
+    ],
+    "hair": [
+      "hair-01",
+      "hair-02",
+      "hair-03",
+      "hair-04",
+      "hair-05",
+      "hair-06",
+      "hair-07",
+      "hair-08",
+      "hair-09",
+      "hair-10",
+      "hair-11",
+      "hair-12"
+    ],
+    "note": "draw exactly one layer of each group, after the base layers (face, then hair)"
+  },
+  "optionNotes": {
+    "face-01": "the approved face of Batch 1: oval eyes with a shine, friendly brows, a small smile",
+    "face-02": "big round eyes, soft high brows, a wider smile",
+    "face-03": "calm almond eyes, straight brows, a small smile",
+    "face-04": "oval eyes with small lashes at the outer corner, a happy smile",
+    "face-05": "bold thick brows, determined but friendly",
+    "face-06": "oval eyes and freckles across the cheeks",
+    "hair-01": "very short (close crop): a thin cap that follows the head",
+    "hair-02": "short: the approved Batch 1 hair (cap, back, sideburns, a short fringe and a tuft)",
+    "hair-03": "curly: a rounder cap made of soft curls",
+    "hair-04": "afro: a rounded shape built from soft coil clumps with light tops, a natural hairline above the brows",
+    "hair-05": "braids: a smooth cap with two braids hanging behind the ears to the shoulders",
+    "hair-06": "ponytail: cap pulled back to a tie at the back of the head, a short tail (above the belt)",
+    "hair-07": "bun: cap with a round bun on top towards the back",
+    "hair-08": "tied back: smooth hair combed back to a low knot at the nape",
+    "hair-09": "two puffs: hair parted down the middle and gathered into two round coil puffs high on the head",
+    "hair-10": "short twists: a soft cap covered in short, rounded twists that point up and out (they never reach the eyes)",
+    "hair-11": "cornrows into braids: neat raised rows from the hairline to the back, ending in braids that hang behind the shoulders",
+    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils"
+  }
+}
