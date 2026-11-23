@@ -4,6 +4,7 @@ import Phaser from 'phaser';
 import { CONTENT } from '../game/content';
 import type { Grade, InsightFamily, Rarity } from '@dojo/sim';
 import { BOARD_PAPER } from './tokens';
+import { BODY_FONT, TITLE_FONT } from './kit';
 
 export { S1, S2, S3, S4, TYPE, RADIUS, MIN_TAP, MOTION, tapArea, BOARD, cubbySize } from './tokens';
 
@@ -11,9 +12,12 @@ export { S1, S2, S3, S4, TYPE, RADIUS, MIN_TAP, MOTION, tapArea, BOARD, cubbySiz
  * P-MENU2-a: mood A, warm dojo wood and paper (Jay's pick). Placeholder colours drawn in code;
  * the Artist's frame art replaces them once Jay approves the samples.
  */
-export const WOOD = { frame: 0x8a5a34, frameDark: 0x5e3b22, grain: 0xb07a4a, inner: 0x1f1813, paper: BOARD_PAPER, ink: '#3a2618', switchOn: 0xa8703f, switchOff: 0x3a2a1e } as const;
+// U-KIT (Nov 23): the wood names now carry the kit's navy and gold, so older screens match every menu.
+export const WOOD = { frame: 0x0d1233, frameDark: 0x0d1233, grain: 0x5a78e0, inner: 0x16206b, paper: BOARD_PAPER, ink: '#16206b', switchOn: 0x36b33a, switchOff: 0x2a3478 } as const;
 
-export const FONT = 'system-ui, sans-serif';
+/** U-KIT: the everyday font (Nunito). Titles and buttons use TITLE_FONT (Lilita One) from kit.ts. */
+export const FONT = BODY_FONT;
+export { TITLE_FONT };
 
 export const RARITY_COLOR: Record<Rarity, number> = {
   common: 0xd8d2c4,

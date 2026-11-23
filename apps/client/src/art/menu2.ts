@@ -40,6 +40,9 @@ export function menu2Slice(scene: Phaser.Scene, name: Name, x: number, y: number
   return ns;
 }
 
+/** U-KIT: menus draw the kit look only (the wood button art stays packed but unused). */
+export const KIT_ONLY = true;
+
 /** Dark ink for words on the honey button and the title plaque (README). */
 export const HONEY_INK = '#462a16';
 /** Label ink on a dimmed (unselected) wood tab: 5:1 or more on the dim wood. */
@@ -50,6 +53,8 @@ const DIM_INK = '#24140a';
  * (a tab that isn't picked); `disabled` uses the matte pale wood. False: the code button stays.
  */
 export function woodSkin(scene: Phaser.Scene, b: { visual: Phaser.GameObjects.Container; hit: Phaser.GameObjects.Zone }, w: number, h: number, o: { dim?: boolean; disabled?: boolean } = {}): boolean {
+  // U-KIT (Nov 23): the wood button art is retired; every button keeps the one kit look.
+  if (KIT_ONLY) return false;
   const name = o.disabled ? 'button-primary-disabled' : 'button-primary-normal';
   const skin = menu2Slice(scene, name, -w / 2, -h / 2, w, h, 'height');
   if (!skin) return false;

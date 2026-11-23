@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GOLD, GREEN, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, BOARD, type PanelChange } from '../ui/tokens';
+import { GREEN, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, BOARD, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import BLESS from '../../../../content/settings/blessing.json';
@@ -52,6 +52,7 @@ import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { TOUR, senseiBubble } from '../ui/homeTour';
 import { GLASS, boardBackdrop, glassPanel, heroPedestal, levelBadge } from '../ui/boardTheme';
+import { KIT, KIT_COLOR, drawPanel, kitWell, kitBackdrop, kitBar, kitPanel, kitRibbon, kitTabs } from '../ui/kit';
 import { currentTraining, seedLoadout, selectProfile, shortDate } from '../game/student';
 import { hex } from '../ui/belt';
 import { startTowerRun } from '../game/tower';
@@ -371,7 +372,7 @@ export class HomeScene extends Phaser.Scene {
     const cx = rightX + rightW / 2;
     const h = pointer ? 92 : 60;
     const cy = pad + h / 2;
-    const shade = this.add.rectangle(cx, cy, w, h, 0x221d2e).setStrokeStyle(3, 0xffd166).setInteractive();
+    const shade = this.add.rectangle(cx, cy, w, h, 0x1b2a7a).setStrokeStyle(3, 0xffd166).setInteractive();
     box.add(shade);
     const line = (y: number, str: string, size: number, color: string) =>
       box.add(
@@ -408,7 +409,7 @@ export class HomeScene extends Phaser.Scene {
     const h = Math.min(280, height - 30);
     const cx = width / 2;
     const top = (height - h) / 2;
-    add(this.add.rectangle(cx, height / 2, w, h, 0x221d2e).setStrokeStyle(3, 0xffd166));
+    add(this.add.rectangle(cx, height / 2, w, h, 0x1b2a7a).setStrokeStyle(3, 0xffd166));
     label(cx, top + 26, 'Floor cleared!', 24, '#ffd166', 'Georgia, serif');
     const order = ['S', 'A', 'B'] as const;
     const grade = order.find((g) => s.results.some((r) => r.grade === g));
@@ -428,7 +429,7 @@ export class HomeScene extends Phaser.Scene {
     const bw = 160;
     const by = top + h - 58;
     // P-MENU-a: the shared button (press feedback, slide-off cancel), 44 tall.
-    button(this, { x: cx - bw / 2, y: by, w: bw, h: 44, label: 'Continue', color: 0xd5713a, size: 19, onTap: () => {
+    button(this, { x: cx - bw / 2, y: by, w: bw, h: 44, label: 'Continue', color: 0xffb01f, size: 19, onTap: () => {
       card.destroy();
       onDone();
     } }, card);
@@ -450,13 +451,13 @@ export class HomeScene extends Phaser.Scene {
     const bx = c.x + (c.w - bw) / 2;
     const bh = 106;
     const by = Math.max(S2, c.y - bh - S2);
-    box.add(this.add.rectangle(bx, by, bw, bh, 0x221d2e).setOrigin(0).setStrokeStyle(3, 0xffd166));
+    box.add(this.add.rectangle(bx, by, bw, bh, 0x1b2a7a).setOrigin(0).setStrokeStyle(3, 0xffd166));
     const line = (y: number, str: string, size: number, color: string) =>
       box.add(this.add.text(bx + bw / 2, y, str, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, align: 'center', wordWrap: { width: bw - 24 } }).setOrigin(0.5, 0).setResolution(crisp()));
     line(by + 10, PW.introTitle, TYPE.title, '#ffd166');
     line(by + 10 + TYPE.title + 6, PW.introLine, TYPE.body, '#f2e9d8');
     this.celebrating = true;
-    button(this, { x: bx + bw / 2 - 48, y: by + bh - MIN_TAP - 8, w: 96, h: MIN_TAP, label: PW.introOk, color: 0xd5713a, size: TYPE.body, onTap: () => {
+    button(this, { x: bx + bw / 2 - 48, y: by + bh - MIN_TAP - 8, w: 96, h: MIN_TAP, label: PW.introOk, color: 0xffb01f, size: TYPE.body, onTap: () => {
       this.profile.pathIntroSeen = true;
       writeSave(this.profile);
       this.celebrating = false;
@@ -506,8 +507,7 @@ export class HomeScene extends Phaser.Scene {
     const t = this.training;
     const level = effectiveLevel(this.profile, t);
     const pv = pathView(this.profile, t, level);
-    this.ui.add(this.add.rectangle(0, 0, width, height, 0x1e1a14).setOrigin(0));
-    for (let x = 0; x < width; x += 48) this.ui.add(this.add.rectangle(x, 0, 2, height, 0x2a241c).setOrigin(0));
+    this.ui.add(kitBackdrop(this, width, height));
 
     // Top bar: Dojo, Board, the title, and the student chip.
     const { bar } = L;
@@ -516,18 +516,16 @@ export class HomeScene extends Phaser.Scene {
     const tight = bar.w < 760 ? 1 : 0;
     const bw = [PATH_BAR_W - 12 * tight, PATH_BAR_W - 12 * tight, SHOP_BUTTON_W - 12 * tight, SHOP_BUTTON_W - 12 * tight];
     const bx = (i: number) => bar.x + bw.slice(0, i).reduce((a, w) => a + w + S2, 0);
-    this.button(bx(0), bar.y, bw[0], bar.h, PW.back, 0x8a5a35, TYPE.body, () => this.backToDojo());
-    this.button(bx(1), bar.y, bw[1], bar.h, PW.board, 0x3a3a4a, TYPE.body, () => this.setView('board'));
-    this.button(bx(2), bar.y, bw[2], bar.h, SHOP_WORDS.button, GOLD, TYPE.body, () => this.openShop());
-    this.button(bx(3), bar.y, bw[3], bar.h, BOOK_WORDS.button, 0x6b5a2a, TYPE.body, () => this.openBook('moves'));
+    this.button(bx(0), bar.y, bw[0], bar.h, PW.back, KIT_COLOR.blue, TYPE.body, () => this.backToDojo());
+    this.button(bx(1), bar.y, bw[1], bar.h, PW.board, KIT_COLOR.blue, TYPE.body, () => this.setView('board'));
+    this.button(bx(2), bar.y, bw[2], bar.h, SHOP_WORDS.button, KIT_COLOR.gold, TYPE.body, () => this.openShop());
+    this.button(bx(3), bar.y, bw[3], bar.h, BOOK_WORDS.button, KIT_COLOR.purple, TYPE.body, () => this.openBook('moves'));
     const chipW = Math.min(220, Math.round(bar.w * 0.26));
     const chipX = bar.x + bar.w - chipW;
     const titleL = bx(4);
     // LP-B2: the FAITH DOES banner takes the title's place; it opens the Book on Faith (L10-B).
     drawBanner(this, (o) => this.ui.add(o), { x: titleL, y: bar.y, w: chipX - titleL - S2, h: bar.h }, t, () => this.openBook('faith'));
-    const chip = this.add.graphics();
-    chip.fillStyle(0x221d2e).fillRoundedRect(chipX, bar.y, chipW, bar.h, RADIUS.panel);
-    this.ui.add(chip);
+    this.ui.add(kitWell(this, chipX, bar.y, chipW, bar.h, 14));
     this.ui.add(makeStandingCharacter(this, chipX + 20, bar.y + bar.h / 2, 14, t.belt, t.stripesThisBelt, loadLook()).container);
     const stripe = t.stripesThisBelt ? `  ·  ${t.stripesThisBelt} stripe${t.stripesThisBelt > 1 ? 's' : ''}` : '';
     this.oneLine(this.text(chipX + 40, bar.y + 4, t.displayName, TYPE.body, '#f2e9d8', true), chipW - 48, TYPE.label);
@@ -569,9 +567,9 @@ export class HomeScene extends Phaser.Scene {
     this.ui = this.shell;
     const { width, height } = view(this);
     const pad = height < LEFT_FULL_H + 20 ? S2 : 12;
-    this.ui.add(this.add.rectangle(0, 0, width, height, 0x1e1a14).setOrigin(0));
-    for (let x = 0; x < width; x += 48) this.ui.add(this.add.rectangle(x, 0, 2, height, 0x2a241c).setOrigin(0));
-    this.button(pad, pad, 96, MIN_TAP, PW.boardBack, 0x8a5a35, TYPE.body, () => this.setView('path'));
+    // U-KIT: the kit sky and a blue ◀ Path, like every other menu.
+    this.ui.add(kitBackdrop(this, width, height));
+    this.button(pad, pad, 96, MIN_TAP, PW.boardBack, KIT_COLOR.blue, TYPE.body, () => this.setView('path'));
     const rx = pad + 96 + S2;
     const rw = width - rx - pad;
     this.tabBox = { rx, y: pad, tabW: (rw - 6 * (BOOK_TABS.length - 1)) / BOOK_TABS.length, h: MIN_TAP };
@@ -610,7 +608,7 @@ export class HomeScene extends Phaser.Scene {
       g.fillStyle(roof, a).fillTriangle(cx - tw / 2, top + 14, cx + tw / 2, top + 14, cx, top + 2);
       g.fillStyle(roof, a).fillRect(cx - tw / 2, top + 10, tw, 5);
       g.fillStyle(roof, a).fillRect(cx - tw * 0.4, bottom - 8, tw * 0.8, 5);
-      for (const k of [-1, 0, 1]) g.fillStyle(lit ? 0xffd166 : 0x2a2536, a).fillRoundedRect(cx + k * tw * 0.2 - 4, top + 20, 8, 14, 3);
+      for (const k of [-1, 0, 1]) g.fillStyle(lit ? 0xffd166 : 0x16206b, a).fillRoundedRect(cx + k * tw * 0.2 - 4, top + 20, 8, 14, 3);
       if (tr.state === 'next') g.fillStyle(0xf2e9d8, 0.18).fillRect(inner.x, top, inner.w, tierH);
       if (tr.state === 'current') {
         g.lineStyle(2, 0xffd166).strokeRect(inner.x + 1, top + 1, inner.w - 2, tierH - 2);
@@ -620,7 +618,7 @@ export class HomeScene extends Phaser.Scene {
     }
     // Scroll the Tower a tier at a time.
     const arrow = (y: number, label: string, to: number) =>
-      this.button(inner.x + inner.w - MIN_TAP, y, MIN_TAP, MIN_TAP, label, 0x3a3150, TYPE.body, () => {
+      this.button(inner.x + inner.w - MIN_TAP, y, MIN_TAP, MIN_TAP, label, 0x3c4ea8, TYPE.body, () => {
         this.towerFrom = to;
         this.render();
       });
@@ -632,8 +630,7 @@ export class HomeScene extends Phaser.Scene {
   private renderPathGate(b: Box): void {
     const g = this.training.gate;
     const box = this.add.graphics();
-    box.fillStyle(0x221d2e).fillRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
-    box.lineStyle(2, 0x3a3150).strokeRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
+    drawPanel(box, b.x, b.y, b.w, b.h, { radius: 14 });
     this.ui.add(box);
     const x = b.x + 12;
     const w = b.w - 24;
@@ -641,7 +638,7 @@ export class HomeScene extends Phaser.Scene {
       this.text(x, b.y + 10, PW.top, TYPE.title, '#ffd166', true, FONT, w);
       return;
     }
-    const lit = this.text(x + w, b.y + 12, fill(PW.lit, { n: g.lit, m: g.locks.length }), TYPE.body, g.ready ? '#ffd166' : '#b9ad99', true).setOrigin(1, 0);
+    const lit = this.text(x + w, b.y + 12, fill(PW.lit, { n: g.lit, m: g.locks.length }), TYPE.body, g.ready ? '#ffd166' : '#a9b8ee', true).setOrigin(1, 0);
     this.oneLine(this.text(x, b.y + 10, fill(PW.gateTo, { belt: g.toBelt.name }), 18, '#f2e9d8', true, 'Georgia, serif'), w - lit.width - S2, TYPE.body);
     const sideW = Math.min(150, w * 0.3);
     const lockW = w - sideW - S2;
@@ -656,17 +653,17 @@ export class HomeScene extends Phaser.Scene {
       if (lock.signedOff) {
         this.ui.add(this.add.circle(lx, ly, r + 4, 0xffd166, 0.25));
         this.ui.add(this.add.circle(lx, ly, r, 0xffd166).setStrokeStyle(2, 0xffffff, 0.8));
-        this.text(lx, ly, '✓', r, '#14121c', true).setOrigin(0.5);
+        this.text(lx, ly, '✓', r, '#0d1233', true).setOrigin(0.5);
       } else if (lock.id === next) {
         this.ui.add(this.add.circle(lx, ly, r + 4, 0xffd166, 0.3));
         this.ui.add(this.add.circle(lx, ly, r, 0xf2e9d8).setStrokeStyle(3, 0xffd166));
         this.text(lx, ly, '🔒', r * 0.8, '#8a6a20').setOrigin(0.5);
       } else {
-        this.ui.add(this.add.circle(lx, ly, r, 0x2a2536).setStrokeStyle(2, 0x6b6478));
+        this.ui.add(this.add.circle(lx, ly, r, 0x16206b).setStrokeStyle(2, 0x5a6ab8));
         this.text(lx, ly, '🔒', r * 0.8, '#8a8296').setOrigin(0.5).setAlpha(0.6);
       }
       const name = isDefense(lock) ? lock.name.slice('Self-Defense '.length) : shortName(lock);
-      this.text(lx, labelY, name, PATH_LABEL.size, lock.signedOff ? '#ffd166' : '#b9ad99', false, FONT, slot - 4).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
+      this.text(lx, labelY, name, PATH_LABEL.size, lock.signedOff ? '#ffd166' : '#a9b8ee', false, FONT, slot - 4).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
     });
     // One "Defense" bracket under each run of Defense locks.
     for (let i = 0; i < g.locks.length; i++) {
@@ -679,21 +676,21 @@ export class HomeScene extends Phaser.Scene {
       const br = this.add.graphics().lineStyle(1, 0x8a8296);
       br.lineBetween(x0, by - 3, x0, by).lineBetween(x0, by, x1, by).lineBetween(x1, by, x1, by - 3);
       this.ui.add(br);
-      this.text((x0 + x1) / 2, by + 2, PW.defense, PATH_LABEL.size, '#b9ad99', false, FONT, x1 - x0 + 8).setOrigin(0.5, 0);
+      this.text((x0 + x1) / 2, by + 2, PW.defense, PATH_LABEL.size, '#a9b8ee', false, FONT, x1 - x0 + 8).setOrigin(0.5, 0);
       i = j;
     }
     // Divider, then the classes sundial and Sensei's Seal.
     const sx0 = x + lockW + S2;
-    this.ui.add(this.add.graphics().lineStyle(1, 0x3a3150).lineBetween(sx0 - S2 / 2, ly - PATH_LOCK_R, sx0 - S2 / 2, b.y + b.h - 10));
+    this.ui.add(this.add.graphics().lineStyle(1, 0x3c4ea8).lineBetween(sx0 - S2 / 2, ly - PATH_LOCK_R, sx0 - S2 / 2, b.y + b.h - 10));
     const half = sideW / 2;
     const dx = sx0 + half / 2;
     const dial = this.add.graphics();
-    dial.fillStyle(0x2a2536).fillCircle(dx, ly, r);
+    dial.fillStyle(0x16206b).fillCircle(dx, ly, r);
     if (g.sundial > 0) dial.fillStyle(0xffd166, 0.9).slice(dx, ly, r, -Math.PI / 2, -Math.PI / 2 + g.sundial * Math.PI * 2).fillPath();
-    dial.lineStyle(2, 0x6b6478).strokeCircle(dx, ly, r);
+    dial.lineStyle(2, 0x5a6ab8).strokeCircle(dx, ly, r);
     this.ui.add(dial);
     const classes = fill(PW.classes, { n: Math.min(g.classesInRank, g.classesBeforeTest), m: g.classesBeforeTest });
-    const classesT = this.text(dx, labelY, classes, PATH_LABEL.size, '#b9ad99', false, FONT, half - 2).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
+    const classesT = this.text(dx, labelY, classes, PATH_LABEL.size, '#a9b8ee', false, FONT, half - 2).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
     // Playtest Nov 22: on a small phone "Classes 1 of 24" wrapped onto two lines. A size or two smaller keeps it on
     // one line when that fits; if it still wraps, it keeps its normal size (two lines are allowed, like Test day).
     for (let size = PATH_LABEL.size - 1; classesT.getWrappedText().length > 1 && size >= PATH_LABEL.size - 2; size--) classesT.setFontSize(size);
@@ -701,7 +698,7 @@ export class HomeScene extends Phaser.Scene {
     const kx = sx0 + half * 1.5;
     const seal = this.add.container(kx, ly);
     if (g.sealLit) seal.add(this.add.circle(0, 0, r + 4, 0xffd166, 0.35));
-    seal.add(this.add.circle(0, 0, r, g.sealLit ? 0xe0533d : 0x2a2536).setStrokeStyle(2, g.sealLit ? 0xffd166 : 0x6b6478));
+    seal.add(this.add.circle(0, 0, r, g.sealLit ? 0xe0533d : 0x16206b).setStrokeStyle(2, g.sealLit ? 0xffd166 : 0x5a6ab8));
     seal.add(this.add.text(0, 0, '師', { fontFamily: FONT, fontSize: `${Math.round(r)}px`, color: g.sealLit ? '#ffffff' : '#6b6478', fontStyle: 'bold' }).setResolution(crisp()).setOrigin(0.5));
     this.ui.add(seal);
     // First time this Seal is seen lit: one pop (skipped in reduced motion) and one soft bell.
@@ -717,14 +714,13 @@ export class HomeScene extends Phaser.Scene {
     }
     // Never shows or guesses a reason when the Seal isn't lit.
     const sealText = g.sealLit ? (g.testDate ? fill(PW.testDay, { date: shortDate(g.testDate) }) : PW.sealLit) : PW.seal;
-    this.text(kx, labelY, sealText, PATH_LABEL.size, g.sealLit ? '#ffd166' : '#b9ad99', g.sealLit, FONT, half - 2).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
+    this.text(kx, labelY, sealText, PATH_LABEL.size, g.sealLit ? '#ffd166' : '#a9b8ee', g.sealLit, FONT, half - 2).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
   }
 
   /** LP-B1: the biggest card, the next real step (core-design section 9: always visible). */
   private renderClassStep(b: Box, step: RequirementStatus | null): void {
     const card = this.add.graphics();
-    card.fillStyle(0x221d2e).fillRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
-    card.lineStyle(3, 0xffd166, 0.7).strokeRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
+    drawPanel(card, b.x, b.y, b.w, b.h, { radius: 14, gold: true });
     this.ui.add(card);
     const x = b.x + S3;
     const w = b.w - 2 * S3;
@@ -746,9 +742,9 @@ export class HomeScene extends Phaser.Scene {
       const tx = x + 2 * ir + S3;
       const tw = w - 2 * ir - S3;
       this.oneLine(this.text(tx, midY - 2, step.name, 22, '#ffffff', true).setOrigin(0, 0.5), tw, TYPE.body);
-      this.oneLine(this.text(tx, midY - 16, PW.classTop, TYPE.body, '#b9ad99').setOrigin(0, 1), tw, TYPE.label);
+      this.oneLine(this.text(tx, midY - 16, PW.classTop, TYPE.body, '#a9b8ee').setOrigin(0, 1), tw, TYPE.label);
       const under = step.catchUp ? fill(PW.catchUp, { belt: step.beltName }) : PW.classBottom;
-      this.oneLine(this.text(tx, midY + 12, under, TYPE.body, step.catchUp ? '#ffd166' : '#b9ad99'), tw, TYPE.label);
+      this.oneLine(this.text(tx, midY + 12, under, TYPE.body, step.catchUp ? '#ffd166' : '#a9b8ee'), tw, TYPE.label);
     }
     if (bits.length) this.oneLine(this.text(x, b.y + b.h - 12 - TYPE.body, bits.join('   ·   '), TYPE.body, '#5cd65c', true), w, TYPE.label);
   }
@@ -756,17 +752,16 @@ export class HomeScene extends Phaser.Scene {
   /** LP-B1: the smaller card, the next game step, the level bar and Enter the Tower. */
   private renderGameStep(b: Box, game: ReturnType<typeof pathView>['game'], level: number): void {
     const card = this.add.graphics();
-    card.fillStyle(0x221d2e, 0.8).fillRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
-    card.lineStyle(2, 0x3a3150).strokeRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
+    drawPanel(card, b.x, b.y, b.w, b.h, { radius: 14 });
     this.ui.add(card);
     const x = b.x + 12;
     const w = b.w - 24;
     let y = b.y + 12;
-    this.text(x, y, PW.gameLabel, TYPE.label, '#b9ad99', true);
+    this.text(x, y, PW.gameLabel, TYPE.label, '#a9b8ee', true);
     y += TYPE.label + 8;
     // A small Tower picture first, then the words (LP-L1: a picture before text).
     const icon = this.add.graphics();
-    for (const [k, c] of [[0, 0xd5713a], [1, 0xf2e9d8], [2, 0xd5713a]] as const) icon.fillStyle(c).fillTriangle(x + 4 + k * 2, y + 30 - k * 10, x + 28 - k * 2, y + 30 - k * 10, x + 16, y + 22 - k * 10);
+    for (const [k, c] of [[0, 0xffb01f], [1, 0xf2e9d8], [2, 0xffb01f]] as const) icon.fillStyle(c).fillTriangle(x + 4 + k * 2, y + 30 - k * 10, x + 28 - k * 2, y + 30 - k * 10, x + 16, y + 22 - k * 10);
     this.ui.add(icon);
     const line = game.kind === 'level' ? fill(PW.gameLevel, { n: game.level }) : game.kind === 'combo' ? fill(PW.gameCombo, { n: game.best }) : PW.gameFirstCombo;
     const words = this.text(x + 36, y, line, TYPE.body, '#f2e9d8', true, FONT, w - 36).setMaxLines(2);
@@ -775,7 +770,7 @@ export class HomeScene extends Phaser.Scene {
     const share = atCap ? 1 : Math.min(1, this.profile.xp / xpToNext(level, this.training.belts));
     const lv = this.text(x, y, fill(PW.level, { n: level }), TYPE.label, '#f2e9d8', true);
     this.xpBar(x + lv.width + S2, y + 2, w - lv.width - S2, share, level, atCap);
-    this.button(x, b.y + b.h - 12 - MIN_TAP, w, MIN_TAP, PW.enter, 0xd5713a, TYPE.body + 1, () => this.enterTower());
+    this.button(x, b.y + b.h - 12 - MIN_TAP, w, MIN_TAP, PW.enter, 0xffb01f, TYPE.body + 1, () => this.enterTower());
   }
 
   /** P-MENU-b: the frame (background, left column, panel box). Not the tabs or the panel contents. */
@@ -797,11 +792,14 @@ export class HomeScene extends Phaser.Scene {
 
     // ---- left (P-MENU-c §3a): header row, character block, level + bar, buttons, the Path card
     // Header: the title and ◀ Dojo on one 44 pt row.
-    const title = this.text(pad, pad + 22, 'Training Board', TYPE.heading, '#f2e9d8', true, 'Georgia, serif').setOrigin(0, 0.5);
-    title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
-    title.setShadow(0, 2, '#000000', 4, true, true);
+    // U-KIT: ◀ Dojo (blue) on the left, the gold ribbon title beside it.
     // Nov 17: the board is a station in the Dojo, so its way back is the Dojo.
-    this.button(pad + leftW - 96, pad, 96, 44, PW.back, 0x3a3150, TYPE.body, () => this.backToDojo());
+    this.button(pad, pad, 96, 44, PW.back, KIT_COLOR.blue, TYPE.body, () => this.backToDojo());
+    const rib = kitRibbon(this, pad + 96 + 14 + (leftW - 110) / 2, pad + 3, 'Training Board', 18, Math.min(150, leftW - 120));
+    this.ui.add(rib.parts);
+    const title = rib.parts[1] as Phaser.GameObjects.Text;
+    if (title.width > leftW - 150) title.setScale((leftW - 150) / title.width);
+    title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
 
     // Character block: a 64 pt row; name and belt stacked 4 pt apart, centred on the avatar.
     const rowTop = pad + 44 + S2;
@@ -840,7 +838,7 @@ export class HomeScene extends Phaser.Scene {
       this.oneLine(this.text(textX, sy + TYPE.body + S1 + 2, `✦ ${line}`, TYPE.label, '#9ad1ff', true), textW, 10);
       sy += S1 + TYPE.label + 2;
     }
-    if (short) this.oneLine(this.text(textX, sy + TYPE.body + S1 + 2, levelLine, TYPE.label, atCap ? '#ffd166' : '#b9ad99', true), textW, TYPE.label);
+    if (short) this.oneLine(this.text(textX, sy + TYPE.body + S1 + 2, levelLine, TYPE.label, atCap ? '#ffd166' : '#a9b8ee', true), textW, TYPE.label);
 
     // Level and experience (capped by the real belt): label and cap on one line, a 10 pt bar 8 below.
     let y = rowTop + rowH + S2;
@@ -859,16 +857,16 @@ export class HomeScene extends Phaser.Scene {
     const enterH = short ? MIN_TAP : 52;
     // The big call to action breathes a warm glow (still with Reduced motion on).
     const enterGlow = this.add.graphics();
-    enterGlow.fillStyle(0xff9a4a, 0.22).fillRoundedRect(pad - 5, y - 4, leftW + 10, enterH + 12, 16);
+    enterGlow.fillStyle(0xffd23f, 0.22).fillRoundedRect(pad - 5, y - 4, leftW + 10, enterH + 12, 16);
     this.ui.add(enterGlow);
     if (!reducedMotion()) this.tweens.add({ targets: enterGlow, alpha: 0.35, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
-    this.button(pad, y, leftW, enterH, 'ENTER THE TOWER', 0xd5713a, 19, () => this.enterTower());
+    this.button(pad, y, leftW, enterH, 'ENTER THE TOWER', KIT_COLOR.gold, 20, () => this.enterTower());
     y += enterH + S2;
     // Staff fixture list, beside Practice room so the next-step card keeps its height on a 375 pt phone.
     // One ordinary click. A beta build does not draw it (B-SAFE) and Practice room keeps the full row.
     const testW = BETA ? 0 : 96;
-    this.button(pad, y, leftW - (testW && testW + S2), 44, 'Practice room', 0x3a3a4a, TYPE.body, () => this.goTo('Game', {}));
-    if (!BETA) this.button(pad + leftW - testW, y, testW, MIN_TAP, 'Testing', 0x4a3f63, TYPE.body, () => this.openTesting());
+    this.button(pad, y, leftW - (testW && testW + S2), 44, 'Practice room', 0x2a3780, TYPE.body, () => this.goTo('Game', {}));
+    if (!BETA) this.button(pad + leftW - testW, y, testW, MIN_TAP, 'Testing', 0x2a3780, TYPE.body, () => this.openTesting());
     // The left column's glass card, behind the hero, level and buttons.
     const cardTop = rowTop - S1 - 4;
     this.ui.addAt(glassPanel(this, pad - S1 - 2, cardTop, leftW + 2 * S1 + 4, y + MIN_TAP + S1 + 2 - cardTop, { radius: 14 }), cardAt);
@@ -882,7 +880,7 @@ export class HomeScene extends Phaser.Scene {
     this.codeFrame = glassPanel(this, rx, top, rw, panelH, { gold: true, radius: 16 });
     this.ui.add(this.codeFrame);
     this.panelBox = { rx, top, rw, panelH };
-    this.tabBox = { rx, y: pad, tabW: (rw - 6 * 2) / 3, h: 34 };
+    this.tabBox = { rx, y: pad, tabW: (rw - 6 * 2) / 3, h: 38 };
   }
 
   /** P-MENU-b: the tab buttons, and the underline slides to the picked tab (jumps with Reduced motion). */
@@ -897,21 +895,13 @@ export class HomeScene extends Phaser.Scene {
           ['gear', `Gear (${this.profile.inventory.length})`],
           ['style', TROPHY_WORDS.style],
         ];
-    const tabW = this.tabBox.tabW;
-    tabs.forEach(([tab, label], i) => {
-      const on = this.tab === tab;
-      // Nov 18 overhaul: the board's tabs are the Equipment screen's violet chips (the Book keeps its wood tabs).
-      const b = button(this, { x: rx + i * (tabW + 6), y: pad, w: tabW, h: th, label, color: this.view === 'book' ? (on ? 0x4a3f63 : 0x2a2536) : on ? GLASS.violet : GLASS.violetDim, size: 14, selected: on && this.view !== 'book', labelColor: on || this.view === 'book' ? '#ffffff' : GLASS.soft, onTap: () => this.setTab(tab) }, this.ui);
-      if (this.view === 'book') woodSkin(this, b, tabW, th, { dim: !on });
-    });
-    const i = tabs.findIndex(([tab]) => tab === this.tab);
-    const ux = rx + i * (tabW + 6) + 8;
-    const uy = pad + th + 3;
-    this.children.bringToTop(this.underline);
-    this.tweens.killTweensOf(this.underline);
-    this.underline.setVisible(true).setSize(tabW - 16, 3);
-    if (slide && !reducedMotion()) this.tweens.add({ targets: this.underline, x: ux, y: uy, duration: MOTION.swap.ms, ease: MOTION.swap.ease });
-    else this.underline.setPosition(ux, uy);
+    // U-KIT: folder tabs on top of the panel; the picked one is gold (the same tabs as the Shop's).
+    const { top } = this.panelBox;
+    const tw = this.view === 'book' ? this.tabBox.tabW * tabs.length + 6 * (tabs.length - 1) : this.panelBox.rw;
+    this.ui.add(kitTabs(this, rx, top - th + 3, tw, th, tabs.map(([tab, label]) => ({ label, on: this.tab === tab, onTap: () => this.setTab(tab) })), 4, tabs.length > 3 ? 14 : 16));
+    this.underline.setVisible(false);
+    void slide;
+    void pad;
   }
 
   /**
@@ -1001,15 +991,15 @@ export class HomeScene extends Phaser.Scene {
       const fw = rw - 8;
       const cx = rx + rw / 2;
       if (y > 0) {
-        cue.fillGradientStyle(0x14121c, 0x14121c, 0x14121c, 0x14121c, 0.5, 0.5, 0, 0).fillRect(fx, win.top, fw, FADE);
-        cue.fillStyle(0x14121c, 0.8).fillRoundedRect(cx - 14, win.top + 1, 28, 14, 7);
-        cue.fillStyle(0xffd166, 0.95).lineStyle(1.5, 0x3a2618, 0.9);
+        cue.fillGradientStyle(0x0d1233, 0x0d1233, 0x0d1233, 0x0d1233, 0.5, 0.5, 0, 0).fillRect(fx, win.top, fw, FADE);
+        cue.fillStyle(0x0d1233, 0.8).fillRoundedRect(cx - 14, win.top + 1, 28, 14, 7);
+        cue.fillStyle(0xffd166, 0.95).lineStyle(1.5, 0x16206b, 0.9);
         cue.fillTriangle(cx - 7, win.top + 11, cx + 7, win.top + 11, cx, win.top + 4).strokeTriangle(cx - 7, win.top + 11, cx + 7, win.top + 11, cx, win.top + 4);
       }
       if (y < max) {
-        cue.fillGradientStyle(0x14121c, 0x14121c, 0x14121c, 0x14121c, 0, 0, 0.5, 0.5).fillRect(fx, win.bottom - FADE, fw, FADE);
-        cue.fillStyle(0x14121c, 0.8).fillRoundedRect(cx - 14, win.bottom - 15, 28, 14, 7);
-        cue.fillStyle(0xffd166, 0.95).lineStyle(1.5, 0x3a2618, 0.9);
+        cue.fillGradientStyle(0x0d1233, 0x0d1233, 0x0d1233, 0x0d1233, 0, 0, 0.5, 0.5).fillRect(fx, win.bottom - FADE, fw, FADE);
+        cue.fillStyle(0x0d1233, 0.8).fillRoundedRect(cx - 14, win.bottom - 15, 28, 14, 7);
+        cue.fillStyle(0xffd166, 0.95).lineStyle(1.5, 0x16206b, 0.9);
         cue.fillTriangle(cx - 7, win.bottom - 11, cx + 7, win.bottom - 11, cx, win.bottom - 4).strokeTriangle(cx - 7, win.bottom - 11, cx + 7, win.bottom - 11, cx, win.bottom - 4);
       }
     };
@@ -1077,19 +1067,10 @@ export class HomeScene extends Phaser.Scene {
    * the new value over 400 ms (Cubic.Out); with Reduced motion on it is drawn full-size at once.
    */
   private xpBar(x: number, y: number, w: number, share: number, level: number, atCap: boolean): void {
-    const bg = this.add.graphics();
-    bg.fillStyle(0x000000, 0.5).fillRoundedRect(x, y, w, 10, 5);
-    bg.lineStyle(1, GLASS.tileLine, 0.9).strokeRoundedRect(x, y, w, 10, 5);
-    const fill = this.add.graphics();
-    this.ui.add([bg, fill]);
-    // Nov 18 overhaul: a gold bar with a shine along its top.
-    const draw = (s: number) => {
-      fill.clear();
-      if (s <= 0) return;
-      const fw = Math.max(10, w * s);
-      fill.fillStyle(atCap ? 0xffd166 : GLASS.gold).fillRoundedRect(x, y, fw, 10, 5);
-      fill.fillStyle(0xffffff, 0.4).fillRoundedRect(x + 2, y + 1, Math.max(0, fw - 4), 3, 1.5);
-    };
+    // U-KIT: the kit's glossy bar (green; gold at the level top).
+    const bar = kitBar(this, x, y - 2, w, 14, 0, atCap ? 'gold' : 'green');
+    this.ui.add(bar.parts);
+    const draw = (s: number) => bar.set(s);
     const key = 'dojo.xpBarShown';
     let prev: { level: number; share: number } | null = null;
     try {
@@ -1163,7 +1144,7 @@ export class HomeScene extends Phaser.Scene {
       const s = L.chip;
       const px = X(i * L.chipStep);
       const py = Y(L.chipsY);
-      const color = r.grade ? GRADE_COLOR[r.grade] : '#7a5a3a';
+      const color = r.grade ? GRADE_COLOR[r.grade] : '#4a5aa8';
       const chip = this.add.graphics();
       chip.fillStyle(GLASS.tileDark).fillRoundedRect(px, py, s, s, 6);
       chip.lineStyle(2, r.kind === 'treasure' && !r.grade ? 0xffd166 : Phaser.Display.Color.HexStringToColor(color).color).strokeRoundedRect(px, py, s, s, 6);
@@ -1324,11 +1305,11 @@ export class HomeScene extends Phaser.Scene {
         const ay = Y(L.alwaysY);
         const ag = this.add.graphics();
         ag.fillStyle(GLASS.tile, 1).fillRoundedRect(ax, ay, s, s, RADIUS.button);
-        ag.lineStyle(2, 0xa8703f, 0.9).strokeRoundedRect(ax, ay, s, s, RADIUS.button);
+        ag.lineStyle(2, 0x2e6ae0, 0.9).strokeRoundedRect(ax, ay, s, s, RADIUS.button);
         this.ui.add(ag);
         const icon = addIcon(this, a.id, ax + s / 2, ay + s / 2, s - 8);
         if (icon) this.ui.add(icon);
-        else this.ui.add(this.add.star(ax + s / 2, ay + s / 2, 5, (s - 8) / 5, (s - 8) / 2.4, 0xffd166).setStrokeStyle(2, 0xa8703f));
+        else this.ui.add(this.add.star(ax + s / 2, ay + s / 2, 5, (s - 8) / 5, (s - 8) / 2.4, 0xffd166).setStrokeStyle(2, 0x2e6ae0));
       });
     }
 
@@ -1367,7 +1348,7 @@ export class HomeScene extends Phaser.Scene {
     const pin = pinnedAgain(L.again, ch, visibleH - 2 * (6 + S1), 2 * (6 + S1) - 4);
     this.runFooter = pin.footer;
     const again = pin.again;
-    button(this, { ...again, x: X(again.x), y: Y(again.y), label: LASTRUN_WORDS.again, color: 0xd5713a, size: TYPE.title, onTap: () => this.enterTower() }, this.panel ?? this.ui);
+    button(this, { ...again, x: X(again.x), y: Y(again.y), label: LASTRUN_WORDS.again, color: 0xffb01f, size: TYPE.title, onTap: () => this.enterTower() }, this.panel ?? this.ui);
   }
 
   private turnFound(by: number): void {
@@ -1382,7 +1363,7 @@ export class HomeScene extends Phaser.Scene {
       this.openEquipment(f.item.uid);
       return;
     }
-    if (f.kind === 'item') this.openRunSheet(f.item.name, [[`${rarityName(f.item.rarity)} ${SLOT_NAME[f.item.slot]}`, css(RARITY_COLOR[f.item.rarity]), true], [describeItem(f.item), '#5a3e28', false], [LASTRUN_WORDS.notInBag, '#7a5a3a', false]]);
+    if (f.kind === 'item') this.openRunSheet(f.item.name, [[`${rarityName(f.item.rarity)} ${SLOT_NAME[f.item.slot]}`, css(RARITY_COLOR[f.item.rarity]), true], [describeItem(f.item), '#2a3478', false], [LASTRUN_WORDS.notInBag, '#4a5aa8', false]]);
     else this.openRunSheet(decorationDef(CONTENT.dojo, f.id).name, [[LASTRUN_WORDS.forDojo, '#a0522d', true]]);
   }
 
@@ -1395,7 +1376,7 @@ export class HomeScene extends Phaser.Scene {
   /** The Bests sheet: the student's own bests only (no comparing, no streaks). */
   private openBests(): void {
     const rows = lastRunBests(this.profile.bests, this.profile.lastRun?.newBests ?? [], showGrades(activeDifficulty(this.profile, this.training.belt.tier)));
-    this.openRunSheet(LASTRUN_WORDS.bestsTitle, [[LASTRUN_WORDS.bestsLine, '#7a5a3a', false], ...rows.map((r): [string, string, boolean] => [`${r.name}: ${r.value}${r.isNew ? `   ${LASTRUN_WORDS.bestNew}` : ''}`, r.isNew ? '#a0522d' : WOOD.ink, r.isNew])]);
+    this.openRunSheet(LASTRUN_WORDS.bestsTitle, [[LASTRUN_WORDS.bestsLine, '#4a5aa8', false], ...rows.map((r): [string, string, boolean] => [`${r.name}: ${r.value}${r.isNew ? `   ${LASTRUN_WORDS.bestNew}` : ''}`, r.isNew ? '#a0522d' : WOOD.ink, r.isNew])]);
   }
 
   /** A paper sheet over the panel (like the cubby sheet): a title, lines, and Close. */
@@ -1544,7 +1525,7 @@ export class HomeScene extends Phaser.Scene {
       } else {
         const g = this.add.graphics();
         g.fillStyle(BOARD_PAPER, 1).fillCircle(0, iy, icon / 2 - 3);
-        g.lineStyle(3, 0xa8703f, 1).strokeCircle(0, iy, icon / 2 - 3);
+        g.lineStyle(3, 0x2e6ae0, 1).strokeCircle(0, iy, icon / 2 - 3);
         v.add(g);
       }
       // L8-B3: the Seal's stage rings (placeholder art).
@@ -1741,8 +1722,9 @@ export class HomeScene extends Phaser.Scene {
       }
       const rowCubbies = row.segments.flatMap((seg) => seg.cubbies);
       // P-MENU2-i: the shelf plank the cubbies stand on (their bottoms sit 4 px down into it). Art only.
-      const plank = menu2Slice(this, 'shelf-plank', sx - S1, cy + L.cubby - 4, rowCubbies.length * step - BOARD.cubby.gap + 2 * S1, 20);
-      if (plank) this.ui.add(plank);
+      // U-KIT: a navy shelf with the kit outline instead of the wood plank art.
+      const plankW = rowCubbies.length * step - BOARD.cubby.gap + 2 * S1;
+      this.ui.add(kitWell(this, sx - S1, cy + L.cubby - 2, plankW, 12, 6));
       rowCubbies.forEach((c, i) => this.cubby(sx + i * step, cy, L.cubby, c, fresh.includes(c.id), c.id === nextId));
       ry += L.rowH;
     }
@@ -1848,7 +1830,7 @@ export class HomeScene extends Phaser.Scene {
     const tw = cubbyTextW(size);
     const label = c.earned ? (c.short ?? c.name) : (c.notYet ?? TROPHY_WORDS.notYet);
     const txt = this.add
-      .text(0, 0, label, { fontFamily: FONT, fontSize: `${c.earned ? (size >= 112 ? TYPE.body : TYPE.label) : TYPE.label}px`, color: c.earned ? '#fff6e6' : WOOD.ink, fontStyle: c.earned ? 'bold' : 'normal', align: 'center', wordWrap: { width: tw } })
+      .text(0, 0, label, { fontFamily: FONT, fontSize: `${c.earned ? (size >= 112 ? TYPE.body : TYPE.label) : TYPE.label}px`, color: c.earned ? '#ffffff' : KIT.soft, fontStyle: 'bold', align: 'center', wordWrap: { width: tw } })
       .setResolution(crisp())
       .setOrigin(0.5, 0)
     return wrapLikeCubby(txt, label, tw);
@@ -1857,18 +1839,11 @@ export class HomeScene extends Phaser.Scene {
   /** P-MENU2-b: one cubby, drawn in code on a button() so it presses like every other button. */
   private cubby(x: number, y: number, size: number, c: Cubby, unlock = false, next = false): void {
     let shine: (() => void) | null = null;
-    const btn = button(this, { x, y, w: size, h: size, label: '', color: c.earned ? 0xa8703f : WOOD.paper, size: TYPE.label, selected: false, stroke: c.earned ? 0xffd166 : WOOD.grain, onTap: () => { shine?.(); this.openCubby(c); } }, this.ui);
+    // U-KIT: an earned cubby is a gold tile, one still to earn a quiet navy tile; the next one to earn has a gold ring.
+    const btn = button(this, { x, y, w: size, h: size, label: '', color: c.earned ? KIT_COLOR.gold : KIT_COLOR.dim, size: TYPE.label, selected: next, onTap: () => { shine?.(); this.openCubby(c); } }, this.ui);
     const v = btn.visual;
     const half = size / 2;
-    // P-MENU2-i: the A-MENU2 cubby (9-slice; the -96 cut for small cubbies), its pressed twin on press.
-    const cut = size < 104 ? '-96' : '';
-    const base = c.earned ? 'cubby-earned' : 'cubby-notyet';
-    const skin = menu2Slice(this, base + cut, -half, -half, size, size);
-    if (skin) skinButton(this, btn, skin, base + cut, `${base}-pressed${cut}`);
-    if (skin && next) {
-      const glow = menu2Image(this, 'cubby-next-glow' + cut, 0, 0, size, size);
-      if (glow) v.addAt(glow, 2);
-    }
+    const skin: Phaser.GameObjects.NineSlice | null = null;
     // B-POLISH-2: every icon is full size; 3-line labels fit by tight top/gap/bottom space.
     const iconS = cubbyIconSize(size);
     const txt = this.cubbyLabel(c, size);
@@ -1898,7 +1873,7 @@ export class HomeScene extends Phaser.Scene {
       const lg = this.add.graphics();
       lg.fillStyle(0xffb347, 0.35).fillCircle(half - 13, -half + 15, 9);
       lg.fillStyle(0xe8743b).fillRoundedRect(half - 18, -half + 8, 10, 14, 4);
-      lg.lineStyle(1, WOOD.ink === '#3a2618' ? 0x3a2618 : 0x000000, 0.8).lineBetween(half - 13, -half + 4, half - 13, -half + 8);
+      lg.lineStyle(1, WOOD.ink === '#16206b' ? 0x16206b : 0x000000, 0.8).lineBetween(half - 13, -half + 4, half - 13, -half + 8);
       v.add(lg);
     }
     if (c.earned && skin) shine = () => this.playOver(v, 'cubby-earned-shine', 6, size);
@@ -2023,18 +1998,18 @@ export class HomeScene extends Phaser.Scene {
     let ty = sy + pad;
     this.oneLine(this.text(tx, ty, c.name, TYPE.title, WOOD.ink, true), textW, TYPE.body);
     ty += TYPE.title + 4;
-    const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(TROPHY_UI.effectLines);
+    const eff = this.text(tx, ty, c.effect, TYPE.body, '#2a3478', false, FONT, textW).setMaxLines(TROPHY_UI.effectLines);
     ty += eff.height + 6;
-    this.text(tx, ty, c.status, TYPE.body, c.earned ? '#8b4513' : '#7a5a3a', true, FONT, textW);
+    this.text(tx, ty, c.status, TYPE.body, c.earned ? '#8b4513' : '#4a5aa8', true, FONT, textW);
     if (c.hint) {
       ty += TYPE.body + 6;
-      const hint = this.text(tx, ty, c.hint, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(2);
+      const hint = this.text(tx, ty, c.hint, TYPE.body, '#2a3478', false, FONT, textW).setMaxLines(2);
       hint.setData('lockedHint', true);
       ty += hint.height - TYPE.body - 6;
     }
     ty = Math.max(ty + TYPE.body + 8, sy + pad + 56 + S2);
     if (c.kata) {
-      this.text(sx + pad, ty, TROPHY_WORDS.kataSteps, TYPE.label, '#7a5a3a', true);
+      this.text(sx + pad, ty, TROPHY_WORDS.kataSteps, TYPE.label, '#4a5aa8', true);
       ty += TYPE.label + 4;
       this.kataSteps(sx + pad, ty, c.kata, sw - 2 * pad, { num: WOOD.ink, arrow: KATA_INK.onPaper.arrow });
     }
@@ -2117,7 +2092,7 @@ export class HomeScene extends Phaser.Scene {
       if (ring && !item) ring.setAlpha(0.6);
       const icon = item ? addGearIcon(this, item, 0, 0, R - 18) : null;
       if (icon) v.add(icon);
-      else v.add(slotGlyph(this, slot, 0, 0, R - 22, item ? 0x3a2618 : 0x6b5440));
+      else v.add(slotGlyph(this, slot, 0, 0, R - 22, item ? 0x16206b : 0x6b5440));
       this.gearRings[slot] = { visual: v, x: cx, y: cy, icon };
     });
     // "Your Strike": the Strike in the Strike slot is shown here too (PB-05 adds the slot picks).
@@ -2127,7 +2102,7 @@ export class HomeScene extends Phaser.Scene {
       this.oneLine(this.text(x, ay, W.always, TYPE.label, '#f2e3c4', true), L.dollW, TYPE.label);
       const iy = ay + TYPE.label + S1;
       const n = L.alwaysIcon;
-      if (!always.length) this.twoLines(this.text(x, iy, W.alwaysEmpty, TYPE.label, '#d9c6a3', false, FONT, L.dollW), L.dollW, TYPE.label);
+      if (!always.length) this.twoLines(this.text(x, iy, W.alwaysEmpty, TYPE.label, '#c9d6ff', false, FONT, L.dollW), L.dollW, TYPE.label);
       always.slice(0, L.perAlwaysRow * L.alwaysRows).forEach((a, i) => {
         const ix = x + (i % L.perAlwaysRow) * (n + S1);
         const iyy = iy + Math.floor(i / L.perAlwaysRow) * (n + S1);
@@ -2146,7 +2121,7 @@ export class HomeScene extends Phaser.Scene {
     GEAR_SLOTS.forEach((slot, i) => {
       const on = this.gearFilter === slot;
       const b = button(this, { x: gx + i * (MIN_TAP + S1), y: y + L.filterY, w: MIN_TAP, h: GEAR_BOARD.filterH, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: on, stroke: WOOD.grain, onTap: () => this.filterGear(slot) }, this.ui);
-      b.visual.setData('gearFilter', slot).add(slotGlyph(this, slot, 0, 0, 22, on ? 0xfff6e6 : 0xd9c6a3));
+      b.visual.setData('gearFilter', slot).add(slotGlyph(this, slot, 0, 0, 22, on ? 0xfff6e6 : 0xc9d6ff));
     });
     // MENU-BAG-01: "Bag" opens the full-screen bag (6 x 4 a page). It sits at the end of the filter row when
     // the row has room, otherwise in the middle of the pager row (the page dots move up a little).
@@ -2170,7 +2145,7 @@ export class HomeScene extends Phaser.Scene {
       const msg = this.gearFilter ? slotEmptyLine(this.gearFilter) : W.bagEmpty;
       const midY = y + L.gridY + (L.pagerY - L.gridY) / 2;
       if (!this.gearFilter) this.ui.add(bagIcon(this, gx + L.gridW / 2, midY - 26));
-      this.twoLines(this.text(gx + L.gridW / 2, midY + 8, msg, TYPE.body, '#d9c6a3', false, FONT, L.gridW - 2 * GEAR_BOARD.labelPad).setOrigin(0.5, 0).setAlign('center'), L.gridW - 2 * GEAR_BOARD.labelPad, TYPE.label);
+      this.twoLines(this.text(gx + L.gridW / 2, midY + 8, msg, TYPE.body, '#c9d6ff', false, FONT, L.gridW - 2 * GEAR_BOARD.labelPad).setOrigin(0.5, 0).setAlign('center'), L.gridW - 2 * GEAR_BOARD.labelPad, TYPE.label);
     }
     let pickedBottom = 0;
     bag.slice(this.page * L.perPage, (this.page + 1) * L.perPage).forEach((it, i) => {
@@ -2243,7 +2218,7 @@ export class HomeScene extends Phaser.Scene {
     v.add(wrapLikeCubby(lab, word, tw).setMaxLines(1));
     if (cmp.overall === 'worn') {
       v.add(this.add.circle(-box.w / 2 + 9, -box.h / 2 + 9, 7, 0xffd166));
-      v.add(this.add.text(-box.w / 2 + 9, -box.h / 2 + 9, '✓', { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#3a2618', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
+      v.add(this.add.text(-box.w / 2 + 9, -box.h / 2 + 9, '✓', { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#16206b', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
     } else if (cmp.overall === 'up' || cmp.overall === 'down') {
       v.add(this.add.circle(box.w / 2 - 9, -box.h / 2 + 9, 7, COMPARE_COLOR[cmp.overall]));
       v.add(this.add.text(box.w / 2 - 9, -box.h / 2 + 9, ARROW[cmp.overall], { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#1e1a2b', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
@@ -2277,7 +2252,7 @@ export class HomeScene extends Phaser.Scene {
       if (ic) sheet.add(ic);
       const tx = ic ? mx + 38 : mx;
       const tw = half - (tx - mx);
-      const t1 = this.oneLine(this.add.text(tx, sy + pad, head, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#b9ad99' }).setResolution(crisp()), tw, TYPE.label);
+      const t1 = this.oneLine(this.add.text(tx, sy + pad, head, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#a9b8ee' }).setResolution(crisp()), tw, TYPE.label);
       const t2 = this.twoLines(this.add.text(tx, sy + pad + 15, it ? it.name : W.nothing, { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: it ? css(RARITY_COLOR[it.rarity]) : '#8a8296', wordWrap: { width: tw } }).setLineSpacing(-3).setResolution(crisp()), tw, TYPE.label);
       sheet.add([t1, t2]);
       return Math.max(t2.y + t2.height, sy + pad + 32);
@@ -2313,8 +2288,8 @@ export class HomeScene extends Phaser.Scene {
       const letGoW = textW - detailsW - 2 * S2 - wearW;
       if (now?.uid === item.uid) button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.takeOff, color: 0x3a5f8a, size: 16, onTap: () => this.takeOff(item) }, sheet);
       else button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.wear, color: GREEN, size: 16, onTap: () => this.wear(item) }, sheet);
-      button(this, { x: x + pad + wearW + S2, y: by, w: letGoW, h: bh, label: W.letGo, color: 0x3a3448, size: TYPE.body, labelColor: '#e8d4b4', onTap: () => this.letGo(item) }, sheet);
-      button(this, { x: x + w - pad - detailsW, y: by, w: detailsW, h: bh, label: this.gearDetails ? W.hideDetails : W.details, color: 0x3a3448, size: TYPE.label, labelColor: '#d9c6a3', onTap: () => { this.gearDetails = !this.gearDetails; this.renderPanel('none'); } }, sheet);
+      button(this, { x: x + pad + wearW + S2, y: by, w: letGoW, h: bh, label: W.letGo, color: 0x2c3f9e, size: TYPE.body, labelColor: '#e8d4b4', onTap: () => this.letGo(item) }, sheet);
+      button(this, { x: x + w - pad - detailsW, y: by, w: detailsW, h: bh, label: this.gearDetails ? W.hideDetails : W.details, color: 0x2c3f9e, size: TYPE.label, labelColor: '#c9d6ff', onTap: () => { this.gearDetails = !this.gearDetails; this.renderPanel('none'); } }, sheet);
     } else {
       const bw = Math.min(100, (w - 4 * pad) / 3);
       sheet.add(this.add.text(x + pad, by + bh / 2, W.letGoAsk, { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: '#ffd166' }).setOrigin(0, 0.5).setResolution(crisp()));
@@ -2407,7 +2382,7 @@ export class HomeScene extends Phaser.Scene {
     const layer = this.add.container(0, 0).setDepth(40);
     this.bagLayer = layer;
     this.ui = layer;
-    const backdrop = this.add.rectangle(0, 0, W0, H0, 0x1b1626, 1).setOrigin(0).setInteractive();
+    const backdrop = this.add.rectangle(0, 0, W0, H0, 0x1b2a7a, 1).setOrigin(0).setInteractive();
     layer.add(backdrop);
     const bag = filterBag(this.profile.inventory, this.gearFilter);
     const pages = bagPageCount(bag.length);
@@ -2420,7 +2395,7 @@ export class HomeScene extends Phaser.Scene {
     GEAR_SLOTS.forEach((slot, i) => {
       const on = this.gearFilter === slot;
       const b = button(this, { x: L.filterX + i * (MIN_TAP + S1), y: L.headY, w: MIN_TAP, h: BAG_SCREEN.headH, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: on, stroke: WOOD.grain, onTap: () => this.filterGear(slot) }, this.ui);
-      b.visual.setData('gearFilter', slot).add(slotGlyph(this, slot, 0, 0, 22, on ? 0xfff6e6 : 0xd9c6a3));
+      b.visual.setData('gearFilter', slot).add(slotGlyph(this, slot, 0, 0, 22, on ? 0xfff6e6 : 0xc9d6ff));
     });
     if (pages > 1) this.trophyPager(L.pagerX, L.headY, L.pagerW, pages, L.headY + 22, this.bagPage);
 
@@ -2433,7 +2408,7 @@ export class HomeScene extends Phaser.Scene {
     for (let i = onPage.length; i < L.perPage; i++) {
       const e = bagTileBox(L, i);
       slots.fillStyle(0x000000, 0.2).fillRoundedRect(e.x, e.y, e.w, e.h, RADIUS.button);
-      slots.lineStyle(2, 0xd9c6a3, 0.18).strokeRoundedRect(e.x, e.y, e.w, e.h, RADIUS.button);
+      slots.lineStyle(2, 0xc9d6ff, 0.18).strokeRoundedRect(e.x, e.y, e.w, e.h, RADIUS.button);
     }
     let pickedBottom = 0;
     onPage.forEach((it, i) => {
@@ -2446,7 +2421,7 @@ export class HomeScene extends Phaser.Scene {
       const mw = Math.min(L.gridW - 2 * S3, 480);
       const cy = L.gridY + (L.rows * L.tileH + (L.rows - 1) * BAG_SCREEN.gap) / 2;
       const t = this.twoLines(this.text(W0 / 2, cy, msg, TYPE.body, '#f2e3c4', false, FONT, mw - 2 * S2).setOrigin(0.5).setAlign('center'), mw - 2 * S2, TYPE.label);
-      layer.add(this.add.rectangle(W0 / 2, cy, mw, t.height + 2 * S3, 0x1b1626, 0.92).setStrokeStyle(2, 0xd9c6a3, 0.5));
+      layer.add(this.add.rectangle(W0 / 2, cy, mw, t.height + 2 * S3, 0x1b2a7a, 0.92).setStrokeStyle(2, 0xc9d6ff, 0.5));
       layer.bringToTop(t);
     }
     const picked = this.pickedItem();
@@ -2700,8 +2675,8 @@ export class HomeScene extends Phaser.Scene {
    * still read. Missing art: the code frame stays.
    */
   private panelFrameArt(rx: number, top: number, rw: number, panelH: number): void {
-    // Nov 18 overhaul: the Training Board's tabs sit on its glass panel; only the Book keeps the wood frame art.
-    if (this.view === 'board') {
+    // U-KIT: every view's tabs sit on the one kit panel (the Book's wood frame art is retired).
+    if (this.view === 'board' || this.view === 'book') {
       this.codeFrame?.setVisible(true);
       return;
     }
@@ -2723,22 +2698,8 @@ export class HomeScene extends Phaser.Scene {
  * little grain, a dark inner board and a thin paper line inside.
  */
 function woodFrame(scene: Phaser.Scene, x: number, y: number, w: number, h: number): Phaser.GameObjects.Graphics {
-  const f = BOARD.frame;
-  const g = scene.add.graphics();
-  g.fillStyle(WOOD.frameDark).fillRoundedRect(x - 1, y - 1, w + 2, h + 2, RADIUS.panel + 1);
-  g.fillStyle(WOOD.frame).fillRoundedRect(x, y, w, h, RADIUS.panel);
-  g.lineStyle(1, WOOD.grain, 0.5);
-  for (let gy = y + 2; gy < y + h - 2; gy += 9) {
-    g.lineBetween(x + 2, gy, x + f - 1, gy + 3);
-    g.lineBetween(x + w - f + 1, gy + 4, x + w - 2, gy + 1);
-  }
-  for (let gx = x + 12; gx < x + w - 12; gx += 23) {
-    g.lineBetween(gx, y + 2, gx + 14, y + f - 2);
-    g.lineBetween(gx + 6, y + h - f + 2, gx + 20, y + h - 2);
-  }
-  g.fillStyle(WOOD.inner, 0.92).fillRoundedRect(x + f, y + f, w - 2 * f, h - 2 * f, RADIUS.panel - 4);
-  g.lineStyle(1, WOOD.paper, 0.3).strokeRoundedRect(x + f + 2, y + f + 2, w - 2 * f - 4, h - 2 * f - 4, RADIUS.panel - 5);
-  return g;
+  // U-KIT: the old wood frame now draws the kit panel.
+  return kitPanel(scene, x, y, w, h, { radius: 16 });
 }
 
 /** P-MENU-d: a faint bag drawn in code (no art file): body, flap and drawstring. */
@@ -2766,7 +2727,7 @@ function houseIcon(scene: Phaser.Scene, x: number, y: number, size: number): Pha
   const h = size / 2;
   g.fillStyle(0xc0392b).fillTriangle(-h, -h * 0.1, h, -h * 0.1, 0, -h);
   g.fillStyle(0xffd166).fillRect(-h * 0.7, -h * 0.1, h * 1.4, h * 1.1);
-  g.fillStyle(0x3a2618).fillRect(-h * 0.2, h * 0.35, h * 0.4, h * 0.65);
+  g.fillStyle(0x16206b).fillRect(-h * 0.2, h * 0.35, h * 0.4, h * 0.65);
   return g;
 }
 
@@ -2783,7 +2744,7 @@ function shortName(r: RequirementStatus): string {
 /** Belt name color that stays readable on the dark floor (black belt text is lightened). */
 function beltTextColor(color: string): string {
   const c = Phaser.Display.Color.HexStringToColor(color);
-  return c.red + c.green + c.blue < 120 ? '#b9ad99' : color;
+  return c.red + c.green + c.blue < 120 ? '#a9b8ee' : color;
 }
 
 /** S3-P1b kata step layout, in screen points. */
@@ -2858,7 +2819,7 @@ function placeholderIcon(scene: Phaser.Scene, x: number, y: number, size: number
   const r = size / 2;
   return scene.add.container(x, y, [
     scene.add.circle(0, 0, r, earned ? 0xffd166 : WOOD.grain, earned ? 0.9 : 0.3),
-    scene.add.star(0, 0, 5, r / 3.2, r / 1.5, earned ? 0x7a4a22 : 0x6b5440, earned ? 1 : 0.5).setStrokeStyle(1.5, 0x3a2618, earned ? 0.8 : 0.4),
+    scene.add.star(0, 0, 5, r / 3.2, r / 1.5, earned ? 0x7a4a22 : 0x6b5440, earned ? 1 : 0.5).setStrokeStyle(1.5, 0x16206b, earned ? 0.8 : 0.4),
   ]);
 }
 

@@ -21,7 +21,7 @@ export class WalkUpButton {
 
   constructor(private readonly scene: Phaser.Scene) {
     this.glow = scene.add.circle(0, 0, RADIUS * 1.25, 0xffd166, 0.2);
-    this.face = scene.add.circle(0, 0, RADIUS, 0x8a5a35).setStrokeStyle(4, 0xffd166);
+    this.face = scene.add.circle(0, 0, RADIUS, 0x2e6ae0).setStrokeStyle(4, 0xffd166);
     const shine = scene.add.ellipse(0, -RADIUS * 0.45, RADIUS * 1.2, RADIUS * 0.55, 0xffffff, 0.16);
     this.label = scene.add
       .text(0, 0, '', { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#fff6e0', stroke: '#3a2412', strokeThickness: 3 })

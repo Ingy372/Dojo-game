@@ -34,7 +34,7 @@ export function closeX(scene: Phaser.Scene, onTap: () => void): Phaser.GameObjec
 export function openBoardReader(scene: Phaser.Scene, textureKey: string, onClose: () => void): () => void {
   const { width, height } = view(scene);
   const layer = scene.add.container(0, 0).setDepth(110);
-  const dim = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.86).setOrigin(0).setInteractive();
+  const dim = scene.add.rectangle(0, 0, width, height, 0x060a24, 0.86).setOrigin(0).setInteractive();
   layer.add(dim);
 
   const img = scene.add.image(0, 0, textureKey).setOrigin(0);
@@ -133,7 +133,7 @@ export function openBoardReader(scene: Phaser.Scene, textureKey: string, onClose
     .text(0, 0, 'Drag to read more', { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#fff6e0' })
     .setOrigin(0.5)
     .setResolution(crisp());
-  const pill = scene.add.rectangle(0, 0, hintText.width + 28, 34, 0x14121c, 0.88).setStrokeStyle(2, 0xffd166, 0.8);
+  const pill = scene.add.rectangle(0, 0, hintText.width + 28, 34, 0x0d1233, 0.88).setStrokeStyle(2, 0xffd166, 0.8);
   const hint = scene.add.container(MARGIN + pill.width / 2, height - MARGIN - 17, [pill, hintText]).setVisible(ih * scale > height - 2 * MARGIN);
   layer.add(hint);
   scene.time.delayedCall(3000, () => hint.active && scene.tweens.add({ targets: hint, alpha: 0, duration: 400 }));

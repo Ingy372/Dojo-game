@@ -16,13 +16,13 @@ export class InsightPicker {
 
   constructor(scene: Phaser.Scene, insights: InsightDef[], onPick: (id: string) => void) {
     const { width, height } = view(scene);
-    const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.78).setOrigin(0).setInteractive();
+    const shade = scene.add.rectangle(0, 0, width, height, 0x060a24, 0.78).setOrigin(0).setInteractive();
     const title = scene.add
-      .text(width / 2, height * 0.1, 'Choose an Insight', { fontFamily: FONT, fontStyle: 'bold', fontSize: '26px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 5 })
+      .text(width / 2, height * 0.1, 'Choose an Insight', { fontFamily: FONT, fontStyle: 'bold', fontSize: '26px', color: '#f2e9d8', stroke: '#0d1233', strokeThickness: 5 })
       .setOrigin(0.5)
       .setResolution(crisp());
     const sub = scene.add
-      .text(width / 2, height * 0.1 + 28, 'It lasts for this run.', { fontFamily: FONT, fontSize: '15px', color: '#b9ad99' })
+      .text(width / 2, height * 0.1 + 28, 'It lasts for this run.', { fontFamily: FONT, fontSize: '15px', color: '#a9b8ee' })
       .setOrigin(0.5)
       .setResolution(crisp());
     this.container = scene.add.container(0, 0, [shade, title, sub]).setDepth(100);
@@ -38,7 +38,7 @@ export class InsightPicker {
       const x = left + i * (cardW + gap);
       const color = FAMILY_COLOR[ins.family];
       const family = scene.add
-        .text(x + cardW / 2, top + 15, ins.family.toUpperCase(), { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: '#14121c' })
+        .text(x + cardW / 2, top + 15, ins.family.toUpperCase(), { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: '#0d1233' })
         .setOrigin(0.5)
         .setResolution(crisp());
       // Its icon (Batch 8) under the stripe, when it has one.
@@ -66,7 +66,7 @@ export class InsightPicker {
     parts.forEach((p) => p.text.setFontSize(bodySize));
 
     parts.forEach(({ ins, x, color, family, icon, name, text }, i) => {
-      const bg = scene.add.rectangle(x, top, cardW, cardH, 0x221d2e).setOrigin(0).setStrokeStyle(3, INSIGHT_ACCENT[ins.id] ?? color, 0.9);
+      const bg = scene.add.rectangle(x, top, cardW, cardH, 0x1b2a7a).setOrigin(0).setStrokeStyle(3, INSIGHT_ACCENT[ins.id] ?? color, 0.9);
       const stripe = scene.add.rectangle(x, top, cardW, 30, color).setOrigin(0);
       const card = scene.add.container(0, 0, [bg, stripe, family, ...(icon ? [icon] : []), name, text]);
       this.container.add(card);
@@ -76,7 +76,7 @@ export class InsightPicker {
       bg.setInteractive();
       bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
         if (scene.time.now - opened < ARM_MS) return;
-        bg.setFillStyle(0x3a3150);
+        bg.setFillStyle(0x3c4ea8);
         bg.disableInteractive();
         scene.time.delayedCall(140, () => onPick(ins.id));
       });

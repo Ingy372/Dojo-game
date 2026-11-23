@@ -4,7 +4,8 @@ import Phaser from 'phaser';
 
 import { sfx } from '../audio/Sfx';
 import { reducedMotion } from '../game/motion';
-import { DPR, FONT, crisp } from './theme';
+import { DPR, crisp } from './theme';
+import { KIT, KIT_TONE, TITLE_FONT, brightness, strokeFor, toneOf } from './kit';
 import { MOTION, PRESS_BRIGHTEN, RADIUS, tapArea } from './tokens';
 
 export interface ButtonOptions {
@@ -46,10 +47,16 @@ export function button(scene: Phaser.Scene, o: ButtonOptions, parent?: Phaser.Ga
   // frame (1.0 of 1.2 ms). The look is unchanged.
   const g = scene.add.image(0, (LIP + SHADOW) / 2, bakeButton(scene, o)).setScale(1 / BAKE);
   const shine = scene.add.image(0, 0, bakeShine(scene, o.w, o.h)).setScale(1 / BAKE).setAlpha(0);
+  // U-KIT: Lilita One, white with a dark outline (a light label colour the caller asked for is kept).
+  const labelColor = o.labelColor && brightness(o.labelColor) > 0.5 ? o.labelColor : '#ffffff';
+  const size = Math.round(o.size * 1.06);
   const label = scene.add
-    .text(o.labelDx ?? 0, 0, o.label, { fontFamily: FONT, fontSize: `${o.size}px`, color: o.labelColor ?? '#ffffff', fontStyle: 'bold', align: 'center', wordWrap: o.labelWrap ? { width: o.labelWrap } : undefined })
+    .text(o.labelDx ?? 0, -LIP * 0.15, o.label, { fontFamily: TITLE_FONT, fontSize: `${size}px`, color: labelColor, stroke: css(KIT.ink), strokeThickness: strokeFor(size), align: 'center', wordWrap: o.labelWrap ? { width: o.labelWrap } : undefined })
     .setResolution(crisp())
     .setOrigin(0.5);
+  // A label that would run past the button shrinks to fit.
+  const room = o.w - 14 - Math.abs(o.labelDx ?? 0);
+  if (!o.labelWrap && label.width > room) label.setScale(room / label.width);
   const visual = scene.add.container(cx, cy, [g, shine, label]).setSize(o.w, o.h);
 
   const a = tapArea(o.w, o.h);
@@ -109,15 +116,6 @@ const PAD = 2;
 const LIP = 3;
 const SHADOW = 3;
 
-/** A colour mixed toward white (k > 0) or black (k < 0), as a CSS rgb() string. */
-function tone(color: number, k: number): string {
-  const r = (color >> 16) & 255;
-  const g = (color >> 8) & 255;
-  const b = color & 255;
-  const t = (v: number) => Math.round(k >= 0 ? v + (255 - v) * k : v * (1 + k));
-  return `rgb(${t(r)},${t(g)},${t(b)})`;
-}
-
 function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {
   const rr = Math.max(0, Math.min(r, w / 2, h / 2));
   ctx.beginPath();
@@ -130,13 +128,14 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
 }
 
 /**
- * Glossy buttons (Jay, Nov 18): drawn once on a canvas with real gradients. The face sits on a darker
- * lip with a soft shadow under it, so it looks raised and pressable; the top half has a glossy shine.
- * The face keeps the button's own colour, so every screen's colour meaning is unchanged.
+ * U-KIT (Jay, Nov 23): every button wears the one kit look (Archero 2 / Survivor.io): a thick dark outline
+ * around a glossy face that sits on a darker lip, with a soft shadow. The caller's colour picks the kit
+ * tone that means the same thing (gold = main action, blue = back / secondary, green = yes / go, red =
+ * danger, dim = quiet), see toneOf. Picked buttons get a gold ring around the outline.
  */
 function bakeButton(scene: Phaser.Scene, o: ButtonOptions): string {
-  const line = o.selected ? { width: 3, colour: 0xffd166, alpha: 1 } : { width: 2, colour: o.stroke ?? 0xffffff, alpha: o.stroke === undefined ? 0.35 : 0.8 };
-  const key = `btn3-${o.w}x${o.h}-${o.color.toString(16)}-${line.width}-${line.colour.toString(16)}-${line.alpha}-${BAKE}`;
+  const t = KIT_TONE[toneOf(o.color)];
+  const key = `btnK-${o.w}x${o.h}-${t.base.toString(16)}-${o.selected ? 's' : ''}-${BAKE}`;
   if (scene.textures.exists(key)) return key;
   const B = BAKE;
   const W = Math.ceil((o.w + PAD * 2) * B);
@@ -148,47 +147,53 @@ function bakeButton(scene: Phaser.Scene, o: ButtonOptions): string {
   const y = PAD * B;
   const w = o.w * B;
   const h = o.h * B;
-  const r = RADIUS.button * B + 2 * B;
-  // Drop shadow.
-  ctx.fillStyle = 'rgba(8,6,14,0.35)';
-  roundRect(ctx, x + B, y + (LIP + SHADOW) * B, w - 2 * B, h, r);
+  const r = Math.min(12 * B, h / 2);
+  const ink = css(KIT.ink);
+  // Drop shadow under the lip.
+  ctx.fillStyle = 'rgba(5,8,30,0.55)';
+  roundRect(ctx, x, y + (LIP + SHADOW) * B, w, h, r);
   ctx.fill();
-  // The lip: the same colour, darker, peeking out under the face.
-  ctx.fillStyle = tone(o.color, -0.45);
-  roundRect(ctx, x, y + LIP * B, w, h, r);
+  // The dark outline around face and lip together.
+  ctx.fillStyle = ink;
+  roundRect(ctx, x, y, w, h + LIP * B, r);
   ctx.fill();
-  // The face: lighter at the top, the button colour in the middle, a bit darker at the bottom.
+  const lw = 2.5 * B;
+  // The lip.
+  ctx.fillStyle = css(t.lip);
+  roundRect(ctx, x + lw, y + lw, w - 2 * lw, h + LIP * B - 2 * lw, r - lw);
+  ctx.fill();
+  // The face: bright at the top, the tone's colour at the bottom.
   const face = ctx.createLinearGradient(0, y, 0, y + h);
-  face.addColorStop(0, tone(o.color, 0.28));
-  face.addColorStop(0.5, tone(o.color, 0));
-  face.addColorStop(1, tone(o.color, -0.16));
+  face.addColorStop(0, css(t.hi));
+  face.addColorStop(1, css(t.base));
   ctx.fillStyle = face;
-  roundRect(ctx, x, y, w, h, r);
+  roundRect(ctx, x + lw, y + lw, w - 2 * lw, h - 2 * lw, r - lw);
   ctx.fill();
-  // Gloss: a soft white band over the top half.
-  const gloss = ctx.createLinearGradient(0, y, 0, y + h * 0.55);
-  gloss.addColorStop(0, 'rgba(255,255,255,0.38)');
-  gloss.addColorStop(1, 'rgba(255,255,255,0.04)');
-  ctx.fillStyle = gloss;
-  roundRect(ctx, x + 2 * B, y + 1.5 * B, w - 4 * B, h * 0.5, r - B);
-  ctx.fill();
-  // A thin bright rim along the top edge.
+  // A thin light line along the face's top edge, and the gloss over the top 40%.
   ctx.save();
-  roundRect(ctx, x, y, w, h, r);
+  roundRect(ctx, x + lw, y + lw, w - 2 * lw, h - 2 * lw, r - lw);
   ctx.clip();
-  ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.55)';
   ctx.lineWidth = 2 * B;
-  roundRect(ctx, x + B, y + B, w - 2 * B, h + 6 * B, r);
+  roundRect(ctx, x + lw, y + lw + B, w - 2 * lw, h + 8 * B, r - lw);
   ctx.stroke();
   ctx.restore();
-  // The outline (gold when picked).
-  const lc = Phaser.Display.Color.IntegerToColor(line.colour);
-  ctx.strokeStyle = `rgba(${lc.red},${lc.green},${lc.blue},${line.alpha})`;
-  ctx.lineWidth = line.width * B;
-  roundRect(ctx, x, y, w, h, r);
-  ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.28)';
+  roundRect(ctx, x + lw + 3 * B, y + lw + 1.5 * B, w - 2 * lw - 6 * B, (h - 2 * lw) * 0.4, Math.max(2 * B, r - lw - 2 * B));
+  ctx.fill();
+  // Picked: a gold ring just inside the outline.
+  if (o.selected) {
+    ctx.strokeStyle = '#ffe36a';
+    ctx.lineWidth = 2.5 * B;
+    roundRect(ctx, x + lw + 1.25 * B, y + lw + 1.25 * B, w - 2 * lw - 2.5 * B, h - 2 * lw - 2.5 * B, r - lw - B);
+    ctx.stroke();
+  }
   tex.refresh();
   return key;
+}
+
+function css(c: number): string {
+  return `#${c.toString(16).padStart(6, '0')}`;
 }
 
 function bakeShine(scene: Phaser.Scene, w: number, h: number): string {

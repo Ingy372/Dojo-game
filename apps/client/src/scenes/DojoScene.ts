@@ -504,7 +504,7 @@ export class DojoScene extends Phaser.Scene {
     const box = this.add.container(0, 0).setDepth(70);
     this.cardsOpen++;
     box.once(Phaser.GameObjects.Events.DESTROY, () => (this.cardsOpen = Math.max(0, this.cardsOpen - 1)));
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
     const body = this.add
       .text(width / 2, 0, lines.join('\n\n'), { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', align: 'center', wordWrap: { width: w - 36 }, lineSpacing: 2 })
       .setOrigin(0.5, 0)
@@ -590,7 +590,7 @@ export class DojoScene extends Phaser.Scene {
     const { width, height } = view(this);
     const pt = PLAY_TIME_TEXT;
     const t = this.add
-      .text(width / 2, height * 0.3, `${pt.doorResting}\n${pt.doorRestingLine}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#fff6e0', align: 'center', stroke: '#14121c', strokeThickness: 5 })
+      .text(width / 2, height * 0.3, `${pt.doorResting}\n${pt.doorRestingLine}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#fff6e0', align: 'center', stroke: '#0d1233', strokeThickness: 5 })
       .setOrigin(0.5)
       .setResolution(crisp())
       .setDepth(40);
@@ -613,7 +613,7 @@ export class DojoScene extends Phaser.Scene {
         fontStyle: 'bold',
         fontSize: '18px',
         color: '#bff5ec',
-        stroke: '#14121c',
+        stroke: '#0d1233',
         strokeThickness: 5,
         align: 'center',
       })
@@ -945,7 +945,7 @@ export class DojoScene extends Phaser.Scene {
     const door = room.doors[0];
     const label = (x: number, y: number, text: string, size: number) =>
       this.add
-        .text(x, y, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color: '#fff6e0', stroke: '#14121c', strokeThickness: 3, backgroundColor: 'rgba(20,18,28,0.72)', padding: { x: 6, y: 1 } })
+        .text(x, y, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color: '#fff6e0', stroke: '#0d1233', strokeThickness: 3, backgroundColor: 'rgba(20,18,28,0.72)', padding: { x: 6, y: 1 } })
         .setOrigin(0.5, 0)
         .setResolution(crisp() * 2);
     return {
@@ -1082,13 +1082,13 @@ export class DojoScene extends Phaser.Scene {
     const pad = 12;
 
     // A dark strip behind the title and buttons (the room scrolls underneath).
-    this.ui.add(this.add.rectangle(0, 0, width, this.mode === 'decorate' ? DECOR_TOP : TOP, 0x14121c, 0.85).setOrigin(0));
+    this.ui.add(this.add.rectangle(0, 0, width, this.mode === 'decorate' ? DECOR_TOP : TOP, 0x0d1233, 0.85).setOrigin(0));
     const title = this.text(pad, 8, 'Home Dojo', 20, '#f2e9d8', true, 'Georgia, serif');
     title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
     this.uiRects.push(title.getBounds());
     const chores = choresLeft(this.dojo);
     const status = chores > 0 ? `Tidy up: ${chores} left` : '✓ Spotless';
-    this.text(pad + title.width + 12, 12, status, 14, chores > 0 ? '#e8d9b5' : '#bff5ec', true);
+    this.text(pad + title.width + 12, 12, status, 14, chores > 0 ? '#dbe6ff' : '#bff5ec', true);
     if (this.dojo.calmMindRuns > 0) {
       const n = this.dojo.calmMindRuns;
       this.text(pad, 30, `Calm Mind · ${n} Tower run${n > 1 ? 's' : ''}`, 14, '#bff5ec', true);
@@ -1100,25 +1100,25 @@ export class DojoScene extends Phaser.Scene {
       if (this.selected && arrows) this.renderArrows(width, height);
       this.button(width - pad - 90, 8, 90, MIN_TAP, 'Done', GREEN, 15, () => this.setDecorating(false));
       const hint = !this.selected ? 'Tap a decoration to pick it' : arrows ? 'Use the arrows to move it' : 'Now tap where it should go';
-      this.button(width - pad - 90 - 8 - 110 - 8 - 130, 8, 130, MIN_TAP, arrows ? 'Move: Arrows ⇄' : 'Move: Tap ⇄', 0x3a3a4a, 13, () => this.chooseMoveStyle());
+      this.button(width - pad - 90 - 8 - 110 - 8 - 130, 8, 130, MIN_TAP, arrows ? 'Move: Arrows ⇄' : 'Move: Tap ⇄', 0x2a3780, 13, () => this.chooseMoveStyle());
       if (this.selected) {
         this.button(width - pad - 90 - 8 - 110, 8, 110, MIN_TAP, 'Put away', 0x6b3a3a, 14, () => this.putAway());
       }
       // Q-PREMIUM-2 M9: the hint rides in a solid dark pill at the bottom, just above the tray (and left of the arrow pad).
       const hintX = this.selected && arrows ? (width - (3 * ARROW + 24)) / 2 : width / 2;
       const hintText = this.text(hintX, height - TRAY - 10, hint, 16, '#fff6e0', true).setOrigin(0.5, 1);
-      hintText.setBackgroundColor('#14121c').setPadding(12, 6, 12, 6).setAlpha(1);
+      hintText.setBackgroundColor('#0d1233').setPadding(12, 6, 12, 6).setAlpha(1);
       this.renderTray(width, height);
     } else if (this.mode === 'play') {
-      this.button(width - pad - 80, 8, 80, 32, PW.dojoButton, 0x4a3f63, 14, () => this.goPath());
-      this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
+      this.button(width - pad - 80, 8, 80, 32, PW.dojoButton, 0x2a3780, 14, () => this.goPath());
+      this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x2e6ae0, 14, () => this.setDecorating(true));
       this.button(width - pad - 80 - 8 - 100 - 8 - 70, 8, 70, 32, 'Look', 0x3a6ea5, 14, () => this.changeLook());
-      this.button(width - pad - 80 - 8 - 100 - 8 - 70 - 8 - 90, 8, 90, 32, DIFFICULTY_TEXT.button, 0x3a3a4a, 14, () => this.openDifficulty());
+      this.button(width - pad - 80 - 8 - 100 - 8 - 70 - 8 - 90, 8, 90, 32, DIFFICULTY_TEXT.button, 0x2a3780, 14, () => this.openDifficulty());
       // One line says which difficulty they're on, shown once ever (M7-P1).
       if (!this.profile.difficultyLineShown && this.profile.difficulty) {
         const name = DIFFICULTY_TEXT.choices.find((c) => c.id === activeDifficulty(this.profile, this.training.belt.tier))?.name ?? '';
         // Below the second button row (Street Smarts) so nothing covers it.
-        this.text(pad, ROW2_Y + MIN_TAP + 8, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
+        this.text(pad, ROW2_Y + MIN_TAP + 8, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#0d1233', 5);
         this.profile.difficultyLineShown = true;
         writeSave(this.profile);
       }
@@ -1161,10 +1161,10 @@ export class DojoScene extends Phaser.Scene {
       [px, py, pw, ph] = [x0, y0, rowW, a];
     }
     // A backing panel catches near-misses, so a missed arrow never lands on the floor.
-    const panel = this.add.rectangle(px - m, py - m, pw + 2 * m, ph + 2 * m, 0x14121c, 0.55).setOrigin(0).setInteractive();
+    const panel = this.add.rectangle(px - m, py - m, pw + 2 * m, ph + 2 * m, 0x0d1233, 0.55).setOrigin(0).setInteractive();
     this.ui.add(panel);
     this.uiRects.push(panel.getBounds());
-    for (const [x, y, label, dx, dy] of buttons) this.button(x, y, a, a, label, 0x3a3a4a, 22, () => this.nudge(dx, dy));
+    for (const [x, y, label, dx, dy] of buttons) this.button(x, y, a, a, label, 0x2a3780, 22, () => this.nudge(dx, dy));
   }
 
 
@@ -1175,7 +1175,7 @@ export class DojoScene extends Phaser.Scene {
     this.controls.reset();
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
-    const dim = this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive();
+    const dim = this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive();
     box.add(dim);
     const close = () => {
       box.destroy();
@@ -1206,7 +1206,7 @@ export class DojoScene extends Phaser.Scene {
       // P-MENU-e: a rounded card with the shared press; the name and words ride inside it.
       // Q-LOCK-CARD: the locked card is solid (no see-through), and a tap answers gently.
       let line: Phaser.GameObjects.Text | null = null;
-      const b = roundButton(this, { x, y: top, w, h, label: '', color: locked ? LOCKED_CARD.color : 0x2a2536, size: 15, selected: on, onTap: () => {
+      const b = roundButton(this, { x, y: top, w, h, label: '', color: locked ? LOCKED_CARD.color : 0x16206b, size: 15, selected: on, onTap: () => {
         if (locked) {
           this.lockedCardTap(b.visual, line!);
           return;
@@ -1217,17 +1217,17 @@ export class DojoScene extends Phaser.Scene {
         close();
       } }, box);
       b.visual.add(this.add.text(0, 18 - h / 2, (on ? '✓ ' : locked ? '🔒 ' : '') + c.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: locked ? LOCKED_CARD.nameColor : '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
-      line = this.add.text(0, 54 - h / 2, locked ? lockedLine(t.locked.challenge, this.training.belts) : c.text, { fontFamily: FONT, fontSize: '15px', color: locked ? LOCKED_CARD.textColor : '#e8d9b5', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp());
+      line = this.add.text(0, 54 - h / 2, locked ? lockedLine(t.locked.challenge, this.training.belts) : c.text, { fontFamily: FONT, fontSize: '15px', color: locked ? LOCKED_CARD.textColor : '#dbe6ff', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp());
       b.visual.add(line);
     });
-    box.add(this.add.text(width / 2, top + h + 14, t.footer, { fontFamily: FONT, fontSize: '14px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
+    box.add(this.add.text(width / 2, top + h + 14, t.footer, { fontFamily: FONT, fontSize: '14px', color: '#a9b8ee' }).setOrigin(0.5, 0).setResolution(crisp()));
     // Grown-up settings sit behind a simple sum, so a young child can't open them by accident (M7-P9).
     const pt = PLAY_TIME_TEXT;
     const gw = 190;
     const gh = MIN_TAP;
     const gx = width - 12 - gw;
     const gy = height - 12 - gh;
-    roundButton(this, { x: gx, y: gy, w: gw, h: gh, label: pt.grownUpButton, color: 0x3a3a4a, size: 14, onTap: () => {
+    roundButton(this, { x: gx, y: gy, w: gw, h: gh, label: pt.grownUpButton, color: 0x2a3780, size: 14, onTap: () => {
       box.destroy();
       this.openGrownUpGate(back);
     } }, box);
@@ -1235,11 +1235,11 @@ export class DojoScene extends Phaser.Scene {
     const motionLabel = () => `${MOTION_TEXT.label}: ${reducedMotion() ? MOTION_TEXT.on : MOTION_TEXT.off}`;
     const mw = Math.min(210, gx - 24);
     const mx = 12;
-    const motion = roundButton(this, { x: mx, y: gy, w: mw, h: gh, label: motionLabel(), color: 0x3a3a4a, size: 14, onTap: () => {
+    const motion = roundButton(this, { x: mx, y: gy, w: mw, h: gh, label: motionLabel(), color: 0x2a3780, size: 14, onTap: () => {
       setReducedMotion(!reducedMotion());
       (motion.visual.getAt(2) as Phaser.GameObjects.Text).setText(motionLabel());
     } }, box);
-    const motionHint = this.add.text(mx, gy - 6, MOTION_TEXT.hint, { fontFamily: FONT, fontSize: '13px', color: '#b9ad99', wordWrap: { width: Math.max(mw, 160) } }).setOrigin(0, 1).setResolution(crisp());
+    const motionHint = this.add.text(mx, gy - 6, MOTION_TEXT.hint, { fontFamily: FONT, fontSize: '13px', color: '#a9b8ee', wordWrap: { width: Math.max(mw, 160) } }).setOrigin(0, 1).setResolution(crisp());
     box.add(motionHint);
     // Music and Sound (M7-P8): big − and + buttons, 0 to 5, saved on this device. Outside the grown-up gate.
     const vx = mx + mw + 12;
@@ -1271,7 +1271,7 @@ export class DojoScene extends Phaser.Scene {
     const back = this.mode === 'arriving' ? 'play' : this.mode;
     this.mode = 'menu';
     const box = this.add.container(0, 0).setDepth(80);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
     const w = Math.min(460, width - 40);
     const h = 200;
     const left = (width - w) / 2;
@@ -1286,7 +1286,7 @@ export class DojoScene extends Phaser.Scene {
     const by = top + h - bh - 20;
     const choice = (x: number, text: string, color: number, onTap: () => void) =>
       roundButton(this, { x, y: by, w: bw, h: bh, label: text, color, size: 17, labelColor: '#fff6e0', stroke: 0xfff6e0, onTap }, box);
-    choice(left + 16, t.rest, 0x4a4a55, () => {
+    choice(left + 16, t.rest, 0x3a4790, () => {
       // Bank it like a play-time rest: nothing found is lost.
       run.status = 'rested';
       // Banking writes a fresh profile; take its dojo too, so the pieces just banked show here.
@@ -1313,7 +1313,7 @@ export class DojoScene extends Phaser.Scene {
     const pt = PLAY_TIME_TEXT;
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
     this.addWipeButton(box);
     const close = () => {
       box.destroy();
@@ -1322,7 +1322,7 @@ export class DojoScene extends Phaser.Scene {
     };
     const w = Math.min(620, width - 40);
     box.add(this.add.text(width / 2, height * 0.08, pt.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
-    const help = this.add.text(width / 2, height * 0.08 + 36, pt.help, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    const help = this.add.text(width / 2, height * 0.08 + 36, pt.help, { fontFamily: FONT, fontSize: '15px', color: '#dbe6ff', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
     box.add(help);
     const choices = PLAY_LIMIT_CHOICES;
     const gap = 10;
@@ -1335,7 +1335,7 @@ export class DojoScene extends Phaser.Scene {
       choices.forEach((n, i) => {
         const on = this.profile.playLimitMinutes === n;
         const x = x0 + i * (bw + gap);
-        const b = roundButton(this, { x, y: by, w: bw, h: bh, label: n === 0 ? pt.off : pt.minutes.replace('{n}', String(n)), color: on ? GREEN : 0x2a2536, size: 16, selected: on, onTap: () => {
+        const b = roundButton(this, { x, y: by, w: bw, h: bh, label: n === 0 ? pt.off : pt.minutes.replace('{n}', String(n)), color: on ? GREEN : 0x16206b, size: 16, selected: on, onTap: () => {
           sfx.place(true);
           this.profile.playLimitMinutes = n;
           writeSave(this.profile);
@@ -1348,7 +1348,7 @@ export class DojoScene extends Phaser.Scene {
     draw();
     const dw = 140;
     const dy = Math.min(height - 12 - 44, by + bh + 22);
-    roundButton(this, { x: width / 2 - dw - 8, y: dy, w: dw, h: 44, label: BELT_TEXT.open, color: 0x2a2536, size: 16, stroke: 0xffd166, labelColor: '#ffd166', onTap: () => {
+    roundButton(this, { x: width / 2 - dw - 8, y: dy, w: dw, h: 44, label: BELT_TEXT.open, color: 0x16206b, size: 16, stroke: 0xffd166, labelColor: '#ffd166', onTap: () => {
       box.destroy();
       this.openBeltEntry(back);
     } }, box);
@@ -1393,7 +1393,7 @@ export class DojoScene extends Phaser.Scene {
     const floor = fix ? feedEntry(feed) : saved;
     const pick: BeltEntry = { ...saved };
     const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
     const close = () => {
       box.destroy();
       this.training = currentTraining();
@@ -1402,7 +1402,7 @@ export class DojoScene extends Phaser.Scene {
     };
     const w = Math.min(600, width - 32);
     box.add(this.add.text(width / 2, 10, fix ? t.fixTitle : t.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
-    box.add(this.add.text(width / 2, 38, fix ? t.fixHelp : t.help, { fontFamily: FONT, fontSize: '14px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp()));
+    box.add(this.add.text(width / 2, 38, fix ? t.fixHelp : t.help, { fontFamily: FONT, fontSize: '14px', color: '#dbe6ff', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp()));
     const cols = 5;
     const gap = 8;
     const cw = (w - gap * (cols - 1)) / cols;
@@ -1414,7 +1414,7 @@ export class DojoScene extends Phaser.Scene {
       box.list.filter((o) => o.getData('pick')).forEach((o) => o.destroy());
       const chip = (x: number, y: number, cw2: number, label: string, swatch: number | null, on: boolean, ok: boolean, tap: () => void) => {
         // P-MENU-c: the shared rounded button; the picked chip is `selected`, a too-low choice `disabled`.
-        const b = roundButton(this, { x, y, w: cw2, h: ch, label, color: on ? GREEN : 0x2a2536, size: 13, selected: on, disabled: !ok, labelWrap: cw2 - (swatch !== null ? 26 : 8), labelDx: swatch !== null ? 8 : 0, onTap: () => { sfx.place(true); tap(); draw(); } }, box);
+        const b = roundButton(this, { x, y, w: cw2, h: ch, label, color: on ? GREEN : 0x16206b, size: 13, selected: on, disabled: !ok, labelWrap: cw2 - (swatch !== null ? 26 : 8), labelDx: swatch !== null ? 8 : 0, onTap: () => { sfx.place(true); tap(); draw(); } }, box);
         if (swatch !== null) b.visual.addAt(this.add.rectangle(-cw2 / 2 + 6, -7, 14, 14, swatch).setOrigin(0).setStrokeStyle(1, 0xffffff, 0.6), 2);
         b.visual.setData('pick', true);
         b.hit.setData('pick', true);
@@ -1427,7 +1427,7 @@ export class DojoScene extends Phaser.Scene {
           Object.assign(pick, pickBelt(belts, floor, b.id));
         });
       });
-      box.add(this.add.text(left, sy + ch / 2, t.stripes, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#e8d9b5' }).setOrigin(0, 0.5).setResolution(crisp()).setData('pick', true));
+      box.add(this.add.text(left, sy + ch / 2, t.stripes, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#dbe6ff' }).setOrigin(0, 0.5).setResolution(crisp()).setData('pick', true));
       [0, 1, 2].forEach((n) => {
         const ok = entryRank(belts, { belt: pick.belt, stripes: n }) >= entryRank(belts, floor);
         chip(left + 90 + n * (64 + gap), sy, 64, String(n), null, pick.stripes === n, ok, () => { pick.stripes = n; });
@@ -1454,10 +1454,10 @@ export class DojoScene extends Phaser.Scene {
       close();
       this.toast(line.replace('{belt}', name).replace('{n}', String(pick.stripes)));
     };
-    if (fix) button(width / 2 - bw - 8, t.back, 0x4a4a55, () => { box.destroy(); this.openBeltEntry(back); });
+    if (fix) button(width / 2 - bw - 8, t.back, 0x3a4790, () => { box.destroy(); this.openBeltEntry(back); });
     else {
-      button(width / 2 - bw * 1.5 - 12, t.back, 0x4a4a55, close);
-      button(width / 2 - bw / 2, t.fixButton, 0x2a2536, () => { box.destroy(); this.openBeltEntry(back, true); });
+      button(width / 2 - bw * 1.5 - 12, t.back, 0x3a4790, close);
+      button(width / 2 - bw / 2, t.fixButton, 0x16206b, () => { box.destroy(); this.openBeltEntry(back, true); });
     }
     button(fix ? width / 2 + 8 : width / 2 + bw / 2 + 12, t.save, GREEN, () => this.confirmBeltEntry(belts, pick, save, fix ? saved : undefined));
   }
@@ -1467,7 +1467,7 @@ export class DojoScene extends Phaser.Scene {
     const t = BELT_TEXT;
     const { width, height } = view(this);
     const card = this.add.container(0, 0).setDepth(90);
-    card.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
+    card.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
     const entryText = (e: BeltEntry) => {
       const name = belts.find((b) => b.id === e.belt)!.name;
       return (e.stripes === 0 ? t.entryNone : e.stripes === 1 ? t.entryOne : t.entryStripes).replace('{belt}', name).replace('{n}', String(e.stripes));
@@ -1475,12 +1475,12 @@ export class DojoScene extends Phaser.Scene {
     const entry = entryText(pick);
     const w = Math.min(460, width - 40);
     const title = this.add.text(width / 2, height * 0.16, keep ? t.fixTitle : t.confirmTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp());
-    const help = this.add.text(width / 2, title.y + title.height + 12, (keep ? t.fixConfirm : t.confirmHelp).replace('{entry}', entry), { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    const help = this.add.text(width / 2, title.y + title.height + 12, (keep ? t.fixConfirm : t.confirmHelp).replace('{entry}', entry), { fontFamily: FONT, fontSize: '15px', color: '#dbe6ff', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
     card.add([title, help]);
     const bw = keep ? 200 : 140;
     const by = Math.min(height - 12 - 44, help.y + help.height + 22);
     const no = keep ? t.fixKeep.replace('{belt}', entryText(keep)) : t.confirmNo;
-    roundButton(this, { x: width / 2 - bw - 8, y: by, w: bw, h: 44, label: no, color: 0x4a4a55, size: 16, labelWrap: bw - 12, onTap: () => card.destroy() }, card);
+    roundButton(this, { x: width / 2 - bw - 8, y: by, w: bw, h: 44, label: no, color: 0x3a4790, size: 16, labelWrap: bw - 12, onTap: () => card.destroy() }, card);
     roundButton(this, { x: width / 2 + 8, y: by, w: bw, h: 44, label: keep ? t.fixYes : t.confirmYes, color: GREEN, size: 16, onTap: () => { card.destroy(); save(); } }, card);
   }
 
@@ -1491,7 +1491,7 @@ export class DojoScene extends Phaser.Scene {
     this.mode = 'menu';
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
     const title = this.add
       .text(width / 2, height * 0.12, 'How do you like to move decorations?', { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' })
       .setOrigin(0.5, 0)
@@ -1507,10 +1507,10 @@ export class DojoScene extends Phaser.Scene {
     options.forEach(([style, name, text], i) => {
       const x = width / 2 + (i === 0 ? -w - 10 : 10);
       const on = this.moveStyle === style;
-      const bg = this.add.rectangle(x, top, w, h, 0x2a2536).setOrigin(0).setStrokeStyle(on ? 4 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setInteractive();
+      const bg = this.add.rectangle(x, top, w, h, 0x16206b).setOrigin(0).setStrokeStyle(on ? 4 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setInteractive();
       box.add(bg);
       box.add(this.add.text(x + w / 2, top + 22, name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
-      box.add(this.add.text(x + w / 2, top + 58, text, { fontFamily: FONT, fontSize: '14px', color: '#e8d9b5', align: 'center', wordWrap: { width: w - 28 } }).setOrigin(0.5, 0).setResolution(crisp()));
+      box.add(this.add.text(x + w / 2, top + 58, text, { fontFamily: FONT, fontSize: '14px', color: '#dbe6ff', align: 'center', wordWrap: { width: w - 28 } }).setOrigin(0.5, 0).setResolution(crisp()));
       bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
         sfx.unlock();
         sfx.place(true);
@@ -1522,20 +1522,20 @@ export class DojoScene extends Phaser.Scene {
         then?.();
       });
     });
-    box.add(this.add.text(width / 2, top + h + 14, 'You can change this any time with the "Move" button.', { fontFamily: FONT, fontSize: '12px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
+    box.add(this.add.text(width / 2, top + h + 14, 'You can change this any time with the "Move" button.', { fontFamily: FONT, fontSize: '12px', color: '#a9b8ee' }).setOrigin(0.5, 0).setResolution(crisp()));
   }
 
   /** Stored decorations, as chips along the bottom. Tap one to place it. */
   private renderTray(width: number, height: number): void {
     const y = height - TRAY + 8;
-    this.ui.add(this.add.rectangle(0, height - TRAY, width, TRAY, 0x14121c, 0.85).setOrigin(0));
+    this.ui.add(this.add.rectangle(0, height - TRAY, width, TRAY, 0x0d1233, 0.85).setOrigin(0));
     this.uiRects.push(new Phaser.Geom.Rectangle(0, height - TRAY, width, TRAY));
     const stored = this.dojo.items.filter((it) => it.col === null);
     if (stored.length === 0) {
-      this.text(width / 2, y + 18, 'Everything is out! Find more decorations in Tower chests.', 13, '#b9ad99').setOrigin(0.5);
+      this.text(width / 2, y + 18, 'Everything is out! Find more decorations in Tower chests.', 13, '#a9b8ee').setOrigin(0.5);
       return;
     }
-    this.text(12, y - 2, 'In storage (tap to place):', 11, '#b9ad99');
+    this.text(12, y - 2, 'In storage (tap to place):', 11, '#a9b8ee');
     const groups = new Map<string, DojoItem[]>();
     for (const it of stored) groups.set(it.id, [...(groups.get(it.id) ?? []), it]);
     let x = 12;
@@ -1544,7 +1544,7 @@ export class DojoScene extends Phaser.Scene {
       const label = items.length > 1 ? `${def.name} ×${items.length}` : def.name;
       const w = Math.max(90, label.length * 7.5 + 20);
       if (x + w > width - 12) break;
-      this.button(x, y + 14, w, 38, label, 0x2a2536, 13, () => this.takeOut(items[0].uid));
+      this.button(x, y + 14, w, 38, label, 0x16206b, 13, () => this.takeOut(items[0].uid));
       x += w + 6;
     }
   }
@@ -1578,10 +1578,10 @@ export class DojoScene extends Phaser.Scene {
     const t = SAFE_TEXT;
     const { width, height } = view(this);
     const card = this.add.container(0, 0).setDepth(90);
-    card.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
+    card.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
     const w = Math.min(460, width - 40);
     const title = this.add.text(width / 2, height * 0.16, t.wipeTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
-    const help = this.add.text(width / 2, title.y + title.height + 12, t.wipeHelp, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    const help = this.add.text(width / 2, title.y + title.height + 12, t.wipeHelp, { fontFamily: FONT, fontSize: '15px', color: '#dbe6ff', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
     card.add([title, help]);
     const bw = 140;
     const by = Math.min(height - 12 - 44, help.y + help.height + 22);
@@ -1629,8 +1629,8 @@ export class DojoScene extends Phaser.Scene {
     const pad = 18;
     text(pad, pad, 'Dojo testing', 20, '#ff9f6b', true);
     const level = Math.round(messLevel(this.dojo.messHours) * 100);
-    text(pad, pad + 28, `Mess: ${level}% (${Math.round(this.dojo.messHours)} hours built up; full at ${DOJO.messFullAfterHours}) · chores left: ${choresLeft(this.dojo)} · Calm Mind runs: ${this.dojo.calmMindRuns}`, 12, '#b9ad99');
-    text(pad, pad + 48, `Fast-forward pretends you were away. You come back in through the door and bow, like a real return. Session day: ${localDay()}${devDayOffset() ? ` (+${devDayOffset()})` : ''}.`, 12, '#b9ad99');
+    text(pad, pad + 28, `Mess: ${level}% (${Math.round(this.dojo.messHours)} hours built up; full at ${DOJO.messFullAfterHours}) · chores left: ${choresLeft(this.dojo)} · Calm Mind runs: ${this.dojo.calmMindRuns}`, 12, '#a9b8ee');
+    text(pad, pad + 48, `Fast-forward pretends you were away. You come back in through the door and bow, like a real return. Session day: ${localDay()}${devDayOffset() ? ` (+${devDayOffset()})` : ''}.`, 12, '#a9b8ee');
     const w = Math.min(170, (width - pad * 2 - 16) / 3);
     let y = pad + 84;
     const away = (hours: number) => {
@@ -1654,7 +1654,7 @@ export class DojoScene extends Phaser.Scene {
       close();
       if (calm) this.celebrateCalm();
     });
-    btn(pad + w + 8, y, w, 'Get every decoration', 0x8a5a35, () => {
+    btn(pad + w + 8, y, w, 'Get every decoration', 0x2e6ae0, () => {
       addDecorations(this.dojo, CONTENT.dojo.decorations.filter((d) => d.source === 'tower').map((d) => d.id));
       writeSave(this.profile);
       close();
@@ -1668,7 +1668,7 @@ export class DojoScene extends Phaser.Scene {
       this.scene.restart();
     });
     y += 46;
-    btn(pad, y, Math.min(260, width - pad * 2), 'Try the new decorations', 0x8a5a35, () => {
+    btn(pad, y, Math.min(260, width - pad * 2), 'Try the new decorations', 0x2e6ae0, () => {
       // Puts the old pieces away and sets out the Tier 1 set (tinted ones in both colours).
       for (const it of this.dojo.items) if (!CONTENT.dojo.starter.some((s) => s.decoration === it.id)) storeItem(this.dojo, it.uid);
       const tier1 = CONTENT.dojo.decorations.filter((d) => d.id.startsWith('decor-a6-'));
@@ -1684,8 +1684,8 @@ export class DojoScene extends Phaser.Scene {
       this.scene.restart();
     });
     y += 54;
-    text(pad, y, PW.adultProfilesHint, 12, '#b9ad99');
-    btn(pad, height - pad - 36, Math.min(200, width - pad * 2), 'Close', 0x5b4a3c, close);
+    text(pad, y, PW.adultProfilesHint, 12, '#a9b8ee');
+    btn(pad, height - pad - 36, Math.min(200, width - pad * 2), 'Close', 0x3a4790, close);
   }
 
   // ---------------------------------------------------------------- layout and helpers
@@ -1787,7 +1787,7 @@ export class DojoScene extends Phaser.Scene {
   private toast(message: string): void {
     const { width, height } = view(this);
     const t = this.add
-      .text(width / 2, height * 0.5, message, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 5, align: 'center', wordWrap: { width: width - 60 } })
+      .text(width / 2, height * 0.5, message, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#f2e9d8', stroke: '#0d1233', strokeThickness: 5, align: 'center', wordWrap: { width: width - 60 } })
       .setOrigin(0.5)
       .setResolution(crisp())
       .setDepth(60);
@@ -1813,7 +1813,7 @@ export class DojoScene extends Phaser.Scene {
   /** P-MENU-e: a rounded card panel (dark fill, gold outline) for the Dojo's popup cards. */
   private roundPanel(x: number, y: number, w: number, h: number, strokeAlpha: number): Phaser.GameObjects.Graphics {
     const g = this.add.graphics();
-    g.fillStyle(0x221d2e).fillRoundedRect(x, y, w, h, RADIUS.panel);
+    g.fillStyle(0x1b2a7a).fillRoundedRect(x, y, w, h, RADIUS.panel);
     g.lineStyle(3, 0xffd166, strokeAlpha).strokeRoundedRect(x, y, w, h, RADIUS.panel);
     return g;
   }

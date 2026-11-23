@@ -31,7 +31,7 @@ export interface CreateSceneData {
 
 const SKY_TOP = 0x3a2a78;
 const SKY_BOTTOM = 0x140d2b;
-const PANEL = 0x1b1626;
+const PANEL = 0x1b2a7a;
 const PANEL_EDGE = 0x4a3f6e;
 const GOLD = 0xffd166;
 const INK = '#f6efe2';
@@ -179,7 +179,7 @@ export class CreateScene extends Phaser.Scene {
       this.button(pad + sw + S2, by, row - sw - S2, MIN_TAP, "Let's go!", GREEN, 19, () => this.finish(true));
     } else {
       const bw = (row - 2 * S2) / 3;
-      this.button(pad, by, bw, MIN_TAP, '◀ Back', 0x5b4a3c, 15, () => this.finish(false));
+      this.button(pad, by, bw, MIN_TAP, '◀ Back', 0x3a4790, 15, () => this.finish(false));
       this.button(pad + bw + S2, by, bw, MIN_TAP, '🎲 Surprise', 0x7a4fd1, 14, () => this.surprise());
       this.button(pad + 2 * (bw + S2), by, bw, MIN_TAP, 'Done', GREEN, 18, () => this.finish(true));
     }
@@ -241,7 +241,7 @@ export class CreateScene extends Phaser.Scene {
     const h = Math.max(MIN_TAP, Math.min(at.h * 0.55, 96));
     (['a', 'b'] as const).forEach((b, i) => {
       const on = this.look.body === b;
-      this.button(at.x + i * (half + 12), at.y + (at.h - h) / 2, half, h, b === 'a' ? 'Boy' : 'Girl', on ? 0x3a7bd5 : 0x3a3448, 20, () => this.change({ body: b }), on);
+      this.button(at.x + i * (half + 12), at.y + (at.h - h) / 2, half, h, b === 'a' ? 'Boy' : 'Girl', on ? 0x3a7bd5 : 0x2c3f9e, 20, () => this.change({ body: b }), on);
     });
   }
 
@@ -304,8 +304,8 @@ export class CreateScene extends Phaser.Scene {
     const h = Math.max(MIN_TAP, Math.min(64, at.h * 0.5));
     const y = at.y + (at.h - h) / 2;
     const go = (d: number) => () => pick(list[(i + d + list.length) % list.length]);
-    this.button(at.x, y, bw, h, '◀', 0x5a4a8a, 24, go(-1));
-    this.button(at.x + at.w - bw, y, bw, h, '▶', 0x5a4a8a, 24, go(1));
+    this.button(at.x, y, bw, h, '◀', 0x2e6ae0, 24, go(-1));
+    this.button(at.x + at.w - bw, y, bw, h, '▶', 0x2e6ae0, 24, go(1));
     const n = list.length;
     const gap = Math.min(24, (at.w - 2 * bw - 24) / n);
     const g = this.add.graphics();
@@ -339,7 +339,7 @@ export class CreateScene extends Phaser.Scene {
       const dot = this.add.circle(cx, cy, rad, c.color).setStrokeStyle(on ? 4 : 2, on ? GOLD : 0xf2e9d8, on ? 1 : 0.7);
       this.ui.add(dot);
       this.ui.add(this.add.ellipse(cx - rad * 0.3, cy - rad * 0.38, rad * 0.7, rad * 0.4, 0xffffff, 0.35).setAngle(-20));
-      if (on) this.text(cx, cy, '✓', Math.round(rad * 0.9), '#ffffff', true).setOrigin(0.5).setStroke('#14121c', 4);
+      if (on) this.text(cx, cy, '✓', Math.round(rad * 0.9), '#ffffff', true).setOrigin(0.5).setStroke('#0d1233', 4);
       // The whole cell is the tap target, so small fingers don't miss.
       dot.setInteractive(new Phaser.Geom.Rectangle(rad - cell / 2, rad - cellH / 2, cell, cellH), Phaser.Geom.Rectangle.Contains);
       dot.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {

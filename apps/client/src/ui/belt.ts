@@ -5,7 +5,7 @@
 import Phaser from 'phaser';
 import type { BeltInfo } from '@dojo/sim';
 
-const OUTLINE = 0x14121c;
+const OUTLINE = 0x0d1233;
 
 /** All a belt drawing needs: its colour, and a second colour for two-colour belts. */
 export type BeltColors = Pick<BeltInfo, 'color' | 'color2'>;

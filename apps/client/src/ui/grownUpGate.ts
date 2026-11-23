@@ -13,7 +13,7 @@ export function showGrownUpGate(scene: Phaser.Scene, pass: () => void, leave: ()
   const q = makeGateQuestion(Math.random);
   const { width, height } = view(scene);
   const box = scene.add.container(0, 0).setDepth(depth);
-  box.add(scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.96).setOrigin(0).setInteractive());
+  box.add(scene.add.rectangle(0, 0, width, height, 0x060a24, 0.96).setOrigin(0).setInteractive());
   const out = (then: () => void) => {
     box.destroy();
     then();
@@ -26,11 +26,11 @@ export function showGrownUpGate(scene: Phaser.Scene, pass: () => void, leave: ()
   const x0 = width / 2 - (q.choices.length * bw + (q.choices.length - 1) * gap) / 2;
   q.choices.forEach((n, i) => {
     const x = x0 + i * (bw + gap);
-    button(scene, { x, y: by, w: bw, h: bh, label: String(n), color: 0x2a2536, size: 20, onTap: () => out(n === q.answer ? pass : leave) }, box);
+    button(scene, { x, y: by, w: bw, h: bh, label: String(n), color: 0x16206b, size: 20, onTap: () => out(n === q.answer ? pass : leave) }, box);
   });
   const cw = 120;
   const cy = by + bh + 24;
-  button(scene, { x: width / 2 - cw / 2, y: cy, w: cw, h: 44, label: pt.gateCancel, color: 0x4a4a55, size: 15, onTap: () => out(leave) }, box);
+  button(scene, { x: width / 2 - cw / 2, y: cy, w: cw, h: 44, label: pt.gateCancel, color: 0x3a4790, size: 15, onTap: () => out(leave) }, box);
 }
 
 /** The only way to open a page outside the game: the gate question first, then a new tab. */

@@ -177,10 +177,11 @@ export function cubbySize(shelfW: number): number {
 }
 
 /** P-MENU2-b: kata step colours. onPaper is for the cream detail sheet (at least 4.5:1 on BOARD_PAPER). */
-export const BOARD_PAPER = 0xf2e3c4;
+/** U-KIT: the light card for detail sheets (was cream paper): an ice-blue card with navy words. */
+export const BOARD_PAPER = 0xeaf2ff;
 export const KATA_INK = {
   onDark: { num: '#ffffff', arrow: 0x9fd3ff },
-  onPaper: { num: '#3a2618', arrow: 0x1d4690 },
+  onPaper: { num: '#16206b', arrow: 0x1d4690 },
 } as const;
 export type KataInk = (typeof KATA_INK)[keyof typeof KATA_INK];
 

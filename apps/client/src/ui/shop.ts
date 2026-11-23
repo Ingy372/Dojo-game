@@ -23,7 +23,7 @@ import { GREEN, MIN_TAP, S1, S2, S3, TYPE } from './tokens';
 const GAP = 8;
 const OWN = (slot: ShopSlot) => `own-${slot}`;
 const TABS = [...new Set(SHOP.groups.map((g) => g.tab))];
-const WOOD = 0x8a5a35;
+const WOOD = 0x2e6ae0;
 const PAPER = 0xede3c0;
 /** Decorations sold here are drawn from this art pack (content/dojo/decorations.json). */
 const DECOR_PACK = 'decor-v2';
@@ -125,7 +125,7 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
       .text(x, y, s, { fontFamily: FONT, fontStyle: bold ? 'bold' : 'normal', fontSize: `${size}px`, color, align: 'center', wordWrap: wrap ? { width: wrap, useAdvancedWrap: true } : undefined })
       .setResolution(crisp())
       .setOrigin(0.5, 0)
-      .setStroke('#140f1c', bold ? 3 : 0);
+      .setStroke('#0d1233', bold ? 3 : 0);
     parent.add(o);
     return o;
   };
@@ -174,7 +174,7 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
     layer.add(bg);
     layer.add(scene.add.zone(0, 0, width, height).setOrigin(0).setInteractive());
     const pad = height < 400 ? S2 : 12;
-    button(scene, { x: pad, y: pad, w: 96, h: MIN_TAP, label: W.back, color: 0x5a4a8a, size: TYPE.body, onTap: close }, layer);
+    button(scene, { x: pad, y: pad, w: 96, h: MIN_TAP, label: W.back, color: 0x2e6ae0, size: TYPE.body, onTap: close }, layer);
     text(width / 2, pad + 6, W.title, TYPE.heading + 4, '#ffd166', true);
     // Coins, top right.
     const coinW = 156;
@@ -361,7 +361,7 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
     const shelfC = scene.add.container(0, 0);
     let gy = areaY;
     for (const g of SHOP.groups.filter((x) => x.tab === tab)) {
-      shelfC.add(scene.add.text(sx + 2, gy, g.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${TYPE.body + 1}px`, color: '#ffe8a8' }).setResolution(crisp()).setStroke('#140f1c', 3));
+      shelfC.add(scene.add.text(sx + 2, gy, g.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${TYPE.body + 1}px`, color: '#ffe8a8' }).setResolution(crisp()).setStroke('#0d1233', 3));
       gy += TYPE.body + S2;
       const tiles: (ShopItem | null)[] = [...(hasOwnTile(g.slot) ? [null] : []), ...SHOP.items.filter((i) => i.group === g.id)];
       tiles.forEach((it, i) => {
@@ -488,10 +488,10 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
       const c = scene.add.graphics();
       drawCoin(c, x + 14, by + 9, 7);
       parent.add(c);
-      parent.add(scene.add.text(x + 24, by + 1, `${it.price}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${TYPE.label}px`, color: '#fff6dc' }).setResolution(crisp()).setStroke('#140f1c', 3));
+      parent.add(scene.add.text(x + 24, by + 1, `${it.price}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${TYPE.label}px`, color: '#fff6dc' }).setResolution(crisp()).setStroke('#0d1233', 3));
     } else {
       const label = locked ? '' : worn ? W.wearing : it ? '✓' : (W.none as string);
-      parent.add(scene.add.text(x + (w - 2) / 2, by + 1, label, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${TYPE.label}px`, color: worn ? '#b8ffcf' : '#ffffff' }).setResolution(crisp()).setOrigin(0.5, 0).setStroke('#140f1c', 3));
+      parent.add(scene.add.text(x + (w - 2) / 2, by + 1, label, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${TYPE.label}px`, color: worn ? '#b8ffcf' : '#ffffff' }).setResolution(crisp()).setOrigin(0.5, 0).setStroke('#0d1233', 3));
     }
     if (locked) {
       const l = scene.add.graphics();

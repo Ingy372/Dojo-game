@@ -278,12 +278,12 @@ export class ActionButtons {
     // Glossy buttons (Jay, Nov 18): a soft shadow and a dark rim under the face so it looks raised,
     // and a glossy shine on its top half. The face's colour still changes with ready / not ready.
     const shadow = this.scene.add.circle(0, 5, radius + 2, 0x08060e, 0.4);
-    const rim = this.scene.add.circle(0, 3, radius + 1, 0x14121c, 0.75);
+    const rim = this.scene.add.circle(0, 3, radius + 1, 0x0d1233, 0.75);
     const face = this.scene.add.circle(0, 0, radius, color, FACE_ALPHA).setStrokeStyle(4, 0xffffff, 0.8);
     const gloss = this.scene.add.ellipse(0, -radius * 0.42, radius * 1.45, radius * 0.85, 0xffffff, 0.22);
     const spark = this.scene.add.ellipse(-radius * 0.38, -radius * 0.52, radius * 0.32, radius * 0.18, 0xffffff, 0.5).setAngle(-25);
     const label = this.scene.add
-      .text(0, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${Math.max(12, Math.round(radius * 0.36))}px`, color: '#ffffff', stroke: '#14121c', strokeThickness: 2 })
+      .text(0, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${Math.max(12, Math.round(radius * 0.36))}px`, color: '#ffffff', stroke: '#0d1233', strokeThickness: 2 })
       .setOrigin(0.5)
       .setResolution(crisp());
     const container = this.scene.add.container(0, 0, [shadow, rim, face, gloss, spark, label]);

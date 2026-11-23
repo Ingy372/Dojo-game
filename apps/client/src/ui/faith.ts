@@ -5,6 +5,7 @@ import Phaser from 'phaser';
 import PACK from '../../../../content/faith/action-zone.json';
 import { bannerLetters, loadFaith, scrollsFound, verseText, type TrainingState, type VerseScroll } from '@dojo/sim';
 import { button } from './button';
+import { drawPanel } from './kit';
 import { FONT, crisp } from './theme';
 import { BOARD_PAPER, MIN_TAP, RADIUS, S2, TYPE } from './tokens';
 import type { Box } from './pathScreen';
@@ -12,9 +13,9 @@ import type { Box } from './pathScreen';
 export const FAITH = loadFaith(PACK);
 
 const GOLD = '#ffd166';
-const DIM = '#b0a088';
-const INK = '#3a2618';
-const INK_SOFT = '#6b5440';
+const DIM = '#5a6ab8';
+const INK = '#16206b';
+const INK_SOFT = '#3a4890';
 
 type Add = (o: Phaser.GameObjects.GameObject) => void;
 
@@ -37,7 +38,8 @@ function fitH(t: Phaser.GameObjects.Text, h: number, size: number): number {
 /** The FAITH DOES banner in the Path's top bar: lit letters in gold, the rest dim. One tap target. */
 export function drawBanner(scene: Phaser.Scene, add: Add, b: Box, t: TrainingState, onTap: () => void): void {
   const g = scene.add.graphics();
-  g.fillStyle(0x5a1e1e).fillRoundedRect(b.x, b.y, b.w, b.h, RADIUS.button).lineStyle(2, 0xc9973a).strokeRoundedRect(b.x + 1, b.y + 1, b.w - 2, b.h - 2, RADIUS.button);
+  // U-KIT: a navy plaque with the kit outline and a gold rim.
+  drawPanel(g, b.x, b.y, b.w, b.h, { radius: 12, gold: true, flat: true });
   add(g);
   const lit = bannerLetters(FAITH, t);
   const glyphs = FAITH.faithDoesBanner.acrostic.split('');
@@ -61,7 +63,7 @@ export function drawBanner(scene: Phaser.Scene, add: Add, b: Box, t: TrainingSta
 /** Paper with a column of lines, centred top to bottom; a line that would not fit is shrunk (never below 11 pt). */
 function paper(scene: Phaser.Scene, add: Add, b: Box, lines: { s: string; size: number; color: string; bold?: boolean; serif?: boolean; gap?: number }[]): void {
   const g = scene.add.graphics();
-  g.fillStyle(BOARD_PAPER).fillRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel).lineStyle(3, 0x8a6a3a).strokeRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
+  g.fillStyle(BOARD_PAPER).fillRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel).lineStyle(3, 0x0d1233).strokeRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
   add(g);
   const wrap = b.w - 32;
   const made = lines.map((l) => text(scene, add, b.x + b.w / 2, 0, l.s, l.size, l.color, l.bold, wrap, l.serif));
@@ -121,7 +123,9 @@ function drawBannerPage(scene: Phaser.Scene, add: Add, b: Box, t: TrainingState)
     const x = b.x + (i % cols) * (cw + S2);
     const y = top + Math.floor(i / cols) * (ch + S2);
     const g = scene.add.graphics();
-    g.fillStyle(on ? 0x3a2a1e : 0x26221c).fillRoundedRect(x, y, cw, ch, RADIUS.button).lineStyle(2, on ? 0xc9973a : 0x3a342a).strokeRoundedRect(x, y, cw, ch, RADIUS.button);
+    // U-KIT: a lit letter is a gold-rimmed kit card, an unlit one a quiet sunk well.
+    if (on) drawPanel(g, x, y, cw, ch, { radius: 12, gold: true });
+    else g.fillStyle(0x0d1233).fillRoundedRect(x, y, cw, ch, 12).fillStyle(0x0a0f33, 0.9).fillRoundedRect(x + 2.5, y + 2.5, cw - 5, ch - 5, 10).lineStyle(1.5, 0x3c4ea8, 0.9).strokeRoundedRect(x + 3, y + 3, cw - 6, ch - 6, 9);
     add(g);
     const big = ch >= 70;
     text(scene, add, x + 22, y + (big ? 8 : 4), letter.letter, big ? 26 : 20, on ? GOLD : DIM, true, undefined, true);
@@ -144,7 +148,7 @@ export function drawFaithPage(scene: Phaser.Scene, add: Add, area: Box, t: Train
   const box = scene.add.container(0, 0);
   add(box);
   const arrows = (dx: number, label: string, to: number, on: boolean) =>
-    button(scene, { x: area.x + area.w - (dx + 1) * MIN_TAP - dx * S2, y: area.y, w: MIN_TAP, h: MIN_TAP, label, color: 0x3a3a4a, size: TYPE.title, disabled: !on, onTap: () => onPage(to) }, box);
+    button(scene, { x: area.x + area.w - (dx + 1) * MIN_TAP - dx * S2, y: area.y, w: MIN_TAP, h: MIN_TAP, label, color: 0x2a3780, size: TYPE.title, disabled: !on, onTap: () => onPage(to) }, box);
   arrows(1, '◀', p - 1, p > 0);
   arrows(0, '▶', p + 1, p < pages.length - 1);
   const dotsL = area.x;
@@ -152,7 +156,7 @@ export function drawFaithPage(scene: Phaser.Scene, add: Add, area: Box, t: Train
   const step = Math.min(18, (dotsR - dotsL) / pages.length);
   const d0 = (dotsL + dotsR) / 2 - (step * (pages.length - 1)) / 2;
   const dots = scene.add.graphics();
-  pages.forEach((_, i) => dots.fillStyle(i === p ? 0xffd166 : 0x5e5446).fillCircle(d0 + i * step, area.y + MIN_TAP / 2, i === p ? 5 : 4));
+  pages.forEach((_, i) => dots.fillStyle(i === p ? 0xffd166 : 0x3c4ea8).fillCircle(d0 + i * step, area.y + MIN_TAP / 2, i === p ? 5 : 4));
   box.add(dots);
   const body: Box = { x: area.x + 12, y: area.y + MIN_TAP + S2, w: area.w - 24, h: area.h - MIN_TAP - S2 };
   const pg = pages[p];

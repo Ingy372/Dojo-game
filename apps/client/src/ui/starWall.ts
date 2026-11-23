@@ -99,15 +99,15 @@ export class StarWall {
 
     // Score, streak and time, across the top.
     this.scoreText = scene.add
-      .text(width / 2, 8, '0', { fontFamily: FONT, fontStyle: 'bold', fontSize: '30px', color: '#fff6e0', stroke: '#2a1a0c', strokeThickness: 5 })
+      .text(width / 2, 8, '0', { fontFamily: FONT, fontStyle: 'bold', fontSize: '30px', color: '#fff6e0', stroke: '#0d1233', strokeThickness: 5 })
       .setOrigin(0.5, 0)
       .setResolution(crisp());
     this.streakText = scene.add
-      .text(width / 2 + 90, 18, '', { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#ffd166', stroke: '#2a1a0c', strokeThickness: 4 })
+      .text(width / 2 + 90, 18, '', { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#ffd166', stroke: '#0d1233', strokeThickness: 4 })
       .setOrigin(0, 0)
       .setResolution(crisp());
     const title = scene.add
-      .text(16, 14, 'STAR WALL', { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#ffd166', stroke: '#2a1a0c', strokeThickness: 4 })
+      .text(16, 14, 'STAR WALL', { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#ffd166', stroke: '#0d1233', strokeThickness: 4 })
       .setResolution(crisp());
     const barW = Math.min(360, width * 0.5);
     this.timeBack = scene.add.rectangle(width / 2 - barW / 2, height - 30, barW, 12, 0x000000, 0.5).setOrigin(0, 0.5).setStrokeStyle(2, 0xffffff, 0.5);
@@ -245,7 +245,7 @@ export class StarWall {
         if (this.closed) return;
         sfx.tap();
         const t = this.scene.add
-          .text(width / 2, height / 2, w, { fontFamily: FONT, fontStyle: 'bold', fontSize: '64px', color: '#fff6e0', stroke: '#2a1a0c', strokeThickness: 8 })
+          .text(width / 2, height / 2, w, { fontFamily: FONT, fontStyle: 'bold', fontSize: '64px', color: '#fff6e0', stroke: '#0d1233', strokeThickness: 8 })
           .setOrigin(0.5)
           .setResolution(crisp());
         this.fx.add(t);
@@ -278,7 +278,7 @@ export class StarWall {
       [`Score: ${this.score}`, newBest ? 'New best!' : `Best: ${Math.max(best, this.score)}`],
       [
         { label: 'Again', color: 0x277a56, onTap: () => this.countdown() },
-        { label: 'Done', color: 0x3a3150, onTap: () => this.exit() },
+        { label: 'Done', color: 0x3c4ea8, onTap: () => this.exit() },
       ],
       newBest,
     );
@@ -420,7 +420,7 @@ export class StarWall {
 
   private pop(at: { x: number; y: number }, s: string, color: string, size: number): void {
     const t = this.scene.add
-      .text(at.x, at.y - 24, s, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#2a1a0c', strokeThickness: 5 })
+      .text(at.x, at.y - 24, s, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#0d1233', strokeThickness: 5 })
       .setOrigin(0.5)
       .setResolution(crisp());
     this.fx.add(t);

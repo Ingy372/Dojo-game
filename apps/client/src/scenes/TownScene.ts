@@ -260,7 +260,7 @@ export class TownScene extends WalkScene {
             fontStyle: 'bold',
             fontSize: '15px',
             color: '#fff6e0',
-            stroke: '#14121c',
+            stroke: '#0d1233',
             strokeThickness: 4,
             backgroundColor: 'rgba(20,18,28,0.6)',
             padding: { x: 7, y: 2 },
@@ -399,7 +399,7 @@ export class TownScene extends WalkScene {
       });
       if (!sprite) return;
       const name = this.add
-        .text(0, -TILE * 1.55, CROWD_NAMES[i % CROWD_NAMES.length], { fontFamily: FONT, fontSize: '11px', color: '#ffffff', stroke: '#14121c', strokeThickness: 3 })
+        .text(0, -TILE * 1.55, CROWD_NAMES[i % CROWD_NAMES.length], { fontFamily: FONT, fontSize: '11px', color: '#ffffff', stroke: '#0d1233', strokeThickness: 3 })
         .setOrigin(0.5, 1)
         .setResolution(crisp() * 2);
       if (this.night) nightLight(sprite, NIGHT_HERO_TINT);

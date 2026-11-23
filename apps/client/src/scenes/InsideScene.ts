@@ -151,7 +151,7 @@ export class InsideScene extends WalkScene {
     super.create(data);
     this.walkUp = new WalkUpButton(this);
     this.comboText = this.add
-      .text(0, 0, '', { fontFamily: FONT, fontStyle: 'bold', fontSize: '26px', color: '#fff6e0', stroke: '#14121c', strokeThickness: 6 })
+      .text(0, 0, '', { fontFamily: FONT, fontStyle: 'bold', fontSize: '26px', color: '#fff6e0', stroke: '#0d1233', strokeThickness: 6 })
       .setOrigin(0.5, 0)
       .setResolution(crisp())
       .setDepth(70)
@@ -338,7 +338,7 @@ export class InsideScene extends WalkScene {
   private say(line: string): void {
     const p = this.world.players.p1.pos;
     const t = this.add
-      .text(p.x * TILE, (p.y - 1.6) * TILE, line, { fontFamily: FONT, fontStyle: 'bold', fontSize: '11px', color: '#fff6e0', stroke: '#14121c', strokeThickness: 4, align: 'center' })
+      .text(p.x * TILE, (p.y - 1.6) * TILE, line, { fontFamily: FONT, fontStyle: 'bold', fontSize: '11px', color: '#fff6e0', stroke: '#0d1233', strokeThickness: 4, align: 'center' })
       .setOrigin(0.5, 1)
       .setResolution(crisp() * 2)
       .setDepth(1e6);
@@ -573,7 +573,7 @@ export class InsideScene extends WalkScene {
   private kiai(): void {
     const { width, height } = view(this);
     const t = this.add
-      .text(width / 2, height * 0.32, 'KIAI!', { fontFamily: FONT, fontStyle: 'bold', fontSize: '44px', color: '#ffd166', stroke: '#14121c', strokeThickness: 8 })
+      .text(width / 2, height * 0.32, 'KIAI!', { fontFamily: FONT, fontStyle: 'bold', fontSize: '44px', color: '#ffd166', stroke: '#0d1233', strokeThickness: 8 })
       .setOrigin(0.5)
       .setResolution(crisp())
       .setDepth(105);
@@ -780,7 +780,7 @@ export class InsideScene extends WalkScene {
 
   private floatNumber(at: Vec2, text: string, color: string, size: number): void {
     const t = this.add
-      .text(at.x * TILE + (Math.random() - 0.5) * 16, (at.y - 1.3) * TILE, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#14121c', strokeThickness: 3 })
+      .text(at.x * TILE + (Math.random() - 0.5) * 16, (at.y - 1.3) * TILE, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#0d1233', strokeThickness: 3 })
       .setOrigin(0.5)
       .setResolution(crisp() * 2)
       .setDepth(1e6);

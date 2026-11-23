@@ -26,8 +26,8 @@ const SOFT = '#b9b0c8';
 const UP = 0x6fdc8c;
 const BG_TOP = 0x231c33;
 const BG_BOTTOM = 0x110e18;
-const PANEL = 0x1b1626;
-const PANEL_EDGE = 0x3a3150;
+const PANEL = 0x1b2a7a;
+const PANEL_EDGE = 0x3c4ea8;
 const GOLD = 0xffc94d;
 
 export const EQUIP_WORDS = {
@@ -179,11 +179,11 @@ export class EquipmentScreen {
     const pad = Math.max(10, Math.min(16, width * 0.015));
     const headH = MIN_TAP;
     // Header: Back, the title, and Wear best.
-    button(s, { x: pad, y: pad, w: 96, h: headH, label: W.back, color: 0x3a3150, size: 15, onTap: () => this.close() }, this.layer);
+    button(s, { x: pad, y: pad, w: 96, h: headH, label: W.back, color: 0x3c4ea8, size: 15, onTap: () => this.close() }, this.layer);
     this.layer.add(this.text(pad + 96 + 14, pad + headH / 2, EQUIP_WORDS.title, 22).setOrigin(0, 0.5).setFontFamily('Georgia, serif'));
     const bestOn = canWearBest(this.profile);
     const bestW = 132;
-    const b = button(s, { x: width - pad - bestW, y: pad, w: bestW, h: headH, label: `★ ${EQUIP_WORDS.best}`, color: bestOn ? 0xc98a1c : 0x3a3150, size: 15, disabled: !bestOn, onTap: () => this.wearBest() }, this.layer);
+    const b = button(s, { x: width - pad - bestW, y: pad, w: bestW, h: headH, label: `★ ${EQUIP_WORDS.best}`, color: bestOn ? 0xc98a1c : 0x3c4ea8, size: 15, disabled: !bestOn, onTap: () => this.wearBest() }, this.layer);
     if (bestOn && !reducedMotion()) s.tweens.add({ targets: b.visual, scale: 1.05, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
 
     const top = pad + headH + 10;

@@ -35,7 +35,7 @@ const MOVE_W = 132;
 const MOVE_H = 54;
 const GAP = 10;
 const INK = '#fff6e0';
-const STROKE = '#14121c';
+const STROKE = '#0d1233';
 const GOLD = 0xffd166;
 /** Blocks blue, punches red, open-hand strikes purple, kicks orange, escapes green: the same colour for the same family in every kata. */
 const FAMILY_COLOR: Record<string, number> = { block: 0x2f6fb5, punch: 0xb8432f, backfist: 0x8a3fb0, spear: 0x8a3fb0, kick: 0xc97a16, break: 0x2a8a6a };
@@ -96,7 +96,7 @@ export class KataMenu {
     const s = this.scene;
     this.layer.removeAll(true);
     const { width, height } = view(s);
-    this.layer.add(s.add.rectangle(0, 0, width, height, 0x0a0810, 0.82).setOrigin(0).setInteractive());
+    this.layer.add(s.add.rectangle(0, 0, width, height, 0x060a24, 0.82).setOrigin(0).setInteractive());
     const n = this.katas.length;
     const cw = Math.min(width - 2 * MARGIN, 620);
     const cols = n > 2 && cw > 440 ? 2 : 1;
@@ -165,7 +165,7 @@ export class KataMenu {
       drawBelt(bg, bx, -2, 28, 8, belt, 0);
       // The knot and its two hanging ends.
       bg.fillStyle(hex(belt.color)).fillRect(bx - 4, -7, 8, 10).fillRect(bx - 5, 3, 4, 9).fillRect(bx + 1, 3, 4, 9);
-      bg.lineStyle(1.5, 0x14121c).strokeRect(bx - 4, -7, 8, 10).strokeRect(bx - 5, 3, 4, 9).strokeRect(bx + 1, 3, 4, 9);
+      bg.lineStyle(1.5, 0x0d1233).strokeRect(bx - 4, -7, 8, 10).strokeRect(bx - 5, 3, 4, 9).strokeRect(bx + 1, 3, 4, 9);
       c.add(bg);
     }
     const left = -w / 2 + 52;
@@ -223,7 +223,7 @@ export class KataMenu {
     // The slider.
     const tx = W / 2 - 34;
     g.fillStyle(on ? 0x3ad17f : 0x5a5070, 1).fillRoundedRect(tx - 23, -12, 46, 24, 12);
-    g.lineStyle(1.5, 0x14121c, 0.8).strokeRoundedRect(tx - 23, -12, 46, 24, 12);
+    g.lineStyle(1.5, 0x0d1233, 0.8).strokeRoundedRect(tx - 23, -12, 46, 24, 12);
     g.fillStyle(0x000000, 0.3).fillCircle(tx + (on ? 11 : -11), 2, 10);
     g.fillStyle(0xffffff, 1).fillCircle(tx + (on ? 11 : -11), 0, 10);
     c.add(g);
@@ -263,7 +263,7 @@ function star(g: Phaser.GameObjects.Graphics, x: number, y: number, r: number, c
     const rr = i % 2 === 0 ? r : r * 0.45;
     pts.push({ x: x + Math.cos(a) * rr, y: y + Math.sin(a) * rr });
   }
-  g.fillStyle(color, 1).fillPoints(pts, true).lineStyle(1.5, 0x14121c, 0.9).strokePoints(pts, true);
+  g.fillStyle(color, 1).fillPoints(pts, true).lineStyle(1.5, 0x0d1233, 0.9).strokePoints(pts, true);
 }
 
 // ---------------------------------------------------------------- the pad
@@ -402,7 +402,7 @@ export class KataPad {
     const glow = s.add.graphics().fillStyle(GOLD, 0.55).fillCircle(0, 0, ARROW_R + 9).setVisible(false);
     const face = s.add.graphics();
     face.fillStyle(0x000000, 0.35).fillCircle(0, 4, ARROW_R);
-    face.fillStyle(0x3a3150, 0.95).fillCircle(0, 0, ARROW_R).lineStyle(3, 0xffffff, 0.7).strokeCircle(0, 0, ARROW_R);
+    face.fillStyle(0x3c4ea8, 0.95).fillCircle(0, 0, ARROW_R).lineStyle(3, 0xffffff, 0.7).strokeCircle(0, 0, ARROW_R);
     face.fillStyle(0xffffff, 0.12).fillEllipse(0, -ARROW_R * 0.45, ARROW_R * 1.3, ARROW_R * 0.6);
     const arrow = s.add.graphics().fillStyle(0xfff6e0, 1);
     const a = ARROW_R * 0.5;
@@ -530,7 +530,7 @@ export class KataPad {
     lines.forEach((l, i) => c.add(text(s, 0, -ch / 2 + 54 + i * 26, l, i === 2 ? 13 : 17, i === 2 && bests.length ? '#7fe0a8' : INK).setOrigin(0.5, 0)));
     const bw = (cw - 60) / 2;
     button(s, { x: -cw / 2 + 20, y: ch / 2 - 62, w: bw, h: 44, label: 'Again', color: 0x6a3fb0, size: 18, onTap: o.again }, c);
-    button(s, { x: cw / 2 - 20 - bw, y: ch / 2 - 62, w: bw, h: 44, label: 'Done', color: 0x3a3150, size: 18, onTap: o.done }, c);
+    button(s, { x: cw / 2 - 20 - bw, y: ch / 2 - 62, w: bw, h: 44, label: 'Done', color: 0x3c4ea8, size: 18, onTap: o.done }, c);
     if (!reducedMotion()) s.tweens.add({ targets: c, scale: { from: 0.8, to: 1 }, alpha: { from: 0, to: 1 }, duration: 220, ease: 'Back.Out' });
     this.card = c;
   }

@@ -24,7 +24,7 @@ export function addVolumeRow(scene: Phaser.Scene, box: Phaser.GameObjects.Contai
   const show = () => pips.forEach((p, i) => p.setFillStyle(i < step ? 0xffd166 : 0x4a4458));
   show();
   const button = (bx: number, text: string, delta: -1 | 1) => {
-    const bg = scene.add.rectangle(bx, y, bw, h, 0x3a3a4a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
+    const bg = scene.add.rectangle(bx, y, bw, h, 0x2a3780).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
     const t = scene.add.text(bx + bw / 2, y + h / 2, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: '22px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp());
     box.add([bg, t]);
     bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {

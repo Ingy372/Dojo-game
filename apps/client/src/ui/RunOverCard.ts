@@ -43,11 +43,11 @@ export function keptCard(
   const left = (width - cardW) / 2;
   const top = (height - cardH) / 2;
   title.setY(top + 16);
-  const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive();
+  const shade = scene.add.rectangle(0, 0, width, height, 0x060a24, 0.8).setOrigin(0).setInteractive();
   const container = scene.add
     .container(0, 0, [
       shade,
-      scene.add.rectangle(left, top, cardW, cardH, 0x221d2e).setOrigin(0).setStrokeStyle(3, 0xffd166, 0.9),
+      scene.add.rectangle(left, top, cardW, cardH, 0x1b2a7a).setOrigin(0).setStrokeStyle(3, 0xffd166, 0.9),
       title,
     ])
     .setDepth(110);
@@ -119,8 +119,8 @@ export function choiceCard(
       .setResolution(crisp());
   const container = scene.add
     .container(0, 0, [
-      scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive(),
-      scene.add.rectangle(left, top, cardW, cardH, 0x221d2e).setOrigin(0).setStrokeStyle(3, 0xffd166, 0.9),
+      scene.add.rectangle(0, 0, width, height, 0x060a24, 0.8).setOrigin(0).setInteractive(),
+      scene.add.rectangle(left, top, cardW, cardH, 0x1b2a7a).setOrigin(0).setStrokeStyle(3, 0xffd166, 0.9),
       text(top + 16, title, 22, '#ffd166', true),
       text(top + 52, line, 15, '#f2e9d8'),
     ])
@@ -139,7 +139,7 @@ export function choiceCard(
       onAnswer(yes);
     });
   };
-  button(left + 16, noLabel, 0x4a4a55, false);
+  button(left + 16, noLabel, 0x3a4790, false);
   button(left + 32 + btnW, yesLabel, GREEN, true);
   container.setAlpha(0);
   scene.tweens.add({ targets: container, alpha: 1, duration: 260 });

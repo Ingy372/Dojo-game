@@ -26,7 +26,7 @@ export class TitleScene extends Phaser.Scene {
     hiDpi(this.cameras.main);
     const { width, height } = view(this);
     const note = this.add
-      .text(width / 2, height / 2, 'Loading…', { fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: '#b9ad99' })
+      .text(width / 2, height / 2, 'Loading…', { fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: '#a9b8ee' })
       .setOrigin(0.5)
       .setResolution(crisp());
     this.load.once(Phaser.Loader.Events.COMPLETE, () => note.destroy());
@@ -52,7 +52,7 @@ export class TitleScene extends Phaser.Scene {
     this.subtitle = this.add
       .text(0, 0, SCREENS.titleLine, {
         fontFamily: 'system-ui, sans-serif',
-        color: '#b9ad99',
+        color: '#a9b8ee',
       })
       .setOrigin(0.5)
       .setResolution(crisp);
@@ -119,9 +119,9 @@ export class TitleScene extends Phaser.Scene {
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(100);
     const w = Math.min(460, width - 40);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0));
+    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0));
     const title = this.add.text(width / 2, height * 0.18, t.savedNoteTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp());
-    const body = this.add.text(width / 2, title.y + title.height + 14, t.savedNoteLines.join('\n\n'), { fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    const body = this.add.text(width / 2, title.y + title.height + 14, t.savedNoteLines.join('\n\n'), { fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#dbe6ff', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
     const by = Math.min(height - 12 - 44, body.y + body.height + 20);
     const ok = this.add.rectangle(width / 2 - 70, by, 140, 44, GREEN).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4);
     const okText = this.add.text(width / 2, by + 22, t.savedNoteButton, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp());

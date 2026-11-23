@@ -46,7 +46,7 @@ export function drawTrainingStation(scene: Phaser.Scene, cx: number, footY: numb
   const bw = w - tile * 0.1;
   const bh = tile * 1.05;
   g.fillStyle(0x3b2616).fillRoundedRect(bx, by, bw, bh, 8);
-  g.fillStyle(0x8a5a35).fillRoundedRect(bx + 3, by + 3, bw - 6, bh - 6, 7);
+  g.fillStyle(0x2e6ae0).fillRoundedRect(bx + 3, by + 3, bw - 6, bh - 6, 7);
   g.fillStyle(0xf3e6c8).fillRoundedRect(bx + 8, by + 8, bw - 16, bh - 16, 5);
   // A roof beam across the top.
   g.fillStyle(0x2c1c10).fillRoundedRect(left - tile * 0.12, top + tile * 0.05, w + tile * 0.24, tile * 0.22, 5);
@@ -58,7 +58,7 @@ export function drawTrainingStation(scene: Phaser.Scene, cx: number, footY: numb
   g.lineStyle(5, 0x6b4426, 1);
   g.lineBetween(ix - tile * 0.32, iy + tile * 0.26, ix + tile * 0.32, iy - tile * 0.26);
   g.lineBetween(ix - tile * 0.32, iy - tile * 0.26, ix + tile * 0.32, iy + tile * 0.26);
-  g.fillStyle(0xd5713a).fillCircle(ix, iy, tile * 0.17);
+  g.fillStyle(0xffb01f).fillCircle(ix, iy, tile * 0.17);
   g.lineStyle(2, 0xfff6e0, 1).strokeCircle(ix, iy, tile * 0.17);
   // Pinned notes.
   g.fillStyle(0xfff6e0).fillRect(bx + 14, by + 14, tile * 0.32, tile * 0.24);
@@ -79,7 +79,7 @@ function stationLabel(scene: Phaser.Scene, y: number, label: string): Phaser.Gam
       fontStyle: 'bold',
       fontSize: '14px',
       color: '#fff6e0',
-      stroke: '#14121c',
+      stroke: '#0d1233',
       strokeThickness: 3,
       backgroundColor: 'rgba(20,18,28,0.75)',
       padding: { x: 7, y: 2 },
@@ -93,7 +93,7 @@ function stationChevron(scene: Phaser.Scene, y: number): Phaser.GameObjects.Grap
   const chevron = scene.add.graphics();
   chevron.fillStyle(0xffd166, 1);
   chevron.fillTriangle(-8, 0, 8, 0, 0, 9);
-  chevron.lineStyle(2, 0x14121c, 1).strokeTriangle(-8, 0, 8, 0, 0, 9);
+  chevron.lineStyle(2, 0x0d1233, 1).strokeTriangle(-8, 0, 8, 0, 0, 9);
   chevron.setPosition(0, y);
   return chevron;
 }

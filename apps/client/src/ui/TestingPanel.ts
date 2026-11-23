@@ -62,7 +62,7 @@ export class TestingPanel {
 
     // Close is at the top, always on screen; the list under it scrolls.
     this.text(pad, pad + 8, 'Testing screen', 20, '#ff9f6b', true);
-    this.text(pad, pad + MIN_TAP + 4, 'Hidden from players. Fake students until DojoForge is connected.', 11, '#b9ad99', false, leftW);
+    this.text(pad, pad + MIN_TAP + 4, 'Hidden from players. Fake students until DojoForge is connected.', 11, '#a9b8ee', false, leftW);
     this.viewTop = pad + MIN_TAP + 4 + 30;
     this.viewBottom = height;
 
@@ -79,22 +79,22 @@ export class TestingPanel {
     const current = selectedProfileKey();
     for (const p of FAKE_PROFILES) {
       const on = p.key === current;
-      this.button(pad, y, leftW, 34, `${on ? '● ' : ''}${p.label}`, on ? 0x3a7bd5 : 0x2a2536, 13, () => actions.pickProfile(p.key));
+      this.button(pad, y, leftW, 34, `${on ? '● ' : ''}${p.label}`, on ? 0x3a7bd5 : 0x16206b, 13, () => actions.pickProfile(p.key));
       y += 40;
     }
     y += 4;
-    this.button(pad, y, leftW, 32, 'Forget what I\'ve seen (replay welcome)', 0x4a3f63, 12, actions.forgetSeen);
+    this.button(pad, y, leftW, 32, 'Forget what I\'ve seen (replay welcome)', 0x2a3780, 12, actions.forgetSeen);
     y += 38;
     const half = (leftW - 8) / 2;
     this.button(pad, y, half, 32, '+1 level', GREEN, 13, actions.addLevel);
     this.button(pad + half + 8, y, half, 32, 'Back to level 1', 0x6b3a3a, 12, actions.resetLevel);
     y += 38;
     // PB-05: the one-time Seal slot note. Needs a student with Seals (Orange).
-    this.button(pad, y, leftW, 32, 'Old save (show slot note again)', 0x4a3f63, 12, actions.oldSave);
+    this.button(pad, y, leftW, 32, 'Old save (show slot note again)', 0x2a3780, 12, actions.oldSave);
     y += 38;
     this.host = this.container;
     // Close is added after the list so it is above every list row, whatever the list is doing.
-    this.button(pad + leftW - 96, pad, 96, MIN_TAP, 'Close', 0x5b4a3c, 15, actions.close, true);
+    this.button(pad + leftW - 96, pad, 96, MIN_TAP, 'Close', 0x3a4790, 15, actions.close, true);
 
     // Drag the left list up and down; it stops at both ends.
     const maxScroll = Math.max(0, y + pad - height);
@@ -134,13 +134,13 @@ export class TestingPanel {
     for (const part of pr.parts) {
       this.text(rx, ry, SOURCE_NAME[part.source], 13, '#f2e9d8', true);
       this.text(rx + 118, ry, `${part.value} / ${part.max}`, 13, '#ffd166', true);
-      this.text(rx + 200, ry, `${Math.round(part.share * 100)}%`, 12, '#b9ad99');
+      this.text(rx + 200, ry, `${Math.round(part.share * 100)}%`, 12, '#a9b8ee');
       const g = scene.add.graphics();
-      g.fillStyle(0x2a2536).fillRect(rx + 240, ry + 3, rw - 240, 8);
+      g.fillStyle(0x16206b).fillRect(rx + 240, ry + 3, rw - 240, 8);
       g.fillStyle(0xffd166).fillRect(rx + 240, ry + 3, (rw - 240) * part.fill, 8);
       this.container.add(g);
       // The detail line starts at the label's left edge so a long one (Training Points) stays on one line.
-      this.text(rx, ry + 15, part.detail, 10, '#b9ad99', false, rw);
+      this.text(rx, ry + 15, part.detail, 10, '#a9b8ee', false, rw);
       ry += rowH;
     }
     ry += 4;
@@ -150,7 +150,7 @@ export class TestingPanel {
       `${profile.blessing.runs > 0 ? BLESS.staffOn.replace('{n}', `${profile.blessing.runs}`) : BLESS.staffOff} · expected level ${training.expectedLevel}`,
     ];
     for (const l of lines) {
-      this.text(rx, ry, l, 11, '#b9ad99', false, rw);
+      this.text(rx, ry, l, 11, '#a9b8ee', false, rw);
       ry += 15;
     }
   }

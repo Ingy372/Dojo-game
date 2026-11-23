@@ -14,6 +14,7 @@ import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { music } from './audio/Music';
 import { sfx } from './audio/Sfx';
 import { DEVICE_DPR, DPR, hiDpi, setScreenSize } from './ui/theme';
+import { installKitText } from './ui/kit';
 import { finishPendingWipe } from './game/beta';
 import { seedLoadout } from './game/student';
 
@@ -28,6 +29,13 @@ function screenSize(): { width: number; height: number } {
 }
 
 setScreenSize(screenSize().width, screenSize().height);
+
+// U-KIT: one look for all words; wait (at most 2 s) for the bundled fonts so no menu draws in a stand-in font.
+installKitText();
+await Promise.race([
+  Promise.all([document.fonts.load("20px 'Lilita One'"), document.fonts.load("14px 'Nunito'"), document.fonts.load("bold 14px 'Nunito'")]).catch(() => undefined),
+  new Promise((done) => setTimeout(done, 2000)),
+]);
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,

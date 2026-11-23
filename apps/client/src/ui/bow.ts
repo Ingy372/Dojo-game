@@ -16,18 +16,18 @@ export { bowGate } from './bowGate';
  */
 export function bowPrompt(scene: Phaser.Scene, line: string, onBow: () => void): Phaser.GameObjects.Container {
   const { width, height } = view(scene);
-  const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.45).setOrigin(0).setInteractive();
+  const shade = scene.add.rectangle(0, 0, width, height, 0x060a24, 0.45).setOrigin(0).setInteractive();
   const r = Math.min(54, height * 0.14);
   const cx = width / 2;
   const cy = height * 0.66;
   const glow = scene.add.circle(cx, cy, r * 1.25, 0xffd166, 0.18);
-  const button = scene.add.circle(cx, cy, r, 0x8a5a35).setStrokeStyle(4, 0xffd166);
+  const button = scene.add.circle(cx, cy, r, 0x2e6ae0).setStrokeStyle(4, 0xffd166);
   const label = scene.add
     .text(cx, cy, 'Bow', { fontFamily: FONT, fontStyle: 'bold', fontSize: `${Math.round(r * 0.5)}px`, color: '#fff6e0' })
     .setOrigin(0.5)
     .setResolution(crisp());
   const text = scene.add
-    .text(cx, cy - r - 30, line, { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 5, align: 'center' })
+    .text(cx, cy - r - 30, line, { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#f2e9d8', stroke: '#0d1233', strokeThickness: 5, align: 'center' })
     .setOrigin(0.5)
     .setResolution(crisp());
   const box = scene.add.container(0, 0, [shade, glow, button, label, text]).setDepth(80);

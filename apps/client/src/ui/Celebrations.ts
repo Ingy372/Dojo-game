@@ -84,7 +84,7 @@ export class Celebrations {
     if (creed) this.steps.push({ kind: 'creed' });
     const { width, height } = view(scene);
     // Opaque (LP-B2 QA): the Path's lower cards showed through the ceremony and met 'Tap to continue'.
-    const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 1).setOrigin(0).setInteractive();
+    const shade = scene.add.rectangle(0, 0, width, height, 0x060a24, 1).setOrigin(0).setInteractive();
     shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.next());
     this.root = scene.add.container(0, 0, [shade]).setDepth(100);
     this.next(true);
@@ -136,7 +136,7 @@ export class Celebrations {
     }
     this.readyAt = this.scene.time.now + wait;
     const { width, height } = this.size();
-    const hint = this.text(width / 2, height - 22, 'Tap to continue', 14, '#b9ad99').setOrigin(0.5).setAlpha(0);
+    const hint = this.text(width / 2, height - 22, 'Tap to continue', 14, '#a9b8ee').setOrigin(0.5).setAlpha(0);
     this.scene.tweens.add({ targets: hint, alpha: 1, delay: wait, duration: 300 });
   }
 
@@ -179,8 +179,8 @@ export class Celebrations {
     const top = height * 0.2;
     this.layer.add(this.scene.add.rectangle(cx, top + gh / 2, gw, gh, hex(to.color), 0.35));
     const label = this.text(cx, top + gh / 2, `${to.name}\nTier`, 26, '#ffffff', true, 'Georgia, serif').setOrigin(0.5).setAlign('center').setAlpha(0);
-    const left = this.scene.add.rectangle(cx - gw / 4, top + gh / 2, gw / 2, gh, 0x5b4a3c).setStrokeStyle(3, OUTLINE_GOLD);
-    const right = this.scene.add.rectangle(cx + gw / 4, top + gh / 2, gw / 2, gh, 0x5b4a3c).setStrokeStyle(3, OUTLINE_GOLD);
+    const left = this.scene.add.rectangle(cx - gw / 4, top + gh / 2, gw / 2, gh, 0x3a4790).setStrokeStyle(3, OUTLINE_GOLD);
+    const right = this.scene.add.rectangle(cx + gw / 4, top + gh / 2, gw / 2, gh, 0x3a4790).setStrokeStyle(3, OUTLINE_GOLD);
     this.layer.add([left, right]);
     this.scene.tweens.add({ targets: left, x: cx - gw * 0.75, duration: 1100, delay: 400, ease: 'Cubic.InOut' });
     this.scene.tweens.add({ targets: right, x: cx + gw * 0.75, duration: 1100, delay: 400, ease: 'Cubic.InOut' });
@@ -244,7 +244,7 @@ export class Celebrations {
       const t = this.text(rightX, top + 30 + i * lineH, `${r.signedOff ? '✓' : '○'}  ${r.name}`, 15, r.signedOff ? '#5cd65c' : '#f2e9d8', false, FONT, colW).setAlpha(0);
       this.scene.tweens.add({ targets: t, alpha: 1, delay: 200 + i * 90, duration: 250 });
     });
-    this.text(cx, height - 50, `${PW.powersNew} ${PW.powersWhere}`, 13, '#b9ad99', false, FONT, width - 40).setOrigin(0.5).setAlign('center');
+    this.text(cx, height - 50, `${PW.powersNew} ${PW.powersWhere}`, 13, '#a9b8ee', false, FONT, width - 40).setOrigin(0.5).setAlign('center');
     this.burst(cx, height * 0.08, [hex(to.color), GOLD], 40);
     sfx.stripe();
     return 900;
@@ -282,7 +282,7 @@ export class Celebrations {
         const intro = this.text(cx, y, STYLE.welcomeStance, 17, '#f2e9d8', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
         if (m.preview.next) {
           const y2 = y + intro.height + 10;
-          this.text(cx, y2, `When Sensei signs off ${m.preview.next.name}, you unlock:`, 15, '#b9ad99', false, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
+          this.text(cx, y2, `When Sensei signs off ${m.preview.next.name}, you unlock:`, 15, '#a9b8ee', false, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
           this.text(cx, y2 + 26, m.preview.ability, 17, '#ffd166', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
         }
         break;
@@ -331,7 +331,7 @@ export class Celebrations {
         this.text(cx, height * 0.58, `New Virtue: ${m.virtue}`, 22, '#ffd166', true).setOrigin(0.5);
         const def = this.training.virtues.find((v) => v.word === m.word)?.def;
         if (def) this.text(cx, height * 0.67, m.rank > 1 ? 'Earned again: your Virtue grew stronger!' : 'Use it in a fight when your Focus is full.', 15, '#f2e9d8').setOrigin(0.5);
-        this.text(cx, height * 0.75, `Earned at ${m.belt}`, 13, '#b9ad99').setOrigin(0.5);
+        this.text(cx, height * 0.75, `Earned at ${m.belt}`, 13, '#a9b8ee').setOrigin(0.5);
         this.text(cx, height * 0.83, gainText(GAINS.stripe, stripeGain(this.training, m.belt)), 18, '#5cd65c', true, FONT, width - 40).setOrigin(0.5).setAlign('center');
         this.burst(cx, height * 0.38, [GOLD, 0xffffff], 45);
         break;
@@ -347,7 +347,7 @@ export class Celebrations {
         const gain = signOffGain(this.training, [r]);
         // R-STANCE-d2: a stance sign-off adds no stats, so it shows no gain line.
         if (gain.power || gain.health) this.text(cx, height * 0.45 + 52, gainText(GAINS.signOff, gain), 17, '#5cd65c', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
-        if (litGateLock(this.training, r)) this.text(cx, height * 0.45 + 84, 'Gate lock lit.', 14, '#b9ad99').setOrigin(0.5);
+        if (litGateLock(this.training, r)) this.text(cx, height * 0.45 + 84, 'Gate lock lit.', 14, '#a9b8ee').setOrigin(0.5);
         this.burst(cx, height * 0.45 - 28, [0x5cd65c, GOLD], 20);
         break;
       }
@@ -392,7 +392,7 @@ export class Celebrations {
           if (shown <= cols) break;
         }
         const extra = m.list.length - res.made.length;
-        if (extra > 0) this.text(cx, bottom + 2, fill(PW.powersMore, { n: extra }), size, '#b9ad99').setOrigin(0.5, 0);
+        if (extra > 0) this.text(cx, bottom + 2, fill(PW.powersMore, { n: extra }), size, '#a9b8ee').setOrigin(0.5, 0);
         res.made.forEach((t, i) => {
           t.setAlpha(0);
           this.scene.tweens.add({ targets: t, alpha: 1, delay: i * 70, duration: 200 });
@@ -481,7 +481,7 @@ export class Celebrations {
   }
 
   private card(cx: number, cy: number, w: number, h: number): void {
-    this.layer.add(this.scene.add.rectangle(cx, cy, w, h, 0x221d2e).setStrokeStyle(3, 0x5cd65c, 0.7));
+    this.layer.add(this.scene.add.rectangle(cx, cy, w, h, 0x1b2a7a).setStrokeStyle(3, 0x5cd65c, 0.7));
   }
 
   /** Confetti bursting out from a point. */

@@ -62,8 +62,8 @@ export class StreetSmartsScene extends Phaser.Scene {
     const pad = 12;
     this.add.rectangle(0, 0, width, height, 0x1c1826).setOrigin(0).setDepth(-1);
     this.text(pad, 12, UI.title, 18, '#ffd166', true);
-    this.button(width - pad - 44, 8, 44, 32, '✕', 0x3a3a4a, 16, () => this.leave());
-    this.button(width - pad - 44 - 8 - 110, 8, 110, 32, this.speak ? UI.speakOn : UI.speakOff, this.speak ? 0x3a6ea5 : 0x3a3a4a, 13, () => this.toggleSpeak());
+    this.button(width - pad - 44, 8, 44, 32, '✕', 0x2a3780, 16, () => this.leave());
+    this.button(width - pad - 44 - 8 - 110, 8, 110, 32, this.speak ? UI.speakOn : UI.speakOff, this.speak ? 0x3a6ea5 : 0x2a3780, 13, () => this.toggleSpeak());
 
     if (this.picking) return this.renderPick(width, height);
     if (this.st.done) return this.renderEnd(width, height);
@@ -94,7 +94,7 @@ export class StreetSmartsScene extends Phaser.Scene {
       choices.forEach((c, i) => {
         const col = i % cols;
         const row = Math.floor(i / cols);
-        this.button(pad + col * (colW + 8), by + row * (btnH + 8), colW, btnH, fillLine(c.text, this.vars()), 0x4a3f63, width < 700 ? 15 : 17, () => this.pick(i));
+        this.button(pad + col * (colW + 8), by + row * (btnH + 8), colW, btnH, fillLine(c.text, this.vars()), 0x2a3780, width < 700 ? 15 : 17, () => this.pick(i));
       });
     }
     this.say(line, body);
@@ -108,7 +108,7 @@ export class StreetSmartsScene extends Phaser.Scene {
     g.fillStyle(0xd8cdb8, 1).fillRect(x, y + h * 0.72, w, h * 0.28);
     const shelfW = Math.min(150, w / 5);
     for (let sx = x + 16; sx + shelfW < x + w - 8; sx += shelfW + 24) {
-      g.fillStyle(0x8a5a35, 1).fillRect(sx, y + h * 0.12, shelfW, h * 0.6);
+      g.fillStyle(0x2e6ae0, 1).fillRect(sx, y + h * 0.12, shelfW, h * 0.6);
       for (let r = 0; r < 3; r++) {
         const ry = y + h * (0.16 + r * 0.19);
         for (let i = 0; i < 4; i++) g.fillStyle([0xff7a45, 0x5cd6b0, 0x6fb7ff, 0xffd166][(i + r) % 4], 1).fillRect(sx + 6 + i * (shelfW - 12) / 4, ry, (shelfW - 12) / 4 - 4, h * 0.13);
@@ -145,7 +145,7 @@ export class StreetSmartsScene extends Phaser.Scene {
     const msg = stars >= max ? fill(UI.starsAll) : `${fill(UI.starsEarned)} ${fill(UI.starsMore)}`;
     this.text(width / 2, height * 0.42, msg, 20, '#ffffff', true, width - 40).setOrigin(0.5).setAlign('center');
     const w = Math.min(220, (width - 48) / 2);
-    this.button(width / 2 - w - 8, height * 0.62, w, 56, UI.playAgain, 0x4a3f63, 17, () => {
+    this.button(width / 2 - w - 8, height * 0.62, w, 56, UI.playAgain, 0x2a3780, 17, () => {
       this.st = startScenario();
       this.render();
     });

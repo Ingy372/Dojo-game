@@ -51,15 +51,15 @@ export function senseiBubble(scene: Phaser.Scene, line: string, onNext?: () => v
   const y = at === 'top' ? BUBBLE_TOP : height - h - 14;
   const g = scene.add.graphics();
   g.fillStyle(0x000000, 0.35).fillRoundedRect(x + 2, y + 5, w, h, 16);
-  g.fillStyle(0x221d2e, 0.96).fillRoundedRect(x, y, w, h, 16);
+  g.fillStyle(0x1b2a7a, 0.96).fillRoundedRect(x, y, w, h, 16);
   g.lineStyle(3, 0xffd166, 1).strokeRoundedRect(x, y, w, h, 16);
   // The name tab.
-  const tab = scene.add.text(x + 18, y, 'Sensei', { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '15px', color: '#2a1d10', backgroundColor: '#ffd166', padding: { x: 10, y: 3 } }).setOrigin(0, 0.5).setResolution(crisp());
+  const tab = scene.add.text(x + 18, y, 'Sensei', { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '15px', color: '#16206b', backgroundColor: '#ffd166', padding: { x: 10, y: 3 } }).setOrigin(0, 0.5).setResolution(crisp());
   text.setY(y + pad + 6);
   box.add([g, tab, text]);
   if (onNext) {
     const bw = 130;
-    button(scene, { x: width / 2 - bw / 2, y: y + h - btnH - 4, w: bw, h: MIN_TAP, label: buttonLabel, color: 0xd5713a, size: 17, onTap: () => {
+    button(scene, { x: width / 2 - bw / 2, y: y + h - btnH - 4, w: bw, h: MIN_TAP, label: buttonLabel, color: 0xffb01f, size: 17, onTap: () => {
       box.destroy();
       onNext();
     } }, box);
@@ -83,7 +83,7 @@ export function tourGlow(scene: Phaser.Scene, x: number, y: number, r: number, o
   // Playtest Nov 22: in the town the full arrow covered the door's "My Dojo" sign; `shortArrow` keeps it below the sign.
   const k = opts.shortArrow ? 0.62 : 1;
   const top = (v: number) => -r * (1.25 + (v - 1.25) * k);
-  arrow.fillStyle(0x14121c, 0.6).fillTriangle(-17, top(2.05), 17, top(2.05), 0, -r * 1.25);
+  arrow.fillStyle(0x0d1233, 0.6).fillTriangle(-17, top(2.05), 17, top(2.05), 0, -r * 1.25);
   arrow.fillStyle(0xffd166, 1).fillTriangle(-14, top(2.1), 14, top(2.1), 0, -r * 1.35);
   arrow.fillRoundedRect(-6, top(2.75), 12, top(2.1) - top(2.75), 4);
   c.add([ring, arrow]);

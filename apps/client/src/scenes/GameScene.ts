@@ -1355,23 +1355,23 @@ export class GameScene extends Phaser.Scene {
     const res = crisp();
     this.hud = this.add.graphics();
     this.comboText = this.add
-      .text(0, 14, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '26px', color: '#ffd166', stroke: '#14121c', strokeThickness: 5 })
+      .text(0, 14, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '26px', color: '#ffd166', stroke: '#0d1233', strokeThickness: 5 })
       .setOrigin(0.5, 0)
       .setResolution(res)
       .setVisible(false);
     this.comboBonusText = this.add
-      .text(0, 46, '', { fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 })
+      .text(0, 46, '', { fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#f2e9d8', stroke: '#0d1233', strokeThickness: 4 })
       .setOrigin(0.5, 0)
       .setResolution(res)
       .setVisible(false);
     this.chainText = this.add
-      .text(0, 68, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '20px', color: RATING.color, stroke: '#14121c', strokeThickness: 5 })
+      .text(0, 68, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '20px', color: RATING.color, stroke: '#0d1233', strokeThickness: 5 })
       .setOrigin(0.5, 0)
       .setResolution(res)
       .setAlpha(RATING.alpha)
       .setVisible(false);
     this.message = this.add
-      .text(0, 0, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 6, align: 'center' })
+      .text(0, 0, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#f2e9d8', stroke: '#0d1233', strokeThickness: 6, align: 'center' })
       .setOrigin(0.5)
       .setResolution(res)
       .setVisible(false);
@@ -1382,7 +1382,7 @@ export class GameScene extends Phaser.Scene {
       .setVisible(false);
     this.doorArrow = this.add.graphics();
     this.screenFlash = this.add.rectangle(0, 0, 10, 10, 0xffffff).setOrigin(0).setAlpha(0);
-    const small = { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 };
+    const small = { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', stroke: '#0d1233', strokeThickness: 4 };
     this.roomLabel = this.add.text(0, 14, '', small).setOrigin(1, 0).setResolution(crisp());
     if (!this.run) {
       // The practice room has a way back home.
@@ -2781,7 +2781,7 @@ export class GameScene extends Phaser.Scene {
     if (!twist?.bells || !this.twistBadge) return;
     this.twistBadge.list.slice(1).forEach((o) => o.destroy());
     const text = this.add
-      .text(22, 0, `${this.world.bells}/${twist.bells}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#14121c', strokeThickness: 4 })
+      .text(22, 0, `${this.world.bells}/${twist.bells}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#0d1233', strokeThickness: 4 })
       .setOrigin(0, 0.5)
       .setResolution(crisp());
     this.cameras.main.ignore(text);
@@ -2803,7 +2803,7 @@ export class GameScene extends Phaser.Scene {
         const look = DOOR_LOOK[kind];
         // TUT-B4: the tutorial's doors lead one way, so only the Keep's BOSS door carries a room-type word.
         const label = this.add
-          .text(at.x * TILE, (at.y + 0.55) * TILE, this.run?.tutorial && kind !== 'boss' ? '' : look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#14121c', strokeThickness: 4 })
+          .text(at.x * TILE, (at.y + 0.55) * TILE, this.run?.tutorial && kind !== 'boss' ? '' : look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#0d1233', strokeThickness: 4 })
           .setOrigin(0.5, 0)
           .setResolution(crisp())
           .setDepth(6);
@@ -3200,7 +3200,7 @@ export class GameScene extends Phaser.Scene {
     const y = 64 + this.toastY * 26;
     this.toastY++;
     const t = this.add
-      .text(width - 16, y, `${rarityName(rarity)}: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: css(color), stroke: '#14121c', strokeThickness: 4 })
+      .text(width - 16, y, `${rarityName(rarity)}: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: css(color), stroke: '#0d1233', strokeThickness: 4 })
       .setOrigin(1, 0)
       .setResolution(crisp())
       .setAlpha(0);
@@ -3268,11 +3268,11 @@ export class GameScene extends Phaser.Scene {
     const disc = this.add.circle(cx, cy, 52, 0x1b1530, 1).setStrokeStyle(5, color, 1);
     const icon = addGearIcon(this, item, cx, cy, 96);
     const title = this.add
-      .text(cx, cy + 66, rank === 0 ? 'NEW GEAR!' : `${rarityName(rarity).toUpperCase()}!`, { fontFamily: FONT, fontStyle: 'bold', fontSize: width < 720 ? '30px' : '36px', color: css(color), stroke: '#14121c', strokeThickness: 7 })
+      .text(cx, cy + 66, rank === 0 ? 'NEW GEAR!' : `${rarityName(rarity).toUpperCase()}!`, { fontFamily: FONT, fontStyle: 'bold', fontSize: width < 720 ? '30px' : '36px', color: css(color), stroke: '#0d1233', strokeThickness: 7 })
       .setOrigin(0.5, 0)
       .setResolution(crisp());
     const label = this.add
-      .text(cx, title.y + title.height, name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '19px', color: '#ffffff', stroke: '#14121c', strokeThickness: 5 })
+      .text(cx, title.y + title.height, name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '19px', color: '#ffffff', stroke: '#0d1233', strokeThickness: 5 })
       .setOrigin(0.5, 0)
       .setResolution(crisp());
     const hint = this.add.text(cx, label.y + label.height + 6, 'Tap to keep it!', { fontFamily: FONT, fontSize: '15px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()).setAlpha(0);
@@ -3337,7 +3337,7 @@ export class GameScene extends Phaser.Scene {
     const y = 64 + this.toastY * 26;
     this.toastY++;
     const t = this.add
-      .text(width - 16, y, surprise ? `A surprise! ${name}` : `Decoration: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#14121c', strokeThickness: 4 })
+      .text(width - 16, y, surprise ? `A surprise! ${name}` : `Decoration: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#0d1233', strokeThickness: 4 })
       .setOrigin(1, 0)
       .setResolution(crisp());
     this.cameras.main.ignore(t);
@@ -3393,7 +3393,7 @@ export class GameScene extends Phaser.Scene {
     const graded = showGrades(this.world.difficulty);
     if (graded) sfx.grade(grade);
     const letter = this.add
-      .text(width / 2, height * 0.36, grade, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '84px', color: GRADE_COLOR[grade], stroke: '#14121c', strokeThickness: 9 })
+      .text(width / 2, height * 0.36, grade, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '84px', color: GRADE_COLOR[grade], stroke: '#0d1233', strokeThickness: 9 })
       .setOrigin(0.5)
       .setResolution(crisp())
       .setScale(2.2)
@@ -3406,7 +3406,7 @@ export class GameScene extends Phaser.Scene {
     // A missed time gets its own line: the full sentence doesn't fit beside the stats at 667.
     const missed = ch && inTime === false ? `\n${ch.outOfTimeText}` : '';
     const line = this.add
-      .text(width / 2, height * 0.36 + 48, `${BOSS_WIN.roomClear}  ${parts.join('  ·  ')}${missed}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4, align: 'center', wordWrap: { width: width - 32 } })
+      .text(width / 2, height * 0.36 + 48, `${BOSS_WIN.roomClear}  ${parts.join('  ·  ')}${missed}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#0d1233', strokeThickness: 4, align: 'center', wordWrap: { width: width - 32 } })
       .setOrigin(0.5, 0)
       .setResolution(crisp())
       .setAlpha(0);
@@ -3692,7 +3692,7 @@ export class GameScene extends Phaser.Scene {
   private focusPop(at: Vec2, text: string): void {
     const t = this.addWorld(
       this.add
-        .text(at.x * TILE, (at.y - 1.3) * TILE, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '24px', color: '#cfeaff', stroke: '#14121c', strokeThickness: 6 })
+        .text(at.x * TILE, (at.y - 1.3) * TILE, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '24px', color: '#cfeaff', stroke: '#0d1233', strokeThickness: 6 })
         .setOrigin(0.5)
         .setResolution(crisp())
         .setDepth(12)
@@ -3723,7 +3723,7 @@ export class GameScene extends Phaser.Scene {
           fontStyle: 'bold',
           fontSize: `${size}px`,
           color,
-          stroke: '#14121c',
+          stroke: '#0d1233',
           strokeThickness: 5,
         })
         .setOrigin(0.5)
@@ -3999,7 +3999,7 @@ export class GameScene extends Phaser.Scene {
     const { width, height } = view(this);
     const rating = color === RATING.color;
     const t = this.add
-      .text(width / 2, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#14121c', strokeThickness: rating ? RATING.stroke : 8 })
+      .text(width / 2, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#0d1233', strokeThickness: rating ? RATING.stroke : 8 })
       .setOrigin(0.5)
       .setResolution(crisp())
       .setAlpha(rating ? RATING.alpha : 1);

@@ -6,7 +6,7 @@ import { FONT, crisp } from './theme';
 export function twistIcon(scene: Phaser.Scene, icon: TwistIcon, size: number): Phaser.GameObjects.Graphics {
   const g = scene.add.graphics();
   const s = size / 2;
-  g.fillStyle(0x14121c, 0.85).fillCircle(0, 0, s);
+  g.fillStyle(0x0d1233, 0.85).fillCircle(0, 0, s);
   g.lineStyle(3, 0xf2e9d8, 1).strokeCircle(0, 0, s);
   if (icon === 'lantern') {
     g.fillStyle(0xffd166, 0.35).fillCircle(0, 0, s * 0.62);
@@ -44,7 +44,7 @@ export function twistBanner(scene: Phaser.Scene, twist: TwistDef, width: number,
   const w = text.width + 48 + 40;
   const h = Math.max(64, text.height + 20);
   const back = scene.add.graphics();
-  back.fillStyle(0x14121c, 0.88).fillRoundedRect(-w / 2, -h / 2, w, h, 14);
+  back.fillStyle(0x0d1233, 0.88).fillRoundedRect(-w / 2, -h / 2, w, h, 14);
   back.lineStyle(3, 0xffd166, 1).strokeRoundedRect(-w / 2, -h / 2, w, h, 14);
   icon.setPosition(-w / 2 + 12 + 24, 0);
   text.setPosition(-w / 2 + 12 + 48 + 14, 0);
