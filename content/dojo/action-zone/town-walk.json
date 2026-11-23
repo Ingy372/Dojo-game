@@ -1084,6 +1084,7 @@
       20.55
     ]
   },
+  "streetDoor": {"label": "Street Smarts", "enterRect": [6.9, 8.1, 9.0, 9.75], "spawn": [7.5, 10.35], "cue": [7.5, 9.55], "note": "Nov 23 (Jay): the market is the Street Smarts House, run by Michael"},
   "dojoDoor": {
     "label": "Action Zone",
     "enterRect": [

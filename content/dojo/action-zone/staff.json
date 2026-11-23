@@ -1,12 +1,15 @@
 {
-  "_note": "Action Zone staff in the game (Jay, Nov 23). Claude's DRAFT words, waiting on Jay's OK: names, titles and every line can be changed here. pack = the art pack; spot = where they stand (tiles); facing = S, SE, SW, E, W, N, NE, NW.",
+  "_note": "Action Zone staff in the game (Jay, Nov 23). Hannah's lines OK'd by Jay (Nov 23). Michael's are Claude's DRAFT words, waiting on Jay's OK: names, titles and every line can be changed here. pack = the art pack; spot = where they stand (tiles); facing = S, SE, SW, E, W, N, NE, NW.",
   "staff": [
     {
       "id": "hannah",
       "name": "Miss Hannah",
       "pack": "staff-hannah",
       "room": "inside",
-      "spot": [3.6, 10.55],
+      "spot": [
+        3.6,
+        10.55
+      ],
       "facing": "S",
       "role": "shop",
       "hello": [
@@ -27,6 +30,34 @@
       "sold": [
         "Thanks! I'll put that to good use.",
         "Deal! Here are your coins."
+      ]
+    },
+    {
+      "id": "michael",
+      "name": "Grandmaster Michael",
+      "pack": "staff-michael",
+      "room": "street-house",
+      "spot": [
+        3.3,
+        1.75
+      ],
+      "facing": "S",
+      "role": "lessons",
+      "hello": [
+        "Welcome to the Street Smarts House!",
+        "Ready to learn how to stay safe?",
+        "Smart choices keep you safe."
+      ],
+      "bye": [
+        "Stay aware out there!",
+        "Great job today!",
+        "Come back and learn more soon."
+      ],
+      "bought": [
+        "Well done! You earned that."
+      ],
+      "sold": [
+        "Well done!"
       ]
     }
   ]

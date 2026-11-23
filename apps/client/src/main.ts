@@ -8,6 +8,7 @@ import { OutsideScene } from './scenes/OutsideScene';
 import { StreetSmartsScene } from './scenes/StreetSmartsScene';
 import { TitleScene } from './scenes/TitleScene';
 import { TownScene } from './scenes/TownScene';
+import { StreetHouseScene } from './scenes/StreetHouseScene';
 import { App } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
@@ -50,7 +51,7 @@ const game = new Phaser.Game({
     mouse: true,
     touch: true,
   },
-  scene: [TitleScene, CreateScene, DojoScene, HomeScene, GameScene, StreetSmartsScene, InsideScene, OutsideScene, TownScene],
+  scene: [TitleScene, CreateScene, DojoScene, HomeScene, GameScene, StreetSmartsScene, InsideScene, OutsideScene, TownScene, StreetHouseScene],
 });
 
 // Nov 17 (desktop): a right click never opens the browser's menu over the game.

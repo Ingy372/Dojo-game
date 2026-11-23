@@ -13,7 +13,8 @@ import { sfx } from '../audio/Sfx';
 import { FONT, crisp, view, hiDpi } from '../ui/theme';
 import { GREEN } from '../ui/tokens';
 
-const SCENARIOS: Record<string, Scenario> = { [storeData.id]: loadScenario(storeData) };
+/** Every Street Smarts scenario (the Street Smarts House lists them). */
+export const SCENARIOS: Record<string, Scenario> = { [storeData.id]: loadScenario(storeData) };
 const UI = uiData as typeof uiData & { speakers: Record<string, string> };
 const SPEAK_KEY = 'dojo-ascent-street-speak';
 
@@ -35,8 +36,12 @@ export class StreetSmartsScene extends Phaser.Scene {
     super('StreetSmarts');
   }
 
-  init(data: { id?: string }): void {
+  /** Where Back goes: the Home Dojo, or (Nov 23) the Street Smarts House. */
+  private back = 'Dojo';
+
+  init(data: { id?: string; back?: string }): void {
     this.sc = SCENARIOS[data?.id ?? ''] ?? SCENARIOS[storeData.id];
+    this.back = data?.back ?? 'Dojo';
   }
 
   create(): void {
@@ -180,7 +185,7 @@ export class StreetSmartsScene extends Phaser.Scene {
   private leave(): void {
     window.speechSynthesis?.cancel();
     this.cameras.main.fadeOut(250, 10, 8, 16);
-    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Dojo'));
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(this.back, { from: 'lesson' }));
   }
 
   private toggleSpeak(): void {

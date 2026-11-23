@@ -22,6 +22,8 @@ import townWalk from '../../../../content/dojo/action-zone/town-walk.json';
 
 export const TOWN_PACK = 'town';
 const WALK = loadTownWalk(townWalk);
+/** Every door in town: home, the Action Zone, and (Nov 23) the Street Smarts House. */
+const DOORS = [WALK.homeDoor, WALK.dojoDoor, ...(WALK.streetDoor ? [WALK.streetDoor] : [])];
 
 /** The town's stage: the student's real belt tier. Test link `?townstage=N` shows another stage (never in beta builds). */
 export function currentTownStage(): number {
@@ -61,7 +63,7 @@ function nightLight(sprite: LayeredSprite, colour: number): void {
 
 /** Where the hero came from: out of their own dojo (home), or out of the Action Zone (outside). */
 export interface TownSceneData {
-  from?: 'home' | 'outside';
+  from?: 'home' | 'outside' | 'street';
   /** Nov 23: play the opening cutscene here, then start this tutorial run. */
   intro?: { run: RunState };
   /** Back from the shop: stand here again (tiles), so the new look shows where the hero was. */
@@ -345,7 +347,7 @@ export class TownScene extends WalkScene {
     const at = (data as TownSceneData | undefined)?.at;
     if (at) return { pos: { ...at }, facing: 'south' };
     const from = (data as TownSceneData | undefined)?.from;
-    const door = from === 'outside' ? WALK.dojoDoor : WALK.homeDoor;
+    const door = from === 'outside' ? WALK.dojoDoor : from === 'street' && WALK.streetDoor ? WALK.streetDoor : WALK.homeDoor;
     return { pos: { x: door.spawn[0], y: door.spawn[1] }, facing: 'south' };
   }
 
@@ -379,13 +381,13 @@ export class TownScene extends WalkScene {
     flat.sort((a, b) => a[0] - b[0]);
 
     const marks: Phaser.GameObjects.GameObject[] = [];
-    for (const door of [WALK.homeDoor, WALK.dojoDoor]) {
+    for (const door of DOORS) {
       const [cx, cy] = door.cue;
       // The Action Zone's tag sits between its doors and its own CMA MARTIAL ARTS sign.
       marks.push(addExitCue(this, cx * TILE, cy * TILE, TILE * 1.3, TILE * 0.8, 'up'));
       marks.push(
         this.add
-          .text(cx * TILE, (cy - (door === WALK.dojoDoor ? 1.95 : 1.25)) * TILE, door.label, {
+          .text(cx * TILE, (cy - (door === WALK.dojoDoor ? 1.95 : door === WALK.homeDoor ? 1.25 : 1.6)) * TILE, door.label, {
             fontFamily: FONT,
             fontStyle: 'bold',
             fontSize: '15px',
@@ -486,7 +488,7 @@ export class TownScene extends WalkScene {
 
   /** A tap on a door (or the building front around it) walks to the spot in front of it, inside its doorway. */
   protected tapTile(tile: Vec2): Vec2 {
-    for (const door of [WALK.homeDoor, WALK.dojoDoor]) {
+    for (const door of DOORS) {
       const [x0, x1, y0, y1] = door.enterRect;
       if (tile.x >= x0 - 0.8 && tile.x <= x1 + 0.8 && tile.y >= y0 - 3 && tile.y <= y1) return { x: (x0 + x1) / 2, y: y1 - 0.3 };
     }
@@ -504,7 +506,11 @@ export class TownScene extends WalkScene {
       this.leave('Dojo', { from: 'town' });
       return;
     }
-    if (this.entered('dojo-door', WALK.dojoDoor.enterRect, p)) this.leave('ActionZoneOutside', { from: 'town' });
+    if (this.entered('dojo-door', WALK.dojoDoor.enterRect, p)) {
+      this.leave('ActionZoneOutside', { from: 'town' });
+      return;
+    }
+    if (WALK.streetDoor && this.entered('street-door', WALK.streetDoor.enterRect, p)) this.leave('StreetHouse');
   }
 
   // ------------------------------------------------------------------ crowd test (?crowd=N): how roomy is the town?

@@ -28,6 +28,8 @@ export interface TownWalk {
   pieces: TownPiece[];
   homeDoor: TownDoor;
   dojoDoor: TownDoor;
+  /** Nov 23: the market's door into the Street Smarts House (null when the town has none). */
+  streetDoor: TownDoor | null;
   /** The highest stage the town has art for. */
   maxStage: number;
 }
@@ -71,6 +73,7 @@ export function loadTownWalk(data: unknown): TownWalk {
     pieces,
     homeDoor: door(raw.homeDoor, 'homeDoor'),
     dojoDoor: door(raw.dojoDoor, 'dojoDoor'),
+    streetDoor: raw.streetDoor === undefined ? null : door(raw.streetDoor, 'streetDoor'),
     maxStage: Math.max(1, ...pieces.map((p) => p.stage)),
   };
   townRoom(walk, 1); // throws if the grid is broken

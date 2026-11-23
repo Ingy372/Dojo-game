@@ -103,6 +103,8 @@ export class TitleScene extends Phaser.Scene {
       else if (params.get('room') === 'town') this.scene.start('ActionZoneTown', { from: 'home' });
       // Test link: ?room=intro plays the opening cutscene, then the tutorial floor (Nov 23).
       else if (params.get('room') === 'intro') this.scene.start('ActionZoneTown', { intro: { run: startTowerRun(loadSave(), currentTraining(), { replayTutorial: true }) } });
+      // Test link: ?room=street opens the Street Smarts House (Nov 23).
+      else if (params.get('room') === 'street') this.scene.start('StreetHouse');
       // Test link: ?room=dojo opens the Action Zone inside room straight away.
       else if (params.get('room') === 'dojo') this.scene.start('ActionZoneInside');
       // Test link: ?street=store-separated opens a Street Smarts scenario straight away.
