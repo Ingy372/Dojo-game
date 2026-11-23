@@ -2811,6 +2811,16 @@
           ]
         }
       ]
+    },
+    "street-house": {
+      "note": "The Street Smarts House (Claude, Nov 23; Jay picked the purpose): the room layers and its furniture. Waiting on Jay's OK of the art.",
+      "sources": [
+        {
+          "id": "street-house",
+          "type": "static",
+          "json": "incoming-art/claude-street-house/sprites/static.json"
+        }
+      ]
     }
   }
 }
