@@ -349,16 +349,13 @@ export const EARN = {
   stripe: 300,
   testApproved: 250,
   signOff: 150,
-  /** Kata practice: no misses, a few misses (up to kataFewMisses), finished; then the small amount once tired. */
-  kataClean: 40,
-  kataFew: 25,
-  kataFewMisses: 2,
-  kataDone: 10,
-  kataAfter: 3,
-  /** Full pay for the first this-many practices of each kata a day. */
-  kataFullPerDay: 3,
-  /** The first time each kata is done with no misses: a one-time bonus. */
-  kataFirstClean: 150,
+  /**
+   * Kata practice (Jay, Nov 23): the first time each kata is done with no mistakes pays a big one-time amount; after
+   * that every clean run pays an ok amount, and a run with mistakes pays very little. No daily limit on kata.
+   */
+  kataFirstClean: 250,
+  kataClean: 30,
+  kataWithMistakes: 3,
   /** Street Smarts: the first finish, each star (a better choice found), and replays (the first few a day). */
   scenarioFirst: 100,
   scenarioStar: 40,

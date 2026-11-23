@@ -5,7 +5,6 @@
 // Nothing is ever taken away and nothing has a deadline or streak (kids rules). Numbers live in config (EARN).
 
 import { EARN } from './config';
-import type { KataBest } from './kataPractice';
 import type { Profile } from './profile';
 import type { TrainingState } from './training';
 
@@ -58,27 +57,25 @@ export function runCoinsToday(profile: Profile, base: number, day: string): numb
 
 export interface KataPay {
   coins: number;
-  /** The first time this kata was done with no misses (a one-time bonus). */
+  /** The first time this kata was done with no mistakes (the big one-time amount). */
   firstClean: boolean;
-  /** Past today's full-pay practices for this kata. */
-  tired: boolean;
 }
 
 /**
- * Coins for a finished kata practice. Clean form pays most; the first clean run of each kata pays a big one-time
- * bonus. `prev` is the kata's best before this run.
+ * Coins for a finished kata practice (Jay, Nov 23): the first clean run (no mistakes) of each kata pays a big one-time
+ * amount, every clean run after that pays an ok amount, and a run with mistakes pays very little.
  */
-export function kataCoins(profile: Profile, kataId: string, wrong: number, prev: KataBest | undefined, day: string): KataPay {
-  const d = today(profile, day);
-  const n = d.kata[kataId] ?? 0;
-  d.kata[kataId] = n + 1;
-  const tired = n >= EARN.kataFullPerDay;
-  let coins = tired ? EARN.kataAfter : wrong === 0 ? EARN.kataClean : wrong <= EARN.kataFewMisses ? EARN.kataFew : EARN.kataDone;
-  const firstClean = wrong === 0 && !profile.coinOnce.includes(`kata:${kataId}`) && (prev?.fewestWrong ?? null) !== 0;
-  if (wrong === 0 && !profile.coinOnce.includes(`kata:${kataId}`)) profile.coinOnce.push(`kata:${kataId}`);
-  if (firstClean) coins += EARN.kataFirstClean;
+export function kataCoins(profile: Profile, kataId: string, wrong: number): KataPay {
+  const key = 'kata:' + kataId;
+  let coins: number = EARN.kataWithMistakes;
+  let firstClean = false;
+  if (wrong === 0) {
+    firstClean = !profile.coinOnce.includes(key);
+    if (firstClean) profile.coinOnce.push(key);
+    coins = firstClean ? EARN.kataFirstClean : EARN.kataClean;
+  }
   profile.coins += coins;
-  return { coins, firstClean, tired };
+  return { coins, firstClean };
 }
 
 // ---------------------------------------------------------------- Street Smarts

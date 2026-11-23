@@ -28,7 +28,6 @@ import { CONTENT, KATAS, KATA_MOVES } from '../game/content';
 import { reducedMotion } from '../game/motion';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
-import { localDay } from '../game/lessons';
 import { kataPacks, loadLook } from '../game/look';
 import { addStatic, loadArt, staticArt, staticSprites } from '../art/art';
 import { addKataMoves } from '../art/player';
@@ -688,8 +687,8 @@ export class InsideScene extends WalkScene {
     const pad = this.kataPad;
     if (!pad) return;
     const profile = loadSave();
-    // Nov 23: kata practice earns coins (clean form most; the first clean run of a kata a big one-time bonus).
-    const pay = kataCoins(profile, kata.id, wrong, profile.kataBests[kata.id], localDay());
+    // Nov 23 (Jay): kata practice earns coins: a big one-time amount for each kata's first clean run, then an ok amount per clean run.
+    const pay = kataCoins(profile, kata.id, wrong);
     const result = recordKataRun(profile.kataBests[kata.id], wrong, ms);
     profile.kataBests = { ...profile.kataBests, [kata.id]: result.best };
     writeSave(profile);

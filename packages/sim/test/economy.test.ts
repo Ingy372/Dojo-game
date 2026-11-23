@@ -17,7 +17,7 @@ const training = (o: { tier?: number; belt?: string; stripes?: string[]; signed?
 
 describe('coin economy (Nov 23, "Hard work = Reward")', () => {
   it('a promotion is the biggest coin gift in the game', () => {
-    const others = [EARN.stripe, EARN.signOff, EARN.testApproved, EARN.kataClean + EARN.kataFirstClean, EARN.scenarioFirst + 3 * EARN.scenarioStar, COINS.classChest, COINS.run + 10 * COINS.fightRoom + COINS.bossRoom + COINS.win];
+    const others = [EARN.stripe, EARN.signOff, EARN.testApproved, EARN.kataFirstClean, EARN.scenarioFirst + 3 * EARN.scenarioStar, COINS.classChest, COINS.run + 10 * COINS.fightRoom + COINS.bossRoom + COINS.win];
     for (const n of others) expect(EARN.promotion).toBeGreaterThan(n);
   });
 
@@ -33,17 +33,15 @@ describe('coin economy (Nov 23, "Hard work = Reward")', () => {
     expect(payRealCoins(p, after).coins).toBe(0);
   });
 
-  it('kata: clean form pays most, the first clean run of a kata pays a one-time bonus, repeats tire out each day', () => {
+  it('kata (Jay, Nov 23): a big one-time amount for the first clean run, ok for every clean run, very little with mistakes', () => {
     const p = newProfile();
-    expect(kataCoins(p, 'keon', 5, undefined, D1).coins).toBe(EARN.kataDone);
-    expect(kataCoins(p, 'keon', 1, { bestMs: null, fewestWrong: 5, runs: 1 }, D1).coins).toBe(EARN.kataFew);
-    const clean = kataCoins(p, 'keon', 0, { bestMs: null, fewestWrong: 1, runs: 2 }, D1);
-    expect(clean).toEqual({ coins: EARN.kataClean + EARN.kataFirstClean, firstClean: true, tired: false });
-    // the 4th practice of the same kata today pays the small amount; another kata still pays full
-    expect(kataCoins(p, 'keon', 0, { bestMs: null, fewestWrong: 0, runs: 3 }, D1)).toEqual({ coins: EARN.kataAfter, firstClean: false, tired: true });
-    expect(kataCoins(p, 'basic-form-1', 0, { bestMs: null, fewestWrong: 0, runs: 3 }, D1).firstClean).toBe(false);
-    // a new day: full pay again, but the one-time bonus never repeats
-    expect(kataCoins(p, 'keon', 0, { bestMs: null, fewestWrong: 0, runs: 4 }, D2)).toEqual({ coins: EARN.kataClean, firstClean: false, tired: false });
+    expect(kataCoins(p, 'keon', 5)).toEqual({ coins: EARN.kataWithMistakes, firstClean: false });
+    expect(kataCoins(p, 'keon', 0)).toEqual({ coins: EARN.kataFirstClean, firstClean: true });
+    for (let i = 0; i < 10; i++) expect(kataCoins(p, 'keon', 0)).toEqual({ coins: EARN.kataClean, firstClean: false });
+    expect(kataCoins(p, 'keon', 1).coins).toBe(EARN.kataWithMistakes);
+    expect(kataCoins(p, 'basic-form-1', 0).firstClean).toBe(true);
+    expect(EARN.kataFirstClean).toBeGreaterThan(EARN.kataClean * 5);
+    expect(EARN.kataClean).toBeGreaterThan(EARN.kataWithMistakes * 5);
   });
 
   it('Street Smarts: first finish and each new star pay well; replays pay a little, a few times a day', () => {

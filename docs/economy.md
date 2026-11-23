@@ -16,8 +16,8 @@ The more real the effort, the bigger the coins. That's the whole design.
 | 4 | **Real sign-off** (a technique passed in class) | 150 each | |
 | 5 | **Class Chest** (every real class) | 150 | Already existed. |
 | 6 | **Street Smarts, first finish** | 100 + 40 per star | Each *new* star on a replay pays 40 (a better choice found). Replays with no new star pay 10, twice a day. |
-| 7 | **Kata, first clean run** (no misses) | +150, once per kata | A one-time bonus for each kata. |
-| 8 | **Kata practice** | 40 clean / 25 up to 2 misses / 10 finished | Full pay for the first 3 practices of each kata a day, then 3. |
+| 7 | **Kata, first clean run** (no mistakes) | 250, once per kata | Jay, Nov 23: a nice one-time payout for each kata. |
+| 8 | **Kata practice** | 30 every clean run / 3 with mistakes | No daily limit (Jay, Nov 23). |
 | 9 | **Tower run** | 60 + 3 per fight room + 10 boss + 10 win | Full pay for the first 6 runs a day, then half. |
 | 10 | **Selling gear to Miss Hannah** | 5 / 15 / 40 / 100 / 250 by rarity | Common to Legendary. Helps, but never beats playing. |
 
@@ -25,7 +25,7 @@ Real training is paid the first time the dojo screen sees it, on a "Hard work pa
 
 ## Why "full pay for the first few a day"
 
-Repeating the same kata 50 times in a row is not much more learning than doing it 3 times. So the first few practices of each kata, and the first 6 Tower runs, pay full each day, and after that they pay a little. Learning **something new** (a different kata, a new Street Smarts scene, a new star) always pays full. Nothing is ever taken away, nothing expires, and there are no streaks to lose (kids rules).
+Playing the same Tower floor over and over is not much more learning, so the first 6 Tower runs pay full each day and after that half. Kata practice has no daily limit (Jay, Nov 23): every clean kata is real practice. Nothing is ever taken away, nothing expires, and there are no streaks to lose (kids rules).
 
 ## Making spending feel good (and a little choosy)
 
