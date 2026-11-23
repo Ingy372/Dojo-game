@@ -4,7 +4,27 @@
 // Left: the hero on a lit stage wearing what's picked, its name, rarity and one big button. Right: glossy cards,
 // framed by rarity, in a shelf that scrolls by drag or mouse wheel.
 import Phaser from 'phaser';
-import { buyLook, shelf, slotOf, wearLook, SKIN_SLOTS, type LookRarity, type Profile, type ShopItem, type ShopSlot, type SkinSlot, type TrainingState } from '@dojo/sim';
+import {
+  buyLook,
+  describeItem,
+  rarityRank,
+  sellGear,
+  sellValue,
+  sellable,
+  shelf,
+  slotOf,
+  wearLook,
+  SKIN_SLOTS,
+  type GearItem,
+  type LookRarity,
+  type Profile,
+  type Rarity,
+  type ShopItem,
+  type ShopSlot,
+  type SkinSlot,
+  type TrainingState,
+} from '@dojo/sim';
+import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { sfx } from '../audio/Sfx';
 import { addStatic, loadArt, staticArt } from '../art/art';
 import { makeStandingCharacter, ownColor } from '../art/player';
@@ -39,6 +59,14 @@ const RARITY: Record<LookRarity, { top: number; bottom: number; rim: number; tex
   legendary: { top: 0xffc23d, bottom: 0xd2701a, rim: 0xfff0a8, text: '#ffe6a0' },
 };
 const OWN_RARITY = { top: 0x5a5470, bottom: 0x332f44, rim: 0x8f88a8, text: '#d8d2e8' };
+/** Tower gear frames on the Sell tab (gear has an Uncommon rarity, looks don't). */
+const GEAR_RARITY: Record<Rarity, { top: number; bottom: number; rim: number; text: string }> = {
+  common: RARITY.common,
+  uncommon: { top: 0x4fbf6a, bottom: 0x23743a, rim: 0xb4f0c0, text: '#c8f5d2' },
+  rare: RARITY.rare,
+  epic: RARITY.epic,
+  legendary: RARITY.legendary,
+};
 
 const hex = (s: string) => Phaser.Display.Color.HexStringToColor(s).color;
 const multiply = (a: number, b: number) =>
@@ -97,6 +125,11 @@ export function openShop(
   const tier = t.belt.tier;
   const onShelf = new Set(shelf(SHOP, tier).map((i) => i.id));
   let picked = SHOP.items.find((i) => i.group === SHOP.groups[0].id)?.id ?? OWN('gi');
+  // Nov 23: the Sell tab (Hannah buys unwanted Tower gear). The gear picked, and a two-tap "Sure?" for selling.
+  let selling = false;
+  let pickedGear: string | null = null;
+  let askSell: string | null = null;
+  let askAll = false;
   let toast = '';
   let action: (() => void) | null = null;
   const loops: Array<{ remove(): void }> = [];
@@ -117,6 +150,12 @@ export function openShop(
   for (const p of missing) TRIED.add(p);
   if (missing.length) {
     loadArt(scene, missing);
+    scene.load.once(Phaser.Loader.Events.COMPLETE, () => layer.active && draw());
+    scene.load.start();
+  }
+
+  loadGearIcons(scene);
+  if (scene.load.list.size > 0) {
     scene.load.once(Phaser.Loader.Events.COMPLETE, () => layer.active && draw());
     scene.load.start();
   }
@@ -200,7 +239,8 @@ export function openShop(
     const top = pad + MIN_TAP + S2;
     const bodyH = height - top - pad;
     const leftW = Math.round(Math.min(310, Math.max(210, width * 0.34)));
-    drawStage(look, pad, top, leftW, bodyH);
+    if (selling) drawSellStage(pad, top, leftW, bodyH);
+    else drawStage(look, pad, top, leftW, bodyH);
     drawShelf(look, pad + leftW + S3, top, width - (pad + leftW + S3) - pad, bodyH);
   };
 
@@ -354,19 +394,34 @@ export function openShop(
   const ownLine = (slot: ShopSlot) => (slot === 'wall' ? W.woodLine : slot === 'gi' || slot === 'hair' ? W.ownLine : W.noneLine);
 
   const drawShelf = (look: PlayerLook, sx: number, top: number, sw: number, bodyH: number) => {
-    const tab = tabOf(picked);
-    const tabW = (sw - (TABS.length - 1) * S1) / TABS.length;
-    TABS.forEach((name, i) => {
-      button(scene, { x: sx + i * (tabW + S1), y: top, w: tabW, h: MIN_TAP, label: name, color: name === tab ? 0xf2a020 : 0x3a3a7a, size: TYPE.body, selected: name === tab, onTap: () => {
+    const tab = selling ? W.sellTab : tabOf(picked);
+    const tabs = [...TABS, W.sellTab];
+    const tabW = (sw - (tabs.length - 1) * S1) / tabs.length;
+    tabs.forEach((name, i) => {
+      const isSell = name === W.sellTab;
+      button(scene, { x: sx + i * (tabW + S1), y: top, w: tabW, h: MIN_TAP, label: name, color: name === tab ? 0xf2a020 : isSell ? 0x2f6a4a : 0x3a3a7a, size: TYPE.body, selected: name === tab, onTap: () => {
         if (name === tab) return;
+        askSell = null;
+        askAll = false;
+        sfx.tap();
+        if (isSell) {
+          selling = true;
+          pickedGear = sortedGear()[0]?.uid ?? null;
+          draw();
+          return;
+        }
+        selling = false;
         const g = SHOP.groups.find((x) => x.tab === name)!;
         picked = profile.shop.wearing[g.slot] ?? SHOP.items.find((it) => it.group === g.id)?.id ?? OWN(g.slot);
-        sfx.tap();
         draw();
       } }, layer);
     });
     const areaY = top + MIN_TAP + S2;
     const areaH = bodyH - MIN_TAP - S2;
+    if (selling) {
+      drawSellShelf(sx, areaY, sw, areaH);
+      return;
+    }
     const cardW = Math.max(66, Math.min(92, Math.floor((sw - GAP * 3) / 4)));
     const cardH = Math.round(cardW * 1.22);
     const perRow = Math.max(1, Math.floor((sw + GAP) / (cardW + GAP)));
@@ -381,7 +436,11 @@ export function openShop(
       });
       gy += Math.ceil(tiles.length / perRow) * (cardH + GAP) + S2;
     }
-    const contentH = gy - areaY;
+    scrollShelf(shelfC, tab, sx, areaY, sw, areaH, gy - areaY);
+  };
+
+  /** Masks a shelf to its area and lets it scroll by drag or mouse wheel when it is taller than the area. */
+  const scrollShelf = (shelfC: Phaser.GameObjects.Container, tab: string, sx: number, areaY: number, sw: number, areaH: number, contentH: number) => {
     const maxScroll = Math.max(0, contentH - areaH);
     let scroll = Math.min(scrollOf.get(tab) ?? 0, maxScroll);
     shelfC.y = -scroll;
@@ -436,6 +495,157 @@ export function openShop(
       } });
       shelfC.setData('dragged', () => moved > 8);
     }
+  };
+
+  // ---------------------------------------------------------------- the Sell tab (Nov 23)
+
+  /** Gear Hannah can buy (not worn), commons first: those are the ones most often sold. */
+  const sortedGear = (): GearItem[] => [...sellable(profile)].sort((a, b) => rarityRank(a.rarity) - rarityRank(b.rarity) || a.slot.localeCompare(b.slot));
+
+  const sold = (paid: number) => {
+    writeSave(profile);
+    sfx.chest();
+    onEvent('sold');
+    toast = fill(W.soldLine, { n: paid });
+    askSell = null;
+    askAll = false;
+  };
+
+  const drawSellStage = (x0: number, top: number, leftW: number, bodyH: number) => {
+    const gear = sortedGear();
+    const item = gear.find((g) => g.uid === pickedGear) ?? null;
+    const rar = item ? GEAR_RARITY[item.rarity] : OWN_RARITY;
+    const panel = scene.add.graphics();
+    panel.fillStyle(0x000000, 0.3).fillRoundedRect(x0 + 2, top + 4, leftW, bodyH, 14);
+    panel.fillGradientStyle(0x5fd0a0, 0x5fd0a0, 0x2a5a8a, 0x2a5a8a, 1).fillRoundedRect(x0, top, leftW, bodyH, 14);
+    panel.lineStyle(3, rar.rim, 0.9).strokeRoundedRect(x0 + 1.5, top + 1.5, leftW - 3, bodyH - 3, 13);
+    layer.add(panel);
+    const cx = x0 + leftW / 2;
+    let y = top + S2;
+    const line = (s: string, color = '#eaf2ff', size: number = TYPE.body, bold = false) => {
+      const o = text(cx, y, s, size, color, bold, leftW - 2 * S3);
+      y += o.height + S1;
+    };
+    const btnY = top + bodyH - MIN_TAP - S2;
+    const act = (label: string, onTap: (() => void) | null, color = 0xf2a020) => {
+      button(scene, { x: x0 + S3, y: btnY, w: leftW - 2 * S3, h: MIN_TAP, label, color, size: TYPE.title, disabled: !onTap, onTap: onTap ?? (() => {}) }, layer);
+      action = onTap;
+    };
+    if (!item) {
+      y += S3;
+      line(W.sellEmptyTitle, '#ffffff', TYPE.title + 2, true);
+      line(W.sellEmpty);
+      if (toast) line(toast, '#ffd166', TYPE.body, true);
+      return;
+    }
+    const size = Math.min(96, bodyH * 0.3);
+    const glow = scene.add.graphics();
+    glow.fillStyle(rar.rim, 0.25).fillCircle(cx, y + size / 2, size * 0.62);
+    layer.add(glow);
+    const icon = addGearIcon(scene, item, cx, y + size / 2, size);
+    if (icon) layer.add(icon);
+    y += size + S2;
+    line(item.name, '#ffffff', TYPE.title + 2, true);
+    const label = (W.gearRarity as Record<string, string>)[item.rarity] ?? item.rarity;
+    const rib = scene.add.graphics();
+    rib.fillStyle(rar.bottom, 1).fillRoundedRect(cx - 50, y, 100, 20, 10);
+    rib.lineStyle(2, rar.rim).strokeRoundedRect(cx - 50, y, 100, 20, 10);
+    layer.add(rib);
+    text(cx, y + 2, label, TYPE.label, rar.text, true);
+    y += 26;
+    const about = describeItem(item);
+    if (about) line(about, '#dff6ff');
+    const n = sellValue(item);
+    if (toast) line(toast, '#ffd166', TYPE.body, true);
+    else line(fill(W.sellLine, { n }), '#fff1c0');
+    if (askSell === item.uid) {
+      act(W.sellSure, () => {
+        const i = gear.findIndex((g) => g.uid === item.uid);
+        const paid = sellGear(profile, [item.uid]);
+        if (!paid) return;
+        const rest = sortedGear();
+        pickedGear = rest[Math.min(i, rest.length - 1)]?.uid ?? null;
+        sold(paid);
+        draw();
+        toast = '';
+      }, 0xd8582a);
+    } else {
+      act(fill(W.sellFor, { n }), () => {
+        askSell = item.uid;
+        askAll = false;
+        sfx.tap();
+        draw();
+      });
+    }
+  };
+
+  const drawSellShelf = (sx: number, areaY: number, sw: number, areaH: number) => {
+    const gear = sortedGear();
+    const commons = gear.filter((g) => g.rarity === 'common');
+    let gy = areaY;
+    // "Sell all Commons": one tap asks, the second sells (handy when the bag is full of them)
+    if (commons.length > 1) {
+      const total = commons.reduce((t, g) => t + sellValue(g), 0);
+      const bw = Math.min(sw * 0.62, 300);
+      button(scene, {
+        x: sx + sw - bw,
+        y: gy,
+        w: bw,
+        h: MIN_TAP - 6,
+        label: askAll ? fill(W.sellAllSure, { n: total }) : fill(W.sellAll, { count: commons.length, n: total }),
+        color: askAll ? 0xd8582a : 0x3a6a8a,
+        size: TYPE.label + 1,
+        onTap: () => {
+          if (!askAll) {
+            askAll = true;
+            askSell = null;
+            sfx.tap();
+            draw();
+            return;
+          }
+          const paid = sellGear(profile, commons.map((g) => g.uid));
+          pickedGear = sortedGear()[0]?.uid ?? null;
+          sold(paid);
+          draw();
+          toast = '';
+        },
+      }, layer);
+    }
+    layer.add(scene.add.text(sx + 2, gy + 8, W.sellShelf, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${TYPE.body + 1}px`, color: '#ffe8a8' }).setResolution(crisp()).setStroke('#140f1c', 3));
+    gy += MIN_TAP;
+    const cardW = Math.max(62, Math.min(84, Math.floor((sw - GAP * 4) / 5)));
+    const cardH = Math.round(cardW * 1.18);
+    const perRow = Math.max(1, Math.floor((sw + GAP) / (cardW + GAP)));
+    const shelfC = scene.add.container(0, 0);
+    gear.forEach((g, i) => {
+      const x = sx + (i % perRow) * (cardW + GAP);
+      const y = gy + Math.floor(i / perRow) * (cardH + GAP);
+      const rar = GEAR_RARITY[g.rarity];
+      shelfC.add(scene.add.image(x, y, cardTexture(scene, cardW, cardH, `gear-${g.rarity}`, rar)).setOrigin(0));
+      const icon = addGearIcon(scene, g, x + (cardW - 2) / 2, y + 7 + (cardH - 34) / 2, Math.min(cardW, cardH - 34) * 0.8);
+      if (icon) shelfC.add(icon);
+      const c = scene.add.graphics();
+      drawCoin(c, x + 14, y + cardH - 16, 7);
+      shelfC.add(c);
+      shelfC.add(scene.add.text(x + 24, y + cardH - 24, `${sellValue(g)}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${TYPE.label}px`, color: '#fff6dc' }).setResolution(crisp()).setStroke('#140f1c', 3));
+      if (g.uid === pickedGear) shelfC.add(scene.add.graphics().lineStyle(4, 0xffffff).strokeRoundedRect(x - 2, y - 2, cardW + 2, cardH, 12));
+      const hit = scene.add.zone(x + cardW / 2, y + cardH / 2, cardW, cardH).setInteractive({ useHandCursor: true });
+      hit.on('pointerup', () => {
+        const dragged = shelfC.getData('dragged') as (() => boolean) | undefined;
+        if (dragged?.() || pickedGear === g.uid) return;
+        pickedGear = g.uid;
+        askSell = null;
+        askAll = false;
+        sfx.tap();
+        draw();
+      });
+      shelfC.add(hit);
+    });
+    if (gear.length === 0) {
+      shelfC.add(scene.add.text(sx + sw / 2, gy + S3, W.sellNone, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: '#cfd8ff', align: 'center', wordWrap: { width: sw - 20 } }).setResolution(crisp()).setOrigin(0.5, 0));
+    }
+    const contentH = gy - areaY + Math.ceil(gear.length / perRow) * (cardH + GAP);
+    scrollShelf(shelfC, W.sellTab, sx, areaY, sw, areaH, contentH);
   };
 
   const cardAt = (parent: Phaser.GameObjects.Container, x: number, y: number, w: number, h: number, slot: ShopSlot, it: ShopItem | null, look: PlayerLook) => {

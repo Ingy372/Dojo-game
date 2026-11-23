@@ -326,6 +326,19 @@ export const COINS = {
 } as const;
 
 /**
+ * Nov 23 (Jay): Hannah buys unwanted Tower gear at the Action Zone pro shop, for a fixed price by rarity. Never
+ * random; gear being worn can't be sold (take it off first). Kept well under a run's pay, so selling helps but
+ * finishing runs (and real training) earns more.
+ */
+export const SELL_PRICE: Readonly<Record<Rarity, number>> = {
+  common: 5,
+  uncommon: 15,
+  rare: 40,
+  epic: 100,
+  legendary: 250,
+};
+
+/**
  * Class Chests after a long time away: every class still counts and still pays its coins and its
  * Home Dojo piece, but one visit adds at most this many pieces of gear to the bag. The rest of
  * those chests hold coins only, so 200 classes never flood the bag with 200 items.

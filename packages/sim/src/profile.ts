@@ -6,7 +6,7 @@ import { readBeltEntry, type BeltEntry } from './beltEntry';
 import { newBlessing, readBlessing, type Blessing } from './blessing';
 import { newDecorEarning, readDecorEarning, type DecorEarning } from './earning';
 import { isPlayLimit, type PlayLimit } from './playTime';
-import { COMBAT, CHALLENGE_FROM_TIER, DIFFICULTY, LOOT, type Difficulty, type Rarity } from './config';
+import { COMBAT, CHALLENGE_FROM_TIER, DIFFICULTY, LOOT, SELL_PRICE, type Difficulty, type Rarity } from './config';
 import type { Effect } from './effects';
 import { GEAR_SLOTS, rarityRank, type GearItem, type GearSlot } from './loot';
 import type { DojoState } from './dojo';
@@ -433,6 +433,34 @@ export function unequip(profile: Profile, slot: GearSlot): void {
 export function letGo(profile: Profile, uid: string): void {
   for (const slot of GEAR_SLOTS) if (profile.equipped[slot] === uid) profile.equipped[slot] = null;
   profile.inventory = profile.inventory.filter((i) => i.uid !== uid);
+}
+
+/** What Hannah pays for a piece of gear at the pro shop (Nov 23). */
+export function sellValue(item: GearItem): number {
+  return SELL_PRICE[item.rarity];
+}
+
+/** Gear that can be sold: everything in the bag that isn't being worn. */
+export function sellable(profile: Profile): GearItem[] {
+  const worn = new Set(GEAR_SLOTS.map((s) => profile.equipped[s]).filter(Boolean));
+  return profile.inventory.filter((i) => !worn.has(i.uid));
+}
+
+/**
+ * Sells pieces of gear to Hannah: each leaves the bag and its price is added to the coins. Worn gear and unknown
+ * ids are skipped. Returns the coins paid (0 if nothing was sold).
+ */
+export function sellGear(profile: Profile, uids: readonly string[]): number {
+  const ok = new Set(sellable(profile).map((i) => i.uid));
+  let paid = 0;
+  for (const uid of new Set(uids)) {
+    if (!ok.has(uid)) continue;
+    const item = profile.inventory.find((i) => i.uid === uid)!;
+    paid += sellValue(item);
+    profile.inventory = profile.inventory.filter((i) => i.uid !== uid);
+  }
+  profile.coins += paid;
+  return paid;
 }
 
 /**
