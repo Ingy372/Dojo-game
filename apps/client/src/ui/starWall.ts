@@ -12,6 +12,7 @@ import { loadSave, writeSave } from '../game/save';
 import { closeX } from './boardReader';
 import { button } from './button';
 import { DPR, FONT, crisp, view } from './theme';
+import { drawPanel } from './kit';
 
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 const FLIGHT_MS = 150;
@@ -205,7 +206,8 @@ export class StarWall {
     const c = this.scene.add.container(0, 0).setDepth(115);
     const back = this.scene.add.rectangle(0, 0, width, height, 0x000000, 0.35).setOrigin(0).setInteractive();
     const panel = this.scene.add.graphics();
-    panel.fillStyle(0x221a2e, 0.97).fillRoundedRect(x, y, w, h, 14).lineStyle(3, glow ? GOLD : 0xffffff, glow ? 1 : 0.4).strokeRoundedRect(x, y, w, h, 14);
+    // U-KIT: the result card is a kit panel (a gold rim for a new best).
+    drawPanel(panel, x, y, w, h, { radius: 16, gold: glow });
     const t = this.scene.add
       .text(width / 2, y + 18, title, { fontFamily: FONT, fontStyle: 'bold', fontSize: '28px', color: '#ffd166' })
       .setOrigin(0.5, 0)

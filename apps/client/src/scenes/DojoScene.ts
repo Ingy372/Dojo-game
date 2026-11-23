@@ -84,6 +84,8 @@ import { isOpen, systemForToday } from '../game/unlocks';
 import { PATH_WORDS as PW, fill } from '../ui/pathScreen';
 import { drawTrainingStation } from '../ui/trainingStation';
 import { CHEST_WORDS as CW, chestIcon, streakAura } from '../ui/classChest';
+import { buttonFace } from '../ui/button';
+import { TITLE_FONT, drawPanel, kitCard, kitScreen } from '../ui/kit';
 
 /** Pixels per tile in the room (before it's scaled to fit the screen). */
 const TILE = 48;
@@ -504,7 +506,7 @@ export class DojoScene extends Phaser.Scene {
     const box = this.add.container(0, 0).setDepth(70);
     this.cardsOpen++;
     box.once(Phaser.GameObjects.Events.DESTROY, () => (this.cardsOpen = Math.max(0, this.cardsOpen - 1)));
-    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
+    box.add(kitScreen(this, width, height));
     const body = this.add
       .text(width / 2, 0, lines.join('\n\n'), { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', align: 'center', wordWrap: { width: w - 36 }, lineSpacing: 2 })
       .setOrigin(0.5, 0)
@@ -1175,7 +1177,7 @@ export class DojoScene extends Phaser.Scene {
     this.controls.reset();
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
-    const dim = this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive();
+    const dim = kitScreen(this, width, height);
     box.add(dim);
     const close = () => {
       box.destroy();
@@ -1271,7 +1273,7 @@ export class DojoScene extends Phaser.Scene {
     const back = this.mode === 'arriving' ? 'play' : this.mode;
     this.mode = 'menu';
     const box = this.add.container(0, 0).setDepth(80);
-    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
+    box.add(kitScreen(this, width, height));
     const w = Math.min(460, width - 40);
     const h = 200;
     const left = (width - w) / 2;
@@ -1313,7 +1315,7 @@ export class DojoScene extends Phaser.Scene {
     const pt = PLAY_TIME_TEXT;
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
+    box.add(kitScreen(this, width, height));
     this.addWipeButton(box);
     const close = () => {
       box.destroy();
@@ -1393,7 +1395,7 @@ export class DojoScene extends Phaser.Scene {
     const floor = fix ? feedEntry(feed) : saved;
     const pick: BeltEntry = { ...saved };
     const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
+    box.add(kitScreen(this, width, height));
     const close = () => {
       box.destroy();
       this.training = currentTraining();
@@ -1467,7 +1469,7 @@ export class DojoScene extends Phaser.Scene {
     const t = BELT_TEXT;
     const { width, height } = view(this);
     const card = this.add.container(0, 0).setDepth(90);
-    card.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
+    card.add(kitScreen(this, width, height));
     const entryText = (e: BeltEntry) => {
       const name = belts.find((b) => b.id === e.belt)!.name;
       return (e.stripes === 0 ? t.entryNone : e.stripes === 1 ? t.entryOne : t.entryStripes).replace('{belt}', name).replace('{n}', String(e.stripes));
@@ -1491,7 +1493,7 @@ export class DojoScene extends Phaser.Scene {
     this.mode = 'menu';
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
+    box.add(kitScreen(this, width, height));
     const title = this.add
       .text(width / 2, height * 0.12, 'How do you like to move decorations?', { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' })
       .setOrigin(0.5, 0)
@@ -1507,7 +1509,9 @@ export class DojoScene extends Phaser.Scene {
     options.forEach(([style, name, text], i) => {
       const x = width / 2 + (i === 0 ? -w - 10 : 10);
       const on = this.moveStyle === style;
-      const bg = this.add.rectangle(x, top, w, h, 0x16206b).setOrigin(0).setStrokeStyle(on ? 4 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setInteractive();
+      // U-KIT: a kit card (a gold rim on the picked one) under a see-through tap shape.
+      box.add(kitCard(this, x, top, w, h, { topLeft: true, gold: on, radius: 16 }));
+      const bg = this.add.rectangle(x, top, w, h, 0xffffff, 0).setOrigin(0).setInteractive();
       box.add(bg);
       box.add(this.add.text(x + w / 2, top + 22, name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
       box.add(this.add.text(x + w / 2, top + 58, text, { fontFamily: FONT, fontSize: '14px', color: '#dbe6ff', align: 'center', wordWrap: { width: w - 28 } }).setOrigin(0.5, 0).setResolution(crisp()));
@@ -1578,7 +1582,7 @@ export class DojoScene extends Phaser.Scene {
     const t = SAFE_TEXT;
     const { width, height } = view(this);
     const card = this.add.container(0, 0).setDepth(90);
-    card.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0).setInteractive());
+    card.add(kitScreen(this, width, height));
     const w = Math.min(460, width - 40);
     const title = this.add.text(width / 2, height * 0.16, t.wipeTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
     const help = this.add.text(width / 2, title.y + title.height + 12, t.wipeHelp, { fontFamily: FONT, fontSize: '15px', color: '#dbe6ff', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
@@ -1612,13 +1616,14 @@ export class DojoScene extends Phaser.Scene {
     this.controls.reset();
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(90);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0d0b14, 0.96).setOrigin(0).setInteractive());
+    box.add(kitScreen(this, width, height));
     const add = <T extends Phaser.GameObjects.GameObject>(o: T) => (box.add(o), o);
     const text = (x: number, y: number, s: string, size: number, color: string, bold = false) =>
       add(this.add.text(x, y, s, { fontFamily: FONT, fontSize: `${size}px`, color, fontStyle: bold ? 'bold' : 'normal', wordWrap: { width: width - 40 } }).setResolution(crisp()));
     const btn = (x: number, y: number, w: number, label: string, color: number, onTap: () => void) => {
-      const bg = add(this.add.rectangle(x, y, w, 36, color).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.3).setInteractive());
-      add(this.add.text(x + w / 2, y + 18, label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '14px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()));
+      add(buttonFace(this, x, y, w, 36, color));
+      const bg = add(this.add.rectangle(x, y, w, 36, 0xffffff, 0).setOrigin(0).setInteractive());
+      add(this.add.text(x + w / 2, y + 17, label, { fontFamily: TITLE_FONT, fontSize: '15px', color: '#ffffff', stroke: '#0d1233', strokeThickness: 3 }).setOrigin(0.5).setResolution(crisp()));
       bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, onTap);
     };
     const close = () => {
@@ -1813,7 +1818,7 @@ export class DojoScene extends Phaser.Scene {
   /** P-MENU-e: a rounded card panel (dark fill, gold outline) for the Dojo's popup cards. */
   private roundPanel(x: number, y: number, w: number, h: number, strokeAlpha: number): Phaser.GameObjects.Graphics {
     const g = this.add.graphics();
-    g.fillStyle(0x1b2a7a).fillRoundedRect(x, y, w, h, RADIUS.panel);
+    drawPanel(g, x, y, w, h, { radius: 14 });
     g.lineStyle(3, 0xffd166, strokeAlpha).strokeRoundedRect(x, y, w, h, RADIUS.panel);
     return g;
   }

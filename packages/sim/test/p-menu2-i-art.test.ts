@@ -68,7 +68,9 @@ describe('P-MENU2-i menu2 art', () => {
     expect(home).toMatch(/menu2Slice\(this, 'panel-frame'/);
     // Nov 18 overhaul: the Training Board's headline is gold text on glass; the plaque art stays in the pack, unused there.
     expect(helpers).toMatch(/'button-primary-normal'/);
-    expect((home.match(/woodSkin\(this/g) ?? []).length).toBeGreaterThanOrEqual(7); // Nov 18: the Training Board dropped its wood skins; the Book keeps its own
+    // U-KIT (Nov 23): menus wear the one kit look; woodSkin is a no-op while KIT_ONLY is on (the art stays packed).
+    expect(helpers).toMatch(/export const KIT_ONLY = true;/);
+    expect(helpers).toMatch(/if \(KIT_ONLY\) return false;/);
     expect(out.filter((n) => n.startsWith('switch'))).toEqual([]);
     expect(home + helpers).not.toMatch(/['"`]switch-(?:track|left|right)/);
   });

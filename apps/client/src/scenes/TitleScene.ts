@@ -10,9 +10,12 @@ import { reducedMotion } from '../game/motion';
 import { markSavedNoteSeen, needsSavedNote, testFlags } from '../game/beta';
 import SAFE_TEXT from '../../../../content/settings/safety.json';
 import { GREEN } from '../ui/tokens';
+import { kitScreen } from '../ui/kit';
+import { kitBackdrop } from '../ui/kit';
 
 export class TitleScene extends Phaser.Scene {
   private title!: Phaser.GameObjects.Text;
+  private backdrop?: Phaser.GameObjects.Container;
   private subtitle!: Phaser.GameObjects.Text;
   private belt!: Phaser.GameObjects.Rectangle;
   private prompt!: Phaser.GameObjects.Text;
@@ -36,11 +39,13 @@ export class TitleScene extends Phaser.Scene {
   create(): void {
     hiDpi(this.cameras.main);
     const crisp = window.devicePixelRatio || 1;
+    // U-KIT: the title screen opens on the kit sky, like every menu.
+    { const v = view(this); this.backdrop = this.add.container(0, 0, kitBackdrop(this, v.width, v.height)).setDepth(-1); }
 
     this.title = this.add
       .text(0, 0, 'Dojo Ascent', {
         fontFamily: 'Georgia, serif',
-        color: '#f2e9d8',
+        color: '#ffe36a',
         fontStyle: 'bold',
       })
       .setOrigin(0.5)
@@ -119,7 +124,7 @@ export class TitleScene extends Phaser.Scene {
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(100);
     const w = Math.min(460, width - 40);
-    box.add(this.add.rectangle(0, 0, width, height, 0x060a24, 0.97).setOrigin(0));
+    box.add(kitScreen(this, width, height));
     const title = this.add.text(width / 2, height * 0.18, t.savedNoteTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp());
     const body = this.add.text(width / 2, title.y + title.height + 14, t.savedNoteLines.join('\n\n'), { fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#dbe6ff', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
     const by = Math.min(height - 12 - 44, body.y + body.height + 20);
@@ -130,6 +135,12 @@ export class TitleScene extends Phaser.Scene {
   }
 
   private layout(): void {
+    // U-KIT: the sky is redrawn to the new size.
+    if (this.backdrop) {
+      const v = view(this);
+      this.backdrop.removeAll(true);
+      this.backdrop.add(kitBackdrop(this, v.width, v.height));
+    }
     const size = view(this);
     const { width, height } = size;
     const cx = width / 2;

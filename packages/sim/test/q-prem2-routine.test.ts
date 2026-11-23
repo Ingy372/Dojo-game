@@ -45,7 +45,8 @@ describe('Q-PREMIUM-2 M9 / M10 / L2 Dojo panels and labels', () => {
   const s = read('scenes/DojoScene.ts');
   it('panel backdrops are nearly solid and the room labels are 14 px', () => {
     expect(s).toMatch(/const LABEL_PX = 14;/);
-    expect((s.match(/0\.97/g) ?? []).length).toBeGreaterThanOrEqual(7);
+    // U-KIT: the pop-up screens sit on the solid kit sky (kitScreen) instead of a 97% dark layer.
+    expect((s.match(/kitScreen\(this, width, height\)/g) ?? []).length).toBeGreaterThanOrEqual(7);
   });
   it('Erase progress sits a full 20 px off the screen edge', () => {
     expect(s).toMatch(/x: 20, y: height - 20 - 44, w, h: 44, label: t\.wipeButton/);
@@ -137,11 +138,11 @@ describe('Q-PREMIUM-2 QA: inside exit glow and testing screen', () => {
   it('the testing screen: Close is added after the list and centred; rows out of view stop taking taps', () => {
     const s = read('ui/TestingPanel.ts');
     expect(s.indexOf("'Close'")).toBeGreaterThan(s.indexOf('this.host = list;'));
-    expect(s).toMatch(/'Close', 0x5b4a3c, 15, actions\.close, true\)/);
+    expect(s).toMatch(/'Close', 0x3a4790, 15, actions\.close, true\)/);
     expect(s).toMatch(/t\.setOrigin\(centre \? 0\.5 : 0, 0\.5\)/);
     expect(s).toMatch(/r\.bg\.input\.enabled = inView/);
     expect(s).toMatch(/this\.updateRowHits\(list\.y\)/);
-    expect(s).toMatch(/this\.text\(rx, ry \+ 15, part\.detail, 10, '#b9ad99', false, rw\)/);
+    expect(s).toMatch(/this\.text\(rx, ry \+ 15, part\.detail, 10, '#a9b8ee', false, rw\)/);
   });
 });
 

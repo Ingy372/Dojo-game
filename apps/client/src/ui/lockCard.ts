@@ -2,7 +2,8 @@
 import { CHALLENGE_FROM_TIER, type FeedBelt } from '@dojo/sim';
 
 /** Solid card colors (not see-through): a darker fill and dimmer words than an open card. */
-export const LOCKED_CARD = { color: 0x1d1a26, nameColor: '#a39bb0', textColor: '#c9b98f' } as const;
+// U-KIT: a quiet navy locked card with soft blue words.
+export const LOCKED_CARD = { color: 0x141a40, nameColor: '#a9b8ee', textColor: '#c9d6ff' } as const;
 
 /** The small shake on tap: pixels each way, back-and-forth count, and total time. */
 export const LOCK_SHAKE = { px: 4, cycles: 3, ms: 250 } as const;

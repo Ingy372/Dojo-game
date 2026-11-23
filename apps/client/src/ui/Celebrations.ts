@@ -21,6 +21,7 @@ import { hex } from './belt';
 import { FONT, crisp, view } from './theme';
 import { FAITH, drawCreed, drawScroll } from './faith';
 import { PATH_WORDS as PW, fill } from './pathScreen';
+import { kitBackdrop, kitCard } from './kit';
 
 type Step =
   /** Sensei's welcome-home line, before the cascade (M7-P4, Manager call). */
@@ -84,9 +85,10 @@ export class Celebrations {
     if (creed) this.steps.push({ kind: 'creed' });
     const { width, height } = view(scene);
     // Opaque (LP-B2 QA): the Path's lower cards showed through the ceremony and met 'Tap to continue'.
-    const shade = scene.add.rectangle(0, 0, width, height, 0x060a24, 1).setOrigin(0).setInteractive();
+    // U-KIT: the ceremony plays over the kit sky (still opaque), a little darker so the rays and bursts glow.
+    const shade = scene.add.rectangle(0, 0, width, height, 0x060a24, 0.35).setOrigin(0).setInteractive();
     shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.next());
-    this.root = scene.add.container(0, 0, [shade]).setDepth(100);
+    this.root = scene.add.container(0, 0, [...kitBackdrop(scene, width, height), shade]).setDepth(100);
     this.next(true);
   }
 
@@ -296,7 +298,7 @@ export class Celebrations {
         this.text(cx, height * 0.12, fill(EVO.title, { family: e.name }), 24, '#ffd166', true, 'Georgia, serif', width - 40).setOrigin(0.5).setAlign('center');
         this.text(cx, height * 0.12 + 30, fill(EVO.stageLabel, { stage: e.stage }), 16, '#e0a060', true).setOrigin(0.5);
         const medal = this.scene.add.container(cx, my);
-        const disc = this.scene.add.circle(0, 0, r, 0x2a2238).setStrokeStyle(3, 0x6a5a80);
+        const disc = this.scene.add.circle(0, 0, r, 0x16206b).setStrokeStyle(3, 0x0d1233);
         medal.add(disc);
         const family = CONTENT.abilities.families.find((f) => f.id === e.family);
         const icon = family ? addSealMedallion(this.scene, family, this.training.abilities, 0, 0, r * 1.6) : null;
@@ -481,7 +483,7 @@ export class Celebrations {
   }
 
   private card(cx: number, cy: number, w: number, h: number): void {
-    this.layer.add(this.scene.add.rectangle(cx, cy, w, h, 0x1b2a7a).setStrokeStyle(3, 0x5cd65c, 0.7));
+    this.layer.add(kitCard(this.scene, cx, cy, w, h, { face: { top: 0x2c3f9e, bottom: 0x152163, rim: 0x5cd65c } }));
   }
 
   /** Confetti bursting out from a point. */

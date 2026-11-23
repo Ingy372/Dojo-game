@@ -39,7 +39,8 @@ describe('P-MENU-c: every swapped button is at least 44 pt (button() also pads t
     expect(MIN_TAP).toBe(44);
     expect(button).toMatch(/selected\?: boolean/);
     // A4-DOJO-hotfix: the outline is baked into the button texture; selected is still a 3 pt gold line.
-    expect(button).toMatch(/o\.selected \? \{ width: 3, colour: 0xffd166/);
+    // U-KIT: a picked button gets a gold ring inside its dark outline.
+    expect(button).toMatch(/if \(o\.selected\) \{\s*ctx\.strokeStyle = '#ffe36a';/);
     expect(button).toMatch(/if \(o\.disabled\) visual\.setAlpha\(0\.35\);\s*else hit\.setInteractive/);
   });
   for (const [name, src] of Object.entries(scopes)) {
@@ -53,7 +54,8 @@ describe('P-MENU-c: every swapped button is at least 44 pt (button() also pads t
   }
   it('Training Board left column: ◀ Path 96x44 (LP-B1), ENTER 52 (44 on a short screen), Practice room 44', () => {
     const home = method(raw('/scenes/HomeScene.ts'), 'renderShell');
-    expect(home).toMatch(/96, 44, PW.back, 0x3a3150, TYPE.body, \(\) => this.backToDojo\(\)/);
+    // U-KIT (Nov 23): ◀ Dojo is the kit's blue back button.
+    expect(home).toMatch(/96, 44, PW.back, KIT_COLOR.blue, TYPE.body, \(\) => this.backToDojo\(\)/);
     expect(home).toMatch(/const enterH = short \? MIN_TAP : 52;/);
     expect(home).toMatch(/leftW, enterH, 'ENTER THE TOWER'/);
     expect(home).toMatch(/leftW - \(testW && testW \+ S2\), 44, 'Practice room'/);

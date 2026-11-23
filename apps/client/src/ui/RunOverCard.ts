@@ -4,6 +4,8 @@ import { FONT, crisp, view } from './theme';
 import { KO, keptText } from '../game/knockout';
 import { reducedMotion } from '../game/motion';
 import { GREEN } from './tokens';
+import { KIT_COLOR, TITLE_FONT, kitCard } from './kit';
+import { buttonFace } from './button';
 
 /**
  * Q-PREM-F11 fix: every tap on Screen 2 (the shade and Head home) is ignored for 500 ms after it
@@ -47,7 +49,7 @@ export function keptCard(
   const container = scene.add
     .container(0, 0, [
       shade,
-      scene.add.rectangle(left, top, cardW, cardH, 0x1b2a7a).setOrigin(0).setStrokeStyle(3, 0xffd166, 0.9),
+      kitCard(scene, left, top, cardW, cardH, { topLeft: true, gold: true }),
       title,
     ])
     .setDepth(110);
@@ -75,9 +77,11 @@ export function keptCard(
   const btnW = Math.min(240, cardW - 48);
   const btnX = width / 2 - btnW / 2;
   const btnY = top + cardH - btnH - 16;
-  const bg = scene.add.rectangle(btnX, btnY, btnW, btnH, GREEN).setOrigin(0).setStrokeStyle(2, 0xfff6e0, 0.5).setInteractive();
+  // U-KIT: the kit's green button face under a see-through tap shape.
+  const face = buttonFace(scene, btnX, btnY, btnW, btnH, GREEN);
+  const bg = scene.add.rectangle(btnX, btnY, btnW, btnH, 0xffffff, 0).setOrigin(0).setInteractive();
   const label = scene.add
-    .text(width / 2 + 14, btnY + btnH / 2, KO.headHome, { fontFamily: FONT, fontStyle: 'bold', fontSize: '19px', color: '#fff6e0' })
+    .text(width / 2 + 14, btnY + btnH / 2 - 1, KO.headHome, { fontFamily: TITLE_FONT, fontSize: '20px', color: '#ffffff', stroke: '#0d1233', strokeThickness: 4 })
     .setOrigin(0.5)
     .setResolution(crisp());
   // The door icon, drawn left of the label.
@@ -86,7 +90,7 @@ export function keptCard(
   const door = scene.add.graphics();
   door.fillStyle(0x8a5a32).fillRect(dx, dy, 16, 22).lineStyle(2, 0xfff6e0).strokeRect(dx, dy, 16, 22);
   door.fillStyle(0xfff6e0).fillCircle(dx + 12, dy + 12, 1.8);
-  container.add([bg, label, door]);
+  container.add([face, bg, label, door]);
   bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, go);
   shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, go);
   container.setAlpha(0);
@@ -120,7 +124,7 @@ export function choiceCard(
   const container = scene.add
     .container(0, 0, [
       scene.add.rectangle(0, 0, width, height, 0x060a24, 0.8).setOrigin(0).setInteractive(),
-      scene.add.rectangle(left, top, cardW, cardH, 0x1b2a7a).setOrigin(0).setStrokeStyle(3, 0xffd166, 0.9),
+      kitCard(scene, left, top, cardW, cardH, { topLeft: true, gold: true }),
       text(top + 16, title, 22, '#ffd166', true),
       text(top + 52, line, 15, '#f2e9d8'),
     ])
@@ -129,9 +133,10 @@ export function choiceCard(
   const btnW = (cardW - 48) / 2;
   const btnY = top + cardH - btnH - 16;
   const button = (x: number, label: string, color: number, yes: boolean) => {
-    const bg = scene.add.rectangle(x, btnY, btnW, btnH, color).setOrigin(0).setStrokeStyle(2, 0xfff6e0, 0.5).setInteractive();
-    const t = scene.add.text(x + btnW / 2, btnY + btnH / 2, label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '17px', color: '#fff6e0' }).setOrigin(0.5).setResolution(crisp());
-    container.add([bg, t]);
+    const face = buttonFace(scene, x, btnY, btnW, btnH, color);
+    const bg = scene.add.rectangle(x, btnY, btnW, btnH, 0xffffff, 0).setOrigin(0).setInteractive();
+    const t = scene.add.text(x + btnW / 2, btnY + btnH / 2 - 1, label, { fontFamily: TITLE_FONT, fontSize: '18px', color: '#ffffff', stroke: '#0d1233', strokeThickness: 4 }).setOrigin(0.5).setResolution(crisp());
+    container.add([face, bg, t]);
     bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
       if (scene.time.now - opened < ARM_MS) return;
       sfx.unlock();
@@ -139,7 +144,7 @@ export function choiceCard(
       onAnswer(yes);
     });
   };
-  button(left + 16, noLabel, 0x3a4790, false);
+  button(left + 16, noLabel, KIT_COLOR.blue, false);
   button(left + 32 + btnW, yesLabel, GREEN, true);
   container.setAlpha(0);
   scene.tweens.add({ targets: container, alpha: 1, duration: 260 });

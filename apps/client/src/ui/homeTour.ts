@@ -3,6 +3,7 @@ import { reducedMotion } from '../game/motion';
 import { button } from './button';
 import { FONT, MIN_TAP, crisp, view } from './theme';
 import TOUR_JSON from '../../../../content/dojo/action-zone/home-tour.json';
+import { drawPanel } from './kit';
 
 /**
  * The Home Tour (Jay, Nov 18): after the tutorial's Floor Keeper, Sensei walks the student round their
@@ -51,7 +52,7 @@ export function senseiBubble(scene: Phaser.Scene, line: string, onNext?: () => v
   const y = at === 'top' ? BUBBLE_TOP : height - h - 14;
   const g = scene.add.graphics();
   g.fillStyle(0x000000, 0.35).fillRoundedRect(x + 2, y + 5, w, h, 16);
-  g.fillStyle(0x1b2a7a, 0.96).fillRoundedRect(x, y, w, h, 16);
+  drawPanel(g, x, y, w, h, { radius: 16, gold: true });
   g.lineStyle(3, 0xffd166, 1).strokeRoundedRect(x, y, w, h, 16);
   // The name tab.
   const tab = scene.add.text(x + 18, y, 'Sensei', { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '15px', color: '#16206b', backgroundColor: '#ffd166', padding: { x: 10, y: 3 } }).setOrigin(0, 0.5).setResolution(crisp());

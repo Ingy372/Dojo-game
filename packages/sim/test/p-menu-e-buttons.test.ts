@@ -42,13 +42,14 @@ describe('P-MENU-e: Dojo popups, the resume offer and the Gate use button()', ()
   it('the resume offer and the lesson card are rounded panels', () => {
     expect(method(dojo, 'offerResume')).toMatch(/roundPanel\(/);
     expect(method(dojo, 'card')).toMatch(/roundPanel\(/);
-    expect(method(dojo, 'roundPanel')).toMatch(/fillRoundedRect\([^)]*RADIUS\.panel\)/);
+    // U-KIT: a kit panel (rounded, dark outline).
+    expect(method(dojo, 'roundPanel')).toMatch(/drawPanel\(g, x, y, w, h, \{ radius: 14 \}\)/);
   });
   it('the Path Gate: the Seal pops once and never loops; it sits on a rounded box (LP-B1)', () => {
     const gate = method(home, 'renderPathGate');
     expect(gate).not.toMatch(/repeat: -1/);
     expect(gate).toMatch(/MOTION\.pop/);
-    expect(gate).toMatch(/fillRoundedRect\([^;]*RADIUS\.panel/);
+    expect(gate).toMatch(/drawPanel\(box, b\.x, b\.y, b\.w, b\.h, \{ radius: 14 \}\)/);
   });
 });
 

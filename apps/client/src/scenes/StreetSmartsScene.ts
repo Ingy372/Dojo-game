@@ -11,6 +11,8 @@ import { currentTraining } from '../game/student';
 import { sfx } from '../audio/Sfx';
 import { FONT, crisp, view, hiDpi } from '../ui/theme';
 import { GREEN } from '../ui/tokens';
+import { TITLE_FONT, kitBackdrop } from '../ui/kit';
+import { buttonFace } from '../ui/button';
 
 const SCENARIOS: Record<string, Scenario> = { [storeData.id]: loadScenario(storeData) };
 const UI = uiData as typeof uiData & { speakers: Record<string, string> };
@@ -60,7 +62,8 @@ export class StreetSmartsScene extends Phaser.Scene {
     this.ui.removeAll(true);
     const { width, height } = view(this);
     const pad = 12;
-    this.add.rectangle(0, 0, width, height, 0x1c1826).setOrigin(0).setDepth(-1);
+    // U-KIT: the kit sky.
+    this.add.container(0, 0, kitBackdrop(this, width, height)).setDepth(-1);
     this.text(pad, 12, UI.title, 18, '#ffd166', true);
     this.button(width - pad - 44, 8, 44, 32, '✕', 0x2a3780, 16, () => this.leave());
     this.button(width - pad - 44 - 8 - 110, 8, 110, 32, this.speak ? UI.speakOn : UI.speakOff, this.speak ? 0x3a6ea5 : 0x2a3780, 13, () => this.toggleSpeak());
@@ -209,9 +212,11 @@ export class StreetSmartsScene extends Phaser.Scene {
   }
 
   private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void): void {
-    const bg = this.add.rectangle(x, y, w, h, color).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35);
+    // U-KIT: the kit button face under a see-through tap shape.
+    this.ui.add(buttonFace(this, x, y, w, h, color));
+    const bg = this.add.rectangle(x, y, w, h, 0xffffff, 0).setOrigin(0);
     this.ui.add(bg);
-    this.text(x + w / 2, y + h / 2, label, size, '#ffffff', true, w - 12).setOrigin(0.5).setAlign('center');
+    this.text(x + w / 2, y + h / 2 - 1, label, size, '#ffffff', true, w - 12).setOrigin(0.5).setAlign('center').setFontFamily(TITLE_FONT).setFontStyle('').setStroke('#0d1233', Math.max(3, Math.round(size / 5)));
     bg.setInteractive({ useHandCursor: true }).on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
       sfx.unlock();
       onTap();

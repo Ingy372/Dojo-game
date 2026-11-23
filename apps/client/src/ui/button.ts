@@ -108,6 +108,15 @@ export function button(scene: Phaser.Scene, o: ButtonOptions, parent?: Phaser.Ga
   return { visual, hit };
 }
 
+/**
+ * U-KIT: just the kit button's face (no tap handling), with its top-left at (x, y). For screens that run
+ * their own taps on a plain shape: draw this under the shape and make the shape see-through.
+ */
+export function buttonFace(scene: Phaser.Scene, x: number, y: number, w: number, h: number, color: number, selected = false): Phaser.GameObjects.Image {
+  const key = bakeButton(scene, { x, y, w, h, label: '', color, size: 12, selected, onTap: () => {} });
+  return scene.add.image(x - PAD, y - PAD, key).setOrigin(0).setScale(1 / BAKE);
+}
+
 /** Texture pixels per point: the UI camera is zoomed by DPR, so this is one texture pixel per screen pixel. */
 const BAKE = Math.ceil(DPR);
 /** Room around the shape for the outline and the drop shadow, in points. */

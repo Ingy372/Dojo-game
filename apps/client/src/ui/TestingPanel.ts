@@ -10,6 +10,8 @@ import { FAKE_PROFILES, selectedProfileKey } from '../game/student';
 import { FONT, crisp, view } from './theme';
 import BLESS from '../../../../content/settings/blessing.json';
 import { GREEN, MIN_TAP } from './tokens';
+import { buttonFace } from './button';
+import { KIT } from './kit';
 
 const SOURCE_NAME: Record<PowerSource, string> = {
   signOffs: 'Sign-offs',
@@ -55,7 +57,7 @@ export class TestingPanel {
     this.container = scene.add.container(0, 0).setDepth(90);
     this.host = this.container;
     // Q-PREMIUM-2 L7: fully solid, so the Board never shows through.
-    const backdrop = scene.add.rectangle(0, 0, width, height, 0x0d0b14, 1).setOrigin(0).setInteractive();
+    const backdrop = scene.add.rectangle(0, 0, width, height, KIT.sky.mid, 1).setOrigin(0).setInteractive();
     this.container.add(backdrop);
     const pad = 14;
     const leftW = Math.min(300, width * 0.42);
@@ -179,7 +181,8 @@ export class TestingPanel {
   }
 
   private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void, centre = false): void {
-    const bg = this.scene.add.rectangle(x, y, w, h, color).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.3);
+    this.host.add(buttonFace(this.scene, x, y, w, h, color));
+    const bg = this.scene.add.rectangle(x, y, w, h, 0xffffff, 0).setOrigin(0);
     this.host.add(bg);
     const t = this.text(centre ? x + w / 2 : x + 10, y + h / 2, label, size, '#ffffff', true, w - 16);
     t.setOrigin(centre ? 0.5 : 0, 0.5);

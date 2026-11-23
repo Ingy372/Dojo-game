@@ -23,19 +23,19 @@ import { startTowerRun } from '../game/tower';
 import { FONT, crisp, view, hiDpi } from '../ui/theme';
 import { button } from '../ui/button';
 import { GREEN, MIN_TAP, S2 } from '../ui/tokens';
+import { KIT, KIT_TONE, drawPanel, fade } from '../ui/kit';
 
 export interface CreateSceneData {
   /** True the first time: a welcome, and no way back until the character is made. */
   first?: boolean;
 }
 
-const SKY_TOP = 0x3a2a78;
-const SKY_BOTTOM = 0x140d2b;
-const PANEL = 0x1b2a7a;
-const PANEL_EDGE = 0x4a3f6e;
+// U-KIT: the kit sky.
+const SKY_TOP = 0x2b4ac4;
+const SKY_BOTTOM = 0x0c1240;
 const GOLD = 0xffd166;
 const INK = '#f6efe2';
-const SOFT = '#c9bfe0';
+const SOFT = '#c9d6ff';
 /** The drifting sparkles' colours: gold, pink, sky blue and mint. */
 const BOKEH = [0xffd166, 0xff8ad8, 0x7fd4ff, 0x8af0c0];
 
@@ -190,8 +190,7 @@ export class CreateScene extends Phaser.Scene {
     const w = width - x0 - pad;
     const panelH = height - 2 * top;
     const panel = this.add.graphics();
-    panel.fillStyle(PANEL, 0.9).fillRoundedRect(x0, top, w, panelH, 16);
-    panel.lineStyle(2, PANEL_EDGE, 1).strokeRoundedRect(x0, top, w, panelH, 16);
+    drawPanel(panel, x0, top, w, panelH, { radius: 16 });
     panel.lineStyle(1, 0xffffff, 0.08).strokeRoundedRect(x0 + 3, top + 3, w - 6, panelH - 6, 13);
     this.ui.add(panel);
     const tabH = Math.max(MIN_TAP + 8, Math.min(60, panelH * 0.2));
@@ -217,12 +216,14 @@ export class CreateScene extends Phaser.Scene {
       const on = t.id === this.tab;
       const tx = x + i * (cw + gap);
       const g = this.add.graphics();
-      g.fillStyle(on ? 0x4a3a86 : 0x2a2240, 1).fillRoundedRect(tx, y, cw, h, 12);
-      if (on) g.fillStyle(0xffffff, 0.1).fillRoundedRect(tx + 2, y + 2, cw - 4, h * 0.45, 10);
-      g.lineStyle(on ? 3 : 1.5, on ? GOLD : PANEL_EDGE, on ? 1 : 0.9).strokeRoundedRect(tx, y, cw, h, 12);
+      // U-KIT: tab tiles: gold when picked, dark blue otherwise, with the kit outline.
+      g.fillStyle(KIT.ink, 1).fillRoundedRect(tx, y, cw, h, 12);
+      if (on) fade(g, tx + 2.5, y + 2.5, cw - 5, h - 5, 10, 0xfff3a8, KIT_TONE.gold.base);
+      else fade(g, tx + 2.5, y + 2.5, cw - 5, h - 5, 10, KIT.tabOff.top, KIT.tabOff.bottom);
+      g.fillStyle(0xffffff, on ? 0.3 : 0.08).fillRoundedRect(tx + 5, y + 4, cw - 10, h * 0.32, 7);
       this.ui.add(g);
       this.text(tx + cw / 2, y + h * 0.38, t.icon, Math.round(h * 0.36), '#ffffff').setOrigin(0.5);
-      this.text(tx + cw / 2, y + h * 0.78, t.label, cw < 64 ? 9 : 11, on ? '#ffd166' : SOFT, true).setOrigin(0.5).setWordWrapWidth(cw - 4, true).setAlign('center');
+      this.text(tx + cw / 2, y + h * 0.78, t.label, cw < 64 ? 9 : 11, on ? KIT.brown : SOFT, true).setOrigin(0.5).setWordWrapWidth(cw - 4, true).setAlign('center');
       const hit = this.add.zone(tx + cw / 2, y + h / 2, cw, Math.max(h, MIN_TAP)).setInteractive({ useHandCursor: true });
       hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
         if (this.tab === t.id || this.shuffling) return;

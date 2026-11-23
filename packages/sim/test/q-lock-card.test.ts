@@ -30,8 +30,9 @@ describe('Q-LOCK-CARD', () => {
 
   it('the locked card is solid (no alpha) and a locked tap never chooses Challenge', () => {
     expect(dojo).not.toMatch(/if \(locked\) b\.visual\.setAlpha/);
-    expect(dojo).toMatch(/color: locked \? LOCKED_CARD\.color : 0x2a2536/);
-    expect(LOCKED_CARD.color).toBeLessThan(0x2a2536);
+    // U-KIT: the open cards are the kit's navy; a locked card is darker still.
+    expect(dojo).toMatch(/color: locked \? LOCKED_CARD\.color : 0x16206b/);
+    expect(LOCKED_CARD.color).toBeLessThan(0x16206b);
     const tap = dojo.slice(dojo.indexOf('if (locked) {'), dojo.indexOf('chooseDifficulty(this.profile, c.id)'));
     expect(tap).toMatch(/this\.lockedCardTap\(b\.visual, line!\);\s*return;/);
     const fn = dojo.slice(dojo.indexOf('private lockedCardTap('), dojo.indexOf('private openBeltEntry('));

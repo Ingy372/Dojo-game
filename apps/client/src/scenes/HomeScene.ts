@@ -52,7 +52,7 @@ import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { TOUR, senseiBubble } from '../ui/homeTour';
 import { GLASS, boardBackdrop, glassPanel, heroPedestal, levelBadge } from '../ui/boardTheme';
-import { KIT, KIT_COLOR, drawPanel, kitWell, kitBackdrop, kitBar, kitPanel, kitRibbon, kitTabs } from '../ui/kit';
+import { KIT, KIT_COLOR, kitCard, kitDim, kitScreen, drawPanel, kitWell, kitBackdrop, kitBar, kitPanel, kitRibbon, kitTabs } from '../ui/kit';
 import { currentTraining, seedLoadout, selectProfile, shortDate } from '../game/student';
 import { hex } from '../ui/belt';
 import { startTowerRun } from '../game/tower';
@@ -372,8 +372,8 @@ export class HomeScene extends Phaser.Scene {
     const cx = rightX + rightW / 2;
     const h = pointer ? 92 : 60;
     const cy = pad + h / 2;
-    const shade = this.add.rectangle(cx, cy, w, h, 0x1b2a7a).setStrokeStyle(3, 0xffd166).setInteractive();
-    box.add(shade);
+    const shade = this.add.rectangle(cx, cy, w, h, 0xffffff, 0).setInteractive();
+    box.add([kitCard(this, cx, cy, w, h, { gold: true, radius: 16 }), shade]);
     const line = (y: number, str: string, size: number, color: string) =>
       box.add(
         this.add
@@ -404,13 +404,13 @@ export class HomeScene extends Phaser.Scene {
     const add = <T extends Phaser.GameObjects.GameObject>(o: T): T => (card.add(o), o);
     const label = (x: number, y: number, str: string, size: number, color: string, family = FONT) =>
       add(this.add.text(x, y, str, { fontFamily: family, fontSize: `${size}px`, color, fontStyle: 'bold', align: 'center', wordWrap: { width: 300, useAdvancedWrap: true } }).setOrigin(0.5).setResolution(crisp()));
-    add(this.add.rectangle(0, 0, width, height, 0x000000, 0.7).setOrigin(0).setInteractive());
+    add(kitDim(this, width, height));
     const w = Math.min(340, width - 40);
     const h = Math.min(280, height - 30);
     const cx = width / 2;
     const top = (height - h) / 2;
-    add(this.add.rectangle(cx, height / 2, w, h, 0x1b2a7a).setStrokeStyle(3, 0xffd166));
-    label(cx, top + 26, 'Floor cleared!', 24, '#ffd166', 'Georgia, serif');
+    add(kitCard(this, cx, height / 2, w, h));
+    kitRibbon(this, cx, top - 16, 'Floor cleared!', 20, 180).parts.forEach((o) => add(o));
     const order = ['S', 'A', 'B'] as const;
     const grade = order.find((g) => s.results.some((r) => r.grade === g));
     if (grade && showGrades(s.difficulty)) label(cx, top + h * 0.36, grade, 64, GRADE_COLOR[grade], 'Georgia, serif');
@@ -451,7 +451,7 @@ export class HomeScene extends Phaser.Scene {
     const bx = c.x + (c.w - bw) / 2;
     const bh = 106;
     const by = Math.max(S2, c.y - bh - S2);
-    box.add(this.add.rectangle(bx, by, bw, bh, 0x1b2a7a).setOrigin(0).setStrokeStyle(3, 0xffd166));
+    box.add(kitCard(this, bx, by, bw, bh, { topLeft: true, gold: true, radius: 16 }));
     const line = (y: number, str: string, size: number, color: string) =>
       box.add(this.add.text(bx + bw / 2, y, str, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, align: 'center', wordWrap: { width: bw - 24 } }).setOrigin(0.5, 0).setResolution(crisp()));
     line(by + 10, PW.introTitle, TYPE.title, '#ffd166');
@@ -2382,8 +2382,7 @@ export class HomeScene extends Phaser.Scene {
     const layer = this.add.container(0, 0).setDepth(40);
     this.bagLayer = layer;
     this.ui = layer;
-    const backdrop = this.add.rectangle(0, 0, W0, H0, 0x1b2a7a, 1).setOrigin(0).setInteractive();
-    layer.add(backdrop);
+    layer.add(kitScreen(this, W0, H0));
     const bag = filterBag(this.profile.inventory, this.gearFilter);
     const pages = bagPageCount(bag.length);
     this.bagPage = Math.min(this.bagPage, pages - 1);

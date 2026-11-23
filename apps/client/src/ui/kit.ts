@@ -452,3 +452,21 @@ export function kitStyle(style?: Phaser.Types.GameObjects.Text.TextStyle): Phase
   }
   return s;
 }
+
+// ---------------------------------------------------------------- screens and cards
+
+/** A full-screen kit page behind a pop-up screen: the kit sky, and a zone that swallows taps. */
+export function kitScreen(scene: Phaser.Scene, width: number, height: number): Phaser.GameObjects.Container {
+  const zone = scene.add.zone(0, 0, width, height).setOrigin(0).setInteractive();
+  return scene.add.container(0, 0, [...kitBackdrop(scene, width, height), zone]);
+}
+
+/**
+ * A kit card centred on (cx, cy) (or with its top-left there when `topLeft`). A gold inner rim marks a
+ * special card. Returns the drawing; give it a hit area yourself if it must swallow taps.
+ */
+export function kitCard(scene: Phaser.Scene, x: number, y: number, w: number, h: number, opts: PanelOpts & { topLeft?: boolean } = {}): Phaser.GameObjects.Graphics {
+  const x0 = opts.topLeft ? x : x - w / 2;
+  const y0 = opts.topLeft ? y : y - h / 2;
+  return kitPanel(scene, x0, y0, w, h, { radius: 18, ...opts });
+}

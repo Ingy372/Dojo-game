@@ -148,6 +148,7 @@ import { Companions, companionPacks } from '../game/companion';
 import { FX_DEPTH } from '../fx/plan';
 import { TrailEmitter, playFx, type FxPlace } from '../fx/shopFx';
 import { VISIBLE_ROWS, bossHeadroom, bossRoomZoom, bossZoomPlan, cameraBounds } from '../game/cameraView';
+import { TITLE_FONT } from '../ui/kit';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -1390,7 +1391,9 @@ export class GameScene extends Phaser.Scene {
         .setText('◀ Home')
         .setFontSize(18)
         .setPadding(10, 6, 10, 6)
-        .setBackgroundColor('#2a2536')
+        .setBackgroundColor('#2e6ae0')
+        .setFontFamily(TITLE_FONT)
+        .setFontStyle('')
         .setInteractive()
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
           if (this.leaving) return;
@@ -2473,7 +2476,7 @@ export class GameScene extends Phaser.Scene {
   private showStory(done: () => void): void {
     this.menuOpen = true;
     const { width, height } = view(this);
-    const back = this.add.rectangle(0, 0, width, height, 0x14121c, 0.94).setOrigin(0, 0).setInteractive();
+    const back = this.add.rectangle(0, 0, width, height, 0x060a24, 0.94).setOrigin(0, 0).setInteractive();
     const text = this.add
       .text(width / 2, height * 0.42, '', { fontFamily: FONT, fontStyle: 'bold', fontSize: width < 720 ? '26px' : '30px', color: '#ffffff', align: 'center', wordWrap: { width: width * 0.8 } })
       .setOrigin(0.5)
@@ -2981,7 +2984,7 @@ export class GameScene extends Phaser.Scene {
         fontStyle: 'bold',
         fontSize: width < 720 ? '16px' : '18px',
         color: '#ffffff',
-        backgroundColor: '#2a2440ee',
+        backgroundColor: '#16206bee',
         padding: { x: 12, y: 8 },
         wordWrap: { width: Math.min(width * 0.4, 300), useAdvancedWrap: true },
       })
@@ -3254,7 +3257,7 @@ export class GameScene extends Phaser.Scene {
     const { width, height } = view(this);
     const cx = width / 2;
     const cy = height * 0.4;
-    const shade = this.add.rectangle(0, 0, width, height, 0x0a0810, 0.6).setOrigin(0).setInteractive();
+    const shade = this.add.rectangle(0, 0, width, height, 0x060a24, 0.6).setOrigin(0).setInteractive();
     const rays = this.add.graphics({ x: cx, y: cy });
     const count = 10 + rank * 2;
     const reach = Math.min(width, height) * 0.62;
@@ -3952,7 +3955,7 @@ export class GameScene extends Phaser.Scene {
         fontSize: width < 720 ? '20px' : '26px',
         color: '#ffffff',
         // K24a: on the tutorial floor the box is see-through (about 65%) and the text has an outline and shadow.
-        backgroundColor: this.run?.tutorial ? '#2a2440a6' : '#2a2440dd',
+        backgroundColor: this.run?.tutorial ? '#16206ba6' : '#16206bdd',
         ...(this.run?.tutorial ? { stroke: '#120e1c', strokeThickness: 4, shadow: { offsetX: 0, offsetY: 2, color: '#000000', blur: 4, fill: true, stroke: true } } : {}),
         padding: { x: 16, y: 8 },
         align: 'center',
