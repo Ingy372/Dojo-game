@@ -1,0 +1,316 @@
+{
+ "sprites": {
+  "outfit-crimson-dragon": {
+   "size": [
+    49,
+    112
+   ],
+   "files": {
+    "outfit-crimson-dragon": "outfit-crimson-dragon.png"
+   },
+   "anchorPx": [
+    24.5,
+    112
+   ]
+  },
+  "outfit-shadow-ninja": {
+   "size": [
+    49,
+    112
+   ],
+   "files": {
+    "outfit-shadow-ninja": "outfit-shadow-ninja.png"
+   },
+   "anchorPx": [
+    24.5,
+    112
+   ]
+  },
+  "outfit-frost-guardian": {
+   "size": [
+    49,
+    112
+   ],
+   "files": {
+    "outfit-frost-guardian": "outfit-frost-guardian.png"
+   },
+   "anchorPx": [
+    24.5,
+    112
+   ]
+  },
+  "outfit-iron-samurai": {
+   "size": [
+    49,
+    112
+   ],
+   "files": {
+    "outfit-iron-samurai": "outfit-iron-samurai.png"
+   },
+   "anchorPx": [
+    24.5,
+    112
+   ]
+  },
+  "outfit-temple-monk": {
+   "size": [
+    49,
+    112
+   ],
+   "files": {
+    "outfit-temple-monk": "outfit-temple-monk.png"
+   },
+   "anchorPx": [
+    24.5,
+    112
+   ]
+  },
+  "outfit-thunder-tiger": {
+   "size": [
+    49,
+    112
+   ],
+   "files": {
+    "outfit-thunder-tiger": "outfit-thunder-tiger.png"
+   },
+   "anchorPx": [
+    24.5,
+    112
+   ]
+  },
+  "outfit-panda-pal": {
+   "size": [
+    49,
+    112
+   ],
+   "files": {
+    "outfit-panda-pal": "outfit-panda-pal.png"
+   },
+   "anchorPx": [
+    24.5,
+    112
+   ]
+  },
+  "outfit-phoenix-flame": {
+   "size": [
+    57,
+    112
+   ],
+   "files": {
+    "outfit-phoenix-flame": "outfit-phoenix-flame.png"
+   },
+   "anchorPx": [
+    28.5,
+    112
+   ]
+  },
+  "outfit-starlight": {
+   "size": [
+    49,
+    112
+   ],
+   "files": {
+    "outfit-starlight": "outfit-starlight.png"
+   },
+   "anchorPx": [
+    24.5,
+    112
+   ]
+  },
+  "outfit-jade-guardian": {
+   "size": [
+    49,
+    112
+   ],
+   "files": {
+    "outfit-jade-guardian": "outfit-jade-guardian.png"
+   },
+   "anchorPx": [
+    24.5,
+    112
+   ]
+  },
+  "hat-red-headband": {
+   "size": [
+    49,
+    61
+   ],
+   "files": {
+    "hat-red-headband": "hat-red-headband.png"
+   },
+   "anchorPx": [
+    24.5,
+    61
+   ]
+  },
+  "hat-tiger-hood": {
+   "size": [
+    49,
+    62
+   ],
+   "files": {
+    "hat-tiger-hood": "hat-tiger-hood.png"
+   },
+   "anchorPx": [
+    24.5,
+    62
+   ]
+  },
+  "hat-panda-hood": {
+   "size": [
+    49,
+    62
+   ],
+   "files": {
+    "hat-panda-hood": "hat-panda-hood.png"
+   },
+   "anchorPx": [
+    24.5,
+    62
+   ]
+  },
+  "hat-ninja-hood": {
+   "size": [
+    49,
+    62
+   ],
+   "files": {
+    "hat-ninja-hood": "hat-ninja-hood.png"
+   },
+   "anchorPx": [
+    24.5,
+    62
+   ]
+  },
+  "hat-samurai-helmet": {
+   "size": [
+    49,
+    61
+   ],
+   "files": {
+    "hat-samurai-helmet": "hat-samurai-helmet.png"
+   },
+   "anchorPx": [
+    24.5,
+    61
+   ]
+  },
+  "hat-straw-hat": {
+   "size": [
+    73,
+    63
+   ],
+   "files": {
+    "hat-straw-hat": "hat-straw-hat.png"
+   },
+   "anchorPx": [
+    36.5,
+    63
+   ]
+  },
+  "hat-dragon-horns": {
+   "size": [
+    49,
+    63
+   ],
+   "files": {
+    "hat-dragon-horns": "hat-dragon-horns.png"
+   },
+   "anchorPx": [
+    24.5,
+    63
+   ]
+  },
+  "hat-frost-crown": {
+   "size": [
+    49,
+    61
+   ],
+   "files": {
+    "hat-frost-crown": "hat-frost-crown.png"
+   },
+   "anchorPx": [
+    24.5,
+    61
+   ]
+  },
+  "hat-fox-mask": {
+   "size": [
+    49,
+    61
+   ],
+   "files": {
+    "hat-fox-mask": "hat-fox-mask.png"
+   },
+   "anchorPx": [
+    24.5,
+    61
+   ]
+  },
+  "back-hero-cape": {
+   "size": [
+    56,
+    104
+   ],
+   "files": {
+    "back-hero-cape": "back-hero-cape.png"
+   },
+   "anchorPx": [
+    28.0,
+    104
+   ]
+  },
+  "back-phoenix-wings": {
+   "size": [
+    52,
+    104
+   ],
+   "files": {
+    "back-phoenix-wings": "back-phoenix-wings.png"
+   },
+   "anchorPx": [
+    26.0,
+    104
+   ]
+  },
+  "back-dragon-tail": {
+   "size": [
+    52,
+    120
+   ],
+   "files": {
+    "back-dragon-tail": "back-dragon-tail.png"
+   },
+   "anchorPx": [
+    26.0,
+    120
+   ]
+  },
+  "back-master-scroll": {
+   "size": [
+    53,
+    104
+   ],
+   "files": {
+    "back-master-scroll": "back-master-scroll.png"
+   },
+   "anchorPx": [
+    26.5,
+    104
+   ]
+  },
+  "back-bo-staff": {
+   "size": [
+    55,
+    104
+   ],
+   "files": {
+    "back-bo-staff": "back-bo-staff.png"
+   },
+   "anchorPx": [
+    27.5,
+    104
+   ]
+  }
+ }
+}
