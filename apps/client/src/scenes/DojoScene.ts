@@ -9,6 +9,8 @@ import {
   addDecorations,
   noteBestStreak,
   openClassChests,
+  giveAchievementPieces,
+  giveShopDecor,
   canPlace,
   choreInReach,
   choresLeft,
@@ -48,7 +50,8 @@ import { LOCK_SHAKE, LOCKED_CARD, lockedLine, lockedTapFeedback, lockShakeOffset
 import { music } from '../audio/Music';
 import { addVolumeRow } from '../ui/VolumeRow';
 import { CONTENT } from '../game/content';
-import { wornShop } from '../game/shop';
+import { SHOP, wornShop } from '../game/shop';
+import { Companions, companionPacks } from '../game/companion';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
 import { TOUR, senseiBubble, tourGlow, tourLine } from '../ui/homeTour';
@@ -160,6 +163,8 @@ export class DojoScene extends Phaser.Scene {
   private player!: Phaser.GameObjects.Container;
   /** The character's art, and a one-off move it's playing (sweep, wipe, straighten, bow). */
   private hero!: LayeredSprite;
+  /** Nov 22: the shop's pet and aura. */
+  private companions: Companions | null = null;
   private heroAction: { name: string; until: number; face: Vec2 | null } | null = null;
   private calmAura!: Phaser.GameObjects.Arc;
   private ui!: Phaser.GameObjects.Container;
@@ -207,7 +212,7 @@ export class DojoScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, [...playerPacks(), 'dojo', NAMED_PACK, ...new Set(CONTENT.dojo.decorations.flatMap((d) => (d.art ? [d.art] : [])))]);
+    loadArt(this, [...playerPacks(), ...companionPacks(), 'dojo', NAMED_PACK, ...new Set(CONTENT.dojo.decorations.flatMap((d) => (d.art ? [d.art] : [])))]);
   }
 
   create(): void {
@@ -255,6 +260,13 @@ export class DojoScene extends Phaser.Scene {
     // Bottom to top: the floor and back wall, mats, the mess on the floor, standing things
     // and the character, then the front wall (the character walks behind it), outlines and labels.
     this.worldLayer.add([...room.back, this.decoLayer, this.spotLayer, this.standLayer, ...room.front, this.selectGfx, ...room.labels]);
+    // Nov 22: the shop's aura glows on the floor (under standing things) and the pet trots in the stand layer.
+    const pos = this.world.players.p1.pos;
+    this.companions = new Companions(this, pos.x * TILE, pos.y * TILE, TILE, 1, {
+      tile: TILE,
+      depth: 0,
+      add: (g) => this.worldLayer.addAt(g, this.worldLayer.getIndex(this.standLayer)),
+    }, (c) => this.standLayer.add(c));
     this.redrawDecorations();
     this.redrawSpots();
 
@@ -436,6 +448,15 @@ export class DojoScene extends Phaser.Scene {
       shown.push(fill(CW.coins, { n: chests.length * COINS.classChest }));
       const title = chests.length === 1 ? CW.title : fill(CW.titleMany, { n: chests.length });
       steps.push(() => this.card(title, [CW.line, shown.join('\n')], CW.button, next, true));
+    }
+    // Nov 22: decorations bought in the Shop and in-game achievement trophies arrive in storage (each once).
+    const bought = giveShopDecor(this.profile, this.dojo, SHOP);
+    const trophies = giveAchievementPieces(this.profile, this.dojo, CONTENT);
+    if (bought.length + trophies.length > 0) {
+      writeSave(this.profile);
+      const names = (ids: string[]) => ids.map((id) => decorationDef(CONTENT.dojo, id).name);
+      const lines = [...names(trophies).map((n) => `Trophy: ${n}`), ...names(bought)].slice(0, 4);
+      steps.push(() => this.card(trophies.length ? 'You earned a trophy!' : 'New for your dojo!', [lines.join('\n'), 'Find it in Decorate, in your storage.'], 'Great!', next));
     }
     // OV-B5: new classes add Blessing runs once, in whichever screen sees them first.
     const blessingAdded = creditBlessing(this.profile.blessing, t.classCheckIns);
@@ -970,6 +991,7 @@ export class DojoScene extends Phaser.Scene {
     const x = Phaser.Math.Linear(this.prevPos.x, p.pos.x, blend);
     const y = Phaser.Math.Linear(this.prevPos.y, p.pos.y, blend);
     this.player.setPosition(x * TILE, y * TILE);
+    this.companions?.update(x * TILE, y * TILE, this.game.loop.delta);
     this.standLayer.sort('y');
     this.animateHero();
     this.calmAura.setVisible(this.dojo.calmMindRuns > 0);

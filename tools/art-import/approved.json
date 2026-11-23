@@ -1468,6 +1468,66 @@
           "json": "incoming-art/claude-decor-v2/sprites/static.json"
         }
       ]
+    },
+    "pet-red-panda": {
+      "note": "Shop pet (Claude, Nov 22, waiting on Jay's OK): idle and walk, 8 directions. Loaded only when worn or previewed.",
+      "sources": [
+        {
+          "id": "pet",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites/red-panda/pet-red-panda.json"
+        }
+      ]
+    },
+    "pet-baby-dragon": {
+      "note": "Shop pet (Claude, Nov 22, waiting on Jay's OK): idle and walk, 8 directions. Loaded only when worn or previewed.",
+      "sources": [
+        {
+          "id": "pet",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites/baby-dragon/pet-baby-dragon.json"
+        }
+      ]
+    },
+    "pet-spirit-fox": {
+      "note": "Shop pet (Claude, Nov 22, waiting on Jay's OK): idle and walk, 8 directions. Loaded only when worn or previewed.",
+      "sources": [
+        {
+          "id": "pet",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites/spirit-fox/pet-spirit-fox.json"
+        }
+      ]
+    },
+    "pet-lucky-koi": {
+      "note": "Shop pet (Claude, Nov 22, waiting on Jay's OK): idle and walk, 8 directions. Loaded only when worn or previewed.",
+      "sources": [
+        {
+          "id": "pet",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites/lucky-koi/pet-lucky-koi.json"
+        }
+      ]
+    },
+    "pet-wise-owl": {
+      "note": "Shop pet (Claude, Nov 22, waiting on Jay's OK): idle and walk, 8 directions. Loaded only when worn or previewed.",
+      "sources": [
+        {
+          "id": "pet",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites/wise-owl/pet-wise-owl.json"
+        }
+      ]
+    },
+    "pet-little-turtle": {
+      "note": "Shop pet (Claude, Nov 22, waiting on Jay's OK): idle and walk, 8 directions. Loaded only when worn or previewed.",
+      "sources": [
+        {
+          "id": "pet",
+          "type": "character",
+          "json": "incoming-art/claude-pets/sprites/little-turtle/pet-little-turtle.json"
+        }
+      ]
     }
   }
 }

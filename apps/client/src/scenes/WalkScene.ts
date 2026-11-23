@@ -10,6 +10,7 @@ import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
 import { TrailEmitter } from '../fx/shopFx';
 import { wornShop } from '../game/shop';
+import { Companions, companionPacks } from '../game/companion';
 import { TouchControls } from '../input/TouchControls';
 import { hiDpi, view } from '../ui/theme';
 
@@ -55,6 +56,7 @@ export abstract class WalkScene extends Phaser.Scene {
   protected lookAt: Vec2 | null = null;
   private armed = new Map<string, boolean>();
   private trail: TrailEmitter | null = null;
+  private companions: Companions | null = null;
 
   /** The sim room (walls). */
   protected abstract room(): Room;
@@ -86,7 +88,7 @@ export abstract class WalkScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, [...playerPacks(), ...this.roomPacks()]);
+    loadArt(this, [...playerPacks(), ...companionPacks(), ...this.roomPacks()]);
   }
 
   create(data?: unknown): void {
@@ -112,6 +114,9 @@ export abstract class WalkScene extends Phaser.Scene {
     // LP-B4b: the walk trail from the shop, on the floor under the hero.
     const trail = wornShop().fx.trail;
     this.trail = trail ? new TrailEmitter(this, trail, { tile: TILE, depth: 0, add: (g) => this.worldLayer.add(g) }) : null;
+    // Nov 22: the shop's aura on the floor and the pet among the standing things.
+    const p0 = this.world.players.p1.pos;
+    this.companions = new Companions(this, p0.x * TILE, p0.y * TILE, TILE, 1, { tile: TILE, depth: 0, add: (g) => this.worldLayer.add(g) }, (c) => this.standLayer.add(c));
 
     this.controls = new TouchControls(this, this.cameras.main, (x, y) => this.toTile(x, y), (x, y) => this.leaving || this.paused || this.overUi(x, y), (x, y) => this.isTapTarget(this.rawTile(x, y)));
     this.layout();
@@ -196,6 +201,10 @@ export abstract class WalkScene extends Phaser.Scene {
     }
     this.onDraw(y);
     if (p.moving) this.trail?.step(x * TILE, (y + 0.15) * TILE);
+    if (this.companions) {
+      this.companions.update(x * TILE, y * TILE, this.game.loop.delta, (py) => py);
+      if (this.companions.pet) this.standLayer.sort('depth');
+    }
 
     this.hero.face(p.facing.x, p.facing.y);
     const speed = Math.hypot(p.pos.x - this.prevPos.x, p.pos.y - this.prevPos.y) * TICKS_PER_SECOND;

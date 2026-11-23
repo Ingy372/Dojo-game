@@ -2,7 +2,7 @@
 // creation and changeable in the Home Dojo. It's saved with the student's progress.
 // The belt is never part of the look: it always shows the real rank.
 
-import { wornColors, type CharacterLook } from '@dojo/sim';
+import { wornColors, wornSkins, type CharacterLook } from '@dojo/sim';
 import type { PackName } from '../art/art';
 import { loadSave, writeSave } from './save';
 import { SHOP } from './shop';
@@ -21,6 +21,8 @@ export interface PlayerLook {
   gi: number;
   /** LP-B4: shop dyes worn over the gi and hair colours ("#rrggbb"), never saved in the look. */
   dye?: { gi: string | null; hair: string | null };
+  /** Visual overhaul (Nov 22): shop skins worn (art layer ids), never saved in the look. */
+  wear?: { outfit: string | null; hat: string | null; back: string | null; hidesHair: boolean };
 }
 
 export const FACES = ['face-01', 'face-02', 'face-03', 'face-04', 'face-05', 'face-06'];
@@ -57,7 +59,7 @@ export function hasLook(): boolean {
 export function loadLook(): PlayerLook {
   const profile = loadSave();
   const saved = valid(profile.look);
-  if (saved) return { ...saved, dye: wornColors(profile, SHOP) };
+  if (saved) return { ...saved, dye: wornColors(profile, SHOP), wear: wornSkins(profile, SHOP) };
   try {
     const old = localStorage.getItem(OLD_TEST_KEY);
     if (old) return valid(JSON.parse(old) as Partial<CharacterLook>) ?? { ...DEFAULT_LOOK };
@@ -69,14 +71,25 @@ export function loadLook(): PlayerLook {
 
 export function saveLook(look: PlayerLook): void {
   const profile = loadSave();
-  const { dye: _dye, ...own } = look;
+  const { dye: _dye, wear: _wear, ...own } = look;
   profile.look = own;
   writeSave(profile);
 }
 
-/** The packs the character needs in rooms (base body, faces, the one chosen hair style). */
+/** The worn skin layers (outfit, hat, back), in that order. */
+export function skinLayers(look: PlayerLook): string[] {
+  const w = look.wear;
+  return w ? [w.outfit, w.hat, w.back].filter((x): x is string => !!x) : [];
+}
+
+/** One skin's pack (only the worn ones are loaded). */
+export function skinPack(body: Body, layer: string): PackName {
+  return `player-${body}-${layer}`;
+}
+
+/** The packs the character needs in rooms (base body, faces, the one chosen hair style, the worn skins). */
 export function lookPacks(look: PlayerLook): PackName[] {
-  return [`player-${look.body}`, `player-${look.body}-faces`, `player-${look.body}-${look.hair}`];
+  return [`player-${look.body}`, `player-${look.body}-faces`, `player-${look.body}-${look.hair}`, ...skinLayers(look).map((l) => skinPack(look.body, l))];
 }
 
 /** The kata practice moves for a look (body, faces, the chosen hair), loaded only when kata practice starts. */

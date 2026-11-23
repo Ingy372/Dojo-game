@@ -57,6 +57,19 @@ export interface CharacterArt {
  * Puts one character together from several packs (e.g. a body, its faces and one hair style),
  * keeping the layers in the art's drawing order.
  */
+/**
+ * Where a layer is drawn. Skin layers (Nov 22) come from their own packs, so the base pack's order doesn't list them:
+ * outfits and back pieces go just before the faces (under the face and hair), hats on top of everything.
+ */
+export function layerRank(order: readonly string[], name: string): number {
+  const i = order.indexOf(name);
+  if (i >= 0) return i;
+  const face = order.findIndex((n) => n.startsWith('face-'));
+  if (name.startsWith('outfit-')) return (face >= 0 ? face : order.length) - 0.6;
+  if (name.startsWith('back-')) return (face >= 0 ? face : order.length) - 0.3;
+  return order.length + (name.startsWith('hat-') ? 1 : 0);
+}
+
 export function combineArt(parts: CharacterArt[]): CharacterArt {
   const [first] = parts;
   const order = first.layerOrder ?? first.layers.map((l) => l.name);
@@ -72,7 +85,7 @@ export function combineArt(parts: CharacterArt[]): CharacterArt {
       animations[name] = { ...anim, ...(animations[name] ?? {}), layers: { ...(animations[name]?.layers ?? {}), ...anim.layers } };
     }
   }
-  layers.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+  layers.sort((a, b) => layerRank(order, a.name) - layerRank(order, b.name));
   return { ...first, layers, animations, layerPack };
 }
 

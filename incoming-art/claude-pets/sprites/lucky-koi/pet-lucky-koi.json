@@ -1,0 +1,99 @@
+{
+  "character": "pet-lucky-koi",
+  "frameWidth": 96,
+  "frameHeight": 96,
+  "anchor": {
+    "x": 48.0,
+    "y": 76.8,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.2,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "pet",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 12,
+      "fps": 10,
+      "durationSec": 1.2,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "pet": "pet-lucky-koi_pet_idle.png"
+      }
+    },
+    "walk": {
+      "frames": 8,
+      "fps": 12,
+      "durationSec": 0.6667,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "pet": "pet-lucky-koi_pet_walk.png"
+      },
+      "groundMotion": {
+        "strideTilesPerLoop": 0.5,
+        "stridePxPerLoop": 40.0,
+        "designSpeedTilesPerSec": 3.0,
+        "fpsPerTilePerSec": 16.0,
+        "note": "planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above"
+      }
+    }
+  }
+}

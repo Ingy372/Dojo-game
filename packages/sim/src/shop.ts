@@ -5,6 +5,7 @@
 // all drawn in code from the recipes here (R-SHOP 3.5).
 
 import { COINS } from './config';
+import { addDecorations, type DojoState } from './dojo';
 import type { Profile } from './profile';
 import type { RunSummary } from './run';
 
@@ -260,4 +261,20 @@ export function wornSkins(profile: Pick<Profile, 'shop'>, catalog: ShopCatalog):
 /** The aura and pet worn now, or null. */
 export function wornExtras(profile: Pick<Profile, 'shop'>, catalog: ShopCatalog): { aura: AuraRecipe | null; pet: string | null } {
   return { aura: wornShopItem(profile, catalog, 'aura')?.aura ?? null, pet: wornShopItem(profile, catalog, 'pet')?.pet ?? null };
+}
+
+/**
+ * Decorations bought in the Shop arrive in the Home Dojo's storage (each once, tracked with the other one-time
+ * pieces in decorEarning.given). Called when the dojo is opened, so a piece bought before the dojo existed still arrives.
+ */
+export function giveShopDecor(profile: Profile, dojo: DojoState, catalog: ShopCatalog): string[] {
+  const out: string[] = [];
+  for (const id of profile.shop.owned) {
+    const decor = catalog.items.find((i) => i.id === id)?.decor;
+    if (!decor || profile.decorEarning.given.includes(`shop:${decor}`)) continue;
+    profile.decorEarning.given.push(`shop:${decor}`);
+    out.push(decor);
+  }
+  if (out.length) addDecorations(dojo, out);
+  return out;
 }

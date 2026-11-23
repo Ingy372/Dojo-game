@@ -144,6 +144,7 @@ import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
 import { wornShop } from '../game/shop';
+import { Companions, companionPacks } from '../game/companion';
 import { FX_DEPTH } from '../fx/plan';
 import { TrailEmitter, playFx, type FxPlace } from '../fx/shopFx';
 import { VISIBLE_ROWS, bossHeadroom, bossRoomZoom, bossZoomPlan, cameraBounds } from '../game/cameraView';
@@ -328,6 +329,7 @@ export class GameScene extends Phaser.Scene {
   /** The student's real progress, and the character it makes (level, abilities, Virtue). */
   private training!: TrainingState;
   private setup!: CharacterSetup;
+  private companions: Companions | null = null;
   private shopFx: ReturnType<typeof wornShop>['fx'] = { trail: null, puff: null, hit: null, win: null };
   private trail: TrailEmitter | null = null;
   /** Aura around the character while a Virtue lasts. */
@@ -522,7 +524,7 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || testFlags().has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK, ...(this.run?.tutorial ? [TUTORIAL_PACK] : [])]);
+    loadArt(this, [...playerPacks(), ...companionPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK, ...(this.run?.tutorial ? [TUTORIAL_PACK] : [])]);
 
     loadGearIcons(this);
   }
@@ -635,6 +637,11 @@ export class GameScene extends Phaser.Scene {
     this.cues = this.add.graphics().setDepth(9.5);
     this.marker = this.add.circle(0, 0, TILE * 0.22).setStrokeStyle(3, COLORS.marker, 0.9).setVisible(false).setDepth(2);
     this.player = this.makePlayer();
+    // Nov 22: the shop's pet and aura (looks only; the aura is drawn at the shop effects' depth, under every danger mark).
+    {
+      const p0 = this.world.players[this.me].pos;
+      this.companions = new Companions(this, p0.x * TILE, p0.y * TILE, TILE, 1, this.fxPlace(), (c) => this.addWorld(c));
+    }
 
     // Two cameras: one follows the character through the room, one holds the on-screen controls.
     const cam = this.cameras.main;
@@ -737,6 +744,8 @@ export class GameScene extends Phaser.Scene {
     this.player.setPosition(x * TILE, y * TILE).setDepth(depthAt(y * TILE));
     this.animateHero(p, now);
     if (p.moving) this.trail?.step(x * TILE, (y + 0.15) * TILE);
+    // The pet stays under enemy warnings too (FX_DEPTH), so it can never hide a danger mark.
+    this.companions?.update(x * TILE, y * TILE, this.game.loop.delta, () => FX_DEPTH);
 
     const r = MOVEMENT.playerRadius * TILE;
 

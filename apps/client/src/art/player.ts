@@ -2,7 +2,7 @@
 
 import Phaser from 'phaser';
 import { MOVEMENT, type BeltInfo } from '@dojo/sim';
-import { DEFAULT_LOOK, FACES, HAIRS, bigLookPack, kataPacks, lookPacks, type PlayerLook } from '../game/look';
+import { DEFAULT_LOOK, FACES, HAIRS, bigLookPack, kataPacks, lookPacks, skinLayers, type PlayerLook } from '../game/look';
 import { drawBelt, makeCharacter } from '../ui/belt';
 import { type CharacterArt, addAnimations, characterArt, characterTop, combineArt } from './art';
 import { LayeredSprite } from './LayeredSprite';
@@ -52,6 +52,10 @@ export function dressLook(sprite: LayeredSprite, look: PlayerLook): void {
     sprite.setLayer(h, h === look.hair);
     sprite.setLayerTint(h, look.dye?.hair ? rgb(look.dye.hair) : swatch('hair', look.hairColor, '#3a2519'));
   }
+  // Skins (Nov 22): only the worn outfit, hat and back piece show; a hood or helmet hides the hair under it.
+  const worn = new Set(skinLayers(look));
+  for (const name of sprite.images.keys()) if (/^(outfit|hat|back)-/.test(name)) sprite.setLayer(name, worn.has(name));
+  if (look.wear?.hidesHair && look.wear.hat && sprite.images.has(look.wear.hat)) for (const h of HAIRS) sprite.setLayer(h, false);
   sprite.setLayerTint('skin', swatch('skin', look.skin, '#efc3a4'));
   sprite.setLayerTint('gi', look.dye?.gi ? rgb(look.dye.gi) : swatch('gi', look.gi, '#f2f2f2'));
 }
@@ -93,6 +97,8 @@ export function addKataMoves(scene: Phaser.Scene, sprite: LayeredSprite, look: P
   const parts = kataPacks(look).map((pack) => characterArt(scene, pack, 'player'));
   if (!parts.every((p): p is CharacterArt => !!p)) return false;
   addAnimations(sprite.art, parts);
+  // Skins have no kata art: kata practice is done in the plain gi, so the hair under a hood shows again.
+  if (look.wear?.hidesHair) sprite.setLayer(look.hair, true);
   return true;
 }
 
@@ -131,7 +137,8 @@ export function makeStandingCharacter(
   stripes: number,
   look: PlayerLook = DEFAULT_LOOK,
 ): StandingCharacter {
-  const art = characterArt(scene, bigLookPack(look), 'player') ?? roomArt(scene, look);
+  // The full-detail pack has no skins: a hero wearing one is drawn from the room packs (which carry the skins).
+  const art = (skinLayers(look).length ? roomArt(scene, look) : null) ?? characterArt(scene, bigLookPack(look), 'player') ?? roomArt(scene, look);
   if (!art) {
     const ch = makeCharacter(scene, x, y, r, belt, stripes);
     return { container: ch.container, sprite: null, retie: (b, n) => drawBelt(ch.belt, 0, r * 0.15, r * 1.9, r * 0.3, b, n) };
