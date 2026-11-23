@@ -18,6 +18,7 @@ export * from './content';
 export * from './run';
 export * from './profile';
 export * from './social';
+export * from './economy';
 export * from './feed';
 export * from './abilities';
 export * from './training';

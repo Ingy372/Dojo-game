@@ -76,7 +76,7 @@ describe('coins a run pays (LP-P1 #494)', () => {
     delete old.shop;
     const p = loadProfile(old);
     expect(p.coins).toBe(0);
-    expect(p.shop).toEqual({ owned: [], wearing: { gi: null, hair: null, trail: null, puff: null, hit: null, win: null, wall: null, outfit: null, hat: null, back: null, aura: null, pet: null, decor: null } });
+    expect(p.shop).toEqual({ owned: [], wearing: { gi: null, hair: null, trail: null, puff: null, hit: null, win: null, wall: null, outfit: null, hat: null, back: null, aura: null, pet: null, decor: null }, wish: null });
     expect(loadProfile({ ...old, coins: -40 }).coins).toBe(0);
     p.coins = 350;
     expect(buyLook(p, CATALOG, 'gi-rose', 1)).toBe(true);
@@ -174,7 +174,8 @@ describe('buying and wearing', () => {
     expect(p.shop.owned).toHaveLength(CATALOG.items.length);
     expect(JSON.stringify(playerStats(p))).toBe(before);
     const readers = Object.entries(SIM_SRC).filter(([f, code]) => !f.endsWith('/shop.ts') && /\.shop\b|wornColors|ShopSave/.test(code)).map(([f]) => f.split('/').pop());
-    expect(readers).toEqual(['profile.ts']);
+    // Nov 23: economy.ts reads the shop's Wish for the progress bar (coins only, never a fight).
+    expect(readers).toEqual(['economy.ts', 'profile.ts']);
   });
 });
 

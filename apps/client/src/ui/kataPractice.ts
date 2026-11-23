@@ -511,11 +511,11 @@ export class KataPad {
   }
 
   /** The finish card: misses, the time if timed, and the bests. "Again" plays the same kata. */
-  showResult(o: { wrong: number; ms: number | null; best: KataBest; newBestTime: boolean; newFewest: boolean; again: () => void; done: () => void }): void {
+  showResult(o: { wrong: number; ms: number | null; best: KataBest; newBestTime: boolean; newFewest: boolean; coins?: number; firstClean?: boolean; again: () => void; done: () => void }): void {
     const s = this.scene;
     const { width, height } = view(s);
     const cw = Math.min(380, width - 2 * MARGIN);
-    const ch = 220;
+    const ch = o.coins ? 250 : 220;
     const c = s.add.container(width / 2, height / 2).setDepth(115);
     const g = s.add.graphics();
     g.fillStyle(0x221a33, 0.96).fillRoundedRect(-cw / 2, -ch / 2, cw, ch, 18).lineStyle(3, GOLD, 0.8).strokeRoundedRect(-cw / 2, -ch / 2, cw, ch, 18);
@@ -528,6 +528,8 @@ export class KataPad {
     if (o.newBestTime) bests.push('Fastest time yet!');
     lines.push(bests.length ? bests.join('  ') : bestLine(o.best, o.ms !== null));
     lines.forEach((l, i) => c.add(text(s, 0, -ch / 2 + 54 + i * 26, l, i === 2 ? 13 : 17, i === 2 && bests.length ? '#7fe0a8' : INK).setOrigin(0.5, 0)));
+    // Nov 23: the coins this practice earned (hard work = reward)
+    if (o.coins) c.add(text(s, 0, -ch / 2 + 54 + lines.length * 26 + 2, o.firstClean ? `First clean form! +${o.coins} coins` : `+${o.coins} coins`, 18, '#ffd166').setOrigin(0.5, 0));
     const bw = (cw - 60) / 2;
     button(s, { x: -cw / 2 + 20, y: ch / 2 - 62, w: bw, h: 44, label: 'Again', color: 0x6a3fb0, size: 18, onTap: o.again }, c);
     button(s, { x: cw / 2 - 20 - bw, y: ch / 2 - 62, w: bw, h: 44, label: 'Done', color: 0x3a3150, size: 18, onTap: o.done }, c);

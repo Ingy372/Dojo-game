@@ -12,6 +12,7 @@ import {
   sellValue,
   sellable,
   shelf,
+  wishProgress,
   slotOf,
   wearLook,
   SKIN_SLOTS,
@@ -235,6 +236,17 @@ export function openShop(
     drawCoin(chip, cx0 + 18, pad + MIN_TAP / 2, 13);
     layer.add(chip);
     text(cx0 + 18 + (coinW - 18) / 2, pad + (MIN_TAP - TYPE.title) / 2 - 1, `${profile.coins}`, TYPE.title + 2, '#fff6dc', true);
+    // Nov 23: the Wish (the look being saved up for): a bar under the coins fills as coins come in
+    const wishItem = profile.shop.wish ? itemOf(profile.shop.wish) : null;
+    const wish = wishProgress(profile, wishItem?.price ?? null);
+    if (wish && wishItem) {
+      const bar = scene.add.graphics();
+      const by = pad + MIN_TAP - 3;
+      bar.fillStyle(0x0e0c1c, 0.9).fillRoundedRect(cx0 + 8, by, coinW - 16, 7, 3);
+      bar.fillStyle(wish.ready ? 0x7fe0a8 : 0xffd166).fillRoundedRect(cx0 + 8, by, Math.max(4, ((coinW - 16) * wish.have) / wish.need), 7, 3);
+      layer.add(bar);
+      text(cx0 - 8, pad + 14, wish.ready ? fill(W.wishReady, { name: wishItem.name }) : fill(W.wishBar, { have: wish.have, need: wish.need }), TYPE.label, wish.ready ? '#b8ffcf' : '#ffe8a8', true).setOrigin(1, 0);
+    }
 
     const top = pad + MIN_TAP + S2;
     const bodyH = height - top - pad;
@@ -336,6 +348,16 @@ export function openShop(
       draw();
     };
     if (toast) line(toast, '#ffd166');
+    // Nov 23: tap the star to make this look your Wish (one at a time) and watch the bar fill as you earn coins
+    if (item && !profile.shop.owned.includes(item.id)) {
+      const wished = profile.shop.wish === item.id;
+      button(scene, { x: x0 + leftW - 92, y: top + 8, w: 84, h: 32, label: wished ? W.wished : W.wish, color: wished ? 0xd99a1e : 0x4a3a7a, size: TYPE.label + 1, selected: wished, onTap: () => {
+        profile.shop.wish = wished ? null : item.id;
+        writeSave(profile);
+        sfx.tap();
+        draw();
+      } }, layer);
+    }
     if (slot === 'decor' && item) {
       if (profile.shop.owned.includes(item.id)) {
         line(W.decorOwned, '#b8ffcf');
@@ -356,6 +378,7 @@ export function openShop(
       line(short > 0 ? fill(W.short, { n: short }) : fill(W.afterLine, { before: profile.coins, after: profile.coins - item.price }));
       act(fill(W.price, { n: item.price }), short > 0 ? null : () => {
         if (!buyLook(profile, SHOP, item.id, tier)) return;
+        if (profile.shop.wish === item.id) profile.shop.wish = null;
         writeSave(profile);
         onEvent('bought');
         sfx.chest();
@@ -730,6 +753,9 @@ export function openShop(
       const k = scene.add.graphics();
       k.lineStyle(4, 0xffffff).strokeRoundedRect(x - 2, y - 2, w + 2, h, 12);
       parent.add(k);
+    }
+    if (it && profile.shop.wish === it.id) {
+      parent.add(scene.add.text(x + w - 8, y + 4, '★', { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#ffd166' }).setOrigin(1, 0).setResolution(crisp()).setStroke('#140f1c', 3));
     }
     const hit = scene.add.zone(x + w / 2, y + h / 2, w, h).setInteractive({ useHandCursor: true });
     hit.on('pointerup', () => {

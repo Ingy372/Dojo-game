@@ -17,6 +17,7 @@ import {
 import { homeDojo } from './dojo';
 import { loadSave, writeSave } from './save';
 import { CONTENT } from './content';
+import { localDay } from './lessons';
 
 const KEY = 'dojo-ascent-run-in-progress';
 
@@ -60,7 +61,7 @@ export function bankRun(
   clearRunInProgress();
   const profile = loadSave();
   const summary = summarizeRun(run);
-  finishRun(profile, summary);
+  finishRun(profile, summary, localDay());
   recordFloorResult(profile, run.tier, result);
   // Surprise pieces keep their colour roll; all remember this floor's belt. One-time pieces
   // (Journal trophies, keeper statues, the folding screen) are added too. Test runs add nothing.

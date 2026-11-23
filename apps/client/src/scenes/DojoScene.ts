@@ -3,12 +3,14 @@ import { reducedMotion, setReducedMotion } from '../game/motion';
 import {
   BOW,
   COINS,
+  EARN,
   DOJO,
   MOVEMENT,
   TICKS_PER_SECOND,
   addDecorations,
   noteBestStreak,
   openClassChests,
+  payRealCoins,
   giveAchievementPieces,
   giveShopDecor,
   canPlace,
@@ -471,6 +473,19 @@ export class DojoScene extends Phaser.Scene {
         }),
       );
     }
+    // Nov 23 (economy): real training pays the biggest coins, shown after its celebration. The very first look
+    // only notes what was already earned (a long history doesn't pour in at once).
+    steps.push(() => {
+      const pay = payRealCoins(this.profile, this.training);
+      writeSave(this.profile);
+      if (pay.coins <= 0) return next();
+      const lines: string[] = [];
+      if (pay.promotions) lines.push(`New belt: +${(pay.promotions * EARN.promotion).toLocaleString()}`);
+      if (pay.stripes) lines.push(`${pay.stripes === 1 ? 'A new stripe' : `${pay.stripes} new stripes`}: +${(pay.stripes * EARN.stripe).toLocaleString()}`);
+      if (pay.tests) lines.push(`Approved to test: +${(pay.tests * EARN.testApproved).toLocaleString()}`);
+      if (pay.signOffs) lines.push(`${pay.signOffs === 1 ? 'A sign-off' : `${pay.signOffs} sign-offs`}: +${(pay.signOffs * EARN.signOff).toLocaleString()}`);
+      this.card('Hard work pays off!', [`Your training in class earned ${pay.coins.toLocaleString()} coins!`, lines.join('\n')], 'Awesome!', next, true);
+    });
     // Welcome Week (M7-P7): at most one new system a day for an existing student, shared with the lessons.
     // G2B12-FIXES: not on the very first visit, so a new student isn't walked through five cards in a row.
     const system = systemMayShow({ firstVisit }) ? systemForToday(this.profile, this.training) : null;

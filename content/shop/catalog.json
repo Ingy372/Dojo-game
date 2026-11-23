@@ -1514,6 +1514,10 @@
   ],
   "_noteWords": "words: the Shop screen. {n}, {name}, {before}, {after} are filled in by the game. Kid lines 8 words or fewer. PLACEHOLDERS for Content.",
   "words": {
+    "wish": "☆ Wish",
+    "wished": "★ My Wish",
+    "wishBar": "Wish: {have} / {need}",
+    "wishReady": "You can get your Wish!",
     "sellTab": "Sell",
     "sellShelf": "Your gear",
     "sellLine": "Miss Hannah will give you {n} coins for it.",

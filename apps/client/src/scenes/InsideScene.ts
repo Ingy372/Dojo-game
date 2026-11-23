@@ -9,6 +9,7 @@ import {
   matBowHere,
   modsFrom,
   newMatGate,
+  kataCoins,
   practiceKatas,
   recordKataRun,
   type Facing as KataFacing,
@@ -27,6 +28,7 @@ import { CONTENT, KATAS, KATA_MOVES } from '../game/content';
 import { reducedMotion } from '../game/motion';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
+import { localDay } from '../game/lessons';
 import { kataPacks, loadLook } from '../game/look';
 import { addStatic, loadArt, staticArt, staticSprites } from '../art/art';
 import { addKataMoves } from '../art/player';
@@ -686,6 +688,8 @@ export class InsideScene extends WalkScene {
     const pad = this.kataPad;
     if (!pad) return;
     const profile = loadSave();
+    // Nov 23: kata practice earns coins (clean form most; the first clean run of a kata a big one-time bonus).
+    const pay = kataCoins(profile, kata.id, wrong, profile.kataBests[kata.id], localDay());
     const result = recordKataRun(profile.kataBests[kata.id], wrong, ms);
     profile.kataBests = { ...profile.kataBests, [kata.id]: result.best };
     writeSave(profile);
@@ -715,6 +719,8 @@ export class InsideScene extends WalkScene {
             wrong,
             ms,
             ...result,
+            coins: pay.coins,
+            firstClean: pay.firstClean,
             again: () => {
               this.stopKata();
               this.startKata(kata, timeTrial);

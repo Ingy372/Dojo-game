@@ -310,7 +310,7 @@ export const BLESSING = {
 
 /**
  * LP-B4 (L13, LP-P1 #494): coins, earned by playing and by real classes, spent only in the looks
- * shop. Fixed amounts, never random, never bought, never lost.
+ * shop. Fixed amounts, never random, never bought, never lost. Nov 23: see EARN for training and learning.
  */
 export const COINS = {
   /** Any finished run, won or lost (a rest before the first room is cleared pays nothing). */
@@ -337,6 +337,37 @@ export const SELL_PRICE: Readonly<Record<Rarity, number>> = {
   epic: 100,
   legendary: 250,
 };
+
+/**
+ * The coin economy (Jay, Nov 23: "Hard work = Reward", see docs/economy.md). Real training pays the most, then
+ * learning in the game (clean kata, Street Smarts), then the Tower. Repeats of the same thing pay full only for the
+ * first few times each day. A promotion is always the biggest coin gift in the game.
+ */
+export const EARN = {
+  /** Real training (paid once each, when the game first sees it). */
+  promotion: 1000,
+  stripe: 300,
+  testApproved: 250,
+  signOff: 150,
+  /** Kata practice: no misses, a few misses (up to kataFewMisses), finished; then the small amount once tired. */
+  kataClean: 40,
+  kataFew: 25,
+  kataFewMisses: 2,
+  kataDone: 10,
+  kataAfter: 3,
+  /** Full pay for the first this-many practices of each kata a day. */
+  kataFullPerDay: 3,
+  /** The first time each kata is done with no misses: a one-time bonus. */
+  kataFirstClean: 150,
+  /** Street Smarts: the first finish, each star (a better choice found), and replays (the first few a day). */
+  scenarioFirst: 100,
+  scenarioStar: 40,
+  scenarioReplay: 10,
+  scenarioReplaysPerDay: 2,
+  /** Tower runs pay full for the first this-many runs a day, then this share. */
+  runsFullPerDay: 6,
+  runAfterShare: 0.5,
+} as const;
 
 /**
  * Town social rules (Jay, Nov 23): preset phrases and parties. Ticks are 20 per second.
