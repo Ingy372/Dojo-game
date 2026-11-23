@@ -1424,3 +1424,12 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - **Jay's second look (Nov 22, desktop):** the shop's big preview looked pixelated, the pets most. It was the small in-game art stretched up. Now the preview has its own art: the idle facing the camera rendered at twice the game's resolution for the hero (every face and hair), every skin and every pet (`render_stage.sh`; packs `player-{a,b}-stage`, `player-{a,b}-stage-skins`, `pets-big`, about 1.7 MB, loaded only when the shop opens). The town's Shop button is also hidden during Sensei's town tour (his bubble was covering the shop).
 - **Nov 23:** Jay OK'd the overhaul ("looks good"); merged onto `main` (the live link).
 - **Next (was):** Jay looks at the previews and plays the preview link; OK (or changes) for the art, names and prices; decide whether the Floor Keeper should also pause (can't be hurt) while it transforms.
+
+## Pro shop, Hannah, selling, phrases, parties and coins (2026-11-23, branch `claude/shop-hub`)
+- **Pro shop:** walk up to the Action Zone's pro shop counter for the Shop button. **Miss Hannah** stands behind it, waves, says hello and goodbye (draft lines).
+- **Staff art:** Jay, Hannah and Michael rebuilt on the hero v2 model from Jay's photos (preview `incoming-art/claude-staff/preview/staff-new.png`). Hannah is in the game; Jay and Michael are ready but not placed.
+- **Sell tab:** Hannah buys unwanted gear for fixed coins by rarity; worn gear stays; "Sell all Commons".
+- **Town:** Say button with 15 draft phrases in bright bubbles; tap a classmate for their card; party invites both ways, party menu, party list. Tap-to-move kept. Try it with `?room=town&crowd=6`.
+- **Coins:** real training pays most, then clean kata and Street Smarts, then the Tower; repeats pay full only the first few times a day; the Wish in the shop. Plan in `docs/economy.md`.
+- 1,693 tests pass; type checks pass; checked in the browser at 932 × 430. Not on `main`.
+- **Next:** Jay plays the preview; OK (or changes) for the staff art, Hannah's name and lines, the 15 phrases and the coin numbers; where Jay and Michael should stand; then copy to `main` with his OK. The live shared town needs the game server (a later milestone).
