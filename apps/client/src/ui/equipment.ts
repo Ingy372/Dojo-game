@@ -16,18 +16,15 @@ import { loadLook } from '../game/look';
 import { reducedMotion } from '../game/motion';
 import { writeSave } from '../game/save';
 import { button } from './button';
+import { KIT, KIT_COLOR, drawPanel, fade, kitBackdrop, kitClose, kitPedestal, kitRibbon } from './kit';
 import { GEAR_WORDS } from './gearBoard';
 import { FONT, RARITY_COLOR, crisp, rarityName } from './theme';
 import { MIN_TAP } from './tokens';
 
 const W = GEAR_WORDS;
-const INK = '#f6efe2';
-const SOFT = '#b9b0c8';
+const INK = '#ffffff';
+const SOFT = '#c9d6ff';
 const UP = 0x6fdc8c;
-const BG_TOP = 0x231c33;
-const BG_BOTTOM = 0x110e18;
-const PANEL = 0x1b2a7a;
-const PANEL_EDGE = 0x3c4ea8;
 const GOLD = 0xffc94d;
 
 export const EQUIP_WORDS = {
@@ -66,12 +63,6 @@ export function canWearBest(profile: Profile): boolean {
 function worn(profile: Profile, slot: GearSlot): GearItem | null {
   const uid = profile.equipped[slot];
   return uid ? profile.inventory.find((i) => i.uid === uid) ?? null : null;
-}
-
-/** Darker shade of a colour (for tile backgrounds). */
-function shade(color: number, k: number): number {
-  const c = Phaser.Display.Color.IntegerToColor(color);
-  return Phaser.Display.Color.GetColor(Math.round(c.red * k), Math.round(c.green * k), Math.round(c.blue * k));
 }
 
 interface SlotView {
@@ -170,20 +161,19 @@ export class EquipmentScreen {
     const s = this.scene;
 
     // Background: a deep gradient with a soft spotlight behind the hero.
-    const bg = s.add.graphics();
-    bg.fillGradientStyle(BG_TOP, BG_TOP, BG_BOTTOM, BG_BOTTOM, 1).fillRect(0, 0, width, height);
-    this.layer.add(bg);
+    // U-KIT: the kit sky behind everything.
+    this.layer.add(kitBackdrop(s, width, height));
     // Blocks taps to whatever is underneath.
     this.layer.add(s.add.zone(0, 0, width, height).setOrigin(0).setInteractive());
 
     const pad = Math.max(10, Math.min(16, width * 0.015));
     const headH = MIN_TAP;
     // Header: Back, the title, and Wear best.
-    button(s, { x: pad, y: pad, w: 96, h: headH, label: W.back, color: 0x3c4ea8, size: 15, onTap: () => this.close() }, this.layer);
-    this.layer.add(this.text(pad + 96 + 14, pad + headH / 2, EQUIP_WORDS.title, 22).setOrigin(0, 0.5).setFontFamily('Georgia, serif'));
+    button(s, { x: pad, y: pad, w: 96, h: headH, label: W.back, color: KIT_COLOR.blue, size: 15, onTap: () => this.close() }, this.layer);
+    this.layer.add(kitRibbon(s, width / 2, pad + 2, EQUIP_WORDS.title, 20, 170).parts);
     const bestOn = canWearBest(this.profile);
     const bestW = 132;
-    const b = button(s, { x: width - pad - bestW, y: pad, w: bestW, h: headH, label: `★ ${EQUIP_WORDS.best}`, color: bestOn ? 0xc98a1c : 0x3c4ea8, size: 15, disabled: !bestOn, onTap: () => this.wearBest() }, this.layer);
+    const b = button(s, { x: width - pad - bestW, y: pad, w: bestW, h: headH, label: `★ ${EQUIP_WORDS.best}`, color: bestOn ? KIT_COLOR.gold : KIT_COLOR.dim, size: 15, disabled: !bestOn, onTap: () => this.wearBest() }, this.layer);
     if (bestOn && !reducedMotion()) s.tweens.add({ targets: b.visual, scale: 1.05, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
 
     const top = pad + headH + 10;
@@ -197,8 +187,7 @@ export class EquipmentScreen {
   private drawShowcase(x: number, y: number, w: number, h: number): void {
     const s = this.scene;
     const panel = s.add.graphics();
-    panel.fillStyle(PANEL, 0.92).fillRoundedRect(x, y, w, h, 14);
-    panel.lineStyle(2, PANEL_EDGE, 1).strokeRoundedRect(x, y, w, h, 14);
+    drawPanel(panel, x, y, w, h, { radius: 16 });
     this.layer.add(panel);
 
     const slotSize = Math.round(Math.min(84, Math.max(56, Math.min(w / 3.8, h * 0.27))));
@@ -211,12 +200,11 @@ export class EquipmentScreen {
 
     // Spotlight and pedestal.
     // A soft spotlight: rings of fading light instead of one flat disc.
-    for (let i = 5; i >= 1; i--) this.layer.add(s.add.circle(cx, footY - r * 0.9, r * (0.9 + i * 0.42), 0x8f7bd6, 0.035));
-    const glow = s.add.circle(cx, footY - r * 0.9, r * 1.5, 0xb9a6ff, 0.1);
+    for (let i = 5; i >= 1; i--) this.layer.add(s.add.circle(cx, footY - r * 0.9, r * (0.9 + i * 0.42), 0x78b4ff, 0.035));
+    const glow = s.add.circle(cx, footY - r * 0.9, r * 1.5, 0x9ad1ff, 0.12);
     this.heroGlow = glow;
-    const ring = s.add.ellipse(cx, footY + r * 1.25, r * 3.6, r * 1.0, 0x000000, 0.35);
-    const ped = s.add.ellipse(cx, footY + r * 1.2, r * 3.2, r * 0.8, 0x4a3f68, 1).setStrokeStyle(2, 0x8f7bd6, 0.8);
-    this.layer.add([glow, ring, ped]);
+    // U-KIT: the kit's green pedestal.
+    this.layer.add([glow, kitPedestal(s, cx, footY + r * 1.15, r * 3.3)]);
     if (!reducedMotion()) s.tweens.add({ targets: glow, alpha: 0.2, duration: 1600, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
     const t = this.opts.training;
     const hero = makeStandingCharacter(s, cx, footY, r, t.belt, t.stripesThisBelt, loadLook()).container;
@@ -242,12 +230,13 @@ export class EquipmentScreen {
       box.add(this.tileBack(item, size, true));
     } else {
       const g = s.add.graphics();
-      g.fillStyle(0x15111e, 1).fillRoundedRect(-size / 2, -size / 2, size, size, 12);
-      g.lineStyle(2, 0x4a4060, 1).strokeRoundedRect(-size / 2, -size / 2, size, size, 12);
+      g.fillStyle(KIT.ink, 1).fillRoundedRect(-size / 2, -size / 2, size, size, 12);
+      g.fillStyle(KIT.well, 0.9).fillRoundedRect(-size / 2 + 3, -size / 2 + 3, size - 6, size - 6, 9);
+      g.lineStyle(1.5, KIT.wellRim, 0.9).strokeRoundedRect(-size / 2 + 3.5, -size / 2 + 3.5, size - 7, size - 7, 8.5);
       box.add(g);
       const ghost = addGearIcon(s, { slot, rarity: 'common' }, 0, -4, size * 0.62);
-      if (ghost) box.add(ghost.setAlpha(0.18).setTint(0x8d84a3));
-      box.add(this.text(0, size * 0.3, '+', 16, '#6f6688').setOrigin(0.5));
+      if (ghost) box.add(ghost.setAlpha(0.22).setTint(0x9aa6d6));
+      box.add(this.text(0, size * 0.3, '+', 18, KIT.soft).setOrigin(0.5));
     }
     const label = this.text(0, size / 2 + 4, W.slots[slot], 12, item ? INK : SOFT).setOrigin(0.5, 0);
     box.add(label);
@@ -274,10 +263,12 @@ export class EquipmentScreen {
     if (rank >= 2) {
       g.fillStyle(col, inSlot ? 0.28 : 0.18).fillRoundedRect(-size / 2 - 4, -size / 2 - 4, size + 8, size + 8, rr + 4);
     }
-    g.fillGradientStyle(shade(col, 0.55), shade(col, 0.55), shade(col, 0.22), shade(col, 0.22), 1).fillRoundedRect(-size / 2, -size / 2, size, size, rr);
-    g.fillStyle(0xffffff, 0.1).fillRoundedRect(-size / 2 + 3, -size / 2 + 3, size - 6, size * 0.42, { tl: rr - 2, tr: rr - 2, bl: 4, br: 4 });
-    g.lineStyle(3, col, 1).strokeRoundedRect(-size / 2, -size / 2, size, size, rr);
-    g.lineStyle(1, 0x000000, 0.5).strokeRoundedRect(-size / 2 + 3, -size / 2 + 3, size - 6, size - 6, rr - 3);
+    // U-KIT: the kit's rarity tile (dark outline, bright rarity face, light inner rim).
+    const face = KIT.rarity[item.rarity];
+    g.fillStyle(KIT.ink, 1).fillRoundedRect(-size / 2, -size / 2, size, size, rr);
+    fade(g, -size / 2 + 3, -size / 2 + 3, size - 6, size - 6, rr - 3, face.top, face.bottom);
+    g.fillStyle(0xffffff, 0.16).fillRoundedRect(-size / 2 + 6, -size / 2 + 5, size - 12, size * 0.32, { tl: rr - 5, tr: rr - 5, bl: 4, br: 4 });
+    g.lineStyle(2.5, face.rim, 1).strokeRoundedRect(-size / 2 + 4.5, -size / 2 + 4.5, size - 9, size - 9, rr - 4);
     const icon = addGearIcon(s, item, 0, -size * 0.02, size * 0.9);
     return icon ? [g, icon] : [g];
   }
@@ -286,8 +277,7 @@ export class EquipmentScreen {
   private drawBag(x: number, y: number, w: number, h: number): void {
     const s = this.scene;
     const panel = s.add.graphics();
-    panel.fillStyle(PANEL, 0.92).fillRoundedRect(x, y, w, h, 14);
-    panel.lineStyle(2, PANEL_EDGE, 1).strokeRoundedRect(x, y, w, h, 14);
+    drawPanel(panel, x, y, w, h, { radius: 16 });
     this.layer.add(panel);
 
     // Chips: All, Hands, Gi, Charms, each with its count.
@@ -353,7 +343,7 @@ export class EquipmentScreen {
       } else if (compareGear(item, worn(this.profile, item.slot)) === 'up') {
         // A green arrow badge: better than what's worn.
         const badge = s.add.graphics();
-        badge.fillStyle(0x14111c, 0.9).fillCircle(tile / 2 - 11, -tile / 2 + 11, 10);
+        badge.fillStyle(0x0d1233, 0.9).fillCircle(tile / 2 - 11, -tile / 2 + 11, 10);
         badge.fillStyle(UP, 1).fillTriangle(tile / 2 - 17, -tile / 2 + 15, tile / 2 - 5, -tile / 2 + 15, tile / 2 - 11, -tile / 2 + 5);
         c.add(badge);
         if (!reducedMotion()) s.tweens.add({ targets: badge, alpha: 0.55, duration: 800, yoyo: true, repeat: -1 });
@@ -441,7 +431,7 @@ export class EquipmentScreen {
     // draw over later siblings in the same parent.
     const card = s.add.container(0, 0).setDepth(this.layer.depth + 1);
     this.card = card;
-    const dim = s.add.rectangle(0, 0, width, height, 0x07060b, 0.72).setOrigin(0).setInteractive();
+    const dim = s.add.rectangle(0, 0, width, height, 0x060a24, 0.72).setOrigin(0).setInteractive();
     dim.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.closeCard());
     card.add(dim);
 
@@ -453,19 +443,19 @@ export class EquipmentScreen {
     card.add(body);
     const col = RARITY_COLOR[item.rarity];
     const g = s.add.graphics();
-    g.fillStyle(0x000000, 0.4).fillRoundedRect(-cw / 2 + 4, -ch / 2 + 6, cw, ch, 18);
-    g.fillStyle(0x1e1830, 1).fillRoundedRect(-cw / 2, -ch / 2, cw, ch, 18);
-    // Rarity band across the top.
-    g.fillGradientStyle(shade(col, 0.75), shade(col, 0.75), shade(col, 0.35), shade(col, 0.35), 1).fillRoundedRect(-cw / 2, -ch / 2, cw, 58, { tl: 18, tr: 18, bl: 0, br: 0 });
-    g.lineStyle(3, col, 1).strokeRoundedRect(-cw / 2, -ch / 2, cw, ch, 18);
+    // U-KIT: a kit panel with the item's rarity colour across the top.
+    drawPanel(g, -cw / 2, -ch / 2, cw, ch, { radius: 18 });
+    const rf = KIT.rarity[item.rarity];
+    fade(g, -cw / 2 + 3, -ch / 2 + 3, cw - 6, 55, { tl: 15, tr: 15, bl: 0, br: 0 }, rf.top, rf.bottom);
+    g.fillStyle(KIT.ink, 1).fillRect(-cw / 2 + 3, -ch / 2 + 57, cw - 6, 3);
+    void col;
     body.add(g);
     // Swallow taps on the card itself so they don't close it.
     body.add(s.add.zone(0, 0, cw, ch).setInteractive());
 
-    body.add(this.text(-cw / 2 + 18, -ch / 2 + 10, item.name, 20).setStroke('#14111c', 3));
+    body.add(this.text(-cw / 2 + 18, -ch / 2 + 10, item.name, 20).setStroke('#0d1233', 3));
     body.add(this.text(-cw / 2 + 18, -ch / 2 + 36, `${rarityName(item.rarity)} · ${W.slots[item.slot]}`, 13, '#fff6e0', false));
-    const close = button(s, { x: cw / 2 - 52, y: -ch / 2 + 8, w: 44, h: 44, label: EQUIP_WORDS.close, color: 0x2b2440, size: 16, onTap: () => this.closeCard() });
-    body.add([close.visual, close.hit]);
+    body.add(kitClose(s, cw / 2 - 8, -ch / 2 + 8, () => this.closeCard()));
 
     // The big icon on the left.
     const iconSize = Math.min(118, ch - 120);
@@ -608,7 +598,7 @@ export class EquipmentScreen {
   private toast(message: string): void {
     const s = this.scene;
     const { width, height } = this.view();
-    const t = this.text(width / 2, height - 40, message, 16, '#fff6e0').setOrigin(0.5).setStroke('#14111c', 4);
+    const t = this.text(width / 2, height - 40, message, 16, '#fff6e0').setOrigin(0.5).setStroke('#0d1233', 4);
     this.layer.add(t);
     s.tweens.add({ targets: t, alpha: 0, delay: 1400, duration: 400, onComplete: () => t.destroy() });
   }

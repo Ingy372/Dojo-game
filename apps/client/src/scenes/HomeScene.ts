@@ -2727,7 +2727,7 @@ function houseIcon(scene: Phaser.Scene, x: number, y: number, size: number): Pha
   const h = size / 2;
   g.fillStyle(0xc0392b).fillTriangle(-h, -h * 0.1, h, -h * 0.1, 0, -h);
   g.fillStyle(0xffd166).fillRect(-h * 0.7, -h * 0.1, h * 1.4, h * 1.1);
-  g.fillStyle(0x16206b).fillRect(-h * 0.2, h * 0.35, h * 0.4, h * 0.65);
+  g.fillStyle(0x5a3e28).fillRect(-h * 0.2, h * 0.35, h * 0.4, h * 0.65);
   return g;
 }
 

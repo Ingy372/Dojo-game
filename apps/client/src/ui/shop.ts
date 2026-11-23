@@ -17,13 +17,14 @@ import { writeSave } from '../game/save';
 import { SHOP, SHOP_WORDS as W } from '../game/shop';
 import { button } from './button';
 import { fill } from './pathScreen';
-import { FONT, crisp } from './theme';
+import { DPR, FONT, crisp } from './theme';
+import { KIT, KIT_COLOR, drawPanel, kitBackdrop, kitCoin, kitPanel, kitRibbon, kitTabs, kitTitle, kitWell } from './kit';
 import { GREEN, MIN_TAP, S1, S2, S3, TYPE } from './tokens';
 
 const GAP = 8;
 const OWN = (slot: ShopSlot) => `own-${slot}`;
 const TABS = [...new Set(SHOP.groups.map((g) => g.tab))];
-const WOOD = 0x2e6ae0;
+const WOOD = 0x8a5a35;
 const PAPER = 0xede3c0;
 /** Decorations sold here are drawn from this art pack (content/dojo/decorations.json). */
 const DECOR_PACK = 'decor-v2';
@@ -33,12 +34,13 @@ const TRIED = new Set<string>();
 
 /** Rarity frames: top and bottom of the card's gradient, the rim, and the ribbon text colour. */
 const RARITY: Record<LookRarity, { top: number; bottom: number; rim: number; text: string }> = {
-  common: { top: 0x6f8aa8, bottom: 0x3d5370, rim: 0xb9cde3, text: '#d9e6f5' },
-  rare: { top: 0x3f8fe8, bottom: 0x1f4fae, rim: 0x9fd0ff, text: '#bfe0ff' },
-  epic: { top: 0xb05cf0, bottom: 0x5e2aa8, rim: 0xe2b8ff, text: '#ecd2ff' },
-  legendary: { top: 0xffc23d, bottom: 0xd2701a, rim: 0xfff0a8, text: '#ffe6a0' },
+  // U-KIT: the kit's rarity faces (the same colours as gear tiles everywhere).
+  common: { ...KIT.rarity.common, text: '#ffffff' },
+  rare: { ...KIT.rarity.rare, text: '#ffffff' },
+  epic: { ...KIT.rarity.epic, text: '#ffffff' },
+  legendary: { ...KIT.rarity.legendary, text: '#ffffff' },
 };
-const OWN_RARITY = { top: 0x5a5470, bottom: 0x332f44, rim: 0x8f88a8, text: '#d8d2e8' };
+const OWN_RARITY = { ...KIT.rarity.locked, text: '#ffffff' };
 
 const hex = (s: string) => Phaser.Display.Color.HexStringToColor(s).color;
 const multiply = (a: number, b: number) =>
@@ -52,32 +54,56 @@ export interface ShopScreen {
   act(): void;
 }
 
-/** A glossy card face baked once into a texture per size and rarity (Graphics redraw on the CPU every frame). */
+/**
+ * U-KIT: a rarity card face baked once per size and rarity at the screen's full sharpness (a canvas with real
+ * gradients): the dark kit outline, the rarity face, an inner rim, a shine, and a darker well for the icon.
+ * Shown with setScale(1 / CARD_RES).
+ */
+const CARD_RES = Math.max(1, Math.min(3, Math.ceil(DPR)));
 function cardTexture(scene: Phaser.Scene, w: number, h: number, key: string, c: { top: number; bottom: number; rim: number }): string {
-  const tex = `shopcard:${key}:${w}x${h}`;
+  const tex = `shopcardK:${key}:${w}x${h}@${CARD_RES}`;
   if (scene.textures.exists(tex)) return tex;
-  const g = scene.make.graphics({ x: 0, y: 0 }, false);
-  const r = 10;
-  g.fillStyle(0x000000, 0.35).fillRoundedRect(2, 4, w - 2, h - 2, r);
-  // A gradient made of thin bands (generateTexture draws on a canvas, which has no gradient fill).
-  const bands = 24;
-  const top = Phaser.Display.Color.IntegerToColor(c.top);
-  const bot = Phaser.Display.Color.IntegerToColor(c.bottom);
-  g.fillStyle(c.bottom).fillRoundedRect(0, 0, w - 2, h - 4, r);
-  for (let i = 0; i < bands; i++) {
-    const k = i / (bands - 1);
-    const col = Phaser.Display.Color.Interpolate.ColorWithColor(top, bot, 100, k * 100);
-    const y0 = r + ((h - 4 - 2 * r) * i) / bands;
-    g.fillStyle(Phaser.Display.Color.GetColor(col.r, col.g, col.b)).fillRect(0, y0, w - 2, (h - 4 - 2 * r) / bands + 1);
-  }
-  g.fillStyle(c.top).fillRoundedRect(0, 0, w - 2, r * 2, { tl: r, tr: r, bl: 0, br: 0 });
-  g.fillStyle(c.bottom).fillRoundedRect(0, h - 4 - r * 2, w - 2, r * 2, { tl: 0, tr: 0, bl: r, br: r });
-  g.lineStyle(3, c.rim, 1).strokeRoundedRect(1.5, 1.5, w - 5, h - 7, r - 1);
-  g.fillStyle(0xffffff, 0.18).fillRoundedRect(5, 4, w - 12, (h - 4) * 0.38, { tl: r - 3, tr: r - 3, bl: 4, br: 4 });
-  // a darker well in the middle for the icon
-  g.fillStyle(0x000000, 0.18).fillRoundedRect(6, 7, w - 14, h - 34, 7);
-  g.generateTexture(tex, w, h);
-  g.destroy();
+  const k = CARD_RES;
+  const ct = scene.textures.createCanvas(tex, Math.ceil(w * k), Math.ceil(h * k));
+  if (!ct) return tex;
+  const ctx = ct.getContext();
+  const css = (n: number, a = 1) => `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+  const rr = (x: number, y: number, ww: number, hh: number, r: number) => {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + ww, y, x + ww, y + hh, r);
+    ctx.arcTo(x + ww, y + hh, x, y + hh, r);
+    ctx.arcTo(x, y + hh, x, y, r);
+    ctx.arcTo(x, y, x + ww, y, r);
+    ctx.closePath();
+  };
+  const W = (w - 2) * k;
+  const H = (h - 4) * k;
+  const r = 12 * k;
+  const o = 3 * k;
+  ctx.fillStyle = 'rgba(5,8,30,0.55)';
+  rr(0, 4 * k, W, H, r);
+  ctx.fill();
+  ctx.fillStyle = css(KIT.ink);
+  rr(0, 0, W, H, r);
+  ctx.fill();
+  const grad = ctx.createLinearGradient(0, o, 0, H - o);
+  grad.addColorStop(0, css(c.top));
+  grad.addColorStop(1, css(c.bottom));
+  ctx.fillStyle = grad;
+  rr(o, o, W - 2 * o, H - 2 * o, r - o);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.16)';
+  rr(o + 3 * k, o + 2 * k, W - 2 * o - 6 * k, (H - 2 * o) * 0.34, r - o - 2 * k);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,0.18)';
+  rr(6 * k, 7 * k, W - 12 * k, H - 30 * k, 7 * k);
+  ctx.fill();
+  ctx.strokeStyle = css(c.rim);
+  ctx.lineWidth = 2.5 * k;
+  rr(o + 1.5 * k, o + 1.5 * k, W - 2 * o - 3 * k, H - 2 * o - 3 * k, r - o - k);
+  ctx.stroke();
+  ct.refresh();
   return tex;
 }
 
@@ -169,22 +195,18 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
     action = null;
     const look = loadLook();
     // Backdrop: a deep blue-violet gradient like the reference games' menus.
-    const bg = scene.add.graphics();
-    bg.fillGradientStyle(0x2a2d6e, 0x2a2d6e, 0x15132e, 0x15132e, 1).fillRect(0, 0, width, height);
-    layer.add(bg);
+    // U-KIT: the kit sky.
+    layer.add(kitBackdrop(scene, width, height));
     layer.add(scene.add.zone(0, 0, width, height).setOrigin(0).setInteractive());
     const pad = height < 400 ? S2 : 12;
     button(scene, { x: pad, y: pad, w: 96, h: MIN_TAP, label: W.back, color: 0x2e6ae0, size: TYPE.body, onTap: close }, layer);
-    text(width / 2, pad + 6, W.title, TYPE.heading + 4, '#ffd166', true);
+    layer.add(kitRibbon(scene, width / 2, pad + 2, W.title, 22, 150).parts);
     // Coins, top right.
     const coinW = 156;
     const cx0 = width - pad - coinW;
-    const chip = scene.add.graphics();
-    chip.fillStyle(0x0e0c1c, 0.85).fillRoundedRect(cx0, pad + 4, coinW, MIN_TAP - 8, (MIN_TAP - 8) / 2);
-    chip.lineStyle(2, 0xffd166, 0.6).strokeRoundedRect(cx0, pad + 4, coinW, MIN_TAP - 8, (MIN_TAP - 8) / 2);
-    drawCoin(chip, cx0 + 18, pad + MIN_TAP / 2, 13);
-    layer.add(chip);
-    text(cx0 + 18 + (coinW - 18) / 2, pad + (MIN_TAP - TYPE.title) / 2 - 1, `${profile.coins}`, TYPE.title + 2, '#fff6dc', true);
+    layer.add(kitWell(scene, cx0, pad + 4, coinW, MIN_TAP - 8));
+    layer.add(kitCoin(scene, cx0 + 18, pad + MIN_TAP / 2, 14));
+    layer.add(kitTitle(scene, cx0 + 18 + (coinW - 18) / 2, pad + MIN_TAP / 2, profile.coins.toLocaleString('en-US'), TYPE.title + 3).setOrigin(0.5));
 
     const top = pad + MIN_TAP + S2;
     const bodyH = height - top - pad;
@@ -205,9 +227,8 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
     const slot = slotOfId(picked);
     const rar = item?.rarity ? RARITY[item.rarity] : OWN_RARITY;
     const panel = scene.add.graphics();
-    panel.fillStyle(0x000000, 0.3).fillRoundedRect(x0 + 2, top + 4, leftW, bodyH, 14);
-    panel.fillGradientStyle(0x6ec6ff, 0x6ec6ff, 0x3a4fb8, 0x3a4fb8, 1).fillRoundedRect(x0, top, leftW, bodyH, 14);
-    panel.lineStyle(3, rar.rim, 0.9).strokeRoundedRect(x0 + 1.5, top + 1.5, leftW - 3, bodyH - 3, 13);
+    // U-KIT: a kit panel with a bright sky face behind the hero.
+    drawPanel(panel, x0, top, leftW, bodyH, { radius: 16, face: { top: 0x8fd4ff, bottom: 0x3f7ce0, rim: rar.rim } });
     layer.add(panel);
     const cx = x0 + leftW / 2;
     const r = Math.min(34, bodyH * 0.14);
@@ -262,8 +283,9 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
     if (item?.rarity) {
       const label = (W.rarity as Record<string, string>)[item.rarity] ?? item.rarity;
       const rib = scene.add.graphics();
-      rib.fillStyle(RARITY[item.rarity].bottom, 1).fillRoundedRect(cx - 46, y, 92, 20, 10);
-      rib.lineStyle(2, RARITY[item.rarity].rim).strokeRoundedRect(cx - 46, y, 92, 20, 10);
+      rib.fillStyle(KIT.ink, 1).fillRoundedRect(cx - 47, y - 1, 94, 22, 11);
+      rib.fillStyle(RARITY[item.rarity].bottom, 1).fillRoundedRect(cx - 44.5, y + 1.5, 89, 17, 8.5);
+      rib.fillStyle(RARITY[item.rarity].top, 1).fillRoundedRect(cx - 44.5, y + 1.5, 89, 9, { tl: 8.5, tr: 8.5, bl: 0, br: 0 });
       layer.add(rib);
       text(cx, y + 2, label, TYPE.label, RARITY[item.rarity].text, true);
       y += 26;
@@ -311,7 +333,7 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
         celebrate(cx, feet - r * 1.5, item.rarity ?? 'common');
         draw();
         toast = '';
-      }, 0xf2a020);
+      }, KIT_COLOR.gold);
     }
   };
 
@@ -343,25 +365,25 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
 
   const drawShelf = (look: PlayerLook, sx: number, top: number, sw: number, bodyH: number) => {
     const tab = tabOf(picked);
-    const tabW = (sw - (TABS.length - 1) * S1) / TABS.length;
-    TABS.forEach((name, i) => {
-      button(scene, { x: sx + i * (tabW + S1), y: top, w: tabW, h: MIN_TAP, label: name, color: name === tab ? 0xf2a020 : 0x3a3a7a, size: TYPE.body, selected: name === tab, onTap: () => {
-        if (name === tab) return;
-        const g = SHOP.groups.find((x) => x.tab === name)!;
-        picked = profile.shop.wearing[g.slot] ?? SHOP.items.find((it) => it.group === g.id)?.id ?? OWN(g.slot);
-        sfx.tap();
-        draw();
-      } }, layer);
-    });
-    const areaY = top + MIN_TAP + S2;
-    const areaH = bodyH - MIN_TAP - S2;
+    // U-KIT: gold-when-picked folder tabs on top of a kit panel that holds the shelf.
+    const TAB_H = 38;
+    layer.add(kitPanel(scene, sx, top + TAB_H - 3, sw, bodyH - TAB_H + 3, { radius: { tl: 0, tr: 16, bl: 16, br: 16 } }));
+    layer.add(kitTabs(scene, sx, top, sw, TAB_H, TABS.map((name) => ({ label: name, on: name === tab, onTap: () => {
+      const g = SHOP.groups.find((x) => x.tab === name)!;
+      picked = profile.shop.wearing[g.slot] ?? SHOP.items.find((it) => it.group === g.id)?.id ?? OWN(g.slot);
+      draw();
+    } })), S1, 15));
+    sx += 12;
+    sw -= 24;
+    const areaY = top + TAB_H + 10;
+    const areaH = bodyH - TAB_H - 20;
     const cardW = Math.max(66, Math.min(92, Math.floor((sw - GAP * 3) / 4)));
     const cardH = Math.round(cardW * 1.22);
     const perRow = Math.max(1, Math.floor((sw + GAP) / (cardW + GAP)));
     const shelfC = scene.add.container(0, 0);
     let gy = areaY;
     for (const g of SHOP.groups.filter((x) => x.tab === tab)) {
-      shelfC.add(scene.add.text(sx + 2, gy, g.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${TYPE.body + 1}px`, color: '#ffe8a8' }).setResolution(crisp()).setStroke('#0d1233', 3));
+      shelfC.add(kitTitle(scene, sx + 2, gy, g.name, TYPE.body + 2, KIT.gold));
       gy += TYPE.body + S2;
       const tiles: (ShopItem | null)[] = [...(hasOwnTile(g.slot) ? [null] : []), ...SHOP.items.filter((i) => i.group === g.id)];
       tiles.forEach((it, i) => {
@@ -432,7 +454,7 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
     const owned = !it || profile.shop.owned.includes(it.id);
     const worn = slot !== 'decor' && profile.shop.wearing[slot] === (it?.id ?? null);
     const rar = it?.rarity ? RARITY[it.rarity] : OWN_RARITY;
-    const face = scene.add.image(x, y, cardTexture(scene, w, h, it?.rarity ?? 'own', rar)).setOrigin(0);
+    const face = scene.add.image(x, y, cardTexture(scene, w, h, it?.rarity ?? 'own', rar)).setOrigin(0).setScale(1 / CARD_RES);
     parent.add(face);
     const ix = x + (w - 2) / 2;
     const iy = y + 7 + (h - 34) / 2;

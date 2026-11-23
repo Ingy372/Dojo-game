@@ -24,7 +24,7 @@ export function streakAura(scene: Phaser.Scene, r: number, bestWeeks: number): P
 /** A small treasure chest drawn in code (no art file): lid, box, band and lock. */
 export function chestIcon(scene: Phaser.Scene, x: number, y: number, color: number): Phaser.GameObjects.Graphics {
   const g = scene.add.graphics({ x, y });
-  g.fillStyle(0x2e6ae0).fillRoundedRect(-10, -8, 20, 7, { tl: 4, tr: 4, bl: 0, br: 0 });
+  g.fillStyle(0x8a5a35).fillRoundedRect(-10, -8, 20, 7, { tl: 4, tr: 4, bl: 0, br: 0 });
   g.fillStyle(0x6b4428).fillRect(-10, -1, 20, 10);
   g.lineStyle(2, color).strokeRoundedRect(-10, -8, 20, 17, 3).lineBetween(-10, -1, 10, -1);
   g.fillStyle(color).fillRect(-2, -3, 4, 5);

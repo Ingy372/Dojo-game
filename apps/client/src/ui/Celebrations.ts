@@ -179,8 +179,8 @@ export class Celebrations {
     const top = height * 0.2;
     this.layer.add(this.scene.add.rectangle(cx, top + gh / 2, gw, gh, hex(to.color), 0.35));
     const label = this.text(cx, top + gh / 2, `${to.name}\nTier`, 26, '#ffffff', true, 'Georgia, serif').setOrigin(0.5).setAlign('center').setAlpha(0);
-    const left = this.scene.add.rectangle(cx - gw / 4, top + gh / 2, gw / 2, gh, 0x3a4790).setStrokeStyle(3, OUTLINE_GOLD);
-    const right = this.scene.add.rectangle(cx + gw / 4, top + gh / 2, gw / 2, gh, 0x3a4790).setStrokeStyle(3, OUTLINE_GOLD);
+    const left = this.scene.add.rectangle(cx - gw / 4, top + gh / 2, gw / 2, gh, 0x5b4a3c).setStrokeStyle(3, OUTLINE_GOLD);
+    const right = this.scene.add.rectangle(cx + gw / 4, top + gh / 2, gw / 2, gh, 0x5b4a3c).setStrokeStyle(3, OUTLINE_GOLD);
     this.layer.add([left, right]);
     this.scene.tweens.add({ targets: left, x: cx - gw * 0.75, duration: 1100, delay: 400, ease: 'Cubic.InOut' });
     this.scene.tweens.add({ targets: right, x: cx + gw * 0.75, duration: 1100, delay: 400, ease: 'Cubic.InOut' });

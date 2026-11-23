@@ -108,7 +108,7 @@ export class StreetSmartsScene extends Phaser.Scene {
     g.fillStyle(0xd8cdb8, 1).fillRect(x, y + h * 0.72, w, h * 0.28);
     const shelfW = Math.min(150, w / 5);
     for (let sx = x + 16; sx + shelfW < x + w - 8; sx += shelfW + 24) {
-      g.fillStyle(0x2e6ae0, 1).fillRect(sx, y + h * 0.12, shelfW, h * 0.6);
+      g.fillStyle(0x8a5a35, 1).fillRect(sx, y + h * 0.12, shelfW, h * 0.6);
       for (let r = 0; r < 3; r++) {
         const ry = y + h * (0.16 + r * 0.19);
         for (let i = 0; i < 4; i++) g.fillStyle([0xff7a45, 0x5cd6b0, 0x6fb7ff, 0xffd166][(i + r) % 4], 1).fillRect(sx + 6 + i * (shelfW - 12) / 4, ry, (shelfW - 12) / 4 - 4, h * 0.13);

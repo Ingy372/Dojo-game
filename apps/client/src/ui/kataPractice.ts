@@ -27,6 +27,7 @@ import { reducedMotion } from '../game/motion';
 import { drawBelt, hex, type BeltColors } from './belt';
 import { closeX } from './boardReader';
 import { button } from './button';
+import { KIT, KIT_TONE, drawPanel, fade, kitPanel, kitRibbon, kitText, kitTile, kitTitle, kitWell } from './kit';
 import { FONT, crisp, view } from './theme';
 
 const MARGIN = 22;
@@ -38,7 +39,8 @@ const INK = '#fff6e0';
 const STROKE = '#0d1233';
 const GOLD = 0xffd166;
 /** Blocks blue, punches red, open-hand strikes purple, kicks orange, escapes green: the same colour for the same family in every kata. */
-const FAMILY_COLOR: Record<string, number> = { block: 0x2f6fb5, punch: 0xb8432f, backfist: 0x8a3fb0, spear: 0x8a3fb0, kick: 0xc97a16, break: 0x2a8a6a };
+// U-KIT: the same families in the kit's brighter tones (blue, red, purple, orange, green).
+const FAMILY_COLOR: Record<string, number> = { block: 0x2e6ae0, punch: 0xd8342a, backfist: 0x7a3ad0, spear: 0x7a3ad0, kick: 0xe88a12, break: 0x2f9a3a };
 
 const TIME_TRIAL_KEY = 'dojo.kataTimeTrial';
 function savedTimeTrial(): boolean {
@@ -101,44 +103,18 @@ export class KataMenu {
     const cw = Math.min(width - 2 * MARGIN, 620);
     const cols = n > 2 && cw > 440 ? 2 : 1;
     const rows = Math.ceil(n / cols);
-    const HEAD = 86;
+    const HEAD = 70;
     const FOOT = 70;
-    const maxCh = height - 2 * MARGIN;
+    const maxCh = height - 2 * MARGIN - 18;
     const rh = Math.max(42, Math.min(58, (maxCh - HEAD - FOOT + GAP) / rows - GAP));
     const ch = Math.min(maxCh, HEAD + rows * (rh + GAP) - GAP + FOOT);
     const x0 = (width - cw) / 2;
-    const y0 = (height - ch) / 2;
+    const y0 = (height - ch) / 2 + 9;
 
-    // The card: a drop shadow, a lighter header band, a gold frame with a thin inner line and gold corner studs.
-    const g = s.add.graphics();
-    g.fillStyle(0x000000, 0.45).fillRoundedRect(x0 + 3, y0 + 9, cw, ch, 20);
-    g.fillStyle(0x1b1429, 0.98).fillRoundedRect(x0, y0, cw, ch, 20);
-    g.fillStyle(0x2d2245, 1).fillRoundedRect(x0, y0, cw, HEAD - 10, { tl: 20, tr: 20, bl: 0, br: 0 });
-    g.fillStyle(0xffffff, 0.05).fillRoundedRect(x0 + 8, y0 + 6, cw - 16, 24, 12);
-    g.lineStyle(3, GOLD, 0.9).strokeRoundedRect(x0, y0, cw, ch, 20);
-    g.lineStyle(1, GOLD, 0.35).strokeRoundedRect(x0 + 7, y0 + 7, cw - 14, ch - 14, 14);
-    g.lineStyle(1.5, GOLD, 0.45).lineBetween(x0 + 18, y0 + HEAD - 10, x0 + cw - 18, y0 + HEAD - 10);
-    for (const [dx, dy] of [
-      [x0 + 16, y0 + 16],
-      [x0 + cw - 16, y0 + 16],
-      [x0 + 16, y0 + ch - 16],
-      [x0 + cw - 16, y0 + ch - 16],
-    ])
-      diamond(g, dx, dy, 4, GOLD, 0.85);
-    this.layer.add(g);
-
-    // The title, with a gold flourish on each side.
-    const title = text(s, width / 2, y0 + 12, 'Practice Kata', 26, '#ffd166').setOrigin(0.5, 0);
-    const fl = s.add.graphics();
-    const ty = y0 + 12 + title.height / 2;
-    for (const side of [-1, 1]) {
-      const a = width / 2 + side * (title.width / 2 + 10);
-      const b = a + side * 46;
-      fl.lineStyle(2, GOLD, 0.7).lineBetween(a, ty, b, ty);
-      diamond(fl, b + side * 5, ty, 5, GOLD, 0.9);
-    }
-    this.layer.add([fl, title]);
-    this.layer.add(text(s, width / 2, y0 + 48, 'Tap the arrow, then the move.', 13, '#d8cdee').setOrigin(0.5, 0));
+    // U-KIT: a kit panel with the gold ribbon title riding on its top edge (Archero's banner look).
+    this.layer.add(kitPanel(s, x0, y0, cw, ch, { radius: 18 }));
+    this.layer.add(kitRibbon(s, width / 2, y0 - 16, 'Practice Kata', 22, 200).parts);
+    this.layer.add(kitText(s, width / 2, y0 + 40, 'Tap the arrow, then the move.', 13, KIT.soft).setOrigin(0.5, 0));
 
     const bw = (cw - 36 - (cols - 1) * GAP) / cols;
     this.katas.forEach((k, i) => this.kataRow(k, x0 + 18 + (i % cols) * (bw + GAP), y0 + HEAD + Math.floor(i / cols) * (rh + GAP), bw, rh));
@@ -149,28 +125,26 @@ export class KataMenu {
   private kataRow(k: KataDef, x: number, y: number, w: number, h: number): void {
     const s = this.scene;
     const c = s.add.container(x + w / 2, y + h / 2);
+    // U-KIT: a blue kit tile; the belt sits in a round navy badge.
+    c.add(kitTile(s, -w / 2, -h / 2, w, h, KIT.rarity.rare, 12));
+    const bx = -w / 2 + 28;
     const g = s.add.graphics();
-    g.fillStyle(0x000000, 0.4).fillRoundedRect(-w / 2, -h / 2 + 4, w, h, 12);
-    g.fillStyle(0x45297a, 1).fillRoundedRect(-w / 2, -h / 2, w, h, 12);
-    g.fillStyle(0x6a3fb0, 1).fillRoundedRect(-w / 2, -h / 2, w, h - 4, 12);
-    g.fillStyle(0xffffff, 0.13).fillRoundedRect(-w / 2 + 4, -h / 2 + 3, w - 8, h * 0.38, 9);
-    g.lineStyle(2, 0xffffff, 0.5).strokeRoundedRect(-w / 2, -h / 2, w, h, 12);
-    // A round badge holding a little belt in this kata's belt colour.
-    const bx = -w / 2 + 26;
-    g.fillStyle(0x1b1429, 0.85).fillCircle(bx, -2, 18).lineStyle(2, GOLD, 0.7).strokeCircle(bx, -2, 18);
+    g.fillStyle(KIT.ink, 1).fillCircle(bx, 0, 19);
+    g.fillStyle(0x141c5a, 1).fillCircle(bx, 0, 16.5);
+    g.fillStyle(0x3a4aa8, 0.6).fillCircle(bx - 3, -4, 9);
     c.add(g);
     const belt = this.belts.get(k.id);
     if (belt) {
       const bg = s.add.graphics();
-      drawBelt(bg, bx, -2, 28, 8, belt, 0);
+      drawBelt(bg, bx, -2, 26, 8, belt, 0);
       // The knot and its two hanging ends.
       bg.fillStyle(hex(belt.color)).fillRect(bx - 4, -7, 8, 10).fillRect(bx - 5, 3, 4, 9).fillRect(bx + 1, 3, 4, 9);
       bg.lineStyle(1.5, 0x0d1233).strokeRect(bx - 4, -7, 8, 10).strokeRect(bx - 5, 3, 4, 9).strokeRect(bx + 1, 3, 4, 9);
       c.add(bg);
     }
-    const left = -w / 2 + 52;
-    const avail = w - 52 - 34;
-    const name = text(s, left, -h / 2 + h * 0.34 - 2, k.name, h < 50 ? 16 : 18).setOrigin(0, 0.5);
+    const left = -w / 2 + 56;
+    const avail = w - 56 - 70;
+    const name = kitTitle(s, left, -h / 2 + h * 0.34, k.name, h < 50 ? 17 : 19).setOrigin(0, 0.5);
     const best = this.bests[k.id];
     const parts = [`${k.steps.length} steps`];
     if (!best || best.runs === 0) parts.push('Not tried yet');
@@ -178,18 +152,24 @@ export class KataMenu {
       parts.push(`Fewest misses ${best.fewestWrong ?? '-'}`);
       if (best.bestMs !== null) parts.push(`Best ${formatKataTime(best.bestMs)}`);
     }
-    const info = text(s, left, h / 2 - h * 0.28, parts.join('  ·  '), 11, '#e3d9f5').setOrigin(0, 0.5);
+    const info = kitText(s, left, h / 2 - h * 0.28, parts.join('  ·  '), 11, '#e3efff').setOrigin(0, 0.5);
     for (const t of [name, info]) if (t.width > avail) t.setScale(avail / t.width);
     c.add([name, info]);
     // A small gold star once the kata has been played with no misses.
     if (best?.fewestWrong === 0) {
       const st = s.add.graphics();
-      star(st, w / 2 - 14, -h / 2 + 12, 6, GOLD);
+      star(st, w / 2 - 66, -h / 2 + 12, 6, GOLD);
       c.add(st);
     }
-    const chev = s.add.graphics().lineStyle(3, INK_NUM, 0.9);
-    chev.beginPath().moveTo(w / 2 - 22, -6).lineTo(w / 2 - 15, 1).lineTo(w / 2 - 22, 8).strokePath();
-    c.add(chev);
+    // A green GO pill on the right (the whole row is the button).
+    const gw = 52;
+    const gh = Math.min(34, h - 16);
+    const go = s.add.graphics();
+    go.fillStyle(KIT.ink, 1).fillRoundedRect(w / 2 - gw - 10, -gh / 2, gw, gh + 3, 10);
+    go.fillStyle(KIT_TONE.green.lip, 1).fillRoundedRect(w / 2 - gw - 7.5, -gh / 2 + 2.5, gw - 5, gh - 2, 8);
+    fade(go, w / 2 - gw - 7.5, -gh / 2 + 2.5, gw - 5, gh - 6, 8, KIT_TONE.green.hi, KIT_TONE.green.base);
+    go.fillStyle(0xffffff, 0.3).fillRoundedRect(w / 2 - gw - 4.5, -gh / 2 + 4, gw - 11, (gh - 6) * 0.38, 5);
+    c.add([go, kitTitle(s, w / 2 - 10 - gw / 2, -1, 'GO', 15).setOrigin(0.5)]);
     const zone = s.add.zone(x + w / 2, y + h / 2, w, h).setInteractive({ useHandCursor: true });
     zone.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
       if (!reducedMotion()) s.tweens.add({ targets: c, scale: 0.96, duration: 70 });
@@ -210,25 +190,22 @@ export class KataMenu {
     const W = 236;
     const H = 46;
     const c = s.add.container(cx, cy);
+    // U-KIT: a sunk kit well with a stopwatch, the words and a chunky switch (green when on).
+    c.add(kitWell(s, -W / 2, -H / 2, W, H, H / 2));
     const g = s.add.graphics();
-    g.fillStyle(0x000000, 0.4).fillRoundedRect(-W / 2, -H / 2 + 4, W, H, H / 2);
-    g.fillStyle(on ? 0x1f5e44 : 0x2c2440, 1).fillRoundedRect(-W / 2, -H / 2, W, H, H / 2);
-    g.fillStyle(0xffffff, 0.08).fillRoundedRect(-W / 2 + 6, -H / 2 + 3, W - 12, H * 0.4, H * 0.2);
-    g.lineStyle(2, on ? 0x7fe0a8 : GOLD, on ? 0.9 : 0.55).strokeRoundedRect(-W / 2, -H / 2, W, H, H / 2);
-    // Stopwatch.
     const sx = -W / 2 + 26;
-    g.lineStyle(2.5, 0xfff6e0, 1).strokeCircle(sx, 2, 10);
-    g.fillStyle(0xfff6e0, 1).fillRect(sx - 3, -12, 6, 4).fillRect(sx + 7, -9, 3, 3);
-    g.lineStyle(2, on ? 0x7fe0a8 : GOLD, 1).lineBetween(sx, 2, sx, -4).lineBetween(sx, 2, sx + 4, 4);
-    // The slider.
+    g.lineStyle(5, KIT.ink, 1).strokeCircle(sx, 2, 10);
+    g.lineStyle(2.5, 0xffffff, 1).strokeCircle(sx, 2, 10);
+    g.fillStyle(0xffffff, 1).fillRect(sx - 3, -12, 6, 4).fillRect(sx + 7, -9, 3, 3);
+    g.lineStyle(2, on ? KIT_TONE.green.hi : 0xffd23f, 1).lineBetween(sx, 2, sx, -4).lineBetween(sx, 2, sx + 4, 4);
     const tx = W / 2 - 34;
-    g.fillStyle(on ? 0x3ad17f : 0x5a5070, 1).fillRoundedRect(tx - 23, -12, 46, 24, 12);
-    g.lineStyle(1.5, 0x0d1233, 0.8).strokeRoundedRect(tx - 23, -12, 46, 24, 12);
-    g.fillStyle(0x000000, 0.3).fillCircle(tx + (on ? 11 : -11), 2, 10);
-    g.fillStyle(0xffffff, 1).fillCircle(tx + (on ? 11 : -11), 0, 10);
+    g.fillStyle(KIT.ink, 1).fillRoundedRect(tx - 26, -15, 52, 30, 15);
+    g.fillStyle(on ? KIT_TONE.green.base : 0x2a3478, 1).fillRoundedRect(tx - 23.5, -12.5, 47, 25, 12.5);
+    g.fillStyle(KIT.ink, 1).fillCircle(tx + (on ? 11 : -11), 0, 11.5);
+    g.fillStyle(0xffffff, 1).fillCircle(tx + (on ? 11 : -11), -1, 9);
     c.add(g);
-    c.add(text(s, -W / 2 + 46, 0, 'Time Trial', 17).setOrigin(0, 0.5));
-    c.add(text(s, tx - 34, 0, on ? 'ON' : 'OFF', 12, on ? '#7fe0a8' : '#b8acd0').setOrigin(1, 0.5));
+    c.add(kitTitle(s, -W / 2 + 46, 0, 'Time Trial', 18).setOrigin(0, 0.5));
+    c.add(kitTitle(s, tx - 34, 0, on ? 'ON' : 'OFF', 12, on ? KIT.good : KIT.faint).setOrigin(1, 0.5));
     const zone = s.add.zone(cx, cy, W, H + 8).setInteractive({ useHandCursor: true });
     zone.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
       sfx.unlock();
@@ -248,12 +225,6 @@ export class KataMenu {
     if (k) this.onPick(k, this.timeTrial);
     else this.onClose();
   }
-}
-
-const INK_NUM = 0xfff6e0;
-
-function diamond(g: Phaser.GameObjects.Graphics, x: number, y: number, r: number, color: number, alpha: number): void {
-  g.fillStyle(color, alpha).fillTriangle(x, y - r, x + r, y, x, y + r).fillTriangle(x, y - r, x - r, y, x, y + r);
 }
 
 function star(g: Phaser.GameObjects.Graphics, x: number, y: number, r: number, color: number): void {
@@ -401,9 +372,13 @@ export class KataPad {
     const s = this.scene;
     const glow = s.add.graphics().fillStyle(GOLD, 0.55).fillCircle(0, 0, ARROW_R + 9).setVisible(false);
     const face = s.add.graphics();
-    face.fillStyle(0x000000, 0.35).fillCircle(0, 4, ARROW_R);
-    face.fillStyle(0x3c4ea8, 0.95).fillCircle(0, 0, ARROW_R).lineStyle(3, 0xffffff, 0.7).strokeCircle(0, 0, ARROW_R);
-    face.fillStyle(0xffffff, 0.12).fillEllipse(0, -ARROW_R * 0.45, ARROW_R * 1.3, ARROW_R * 0.6);
+    // U-KIT: a chunky round kit button (dark outline, blue face on a darker lip, a shine).
+    face.fillStyle(0x05081e, 0.5).fillCircle(0, 5, ARROW_R);
+    face.fillStyle(KIT.ink, 1).fillCircle(0, 1.5, ARROW_R + 1.5);
+    face.fillStyle(KIT_TONE.blue.lip, 1).fillCircle(0, 1.5, ARROW_R - 1);
+    face.fillStyle(KIT_TONE.blue.base, 1).fillCircle(0, -1, ARROW_R - 2);
+    face.fillStyle(KIT_TONE.blue.hi, 0.75).fillCircle(0, -ARROW_R * 0.18, ARROW_R * 0.72);
+    face.fillStyle(0xffffff, 0.3).fillEllipse(0, -ARROW_R * 0.5, ARROW_R * 1.2, ARROW_R * 0.5);
     const arrow = s.add.graphics().fillStyle(0xfff6e0, 1);
     const a = ARROW_R * 0.5;
     arrow.fillTriangle(a, 0, -a * 0.55, -a * 0.85, -a * 0.55, a * 0.85).fillRect(-a * 1.05, -a * 0.28, a * 0.7, a * 0.56);
@@ -421,9 +396,13 @@ export class KataPad {
     const color = FAMILY_COLOR[family] ?? FAMILY_COLOR.punch;
     const glow = s.add.graphics().fillStyle(GOLD, 0.55).fillRoundedRect(-w / 2 - 8, -h / 2 - 8, w + 16, h + 16, 18).setVisible(false);
     const face = s.add.graphics();
-    face.fillStyle(0x000000, 0.35).fillRoundedRect(-w / 2, -h / 2 + 4, w, h, 14);
-    face.fillStyle(color, 1).fillRoundedRect(-w / 2, -h / 2, w, h, 14).lineStyle(3, 0xffffff, 0.75).strokeRoundedRect(-w / 2, -h / 2, w, h, 14);
-    face.fillStyle(0xffffff, 0.14).fillRoundedRect(-w / 2 + 4, -h / 2 + 3, w - 8, h * 0.42, 10);
+    // U-KIT: a chunky kit button in the move family's colour (dark outline, darker lip, a shine).
+    const lipC = Phaser.Display.Color.ValueToColor(color).darken(28).color;
+    face.fillStyle(0x05081e, 0.5).fillRoundedRect(-w / 2, -h / 2 + 6, w, h, 14);
+    face.fillStyle(KIT.ink, 1).fillRoundedRect(-w / 2, -h / 2, w, h + 3, 14);
+    face.fillStyle(lipC, 1).fillRoundedRect(-w / 2 + 2.5, -h / 2 + 2.5, w - 5, h - 2, 12);
+    face.fillStyle(color, 1).fillRoundedRect(-w / 2 + 2.5, -h / 2 + 2.5, w - 5, h - 6, 12);
+    face.fillStyle(0xffffff, 0.24).fillRoundedRect(-w / 2 + 6, -h / 2 + 4, w - 12, (h - 6) * 0.4, 8);
     const iconSize = h * 0.62;
     const icon = drawMoveIcon(s, m.icon, iconSize).setPosition(-w / 2 + iconSize / 2 + 8, 0);
     const label = s.add
@@ -518,16 +497,17 @@ export class KataPad {
     const ch = 220;
     const c = s.add.container(width / 2, height / 2).setDepth(115);
     const g = s.add.graphics();
-    g.fillStyle(0x221a33, 0.96).fillRoundedRect(-cw / 2, -ch / 2, cw, ch, 18).lineStyle(3, GOLD, 0.8).strokeRoundedRect(-cw / 2, -ch / 2, cw, ch, 18);
+    // U-KIT: a kit panel with the gold ribbon title on its top edge.
+    drawPanel(g, -cw / 2, -ch / 2, cw, ch, { radius: 18 });
     c.add(g);
-    c.add(text(s, 0, -ch / 2 + 14, 'Kata complete!', 24, '#ffd166').setOrigin(0.5, 0));
+    c.add(kitRibbon(s, 0, -ch / 2 - 16, 'Kata complete!', 20, 200).parts);
     const lines = [o.wrong === 0 ? 'No misses. Clean form!' : `Misses: ${o.wrong}`];
     if (o.ms !== null) lines.push(`Time: ${formatKataTime(o.ms)}`);
     const bests: string[] = [];
     if (o.newFewest) bests.push('Fewest misses yet!');
     if (o.newBestTime) bests.push('Fastest time yet!');
     lines.push(bests.length ? bests.join('  ') : bestLine(o.best, o.ms !== null));
-    lines.forEach((l, i) => c.add(text(s, 0, -ch / 2 + 54 + i * 26, l, i === 2 ? 13 : 17, i === 2 && bests.length ? '#7fe0a8' : INK).setOrigin(0.5, 0)));
+    lines.forEach((l, i) => c.add(text(s, 0, -ch / 2 + 44 + i * 26, l, i === 2 ? 13 : 17, i === 2 && bests.length ? '#7fe0a8' : INK).setOrigin(0.5, 0)));
     const bw = (cw - 60) / 2;
     button(s, { x: -cw / 2 + 20, y: ch / 2 - 62, w: bw, h: 44, label: 'Again', color: 0x6a3fb0, size: 18, onTap: o.again }, c);
     button(s, { x: cw / 2 - 20 - bw, y: ch / 2 - 62, w: bw, h: 44, label: 'Done', color: 0x3c4ea8, size: 18, onTap: o.done }, c);

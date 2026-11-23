@@ -6,25 +6,16 @@ import Phaser from 'phaser';
 import { sfx } from '../audio/Sfx';
 import { reducedMotion } from '../game/motion';
 import { DPR, FONT, crisp, view } from './theme';
+import { kitClose } from './kit';
 
 const MARGIN = 16;
 const CLOSE_R = 26;
 
 /** The big round X used by the Action Zone's full-screen views, top right. `onTap` runs on a press. */
 export function closeX(scene: Phaser.Scene, onTap: () => void): Phaser.GameObjects.Container {
+  // U-KIT: the kit's round red close button, in the same top-right spot.
   const { width } = view(scene);
-  const ring = scene.add.circle(0, 0, CLOSE_R + 4, 0xffffff, 0.95);
-  const face = scene.add.circle(0, 0, CLOSE_R, 0xc0392b);
-  const g = scene.add.graphics().lineStyle(6, 0xffffff, 1);
-  const k = CLOSE_R * 0.42;
-  g.lineBetween(-k, -k, k, k).lineBetween(-k, k, k, -k);
-  const box = scene.add.container(width - MARGIN - CLOSE_R - 4, MARGIN + CLOSE_R + 4, [ring, face, g]).setDepth(120);
-  ring.setInteractive(new Phaser.Geom.Circle(CLOSE_R + 4, CLOSE_R + 4, CLOSE_R + 12), Phaser.Geom.Circle.Contains);
-  ring.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-    sfx.tap();
-    onTap();
-  });
-  return box;
+  return kitClose(scene, width - MARGIN - CLOSE_R - 4, MARGIN + CLOSE_R + 4, onTap, CLOSE_R + 2).setDepth(120);
 }
 
 /**
