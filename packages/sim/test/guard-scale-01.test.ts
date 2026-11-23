@@ -307,7 +307,8 @@ describe('GUARD-SCALE-01: the art is drawn at the same scale', () => {
     expect(gameSceneRaw).toMatch(/characterTop\(this, art\) \* scale/);
     // Shades v2 (Nov 18): artScale(def) = def.scale times the White belt monsters' drawing boost (art/tiers.ts).
     expect(gameSceneRaw).toMatch(/const scale = artScale\(e\.def\)/);
-    expect(gameSceneRaw).toMatch(/setScale\(artScale\(e\.def\) \* \(1 \+ 0\.3/);
-    expect(gameSceneRaw).toMatch(/s\.container\.setScale\(artScale\(e\.def\)\)/);
+    // Visual overhaul (Nov 22): a Guardian's second form may be packed smaller and drawn back up (rigBoost); the base is kept as baseScale.
+    expect(gameSceneRaw).toMatch(/\?\? artScale\(e\.def\)\) \* \(1 \+ 0\.3/);
+    expect(gameSceneRaw).toMatch(/s\.container\.setScale\(\(s\.container\.getData\('baseScale'\) as number \| undefined\) \?\? artScale\(e\.def\)\)/);
   });
 });
