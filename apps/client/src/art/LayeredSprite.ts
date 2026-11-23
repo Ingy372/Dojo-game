@@ -31,6 +31,8 @@ export class LayeredSprite {
   /** Drawn as its own mirror image (kata moves on the right side use the left-side art flipped). */
   private mirrored = false;
   private flashing: string | null = null;
+  /** A light over the whole character (the town at night), multiplied into each layer's own colour. */
+  private shade: number | null = null;
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -158,9 +160,20 @@ export class LayeredSprite {
     return this;
   }
 
+  /**
+   * Lights the whole character with `color` (null takes it off). Unlike a plain tint on every layer, this keeps
+   * each layer's own colour (skin, hair, gi, belt) and darkens it, so the hero never turns one flat colour.
+   */
+  setShade(color: number | null): this {
+    this.shade = color;
+    if (!this.flashing) for (const [name, img] of this.images) this.applyTint(img, this.baseTints.get(name) ?? null);
+    return this;
+  }
+
   private applyTint(img: Phaser.GameObjects.Image, color: number | null): void {
-    if (color === null) img.clearTint();
-    else img.setTint(color);
+    const c = multiplyColour(color, this.shade);
+    if (c === null) img.clearTint();
+    else img.setTint(c);
   }
 
   /** The frame index currently shown. */
@@ -208,4 +221,12 @@ export class LayeredSprite {
   destroy(): void {
     this.container.destroy();
   }
+}
+
+/** Two tints multiplied channel by channel (null is white). */
+export function multiplyColour(a: number | null, b: number | null): number | null {
+  if (a === null) return b;
+  if (b === null) return a;
+  const ch = (shift: number) => Math.round((((a >> shift) & 255) * ((b >> shift) & 255)) / 255) << shift;
+  return ch(16) | ch(8) | ch(0);
 }

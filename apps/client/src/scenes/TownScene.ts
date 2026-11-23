@@ -8,7 +8,10 @@ import { reducedMotion } from '../game/motion';
 import { loadLook, SWATCHES } from '../game/look';
 import { currentTraining } from '../game/student';
 import { addExitCue } from '../ui/exitCue';
-import { FONT, crisp } from '../ui/theme';
+import { FONT, MIN_TAP, S2, TYPE, crisp, view } from '../ui/theme';
+import { button as roundButton } from '../ui/button';
+import { openShop, type ShopScreen } from '../ui/shop';
+import { SHOP_WORDS } from '../game/shop';
 import { TOUR, senseiBubble, tourGlow, tourLine } from '../ui/homeTour';
 import { loadSave, writeSave } from '../game/save';
 import { TILE, WalkScene, inRect, type Facing } from './WalkScene';
@@ -45,16 +48,23 @@ const TOWER_LOOK = { x: 30.3, rows: 15 };
 
 type TownSprite = StaticSprite & { stage?: number; until?: number; drawScale?: number; glows?: [number, number, number][] };
 
-/** Tints everything in a container (the hero and the classmates at night). */
-function tintAll(obj: Phaser.GameObjects.GameObject, colour: number): void {
-  if (obj instanceof Phaser.GameObjects.Container) obj.list.forEach((o) => tintAll(o, colour));
-  else if ('setTint' in obj && !(obj instanceof Phaser.GameObjects.Text)) (obj as Phaser.GameObjects.Image).setTint(colour);
+/**
+ * Night light on a character (the hero and the classmates). The layers keep their own colours (skin, hair, gi,
+ * belt) and are darkened with the night colour; a plain tint would replace them and turn the hero one flat colour.
+ */
+function nightLight(sprite: LayeredSprite, colour: number): void {
+  sprite.setShade(colour);
 }
 
 /** Where the hero came from: out of their own dojo (home), or out of the Action Zone (outside). */
 export interface TownSceneData {
   from?: 'home' | 'outside';
+  /** Back from the shop: stand here again (tiles), so the new look shows where the hero was. */
+  at?: Vec2;
 }
+
+const SHOP_GOLD = 0xc8962e;
+const SHOP_W = 96;
 
 /** A pretend classmate for the crowd test (`?crowd=N`): walks between open spots, never blocks anyone. */
 interface Walker {
@@ -81,6 +91,10 @@ export class TownScene extends WalkScene {
   private night = false;
   /** How many rows tall the view is now (eases between 7 on the streets and 12 on the Tower path). */
   private rowsNow = 7;
+  /** Jay, Nov 22: the looks shop opens from town too (the button at the top right). */
+  private shopButton: Phaser.GameObjects.Container | null = null;
+  private shopRect: Phaser.Geom.Rectangle | null = null;
+  private shop: ShopScreen | null = null;
 
   constructor() {
     super('ActionZoneTown');
@@ -107,7 +121,11 @@ export class TownScene extends WalkScene {
     this.rowsNow = 7;
     this.roomAt = townRoom(WALK, this.stage);
     super.create(data);
-    if (this.night) tintAll(this.player, NIGHT_HERO_TINT);
+    if (this.night) nightLight(this.hero, NIGHT_HERO_TINT);
+    this.shop = null;
+    this.drawShopButton();
+    this.scale.on(Phaser.Scale.Events.RESIZE, this.drawShopButton, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.drawShopButton, this));
     this.makeCrowd(Math.min(30, Math.max(0, Number(testFlags().get('crowd')) || 0)));
     this.tourStop((data as TownSceneData | undefined)?.from);
   }
@@ -155,7 +173,43 @@ export class TownScene extends WalkScene {
     return this.rowsNow;
   }
 
+  /** The Shop button, top right (redrawn when the screen changes size). */
+  private drawShopButton(): void {
+    this.shopButton?.destroy();
+    const { width } = view(this);
+    const box = this.add.container(0, 0).setDepth(50);
+    const b = roundButton(this, { x: width - S2 - SHOP_W, y: S2, w: SHOP_W, h: MIN_TAP, label: SHOP_WORDS.button, color: SHOP_GOLD, size: TYPE.body, onTap: () => this.openTownShop() }, box);
+    this.shopButton = box;
+    this.shopRect = b.hit.getBounds();
+  }
+
+  private openTownShop(): void {
+    if (this.shop || this.paused || this.leaving) return;
+    const { width, height } = view(this);
+    this.paused = true;
+    this.shopButton?.setVisible(false);
+    const before = JSON.stringify(loadSave().shop.wearing);
+    this.shop = openShop(this, width, height, loadSave(), currentTraining(), () => {
+      this.shop?.layer.destroy();
+      this.shop = null;
+      // A new look needs its art loaded: come back to the same spot with it on.
+      if (JSON.stringify(loadSave().shop.wearing) !== before) {
+        const p = this.world.players.p1.pos;
+        this.scene.restart({ at: { x: p.x, y: p.y } } satisfies TownSceneData);
+        return;
+      }
+      this.paused = false;
+      this.shopButton?.setVisible(true);
+    });
+  }
+
+  protected overUi(x: number, y: number): boolean {
+    return !!this.shop || (!!this.shopRect && this.shopRect.contains(x, y));
+  }
+
   protected spawn(data: unknown): { pos: Vec2; facing: Facing } {
+    const at = (data as TownSceneData | undefined)?.at;
+    if (at) return { pos: { ...at }, facing: 'south' };
     const from = (data as TownSceneData | undefined)?.from;
     const door = from === 'outside' ? WALK.dojoDoor : WALK.homeDoor;
     return { pos: { x: door.spawn[0], y: door.spawn[1] }, facing: 'south' };
@@ -344,7 +398,7 @@ export class TownScene extends WalkScene {
         .text(0, -TILE * 1.55, CROWD_NAMES[i % CROWD_NAMES.length], { fontFamily: FONT, fontSize: '11px', color: '#ffffff', stroke: '#14121c', strokeThickness: 3 })
         .setOrigin(0.5, 1)
         .setResolution(crisp() * 2);
-      if (this.night) tintAll(sprite.container, NIGHT_HERO_TINT);
+      if (this.night) nightLight(sprite, NIGHT_HERO_TINT);
       const box = this.add.container(pick.x * TILE, pick.y * TILE, [sprite.container, name]);
       this.standLayer.add(box);
       this.walkers.push({ sprite, box, pos: { ...pick }, path: [], rest: Math.random() * 2 });
