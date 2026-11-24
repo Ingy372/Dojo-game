@@ -1,6 +1,12 @@
 import { defineConfig } from 'vite';
 
+// The live link is safe for players (Grok playtest Nov 23, C1): Cloudflare builds `main` with
+// WORKERS_CI_BRANCH=main, and that build switches the test screens and test links off, the same as
+// `npm run build:beta`. Preview links (other branches) and local runs keep them for testing.
+const LIVE = process.env.WORKERS_CI_BRANCH === 'main';
+
 export default defineConfig({
+  ...(LIVE ? { mode: 'beta' } : {}),
   // Relative paths so the same build works on Cloudflare Pages and inside
   // the Capacitor iOS/Android apps later.
   base: './',
