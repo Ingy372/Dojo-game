@@ -60,6 +60,10 @@ export interface PlayerState {
   tools: { setup: ToolSetup; cooldown: number }[];
   /** Tool Belt: the tick this player last landed a hit, or -1 (the 'crowded' trigger only counts while fighting). */
   lastLandedTick: number;
+  /** Tool Belt: the signature move on the KATA button, or null. */
+  kataMove: KataSignatureSetup | null;
+  /** Tool Belt: ticks before the KATA button can be used again (0 = ready). */
+  kataCooldown: number;
   /** Ticks of guard pose left after pressing Counter (0 = not guarding). */
   guardTicks: number;
   /** Ticks before Counter can be pressed again after a guard that countered nothing. */
@@ -197,6 +201,8 @@ export interface EnemyState {
 export type AttackMove = 'basic' | 'strike' | 'counter' | 'chain' | 'ripple' | 'reflect';
 
 export type CombatEvent =
+  /** Tool Belt: the KATA button's signature move (its id). */
+  | { kind: 'kataMove'; playerId: PlayerId; id: string }
   /** Tool Belt: a tool fired (its technique number). */
   | { kind: 'toolFired'; playerId: PlayerId; technique: number }
   | { kind: 'playerAttack'; playerId: PlayerId; enemyId: EnemyId; move: AttackMove; damage: number; defeated: boolean }
@@ -360,7 +366,7 @@ export type MoveInput =
   | { kind: 'moveTo'; x: number; y: number };
 
 /** What a player asks for on one tick: movement, plus a button press if any. */
-export type PlayerAction = 'strike' | 'counter' | 'dash' | 'stance' | 'virtue';
+export type PlayerAction = 'strike' | 'counter' | 'dash' | 'stance' | 'virtue' | 'kata';
 export type PlayerInput = MoveInput & { action?: PlayerAction };
 
 export interface WorldOptions {
@@ -433,6 +439,18 @@ export interface PlayerSetup {
   strike?: StrikeSetup;
   /** Tool Belt: the equipped tools (missing or empty = none). */
   tools?: ToolSetup[];
+  /** Tool Belt: the kata signature move on the KATA button (missing or null = no button). */
+  kataMove?: KataSignatureSetup | null;
+}
+
+/** Tool Belt: a kata signature move as a fight uses it (a KataSignatureDef without the words). */
+export interface KataSignatureSetup {
+  id: string;
+  cooldownTicks: number;
+  radius: number;
+  strength: number;
+  knockTiles: number;
+  staggerTicks: number;
 }
 
 /** PB-03: a Strike as a fight uses it (a StrikeDef without the words). */
@@ -496,6 +514,8 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       counterPressedTick: -1,
       tools: (options.player?.tools ?? []).map((setup) => ({ setup, cooldown: 0 })),
       lastLandedTick: -1,
+      kataMove: options.player?.kataMove ? { ...options.player.kataMove } : null,
+      kataCooldown: 0,
       guardTicks: 0,
       counterLockout: 0,
       opening: null,
@@ -873,6 +893,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.dashCooldown > 0) p.dashCooldown--;
   if (p.stanceCooldown > 0) p.stanceCooldown--;
   for (const t of p.tools) if (t.cooldown > 0) t.cooldown--;
+  if (p.kataCooldown > 0) p.kataCooldown--;
   if (crowded(world, p)) fireTools(world, p, 'crowded');
   if (p.virtueTicks > 0 && --p.virtueTicks === 0) {
     p.virtueShield = 0;
@@ -900,6 +921,8 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
     world.events.push({ kind: 'stanceChange', playerId: p.id, stance: p.stance });
   } else if (input.action === 'virtue' && p.virtue) {
     useVirtue(world, p);
+  } else if (input.action === 'kata' && p.kataMove && p.kataCooldown === 0 && p.dashTicks === 0) {
+    useKataMove(world, p, room);
   }
 
   if (p.dashTicks > 0) {
@@ -2081,4 +2104,32 @@ function crowded(world: WorldState, p: PlayerState): boolean {
   if (p.lastLandedTick < 0 || world.tick - p.lastLandedTick > TOOL_BELT.crowdedRecentHitTicks) return false;
   const close = world.enemies.filter((e) => isEnemyPresent(e) && bodyGap(p.pos, R, e.pos, e.def.radius) <= TOOL_BELT.crowdedRadius).length;
   return close >= TOOL_BELT.crowdedCount;
+}
+
+/**
+ * Tool Belt: the KATA button. Every present enemy within the move's radius takes a hit, is pushed
+ * away (bosses stay put; walls stop it) and is stunned (never longer than the hold cap). The move
+ * plays and its cooldown starts even when nothing is close.
+ */
+function useKataMove(world: WorldState, p: PlayerState, room: Room): void {
+  const k = p.kataMove!;
+  p.kataCooldown = k.cooldownTicks;
+  p.guardTicks = 0;
+  p.path = null;
+  world.events.push({ kind: 'kataMove', playerId: p.id, id: k.id });
+  for (const e of world.enemies) {
+    if (!isEnemyPresent(e) || bodyGap(p.pos, R, e.pos, e.def.radius) > k.radius) continue;
+    landHit(world, p, e, 'strike', k.strength, 0);
+    if (e.mode === 'defeated') continue;
+    if (!e.def.boss && k.knockTiles > 0) {
+      const away = directionTo(p.pos, e.pos);
+      e.pos = { x: e.pos.x + away.x * k.knockTiles, y: e.pos.y + away.y * k.knockTiles };
+      pushOutOfWalls(room, e.pos, e.def.radius);
+    }
+    if (k.staggerTicks > 0 && e.mode !== 'thrown') {
+      e.mode = 'stagger';
+      e.modeTicks = Math.max(e.mode === 'stagger' ? e.modeTicks : 0, Math.min(COMBAT.counter.holdCapTicks, k.staggerTicks));
+      e.held = false;
+    }
+  }
 }

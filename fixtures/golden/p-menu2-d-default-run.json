@@ -6,6 +6,7 @@
       "power": 10,
       "guard": 0,
       "effects": [],
+      "kataMove": null,
       "tools": [],
       "strike": {
         "id": "spin-kick",
@@ -504,6 +505,7 @@
       "power": 10,
       "guard": 0,
       "effects": [],
+      "kataMove": null,
       "tools": [],
       "strike": {
         "id": "spin-kick",
@@ -1002,6 +1004,14 @@
       "power": 13,
       "guard": 7,
       "effects": [],
+      "kataMove": {
+        "id": "kiai",
+        "cooldownTicks": 500,
+        "radius": 2,
+        "strength": 1,
+        "knockTiles": 0.5,
+        "staggerTicks": 24
+      },
       "tools": [],
       "strike": {
         "id": "spin-kick",
@@ -1524,6 +1534,14 @@
       "power": 13,
       "guard": 7,
       "effects": [],
+      "kataMove": {
+        "id": "kiai",
+        "cooldownTicks": 500,
+        "radius": 2,
+        "strength": 1,
+        "knockTiles": 0.5,
+        "staggerTicks": 24
+      },
       "tools": [],
       "strike": {
         "id": "spin-kick",
@@ -2046,6 +2064,14 @@
       "power": 23,
       "guard": 19,
       "effects": [],
+      "kataMove": {
+        "id": "four-corners",
+        "cooldownTicks": 440,
+        "radius": 2.4,
+        "strength": 1.5,
+        "knockTiles": 1.5,
+        "staggerTicks": 10
+      },
       "tools": [],
       "strike": {
         "id": "spin-kick",
@@ -2602,6 +2628,14 @@
       "power": 23,
       "guard": 19,
       "effects": [],
+      "kataMove": {
+        "id": "four-corners",
+        "cooldownTicks": 440,
+        "radius": 2.4,
+        "strength": 1.5,
+        "knockTiles": 1.5,
+        "staggerTicks": 10
+      },
       "tools": [],
       "strike": {
         "id": "spin-kick",
@@ -3158,6 +3192,14 @@
       "power": 37,
       "guard": 3,
       "effects": [],
+      "kataMove": {
+        "id": "iron-wall",
+        "cooldownTicks": 560,
+        "radius": 1.6,
+        "strength": 4,
+        "knockTiles": 1,
+        "staggerTicks": 20
+      },
       "tools": [],
       "strike": {
         "id": "spin-kick",
@@ -3731,6 +3773,14 @@
       "power": 37,
       "guard": 3,
       "effects": [],
+      "kataMove": {
+        "id": "iron-wall",
+        "cooldownTicks": 560,
+        "radius": 1.6,
+        "strength": 4,
+        "knockTiles": 1,
+        "staggerTicks": 20
+      },
       "tools": [],
       "strike": {
         "id": "spin-kick",

@@ -85,7 +85,7 @@ describe('PB-05 Fighting Style screen', () => {
             expect(shown.cards.filter((c) => c.slot === 'seal' && c.pick).map((c) => c.pick!.id)).toContain(pick.id);
           } else if (card.slot === 'kata') {
             expect(loadout?.kata).toBe(pick.id);
-            expect(shown.cards.find((c) => c.slot === 'kata')?.pick?.line).toBe('Power coming soon');
+            expect(shown.cards.find((c) => c.slot === 'kata')?.pick?.line).toBe(content.abilities.kataSignatures.find((m) => m.id === pick.id)!.text);
           } else {
             expect(shown.current[card.slot as 'stance' | 'virtue']?.id).toBe(pick.id);
           }
@@ -128,17 +128,20 @@ describe('PB-05 Fighting Style screen', () => {
     expect(after.effects.some((e) => e.type === 'counterPush')).toBe(false);
   });
 
-  it('a chosen kata power is only a placeholder (PB-04): the fight does not change', () => {
+  it('Tool Belt: a chosen kata move goes on the KATA button and adds no always-on effects', () => {
     const t = belts.white;
     const kata = buildStyle(t, content.abilities, null).trays.kata.find((p) => p.earned);
-    expect(kata?.id).toBe('basic-form-1-power');
+    expect(kata?.id).toBe('kiai');
     const p = newProfile();
+    p.senseiPick = false;
     const before = characterSetup(p, t, content.abilities);
+    expect(before.kataMove).toBeNull();
     p.loadout = equip(t, null, 'kata', 0, kata!.id).session.loadout;
     const after = characterSetup(p, t, content.abilities);
+    expect(after.kataMove?.id).toBe('kiai');
     expect(after.effects).toEqual(before.effects);
     expect(after.strike).toEqual(before.strike);
-    expect(buildStyle(t, content.abilities, p.loadout).cards.find((c) => c.slot === 'kata')?.pick?.name).toBe('Basic Form 1');
+    expect(buildStyle(t, content.abilities, p.loadout).cards.find((c) => c.slot === 'kata')?.pick?.name).toBe('Kiai!');
   });
 
   it('puts a New dot on an unseen earned pick and clears it once that card is opened', () => {

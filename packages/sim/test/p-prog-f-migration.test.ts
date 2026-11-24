@@ -122,6 +122,6 @@ describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
     expect(i.earned.strikes).toEqual(earnedStrikes(t, content.abilities.strikeDefs));
     expect(i.earned.strikes.length).toBeGreaterThan(0);
     expect(i.earned.families.length).toBeGreaterThan(0);
-    expect(i.earned.kataPowers).toEqual(['basic-form-1-power', 'basic-form-2-power', 'keon-power']);
+    expect(i.earned.kataPowers).toEqual(['kiai', 'four-corners', 'iron-wall']);
   });
 });

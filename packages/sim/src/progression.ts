@@ -8,7 +8,7 @@ import type { FeedBelt } from './feed';
 import { playerStats, type Loadout, type Profile } from './profile';
 import { earnedPicks, normalizeSlots, sealSlots, type LoadoutEarned } from './loadout';
 import { toolPockets, toolSetups } from './tools';
-import { kataPowerEffects, resolveKataPowerId } from './kataPowers';
+import { earnedKataSignatures, resolveKataSignatureId } from './kataPowers';
 import { equippedStrikeSetup, resolveStrikeId } from './strikes';
 import type { RunSummary } from './run';
 import { trainingStats, unlockedStances, virtueTitle, type TrainingState, type VirtueInfo } from './training';
@@ -127,8 +127,11 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
   const level = effectiveLevel(profile, training);
   // Tool Belt: Seals no longer apply; the tools in the pockets fire in fights instead.
   const loadout = normalizeLoadout(profile.loadout, training, abilities, profile.grandfatheredStances);
-  // PB-04: the one kata power in the Kata slot (a placeholder adds nothing).
-  const kata = kataPowerEffects(abilities.kataPowers, loadout?.kata ?? null);
+  // Tool Belt: the Kata slot holds a signature move for the KATA button (no passive effects any more).
+  // Nothing chosen: with Sensei's Pick on, the newest earned move.
+  const earnedMoves = earnedKataSignatures(training, abilities.kataSignatures);
+  const moveId = loadout?.kata ?? (profile.senseiPick ? earnedMoves[earnedMoves.length - 1] ?? null : null);
+  const move = abilities.kataSignatures.find((m) => m.id === moveId);
   // R-BAL-12: real training adds whole-number stats on top of gear and level.
   const trained = trainingStats(training);
   return {
@@ -138,7 +141,8 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
     guard: gear.guard + trained.guard,
     // B-TUNE-GUIDED: a testing fixture's pinned stats replace the worked-out ones.
     ...training.pinnedStats,
-    effects: [...kata, ...gear.effects],
+    effects: [...gear.effects],
+    kataMove: move ? { id: move.id, cooldownTicks: move.cooldownTicks, radius: move.radius, strength: move.strength, knockTiles: move.knockTiles, staggerTicks: move.staggerTicks } : null,
     tools: toolSetups(abilities.tools, loadout?.tools ?? []),
     // PB-03: the Strike is the one in the Strike slot (Spin Kick when empty). The old always-on Strike upgrades are retired.
     strike: equippedStrikeSetup(abilities.strikeDefs, loadout?.strike ?? null),
@@ -157,7 +161,7 @@ export function normalizeLoadout(loadout: Loadout | null, training: TrainingStat
   // R-PROGRESSION-BETA: a Strike, kata power or Seal that isn't earned goes to its slot's default; extra Seals are dropped from the end.
   // PB-03: an old Strike id means the Strike with the same kick combo number (`resolveStrikeId`).
   // PB-04: a kata id (saved before kata powers existed) means that kata's power.
-  const resolved = { ...loadout, strike: resolveStrikeId(abilities.strikeDefs, loadout.strike), kata: resolveKataPowerId(abilities.kataPowers, loadout.kata) };
+  const resolved = { ...loadout, strike: resolveStrikeId(abilities.strikeDefs, loadout.strike), kata: resolveKataSignatureId(abilities.kataSignatures, loadout.kata) };
   return { stance: ok ? loadout.stance : null, virtue: loadout.virtue, ...normalizeSlots(resolved, earned, sealSlots(training.tier), toolPockets(training)) };
 }
 

@@ -3,7 +3,7 @@
 // Tap a card, then tap a pick. Wording comes from content/abilities/fighting-style.json.
 // Rank names come from the live seal families (J27), not the older draft labels.
 
-import { defaultStrikeDef, earnedKataPowers, familyRank, familyStage, earnedStrikes, resolveKataPowerId, emptyLoadout, equipSeal, equipStrike, normalizeLoadout, removeSeal, sealSlots, signedOffTechniques, swapSeal, unlockedFamilies, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type PickLine, type SealFamilyDef, type TrainingState } from '@dojo/sim';
+import { defaultStrikeDef, earnedKataSignatures, familyRank, familyStage, earnedStrikes, resolveKataSignatureId, emptyLoadout, equipSeal, equipStrike, normalizeLoadout, removeSeal, sealSlots, signedOffTechniques, swapSeal, unlockedFamilies, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type PickLine, type SealFamilyDef, type TrainingState } from '@dojo/sim';
 import words from '../../../../content/abilities/fighting-style.json';
 import helpFile from '../../../../content/abilities/fighting-style-help.json';
 import EVO from '../../../../content/abilities/seal-evolution.json';
@@ -207,10 +207,10 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
   });
   const strikePick = strikeTray.find((p) => p.id === strikeDef?.id) ?? null;
 
-  // PB-04: the kata powers of the signed-off katas. A placeholder (until PB-11) says "Power coming soon" and changes no fight.
-  const earnedKata = earnedKataPowers(training, abilities.kataPowers);
-  const kataTray: StylePick[] = earnedKata.map((id) => abilities.kataPowers.find((p) => p.id === id)!)
-    .map((p) => ({ id: p.id, slot: 'kata' as const, name: p.name, line: p.status === 'final' ? p.text : words.emptyKata, earned: true }));
+  // Tool Belt: the signature moves of the signed-off katas, for the KATA button.
+  const earnedKata = earnedKataSignatures(training, abilities.kataSignatures);
+  const kataTray: StylePick[] = earnedKata.map((id) => abilities.kataSignatures.find((m) => m.id === id)!)
+    .map((m) => ({ id: m.id, slot: 'kata' as const, name: m.name, line: m.text, earned: true }));
   const kataPick = kataTray.find((p) => p.id === normalized?.kata) ?? null;
 
   const signed = signedOffTechniques(training);
@@ -244,7 +244,7 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
     { slot: 'virtue', index: 0, label: words.slots.virtue, pick: virtue, locked: null, newDot: dot(seen, earnedVirtues) },
     { slot: 'strike', index: 0, label: words.slots.strike, pick: strikePick, locked: null, newDot: dot(seen, strikeTray) },
     // A kata id seen before PB-04 counts as its power seen.
-    { slot: 'kata', index: 0, label: words.slots.kata, pick: kataPick, locked: null, newDot: dot(seen && seen.map((id) => resolveKataPowerId(abilities.kataPowers, id) ?? id), kataTray) },
+    { slot: 'kata', index: 0, label: words.slots.kata, pick: kataPick, locked: null, newDot: dot(seen && seen.map((id) => resolveKataSignatureId(abilities.kataSignatures, id) ?? id), kataTray) },
   ];
   for (let i = 0; i < slots; i++) {
     const id = equippedSeals[i] ?? null;

@@ -9,7 +9,7 @@ import type { SealFamilyDef } from './abilities';
 import { earnedTools } from './tools';
 import { emptyLoadout, type Loadout, type Profile } from './profile';
 import { unlockedFamilies } from './sealFamilies';
-import { earnedKataPowers } from './kataPowers';
+import { earnedKataSignatures } from './kataPowers';
 import { earnedStrikes, resolveStrikeId } from './strikes';
 import type { TrainingState } from './training';
 
@@ -41,7 +41,7 @@ export interface LoadoutEarned {
  */
 export function earnedPicks(training: TrainingState, abilities: AbilityContent): LoadoutEarned {
   const strikes = earnedStrikes(training, abilities.strikeDefs);
-  return { strikes, families: unlockedFamilies(training, abilities.families), kataPowers: earnedKataPowers(training, abilities.kataPowers), tools: earnedTools(training, abilities.tools) };
+  return { strikes, families: unlockedFamilies(training, abilities.families), kataPowers: earnedKataSignatures(training, abilities.kataSignatures), tools: earnedTools(training, abilities.tools) };
 }
 
 /**
