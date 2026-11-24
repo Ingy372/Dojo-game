@@ -7,7 +7,7 @@ import type { Effect } from './effects';
 import type { FeedBelt } from './feed';
 import { playerStats, type Loadout, type Profile } from './profile';
 import { earnedPicks, normalizeSlots, sealSlots, type LoadoutEarned } from './loadout';
-import { toolPockets, toolSetups } from './tools';
+import { earnedTools, toolPockets, toolSetups } from './tools';
 import { earnedKataSignatures, resolveKataSignatureId } from './kataPowers';
 import { equippedStrikeSetup, resolveStrikeId } from './strikes';
 import type { RunSummary } from './run';
@@ -143,7 +143,8 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
     ...training.pinnedStats,
     effects: [...gear.effects],
     kataMove: move ? { id: move.id, cooldownTicks: move.cooldownTicks, radius: move.radius, strength: move.strength, knockTiles: move.knockTiles, staggerTicks: move.staggerTicks } : null,
-    tools: toolSetups(abilities.tools, loadout?.tools ?? []),
+    // Sensei's Pick on and every pocket empty: the newest earned tools, up to the pockets.
+    tools: toolSetups(abilities.tools, loadout?.tools?.length ? loadout.tools : profile.senseiPick ? earnedTools(training, abilities.tools).slice(-toolPockets(training)) : []),
     // PB-03: the Strike is the one in the Strike slot (Spin Kick when empty). The old always-on Strike upgrades are retired.
     strike: equippedStrikeSetup(abilities.strikeDefs, loadout?.strike ?? null),
     ...loadoutAbilities(profile.loadout, training, abilities, profile.grandfatheredStances),

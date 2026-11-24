@@ -17,6 +17,7 @@
 // counter window 14 ticks (was 10); every setup is the same, the fights play out differently.
 // Tool Belt Task 5 re-captured it on purpose: each setup gains "tools": [] (no tools in the pockets); every run is the same.
 // Tool Belt Task 6 re-captured it on purpose: each setup gains its "kataMove" (Sensei picks the newest earned); the bot never presses KATA, so every run is the same.
+// Tool Belt Task 7 re-captured it on purpose: with Sensei's Pick on and empty pockets, the newest earned tools now come along, so tools fire and the fights change.
 import { describe, expect, it } from 'vitest';
 import { captureGolden } from './golden-capture';
 import golden from '../../../fixtures/golden/p-menu2-d-default-run.json';

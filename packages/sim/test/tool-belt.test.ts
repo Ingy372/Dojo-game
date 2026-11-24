@@ -153,3 +153,17 @@ describe('the New tool card', () => {
     expect(w.evolutions).toEqual([]);
   });
 });
+
+describe("Sensei's Pick fills empty pockets", () => {
+  it('a student with tools and nothing in the pockets brings the newest tools, up to the pockets', () => {
+    const t = training(green);
+    const setup = characterSetup(newProfile(), t, content.abilities);
+    const pockets = toolPockets(t);
+    expect(setup.tools!.map((x) => x.technique)).toEqual(range(16 - pockets, 15));
+  });
+
+  it("with Sensei's Pick off, empty pockets stay empty", () => {
+    const p = { ...newProfile(), senseiPick: false };
+    expect(characterSetup(p, training(green), content.abilities).tools).toEqual([]);
+  });
+});
