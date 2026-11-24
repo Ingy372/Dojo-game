@@ -1452,3 +1452,4 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - No automatic blocking (Guided enemies 0.75 -> 0.7 to keep the white-belt target), kata Watch first and Hint, the town mini map and the door signs with pictures. Details in decisions.md. 1,696 tests pass; type checks and both builds pass; checked in the browser at 844 x 390 (Watch to "Your turn!", a hinted run paying 3 coins, the map and all three signs).
 - **Next:** Jay plays the preview: a fight in Steady (no auto-blocks), kata Watch and Hint, and the town map and signs; OK (or changes) for the picture icons and the kata words; then copy to `main` with his OK. Still open: re-measure the coin table with BALANCE=1.
 
+- **On the live link (Nov 24, Jay: "go ahead and push live"):** merged into `main`; 1,696 tests pass. Checked the live build: it has the new kata words and no Testing screen (the `WORKERS_CI_BRANCH=main` beta-mode switch works). Jay tests on the live link later.

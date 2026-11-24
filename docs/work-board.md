@@ -81,7 +81,7 @@ Jay has a few more visuals to list here.
 
 | ID | What | Status |
 |---|---|---|
-| GP-1 | Batch 1: live link hides Testing, grown-up check, invites Off, tap fixes, shop decor to storage, Home Dojo fixes | Built Nov 24; waits on Jay's phone test and OK for `main` |
+| GP-1 | Batch 1: live link hides Testing, grown-up check, invites Off, tap fixes, shop decor to storage, Home Dojo fixes | On `main` Nov 24 (Jay OK); Jay tests on the live link |
 | GP-2 | Defeat screen | Jay, Nov 24: no change |
 | GP-3 | No automatic blocking (Mash guard off; Guided enemies 0.7) | Built Nov 24; waits on Jay's phone test |
 | GP-4 | Town mini map and door signs with pictures (no Home button, Jay) | Built Nov 24; icons wait on Jay's OK |
