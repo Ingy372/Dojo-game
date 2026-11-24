@@ -529,7 +529,7 @@ export class InsideScene extends WalkScene {
       katas,
       new Map(katas.map((k) => [k.id, training.belts.find((b) => `${b.id}-kata` === k.requirement)])),
       loadSave().kataBests,
-      (kata, timeTrial) => this.startKata(kata, timeTrial),
+      (kata, timeTrial, watch) => this.startKata(kata, timeTrial, watch),
       () => {
         this.paused = false;
         this.mode = 'walk';
@@ -538,7 +538,7 @@ export class InsideScene extends WalkScene {
   }
 
   /** The hero steps to the logo's middle, faces the front, bows in and takes the Open Leg Stance; then the pad shows. */
-  private startKata(kata: KataDef, timeTrial: boolean): void {
+  private startKata(kata: KataDef, timeTrial: boolean, watch = false): void {
     const k = INSIDE.kataSpot!;
     const me = this.world.players.p1;
     this.mode = 'kata';
@@ -615,7 +615,17 @@ export class InsideScene extends WalkScene {
       beat: (beat, move, index) => beatFn(beat, move, index),
       done: (wrong, ms) => this.finishKata(kata, timeTrial, wrong, ms),
       quit: () => this.stopKata(),
-    });
+      // Jay, Nov 24: Watch first ends with the bow out and "Your turn!" (Try it plays the same kata).
+      watched: () => this.bowOutKata(() =>
+        pad.showWatchEnd({
+          tryIt: () => {
+            this.stopKata();
+            this.startKata(kata, timeTrial);
+          },
+          done: () => this.stopKata(),
+        }),
+      ),
+    }, watch);
     this.kataPad = pad;
     // The camera puts the logo's middle in the open space between the arrow pad and the technique buttons.
     this.lookAt = { x: k.center.x + (view(this).width / 2 - pad.freeCenterX) / (TILE * this.zoom), y: k.center.y };
@@ -688,8 +698,10 @@ export class InsideScene extends WalkScene {
     if (!pad) return;
     const profile = loadSave();
     // Nov 23 (Jay): kata practice earns coins: a big one-time amount for each kata's first clean run, then an ok amount per clean run.
-    const pay = kataCoins(profile, kata.id, wrong);
-    const result = recordKataRun(profile.kataBests[kata.id], wrong, ms);
+    // Jay, Nov 24: a run that used the Hint button pays like a run with mistakes and sets no bests.
+    const hinted = pad.hinted;
+    const pay = kataCoins(profile, kata.id, wrong, hinted);
+    const result = recordKataRun(profile.kataBests[kata.id], wrong, ms, hinted);
     profile.kataBests = { ...profile.kataBests, [kata.id]: result.best };
     writeSave(profile);
     const me = this.world.players.p1;
@@ -720,6 +732,7 @@ export class InsideScene extends WalkScene {
             ...result,
             coins: pay.coins,
             firstClean: pay.firstClean,
+            hinted,
             again: () => {
               this.stopKata();
               this.startKata(kata, timeTrial);
@@ -729,6 +742,32 @@ export class InsideScene extends WalkScene {
         },
         this.hero,
       );
+    }));
+  }
+
+  /** Back to the middle, face the front and bow out, then `then` (Watch first's ending). */
+  private bowOutKata(then: () => void): void {
+    const pad = this.kataPad;
+    if (!pad) return;
+    const me = this.world.players.p1;
+    const whenFree = (fn: () => void): void => {
+      if (this.kataPad !== pad) return;
+      if (this.kataQueued.length || this.kataTurning()) this.time.delayedCall(120, () => whenFree(fn));
+      else fn();
+    };
+    this.time.delayedCall(350, () => whenFree(() => {
+      if (this.kataPad !== pad) return;
+      this.kataSettleStep();
+      this.kataTarget = { ...INSIDE.kataSpot!.center };
+      this.hero.setMirrored(false);
+      me.facing = { ...KATA_VEC.F };
+      this.kataReady = false;
+      this.heroAction = this.hero.has('bow') ? 'bow' : null;
+      playBow(this, this.player, () => {
+        if (this.kataPad !== pad) return;
+        this.heroAction = null;
+        then();
+      }, this.hero);
     }));
   }
 

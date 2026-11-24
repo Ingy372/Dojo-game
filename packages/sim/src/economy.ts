@@ -65,11 +65,12 @@ export interface KataPay {
  * Coins for a finished kata practice (Jay, Nov 23): the first clean run (no mistakes) of each kata pays a big one-time
  * amount, every clean run after that pays an ok amount, and a run with mistakes pays very little.
  */
-export function kataCoins(profile: Profile, kataId: string, wrong: number): KataPay {
+export function kataCoins(profile: Profile, kataId: string, wrong: number, hinted = false): KataPay {
   const key = 'kata:' + kataId;
   let coins: number = EARN.kataWithMistakes;
   let firstClean = false;
-  if (wrong === 0) {
+  // Jay, Nov 24: a run that used the Hint button pays like a run with mistakes, never the clean-run coins.
+  if (wrong === 0 && !hinted) {
     firstClean = !profile.coinOnce.includes(key);
     if (firstClean) profile.coinOnce.push(key);
     coins = firstClean ? EARN.kataFirstClean : EARN.kataClean;
