@@ -1,6 +1,6 @@
 {
   "notes": "P-MENU2-e: words for the Fighting Style screen. Plain words, no numbers (D6). Locked items invite, never lock (D3).",
-  "slots": { "stance": "Stance", "virtue": "Virtue", "strike": "Strike", "kata": "Kata", "seal": "Tool Belt" },
+  "slots": { "stance": "Stance", "virtue": "Virtue", "strike": "Strike", "kata": "Kata", "seal": "Tool" },
   "glyphs": { "stance": "👣", "virtue": "✦" },
   "choose": { "stance": "Pick a Stance", "virtue": "Pick a Virtue", "strike": "Pick a Strike", "kata": "Pick a Kata move", "seal": "Pick a tool" },
   "hint": "Tap a card, then tap a pick.",

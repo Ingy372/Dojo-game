@@ -162,7 +162,20 @@ export interface PickLine {
  * handled once (`picksKnown`; tools as "tool-<n>"); the first check only records what is already
  * earned. Returns one line per new move, in the order earned (a tool's move is its number as text).
  */
-export function senseiPick(profile: Profile, earned: LoadoutEarned, tier: number, pockets: number = TOOL_BELT.startPockets): PickLine[] {
+export function senseiPick(profile: Profile, earned: LoadoutEarned, tier: number, pockets: number = TOOL_BELT.startPockets, fillEmpty = false): PickLine[] {
+  const lines = senseiPickMoves(profile, earned, tier, pockets);
+  // Tool Belt: with Sensei's Pick on, an empty Tool Belt and an empty Kata slot get the newest earned,
+  // quietly (no lines), so the screen shows what a fight brings.
+  if (fillEmpty && profile.senseiPick) {
+    const base = profile.loadout ?? emptyLoadout();
+    const tools = base.tools.length === 0 ? earned.tools.slice(-pockets) : base.tools;
+    const kata = base.kata ?? earned.kataPowers[earned.kataPowers.length - 1] ?? null;
+    if (tools !== base.tools || kata !== base.kata) profile.loadout = { ...base, tools: [...tools], kata };
+  }
+  return lines;
+}
+
+function senseiPickMoves(profile: Profile, earned: LoadoutEarned, tier: number, pockets: number): PickLine[] {
   const toolKey = (n: number) => `tool-${n}`;
   if (profile.picksKnown === null) {
     profile.picksKnown = [...earned.strikes, ...earned.tools.map(toolKey)];

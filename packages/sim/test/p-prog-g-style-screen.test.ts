@@ -55,7 +55,7 @@ describe('PB-05 Fighting Style screen', () => {
       const pockets = m.cards.filter((c) => c.slot === 'seal');
       expect(pockets.filter((c) => c.locked === null).length).toBe(toolPockets(t));
       expect(pockets.filter((c) => c.locked !== null).map((c) => c.locked)).toEqual(['Learn a kata!']);
-      expect(m.cards.find((c) => c.slot === 'seal')?.label).toBe('Tool Belt');
+      expect(m.cards.find((c) => c.slot === 'seal')?.label).toBe('Tool');
       // Every stage 1 tool shows: earned ones first, the rest waiting at the dojo.
       expect(m.trays.seal.map((p) => p.id).sort((x, y) => Number(x) - Number(y))).toEqual(content.abilities.tools.map((x) => String(x.technique)));
       expect(m.cards.some((c) => c.slot === 'kata')).toBe(true);

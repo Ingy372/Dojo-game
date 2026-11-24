@@ -167,3 +167,26 @@ describe("Sensei's Pick fills empty pockets", () => {
     expect(characterSetup(p, training(green), content.abilities).tools).toEqual([]);
   });
 });
+
+describe("Sensei's Pick saves its picks so the screen shows them", () => {
+  it('fills empty pockets and an empty Kata slot with the newest, quietly (no lines)', () => {
+    const p = newProfile();
+    p.picksKnown = [];
+    const lines = senseiPick(p, { strikes: [], families: [], kataPowers: ['kiai', 'four-corners'], tools: range(1, 15) }, 3, 4, true);
+    expect(p.loadout!.tools).toEqual([12, 13, 14, 15]);
+    expect(p.loadout!.kata).toBe('four-corners');
+    expect(lines.filter((l) => l.kind === 'added' || l.kind === 'swapped').map((l) => l.move)).toEqual(['12', '13', '14', '15']);
+  });
+
+  it("leaves chosen pockets alone, and does nothing with Sensei's Pick off", () => {
+    const p = newProfile();
+    p.picksKnown = range(1, 15).map((n) => `tool-${n}`);
+    p.loadout = { ...emptyLoadout(), tools: [3], kata: 'kiai' };
+    senseiPick(p, { strikes: [], families: [], kataPowers: ['kiai', 'four-corners'], tools: range(1, 15) }, 3, 4, true);
+    expect(p.loadout.tools).toEqual([3]);
+    expect(p.loadout.kata).toBe('kiai');
+    const off = { ...newProfile(), senseiPick: false, picksKnown: [] as string[] };
+    senseiPick(off, { strikes: [], families: [], kataPowers: ['kiai'], tools: [1, 2] }, 1, 3, true);
+    expect(off.loadout).toBeNull();
+  });
+});

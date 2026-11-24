@@ -306,7 +306,7 @@ export class HomeScene extends Phaser.Scene {
     const blessingAdded = creditBlessing(this.profile.blessing, this.training.classCheckIns);
     const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name, blessingAdded, CONTENT.abilities.families, CONTENT.abilities.tools);
     // OV-B1: Sensei's Pick puts new Kicks and Defenses in their slots; the lesson comes the first time one moves.
-    const picked = senseiPick(this.profile, earnedPicks(this.training, CONTENT.abilities), this.training.tier, toolPockets(this.training));
+    const picked = senseiPick(this.profile, earnedPicks(this.training, CONTENT.abilities), this.training.tier, toolPockets(this.training), true);
     const picks = { lesson: [] as string[], lines: picked.map((l) => pickLineText(l, CONTENT.abilities)) };
     if (picked.some((l) => l.kind !== 'ready')) {
       const lesson = takeLesson('firstSenseiPick', null);
