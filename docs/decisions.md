@@ -2184,3 +2184,9 @@ Grok's three-persona playtest and hand-off report (`docs/reviews/grok-playtest-2
 - **Street Smarts "Back" from the house** reads "Back to the house" (it returns there by design, Nov 23).
 - **Checked, not bugs:** kata practice counts right moves (no per-step hint by design: the student knows the form from class); the Decorate move choice is remembered; the run timer stops in menus; the Blessing counts down per counted run; Michael's desk is the wall Grok hit. Grok's profile switching on the Testing screen likely caused several of its reports.
 - **Waiting on Jay:** the defeat screen (keep the kind words but always pay a little?), the beginner Mash guard (Guided only, or end sooner?), the town Home button and map (batch 2), and whether kata should offer a beginner hint.
+
+## Jay's answers on the Grok playtest (2026-11-24)
+- **Defeat screen: no change.** The kind knock-out flow (B-MASHER-d1) stays as it is.
+- **No automatic blocking (Jay: "shouldn't be a feature").** The Mash guard (a hit during the hero's own swing counted as a Block until the room's 3rd Perfect Counter, B-MASHER-b/2) is to be removed. Blocks come only from pressing Counter. The wind-up "!" stays Guided-only plus the tutorial floor (already so since Nov 18).
+- **Town:** Jay likes a mini map and door signs/labels; asked why a Home button (explained; waits on his pick).
+- **Kata:** yes to a guided "watch it first" mode that says each move aloud (the phone's own voice) while lighting the arrow and move buttons, so a new belt gets a refresher before trying. Yes to a "show me the next move" hint; a run that uses it pays like a run with mistakes (3 coins), never the clean-run coins.
