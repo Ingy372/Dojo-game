@@ -2429,7 +2429,7 @@
       ]
     },
     "player-a-turn": {
-      "note": "Character creation (Jay, Nov 23: touch and move your character to see the hair): the idle in all 8 directions, every face and hair. Loaded only on the character screen.",
+      "note": "Character creation (Jay, Nov 23: touch and move your character to see the hair): the idle in all 8 directions, every face and hair. Loaded only on the character screen. Full detail (scale 1) like the front view, so turning stays sharp (Jay, Nov 23: it went blurry on desktop).",
       "sources": [
         {
           "id": "player",
@@ -2444,10 +2444,11 @@
             "idle"
           ]
         }
-      ]
+      ],
+      "scale": 1
     },
     "player-b-turn": {
-      "note": "Character creation (Jay, Nov 23: touch and move your character to see the hair): the idle in all 8 directions, every face and hair. Loaded only on the character screen.",
+      "note": "Character creation (Jay, Nov 23: touch and move your character to see the hair): the idle in all 8 directions, every face and hair. Loaded only on the character screen. Full detail (scale 1) like the front view, so turning stays sharp (Jay, Nov 23: it went blurry on desktop).",
       "sources": [
         {
           "id": "player",
@@ -2462,7 +2463,8 @@
             "idle"
           ]
         }
-      ]
+      ],
+      "scale": 1
     },
     "player-a-hair-13": {
       "note": "One hair style (only the chosen one is loaded), hair-13 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
