@@ -226,6 +226,7 @@ export class Celebrations {
       if (e.kind === 'stripe' || e.kind === 'signOff' || e.kind === 'signOffs') continue;
       else if (e.kind === 'testApproved') earned.push({ line: `Sensei's Seal is lit${e.testDate ? `: test day ${shortDate(e.testDate)}` : ''}`, color: '#ffd166' });
       else if (e.kind === 'blessing') earned.push({ line: e.full ? BLESS.full : BLESS.celebration, color: '#9ad1ff' });
+      else if (e.kind === 'newTool') earned.push({ line: fill(STYLE.newTool.row, { n: e.technique, name: e.name }), color: '#c9a8ff' });
       else if (e.kind === 'evolved') earned.push({ line: fill(EVO.legacyRow, { family: e.evolution.name, stage: e.evolution.stage }), color: '#e0a060' });
     }
     // Right: the new belt's techniques, in the school's own words.
@@ -406,6 +407,15 @@ export class Celebrations {
         this.text(cx, height * 0.45 - 40, "Sensei's Seal is lit!", 24, '#ffd166', true).setOrigin(0.5);
         this.text(cx, height * 0.45 + 2, "You're ready for your next belt test!", 17, '#f2e9d8').setOrigin(0.5);
         if (m.testDate) this.text(cx, height * 0.45 + 34, `Test day: ${shortDate(m.testDate)}`, 17, '#ffffff', true).setOrigin(0.5);
+        break;
+      }
+      case 'newTool': {
+        // Tool Belt: a small card (smaller than the sign-off card before it, which is the real achievement).
+        sfx.insight();
+        this.card(cx, height * 0.45, Math.min(460, width - 40), 150);
+        this.text(cx, height * 0.45 - 44, fill(STYLE.newTool.title, { n: m.technique, name: m.name }), 22, '#c9a8ff', true).setOrigin(0.5);
+        this.text(cx, height * 0.45 - 6, m.text, 15, '#f2e9d8', false, FONT, Math.min(420, width - 60)).setOrigin(0.5, 0.5).setAlign('center');
+        this.text(cx, height * 0.45 + 40, STYLE.newTool.line, 14, '#b9ad99').setOrigin(0.5).setAlign('center');
         break;
       }
       case 'blessing': {

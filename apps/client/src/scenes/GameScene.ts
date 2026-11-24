@@ -139,6 +139,7 @@ import { LESSONS, noteLessonSeen, takeLesson } from '../game/lessons';
 import { bankRun, saveRunInProgress } from '../game/runSave';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css, view, DPR, hiDpi } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
+import { ToolRow } from '../ui/toolRow';
 import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
@@ -476,6 +477,8 @@ export class GameScene extends Phaser.Scene {
 
   private controls!: TouchControls;
   private buttons!: ActionButtons;
+  /** Tool Belt: the equipped tools' icons and callouts (null with no tools). */
+  private toolRow: ToolRow | null = null;
   private uiCamera!: Phaser.Cameras.Scene2D.Camera;
 
   // Top-left bars, combo counter and messages (drawn by the screen camera).
@@ -678,7 +681,7 @@ export class GameScene extends Phaser.Scene {
     for (const e of this.world.enemies) this.makeEnemy(e);
 
     const p0 = this.world.players[this.me];
-    this.buttons = new ActionButtons(this, () => sfx.unlock(), { virtue: !!p0.virtue }, () => this.virtueReadyLine());
+    this.buttons = new ActionButtons(this, () => sfx.unlock(), { virtue: !!p0.virtue, kata: !!p0.kataMove }, () => this.virtueReadyLine());
     this.controls = new TouchControls(
       this,
       cam,
@@ -687,6 +690,8 @@ export class GameScene extends Phaser.Scene {
     );
     this.makeHud();
     cam.ignore([...this.controls.objects, ...this.buttons.objects]);
+    this.toolRow = p0.tools.length > 0 ? new ToolRow(this, CONTENT.abilities.tools, p0.tools.map((t) => t.setup.technique), HUD_TOP_PX) : null;
+    if (this.toolRow) cam.ignore(this.toolRow.objects);
     cam.fadeIn(350, 10, 8, 16);
     this.enemiesAt = 0;
     this.bossZoom = 1;
@@ -695,6 +700,8 @@ export class GameScene extends Phaser.Scene {
     this.bossWatchFrom = this.time.now + 600;
     if (this.run && this.run.depth === 0 && !this.run.bowed && !this.run.tutorial) this.askForBow();
     else this.introduceRoom();
+    // Tool Belt: the first fight with a KATA button, Sensei says what it is (once).
+    if (p0.kataMove) this.time.delayedCall(1800, () => this.lesson('firstKataButton'));
 
     this.layout();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
@@ -808,6 +815,7 @@ export class GameScene extends Phaser.Scene {
     this.buttons.counterWindow(this.counterWindowOpen);
 
     this.buttons.update(p);
+    this.toolRow?.update(p);
     this.placeCounterTip();
     this.drawHud();
     this.drawRunHud(now);
@@ -1517,6 +1525,7 @@ export class GameScene extends Phaser.Scene {
     this.uiCamera.setSize(width * DPR, height * DPR);
     this.controls.layout();
     this.buttons.layout();
+    this.toolRow?.layout();
     // The practice room's two-line title sits top centre: the combo words go just under it, never on it.
     const comboTop = this.practiceLabel ? this.practiceLabel.y + this.practiceLabel.height + 4 : 14;
     this.comboText.setPosition(width / 2, comboTop);
@@ -1755,6 +1764,30 @@ export class GameScene extends Phaser.Scene {
         }
         case 'virtueEnd':
           break;
+        case 'toolFired': {
+          // Tool Belt: the hero does the tool's move (if not busy) and its name pops up in the corner.
+          if (ev.playerId !== this.me) break;
+          const p = this.world.players[ev.playerId];
+          const def = CONTENT.abilities.tools.find((t) => t.technique === ev.technique);
+          if (def && def.anim !== 'none' && !this.heroAction) this.heroDo(def.anim);
+          this.ring(p.pos, 0xc9a8ff, 1.3, 0.7);
+          sfx.insight();
+          this.toolRow?.fired(ev.technique);
+          this.lesson('firstToolFired');
+          break;
+        }
+        case 'kataMove': {
+          // Tool Belt: the KATA button's signature move.
+          const p = this.world.players[ev.playerId];
+          const move = CONTENT.abilities.kataSignatures.find((m) => m.id === ev.id);
+          sfx.greatCounter();
+          this.heroDo(move?.anim === 'strike' ? 'strike' : 'counter');
+          this.impact(FEEL.perfect);
+          this.flashScreen(0xc9a8ff, 0.4, 240);
+          this.ring(p.pos, 0xc9a8ff, move?.radius ?? 2);
+          if (move) this.popWord(move.name, '#e8d8ff', RATING.name);
+          break;
+        }
         case 'virtueRefused': {
           const p = this.world.players[ev.playerId];
           sfx.denied();

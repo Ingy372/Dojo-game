@@ -3,10 +3,9 @@
 // Tap a card, then tap a pick. Wording comes from content/abilities/fighting-style.json.
 // Rank names come from the live seal families (J27), not the older draft labels.
 
-import { defaultStrikeDef, earnedKataSignatures, familyRank, familyStage, earnedStrikes, resolveKataSignatureId, emptyLoadout, equipSeal, equipStrike, normalizeLoadout, removeSeal, sealSlots, signedOffTechniques, swapSeal, unlockedFamilies, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type PickLine, type SealFamilyDef, type TrainingState } from '@dojo/sim';
+import { TOOL_BELT, defaultStrikeDef, earnedKataSignatures, earnedStrikes, earnedTools, emptyLoadout, equipStrike, equipTool, normalizeLoadout, removeTool, resolveKataSignatureId, swapTool, toolPockets, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type PickLine, type ToolDef, type TrainingState } from '@dojo/sim';
 import words from '../../../../content/abilities/fighting-style.json';
 import helpFile from '../../../../content/abilities/fighting-style-help.json';
-import EVO from '../../../../content/abilities/seal-evolution.json';
 import { MIN_TAP, S1, S2, TYPE, pageDots } from './tokens';
 
 export const STYLE_WORDS = words;
@@ -119,7 +118,6 @@ export interface StyleTapResult {
 const line = (id: string): string => (words.lines as Record<string, string>)[id] ?? words.lineFallback;
 /** R-STANCE-g: a not-yet Stance can have its own locked line (#312); otherwise its normal line. */
 const notYetLine = (id: string): string => (words.notYetLines as Record<string, string>)[id] ?? line(id);
-const sealLine = (family: string, name: string): string => words.sealRank.replace('{family}', family).replace('{name}', name);
 
 const HELP_TRIGGER: Record<string, string> = {
   'help-slots': 'open',
@@ -129,22 +127,6 @@ const HELP_TRIGGER: Record<string, string> = {
   'help-kata-soon': 'kata-soon',
   'help-kata-pick': 'kata-pick',
 };
-
-/** The belt name of the first tier that has a third Seal slot, when this belt does not have it yet. */
-export function nextSealBelt(tier: number, belts: readonly { name: string }[]): string | null {
-  if (sealSlots(tier) >= 3) return null;
-  const i = belts.findIndex((_, n) => sealSlots(n + 1) >= 3);
-  return i >= 0 ? belts[i].name : null;
-}
-
-function newestRank(family: SealFamilyDef, signed: ReadonlySet<number>): { name: string } | null {
-  let best: { technique: number; name: string } | null = null;
-  for (const r of family.ranks) {
-    if (!signed.has(r.technique)) continue;
-    if (!best || r.technique > best.technique) best = { technique: r.technique, name: r.name };
-  }
-  return best;
-}
 
 function dot(seen: readonly string[] | null | undefined, picks: readonly StylePick[]): boolean {
   if (seen == null) return false;
@@ -213,30 +195,19 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
     .map((m) => ({ id: m.id, slot: 'kata' as const, name: m.name, line: m.text, earned: true }));
   const kataPick = kataTray.find((p) => p.id === normalized?.kata) ?? null;
 
-  const signed = signedOffTechniques(training);
-  const earnedFamilies = unlockedFamilies(training, abilities.families);
-  const sealTray: StylePick[] = [];
-  const pushFamily = (f: SealFamilyDef, earned: boolean, comingLater = false) => {
-    const rank = newestRank(f, signed);
-    const stage = earned ? familyStage(familyRank(f, signed)) : 0;
-    sealTray.push({
-      id: f.id, slot: 'seal', name: f.name, earned, comingLater,
-      line: comingLater ? words.comingLater : earned && rank ? `${sealLine(f.name, rank.name)} · ${EVO.stageLabel.replace('{stage}', String(stage))}` : words.notYet,
-      ...(stage > 0 ? { stage } : {}),
-    });
-  };
-  for (const id of earnedFamilies) {
-    const f = abilities.families.find((x) => x.id === id);
-    if (f) pushFamily(f, true);
-  }
-  for (const f of abilities.families) {
-    if (!f.live || earnedFamilies.includes(f.id)) continue;
-    pushFamily(f, false);
-  }
-  for (const f of abilities.families) if (!f.live) pushFamily(f, false, true);
-
-  const equippedSeals = (normalized?.seals ?? []).filter((id) => earnedFamilies.includes(id));
-  const slots = sealSlots(training.tier);
+  // Tool Belt (Nov 24): the 'seal' cards are now the Tool Belt's pockets and its tray holds tools (id = the
+  // technique number as text). Earned tools first, then the ones still to learn in class.
+  const earnedToolList = earnedTools(training, abilities.tools);
+  const toolPick = (t: ToolDef, earned: boolean): StylePick => ({
+    id: String(t.technique), slot: 'seal', name: `#${t.technique} ${t.name}`, earned,
+    line: earned ? `${t.text} ${words.fires[t.trigger]} ${words.inClass.replace('{reminder}', t.reminder)}` : words.notYet,
+  });
+  const sealTray: StylePick[] = [
+    ...abilities.tools.filter((t) => earnedToolList.includes(t.technique)).map((t) => toolPick(t, true)),
+    ...abilities.tools.filter((t) => !earnedToolList.includes(t.technique)).map((t) => toolPick(t, false)),
+  ];
+  const equippedSeals = (normalized?.tools ?? []).filter((n) => earnedToolList.includes(n)).map(String);
+  const slots = toolPockets(training);
   const seen = view.seen;
   const sealFresh = dot(seen, sealTray);
   const cards: StyleCard[] = [
@@ -250,8 +221,8 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
     const id = equippedSeals[i] ?? null;
     cards.push({ slot: 'seal', index: i, label: words.slots.seal, pick: id ? sealTray.find((p) => p.id === id) ?? null : null, locked: null, newDot: i === 0 && sealFresh });
   }
-  const lockedBelt = nextSealBelt(training.tier, training.belts);
-  if (lockedBelt) cards.push({ slot: 'seal', index: slots, label: words.slots.seal, pick: null, locked: lockedBelt, newDot: false });
+  // Tool Belt: one more pocket waits for the next kata.
+  if (slots < TOOL_BELT.maxPockets) cards.push({ slot: 'seal', index: slots, label: words.slots.seal, pick: null, locked: words.morePockets, newDot: false });
 
   const help = !view.helpUsed && view.triggers?.length
     ? styleHelp(view.helpSeen ?? [], view.helpBlocked ?? [], view.triggers)
@@ -432,9 +403,9 @@ export function applyStyleTap(session: StyleSession, tap: StyleTap, training: Tr
   if (tap.kind === 'cancel') return { session: { ...session, swap: null, focus: null }, save: false, sheet: null, triggers: [], seenIds: [] };
   if (tap.kind === 'take-out') {
     if (session.open?.slot !== 'seal') return same(session);
-    const id = session.loadout?.seals[session.open.index];
-    if (!id) return same(session);
-    const next = removeSeal({ ...emptyLoadout(), ...session.loadout }, id);
+    const id = session.loadout?.tools?.[session.open.index];
+    if (id === undefined) return same(session);
+    const next = removeTool({ ...emptyLoadout(), ...session.loadout }, id);
     return { session: { ...session, loadout: next, swap: null, focus: null }, save: true, sheet: null, triggers: [], seenIds: [] };
   }
   if (tap.kind === 'card') {
@@ -442,8 +413,8 @@ export function applyStyleTap(session: StyleSession, tap: StyleTap, training: Tr
     if (!card) return same(session);
     if (session.swap && tap.slot === 'seal' && card.pick && !card.locked) {
       const base: Loadout = { ...emptyLoadout(), ...session.loadout };
-      // swapSeal returns the same object when the swap is not valid.
-      const next = swapSeal(base, card.pick.id, session.swap, unlockedFamilies(training, abilities.families));
+      // swapTool returns the same object when the swap is not valid.
+      const next = swapTool(base, Number(card.pick.id), Number(session.swap), earnedTools(training, abilities.tools));
       const swapped = next !== base;
       return { session: { loadout: swapped ? next : session.loadout, open: { slot: 'seal', index: tap.index }, swap: null, focus: null }, save: swapped, sheet: null, triggers: [], seenIds: [] };
     }
@@ -473,8 +444,8 @@ export function applyStyleTap(session: StyleSession, tap: StyleTap, training: Tr
     return { session: { ...focus, loadout: { ...base, kata: pick.id } }, save: true, sheet: null, triggers: [], seenIds: [] };
   }
   const base: Loadout = { ...emptyLoadout(), ...session.loadout };
-  const r = equipSeal(base, pick.id, unlockedFamilies(training, abilities.families), sealSlots(training.tier));
+  const r = equipTool(base, Number(pick.id), earnedTools(training, abilities.tools), toolPockets(training));
   if (r.result === 'full') return { session: { ...session, focus: pick.id, swap: pick.id }, save: false, sheet: null, triggers: ['swap'], seenIds: [] };
-  if (r.result !== 'equipped') return { session: focus, save: false, sheet: null, triggers: [], seenIds: [] };
+  if (r.result !== 'ok') return { session: focus, save: false, sheet: null, triggers: [], seenIds: [] };
   return { session: { ...focus, loadout: r.loadout }, save: true, sheet: null, triggers: [], seenIds: [] };
 }

@@ -1,6 +1,6 @@
 // Tool Belt stage 1, Task 5: pockets, earned tools, Sensei's Pick and old saves with Seals.
 import { describe, expect, it } from 'vitest';
-import { buildTraining, characterSetup, earnedPicks, earnedTools, emptyLoadout, equipTool, loadFeed, newProfile, seedToolBelt, senseiPick, toolPockets, type TrainingState } from '../src';
+import { buildTraining, characterSetup, earnedPicks, earnedTools, emptyLoadout, equipTool, loadFeed, newProfile, rewardMoments, seedToolBelt, senseiPick, snapshot, toolPockets, type TrainingState } from '../src';
 import { testContent } from './load-content';
 import whiteNew from '../../../fixtures/1-white-belt-new.json';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
@@ -127,5 +127,29 @@ describe('characterSetup', () => {
     p.loadout = { ...emptyLoadout(), tools: [3, 9, 1, 1] };
     const setup = characterSetup(p, training(white3), content.abilities);
     expect(setup.tools!.map((t) => t.technique)).toEqual([3, 1]);
+  });
+});
+
+describe('the New tool card', () => {
+  it('follows the sign-off of a technique with a tool, once, and replaces the Seal evolution card', () => {
+    const t = training(green);
+    const prev = snapshot(t);
+    const reqId = t.abilities.filter((a) => a.kind === 'seal')[6].requirement.id; // technique #7
+    const before = { ...prev, signed: prev.signed.filter((id) => id !== reqId) };
+    const m = rewardMoments(before, t, undefined, null, content.abilities.families, content.abilities.tools);
+    const kinds = m.map((x) => x.kind);
+    expect(kinds.filter((k) => k === 'newTool')).toHaveLength(1);
+    expect(kinds).not.toContain('evolved');
+    expect(kinds.indexOf('newTool')).toBeGreaterThan(kinds.findIndex((k) => k === 'signOff' || k === 'signOffs'));
+    const card = m.find((x) => x.kind === 'newTool');
+    expect(card?.kind === 'newTool' && card.technique).toBe(7);
+    expect(rewardMoments(prev, t, undefined, null, content.abilities.families, content.abilities.tools)).toEqual([]);
+  });
+
+  it('the first look home lists no Seal stages once tools exist', () => {
+    const m = rewardMoments(null, training(green), undefined, null, content.abilities.families, content.abilities.tools);
+    const w = m[0];
+    if (w.kind !== 'welcome') throw new Error('expected the welcome card');
+    expect(w.evolutions).toEqual([]);
   });
 });

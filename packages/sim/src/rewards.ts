@@ -4,6 +4,7 @@
 // promotion, then stripes, then sign-offs, then Sensei's Seal, then the Blessing.
 
 import type { SealFamilyDef } from './abilities';
+import type { ToolDef } from './abilities';
 import { evolutionsSince, signedOffTechniques, techniquesIn, type Evolution } from './sealFamilies';
 import type { BeltInfo, RequirementStatus, TrainingState, VirtueInfo } from './training';
 import { byTier, TRAINING_STATS } from './config';
@@ -70,6 +71,8 @@ export type RewardMoment =
   | { kind: 'signOffs'; list: Array<{ requirement: RequirementStatus; ability: string }> }
   /** L8-B3: a Seal family reached a new stage (after the sign-off cards; once, since the snapshot moves on). */
   | { kind: 'evolved'; evolution: Evolution }
+  /** Tool Belt: a sign-off earned a new tool (after the sign-off cards, and smaller than them). */
+  | { kind: 'newTool'; technique: number; name: string; text: string }
   | { kind: 'testApproved'; testDate: string | null }
   /** OV-B5: a new class added Blessing runs. full: it was already at the most it holds. */
   | { kind: 'blessing'; full: boolean };
@@ -108,8 +111,10 @@ export function abilityLabel(t: TrainingState, id: string): string {
   if (!a) return '';
   // R-STANCE-d2: katas unlock nothing for the beta.
   // Grok playtest Nov 23 (O4): "later update" read as unfinished; kata practice and its coins are in now.
-  if (a.requirement.type === 'kata') return 'Kata';
-  const kind = a.kind === 'stance' ? 'Stance' : a.kind === 'strike' ? 'Strike upgrade' : 'Technique Seal';
+  // Tool Belt (Nov 24): a kata earns its KATA move and a Tool Belt pocket; a self-defense technique earns a tool.
+  if (a.requirement.type === 'kata') return 'Kata move + a Tool Belt pocket';
+  if (a.kind === 'seal') return 'New tool for your Tool Belt';
+  const kind = a.kind === 'stance' ? 'Stance' : 'Strike upgrade';
   const name = a.stance?.name ?? a.perk?.name;
   return name ? `${kind}: ${name}` : `${kind} (power arrives in a later update)`;
 }
@@ -119,9 +124,10 @@ export function abilityLabel(t: TrainingState, id: string): string {
  * `blessingAdded` is what `creditBlessing` returned: runs a new class added, or null for none.
  * `families`: the Seal families, so an evolution can follow its sign-off (L8-B3).
  */
-export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, stance = "Beginner's Stance", blessingAdded: number | null = null, families: readonly SealFamilyDef[] = []): RewardMoment[] {
+export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, stance = "Beginner's Stance", blessingAdded: number | null = null, families: readonly SealFamilyDef[] = [], tools: readonly ToolDef[] = []): RewardMoment[] {
   if (!prev || prev.studentId !== t.studentId) {
-    return unlockCascade(t, stance, families);
+    // Tool Belt: with tools, Seal stages are no longer shown.
+    return unlockCascade(t, stance, tools.length > 0 ? [] : families);
   }
   // Going down in rank can only happen while testing with fake profiles: nothing to celebrate.
   if (t.tier < prev.tier) return [];
@@ -150,7 +156,14 @@ export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, s
   const fresh = [...t.requirements, ...t.stances.map((s) => s.requirement)].filter((r) => r.signedOff && !oldSigned.has(r.id)).map((r) => ({ requirement: r, ability: abilityLabel(t, r.id) }));
   if (fresh.length > MAX_SINGLE_SIGNOFFS) out.push({ kind: 'signOffs', list: fresh });
   else for (const f of fresh) out.push({ kind: 'signOff', ...f });
-  for (const evolution of evolutionsSince(families, techniquesIn(t, oldSigned), signedOffTechniques(t))) out.push({ kind: 'evolved', evolution });
+  if (tools.length > 0) {
+    // Tool Belt: each newly signed technique with a tool gets a small New tool card.
+    const had = techniquesIn(t, oldSigned);
+    for (const n of [...signedOffTechniques(t)].filter((x) => !had.has(x)).sort((a, b) => a - b)) {
+      const tool = tools.find((x) => x.technique === n);
+      if (tool) out.push({ kind: 'newTool', technique: n, name: tool.name, text: tool.text });
+    }
+  } else for (const evolution of evolutionsSince(families, techniquesIn(t, oldSigned), signedOffTechniques(t))) out.push({ kind: 'evolved', evolution });
 
   if (t.gate.sealLit && !prev.approved) out.push({ kind: 'testApproved', testDate: t.gate.testDate });
   if (blessingAdded !== null) out.push({ kind: 'blessing', full: blessingAdded === 0 });

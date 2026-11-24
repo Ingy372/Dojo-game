@@ -40,7 +40,6 @@ import {
   dismissSlotNote,
   earnedPicks,
   senseiPick,
-  signedOffTechniques,
   toolPockets,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
@@ -69,7 +68,7 @@ import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
 import { drawBanner, drawFaithPage } from '../ui/faith';
-import { BOOK_TABS, BOOK_WORDS, boardTab, bookCubbies, sealStageLine, tabCubbies, type BookTab } from '../ui/book';
+import { BOOK_TABS, BOOK_WORDS, boardTab, bookCubbies, tabCubbies, type BookTab } from '../ui/book';
 import { drawMonsterJournal } from '../ui/MonsterJournal';
 import { isOpen } from '../game/unlocks';
 import { NAMED_PACK } from '../game/named';
@@ -305,7 +304,7 @@ export class HomeScene extends Phaser.Scene {
     }
     this.training = currentTraining();
     const blessingAdded = creditBlessing(this.profile.blessing, this.training.classCheckIns);
-    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name, blessingAdded, CONTENT.abilities.families);
+    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name, blessingAdded, CONTENT.abilities.families, CONTENT.abilities.tools);
     // OV-B1: Sensei's Pick puts new Kicks and Defenses in their slots; the lesson comes the first time one moves.
     const picked = senseiPick(this.profile, earnedPicks(this.training, CONTENT.abilities), this.training.tier, toolPockets(this.training));
     const picks = { lesson: [] as string[], lines: picked.map((l) => pickLineText(l, CONTENT.abilities)) };
@@ -1537,7 +1536,8 @@ export class HomeScene extends Phaser.Scene {
       const icon = Math.max(24, Math.min(L.icon, box.h - TYPE.label * 2 - 14));
       const iy = top + 4 + icon / 2;
       const iconId = card.locked ? 'lock' : card.slot === 'seal' ? (card.pick?.id ?? 'empty-slot') : card.slot === 'kata' ? 'kata' : card.pick?.id ?? '';
-      const family = card.slot === 'seal' && !card.locked && card.pick ? CONTENT.abilities.families.find((f) => f.id === card.pick?.id) : undefined;
+      // Tool Belt: a pocket shows the picture of the family its tool's technique belongs to.
+      const family = card.slot === 'seal' && !card.locked && card.pick ? CONTENT.abilities.families.find((f) => f.ranks.some((r) => String(r.technique) === card.pick?.id)) : undefined;
       const img = family ? addSealMedallion(this, family, this.training.abilities, 0, iy, icon) : iconId ? addSlotIcon(this, iconId, 0, iy, icon) : null;
       if (img) v.add(img);
       else if (card.slot === 'stance' || card.slot === 'virtue') {
@@ -1789,7 +1789,11 @@ export class HomeScene extends Phaser.Scene {
         const k = KATAS.get(id);
         return k ? kataArrows(k) : undefined;
       },
-      sealStage: sealStageLine(CONTENT.abilities.families, signedOffTechniques(t)),
+      // Tool Belt: each self-defense trophy names the tool it earned (Seal stages are no longer shown).
+      sealStage: (n: number) => {
+        const tool = CONTENT.abilities.tools.find((x) => x.technique === n);
+        return tool ? `Tool: #${tool.technique} ${tool.name}` : undefined;
+      },
     });
   }
 

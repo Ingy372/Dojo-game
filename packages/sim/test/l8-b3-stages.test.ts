@@ -1,5 +1,5 @@
-// L8-B3 (L8-SPEC section 6): Seal stages from rank, one evolution card per evolution, the legacy
-// cascade's evolutions on the one welcome card, and the stage on the loadout and in the Book.
+// L8-B3 (L8-SPEC section 6): Seal stages from rank and evolution cards. Tool Belt (Nov 24): players no longer see Seal stages;
+// the rules stay for old saves and are tested here, and with tools the New tool card replaces the evolution card (tool-belt.test.ts).
 import { describe, expect, it } from 'vitest';
 import { buildTraining, evolutionsSince, familyStage, loadFeed, rewardMoments, signedOffTechniques, snapshot, type Now } from '../src';
 import { buildStyle } from '../../../apps/client/src/ui/fightingStyle';
@@ -48,13 +48,13 @@ describe('L8-B3 Seal stages', () => {
     expect(w.evolutions.every((e) => e.stage >= 2)).toBe(true);
   });
 
-  it('the loadout and the Book show each earned family stage', () => {
+  it('Tool Belt (Nov 24): the loadout shows tools, not Seal stages', () => {
     const model = buildStyle(t, content.abilities, null);
     const earned = model.trays.seal.filter((p) => p.earned);
     expect(earned.length).toBeGreaterThan(0);
     for (const p of earned) {
-      expect(p.stage).toBeGreaterThanOrEqual(1);
-      expect(p.line).toContain(`Stage ${p.stage}`);
+      expect(p.stage).toBeUndefined();
+      expect(p.line).not.toContain('Stage');
     }
     const evolved = evolutionsSince(families, new Set(), signed)[0];
     expect(sealStageLine(families, signed)(evolved.technique)).toBe(`${evolved.name} Seal: Stage ${evolved.stage}`);
