@@ -67,7 +67,7 @@ room = {
         "middle-aisle-back": [7.2, 2.7], "middle-aisle-front": [7.2, 5.6], "front-player": [8.2, 7.0],
         "worker": [6.75, 6.4], "cashier": [11.0, 5.55], "stranger": [3.2, 5.3], "hide-spot": [1.3, 7.9],
         "meet-worker": [7.25, 7.0], "door-in": [14.0, 8.0], "door-out": [14.0, 9.9],
-        "shopper-talk": [9.1, 7.25], "hug-grownup": [8.95, 7.05], "speaker": [8.5, 1.0, 2.15],
+        "shopper-talk": [9.45, 7.3], "hug-grownup": [8.95, 7.05], "speaker": [8.5, 1.0, 2.15],
     },
 }
 json.dump(room, open(ROOM_OUT, "w", newline="\n"), indent=1)

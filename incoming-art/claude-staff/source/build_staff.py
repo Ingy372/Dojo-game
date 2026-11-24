@@ -26,8 +26,8 @@ STAFF = {
 # Everyday people for the Street Smarts store (Jay, Nov 24): no gi and no belt, a shirt, trousers and shoes. The store
 # staff (worker, cashier) wear the store's blue vest with a white name tag, so kids can spot who works there.
 CIV = dict(
-    mom=dict(body="b", face="02", hair="14", skin="#e9b48f", hairc="#5a3a22", shirt="#d9577a", pants="#3d5a8a", shoes="#f4f4f4", iris="#5a7a4a", grin=0.07),
-    dad=dict(body="a", face="04", hair="05", skin="#d9a27a", hairc="#2e2420", shirt="#3f8f6a", pants="#4a4a55", shoes="#2a2a2a", iris="#4a3020", grin=0.08),
+    mom=dict(body="b", face="02", hair="05", skin="#e9b48f", hairc="#5a3a22", shirt="#d9577a", pants="#3d5a8a", shoes="#f4f4f4", iris="#5a7a4a", grin=0.07),
+    dad=dict(body="a", face="04", hair="14", skin="#d9a27a", hairc="#2e2420", shirt="#3f8f6a", pants="#4a4a55", shoes="#2a2a2a", iris="#4a3020", grin=0.08),
     worker=dict(body="a", face="01", hair="07", skin="#8d5a3c", hairc="#1e1a18", shirt="#f2f2f2", pants="#2e3440", shoes="#202020", iris="#3a2418", grin=0.09, vest="#2f74c8"),
     cashier=dict(body="b", face="05", hair="11", skin="#f0c8a8", hairc="#c8823a", shirt="#f6d55c", pants="#2e3440", shoes="#202020", iris="#4a6a8a", grin=0.07, vest="#2f74c8"),
     shopper=dict(body="a", face="03", hair="09", skin="#e0b090", hairc="#6a4a30", shirt="#8a7a9a", pants="#7a6a52", shoes="#4a3a2a", iris="#4a3020"),

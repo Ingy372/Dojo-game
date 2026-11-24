@@ -1452,3 +1452,7 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - No automatic blocking (Guided enemies 0.75 -> 0.7 to keep the white-belt target), kata Watch first and Hint, the town mini map and the door signs with pictures. Details in decisions.md. 1,696 tests pass; type checks and both builds pass; checked in the browser at 844 x 390 (Watch to "Your turn!", a hinted run paying 3 coins, the map and all three signs).
 - **Next:** Jay plays the preview: a fight in Steady (no auto-blocks), kata Watch and Hint, and the town map and signs; OK (or changes) for the picture icons and the kata words; then copy to `main` with his OK. Still open: re-measure the coin table with BALANCE=1.
 
+## Street Smarts cut scene (2026-11-24, branch `claude/street-cutscene`)
+- "Lost in the store" now plays like a cut scene in a Blender store with Blender people (Mom or Dad, a worker and cashier in blue vests with name tags, a shopper, a stranger). About 20 short lines instead of 35, no Next taps: it stops only for 3 questions and 1 tap-a-person moment. Jay's round 2 script. Details in decisions.md.
+- 1,699 tests pass; type checks and both builds pass; checked in the browser at 844 x 390 and 667 x 375 (the whole lesson, a wrong answer and its retry, the stranger and cashier taps, Skip on a replay, the end screen).
+- **Next:** Jay plays the preview (`?street=store-separated`, or the Street Smarts House in town); OK (or changes) for the store and people art, Sensei's portrait (Jay's staff character) and voice; then copy to `main` with his OK.

@@ -31,7 +31,7 @@
             { "do": "camera", "fit": ["toy-player", "enter-player"], "with": true },
             { "do": "walk", "who": "grownup", "to": "toy-grownup", "via": ["east-aisle-grownup"] },
             { "do": "walk", "who": "player", "to": "toy-player", "via": ["east-aisle"], "with": true },
-            { "do": "camera", "fit": ["toy-player", "toy-grownup"] },
+            { "do": "camera", "fit": ["toy-player", "grownup-away"] },
             { "do": "face", "who": "player", "dir": "N" },
             { "do": "emote", "who": "player", "emote": "toy" },
             { "do": "walk", "who": "grownup", "to": "grownup-away", "with": true },
@@ -42,7 +42,8 @@
           "speaker": "narrator",
           "text": "When {player} looks up, {grownup} is gone.",
           "stage": [
-            { "do": "face", "who": "player", "dir": "S" },
+            { "do": "camera", "fit": ["toy-player"] },
+            { "do": "face", "who": "player", "dir": "S", "with": true },
             { "do": "emote", "who": "player", "emote": "question" }
           ]
         },
@@ -162,11 +163,16 @@
             "text": "I'll call {grownup} on the store speaker.",
             "expression": "happy",
             "stage": [
-              { "do": "pause", "secs": 1.2 },
+              { "do": "camera", "fit": ["meet-worker", "front-player", "speaker"] },
               { "do": "emote", "to": "speaker", "emote": "sound" }
             ]
           },
-          { "speaker": "worker", "text": "Let's wait here together.", "expression": "happy" }
+          {
+            "speaker": "worker",
+            "text": "Let's wait here together.",
+            "expression": "happy",
+            "stage": [{ "do": "camera", "fit": ["meet-worker", "front-player"] }]
+          }
         ],
         "voice-retry": [
           { "speaker": "sensei", "text": "It's okay to feel shy.", "expression": "thinking" },
