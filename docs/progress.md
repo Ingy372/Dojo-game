@@ -1453,3 +1453,8 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - **Next:** Jay plays the preview: a fight in Steady (no auto-blocks), kata Watch and Hint, and the town map and signs; OK (or changes) for the picture icons and the kata words; then copy to `main` with his OK. Still open: re-measure the coin table with BALANCE=1.
 
 - **On the live link (Nov 24, Jay: "go ahead and push live"):** merged into `main`; 1,696 tests pass. Checked the live build: it has the new kata words and no Testing screen (the `WORKERS_CI_BRANCH=main` beta-mode switch works). Jay tests on the live link later.
+
+## Town comes alive, first pass (2026-11-24, branch `claude/town-life`)
+- Jay added reference pictures in `Art Samples/` (cozy, lush, lots of small life) and asked for the town to feel less flat. New `apps/client/src/fx/townLife.ts`, all drawn in code, looks only: trees, bushes and flower beds sway in a rolling breeze; flower clumps and grass tufts in the lawns (more flowers with each real belt stage); butterflies by day; cherry petals drifting from the four plaza trees; small flocks of birds crossing the sky; soft cloud shadows sliding over the town; ripples and sparkles on the pond. At night: no butterflies, birds or clouds (the fireflies stay). Reduced motion keeps only the still flowers.
+- 3,328 tests pass; client type checks and build pass; checked in the browser at 844 x 390 (flowers, ripples, birds).
+- **Next (ideas for pass 2, need Jay's OK):** paths with fallen petals and wear, fences and flower boxes along the lawns, a warmer sunlight tint, villagers (Sensei, Hannah, Michael) strolling outside, ambient sounds (birds, breeze, water). Then copy to `main` with Jay's OK.

@@ -5,6 +5,7 @@ import { makePlayerSprite, playLocomotion } from '../art/player';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { testFlags } from '../game/beta';
 import { reducedMotion } from '../game/motion';
+import { TownLife } from '../fx/townLife';
 import { loadLook, SWATCHES } from '../game/look';
 import { currentTraining } from '../game/student';
 import { addExitCue } from '../ui/exitCue';
@@ -23,6 +24,8 @@ import townWalk from '../../../../content/dojo/action-zone/town-walk.json';
 
 export const TOWN_PACK = 'town';
 const WALK = loadTownWalk(townWalk);
+/** Town pieces that lean in the breeze. */
+const SWAYS = /tree|sakura|maple|shrub|bamboo|palm|flowers/;
 /** Every door in town: home, the Action Zone, and (Nov 23) the Street Smarts House. */
 const DOORS = [WALK.homeDoor, WALK.dojoDoor, ...(WALK.streetDoor ? [WALK.streetDoor] : [])];
 /** Jay, Nov 24: each door's picture on its sign and on the mini map. */
@@ -378,8 +381,12 @@ export class TownScene extends WalkScene {
     return { pos: { x: door.spawn[0], y: door.spawn[1] }, facing: 'south' };
   }
 
+  /** The moving things that make the town feel alive (Jay, Nov 24). */
+  private life: TownLife | null = null;
+
   protected drawRoom(): void {
     const w = WALK.tiles[0].length;
+    const swayers: [Phaser.GameObjects.Image[], boolean][] = [];
     const all = Object.entries(staticSprites(this, TOWN_PACK)) as [string, TownSprite][];
     // The picture starts above row 0: the hills, the sky and the Tower.
     const top = Math.min(0, ...all.filter(([, s]) => s.place === 'ground').map(([, s]) => s.anchorTile?.[1] ?? 0));
@@ -398,6 +405,7 @@ export class TownScene extends WalkScene {
       if (s.drawScale) for (const img of images) img.setScale(s.drawScale);
       if (this.night && !lit) for (const img of images) img.setTint(NIGHT_TINT);
       const glows = lit ? this.glows(s, pools) : [];
+      if (SWAYS.test(id) && s.place !== 'ground') swayers.push([images, !/shrub|bamboo|flowers/.test(id)]);
       if (s.place === 'ground') ground.push(...images);
       else if (s.place === 'lit-ground' || s.place === 'flat') flat.push([s.sortRow ?? -1, [...images, ...glows]]);
       else {
@@ -419,6 +427,15 @@ export class TownScene extends WalkScene {
     this.standLayer.add(marks.filter((_m, i) => i % 2 === 1));
     if (this.night) this.fireflies();
     this.worldLayer.add([...back, ...ground, ...pools, ...flat.flatMap(([, imgs]) => imgs), ...marks.filter((_m, i) => i % 2 === 0), this.standLayer]);
+    const lifeGround = this.add.container(0, 0);
+    this.worldLayer.addAt(lifeGround, this.worldLayer.getIndex(this.standLayer));
+    this.life?.destroy();
+    this.life = new TownLife({ scene: this, stand: this.standLayer, ground: lifeGround, tile: TILE, width: w, top, night: this.night, stage: this.stage, still: reducedMotion(), nightTint: NIGHT_TINT });
+    for (const [imgs, big] of swayers) this.life.sway(imgs, big);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.life?.destroy();
+      this.life = null;
+    });
     this.standLayer.sort('depth');
   }
 
@@ -578,6 +595,7 @@ export class TownScene extends WalkScene {
       this.refreshZoom();
     }
     super.update(time, delta);
+    this.life?.update(time);
     this.social?.update();
     if (this.miniMap && this.world) this.miniMap.update(this.world.players.p1.pos, this.walkers.map((w) => w.pos), time);
     if (!this.walkers.length) return;
