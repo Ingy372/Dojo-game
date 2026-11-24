@@ -2198,3 +2198,6 @@ Grok's three-persona playtest and hand-off report (`docs/reviews/grok-playtest-2
 - **Kata Hint:** a Hint button (and the H key) lights and says the next arrow, or the move once the arrow is tapped. A run that used it pays 3 coins (as with mistakes), never the clean or first-clean coins, counts as played and sets no bests; the result says "Done with a hint." The free glow after two misses on a beat is unchanged.
 - **Town mini map:** top left, about 17% of the screen width: the walkable streets, a picture for My Dojo (gold house), the Action Zone (red belt), the Street Smarts House (green shield) and the Tower (purple pagoda), classmates as small dots and you as a bright one. Tapping it does nothing.
 - **Door signs:** each town door's name sits on a dark rounded sign with the same picture as on the map, in the place's colour. The pictures are drawn in code as placeholders, for Jay's OK.
+
+## Nov 24: the rock garden's sand can't be walked on (Jay)
+- Only the stepping-stone path through the rock garden is walkable; the raked sand is blocked like the rocks. Kept in `town-walk.json` and in `build_town.py` (GROUND_BLOCK) so rerunning the town art keeps it.

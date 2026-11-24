@@ -50,8 +50,11 @@ const GARDEN_ROCKS: [number, number, number][] = [
   [6.4, 22.3, 0.9],
 ];
 const GARDEN_BUSHES: [number, number, number][] = [
-  [3.2, 16.9, 0xff8fc0],
-  [3.2, 23.7, 0xe0559a],
+  // round the garden on the lawn, never on the sand (Jay, Nov 24)
+  [1.7, 17.4, 0xff8fc0],
+  [1.7, 22.6, 0xe0559a],
+  [4.0, 24.85, 0xff8fc0],
+  [10.6, 24.85, 0xe0559a],
   [13.6, 16.6, 0xe0559a],
   [13.6, 23.6, 0xff8fc0],
 ];
@@ -105,19 +108,25 @@ export class TownLife {
     for (const obj of images) this.swayers.push({ obj, kind, phase, sx: obj.scaleX, sy: obj.scaleY });
   }
 
+  private lastTime = -1;
+
   update(time: number): void {
+    const dt = this.lastTime < 0 ? 0 : Math.min(100, time - this.lastTime);
+    this.lastTime = time;
     // Gusts roll across the town from left to right: each plant is pushed over (downwind), then springs back
     // and flutters. Two slow waves mixed, so the gusts never repeat in an obvious way.
     for (const w of this.swayers) {
       const k = SWAY[w.kind];
       const wave = Math.sin(time * 0.00052 - w.obj.x * 0.0035) * 0.6 + Math.sin(time * 0.00021 - w.obj.x * 0.0011 + 1.3) * 0.4;
       const gust = Math.max(0, wave) ** 1.5;
-      const flutter = Math.sin(time * k.speed * (1 + gust) + w.phase) * (0.35 + 0.65 * gust);
+      // the flutter quickens in a gust: its phase is added up frame by frame, so speeding up never jumps
+      w.phase += dt * k.speed * (1 + gust);
+      const flutter = Math.sin(w.phase) * (0.35 + 0.65 * gust);
       const bend = gust * 0.9 + flutter * 0.6;
       w.obj.angle = bend * k.amp;
       if (k.squash) {
         // the crown puffs and settles a little as the wind moves through the leaves
-        const puff = Math.sin(time * k.speed * 1.7 + w.phase * 2) * k.squash * (0.4 + gust);
+        const puff = Math.sin(w.phase * 1.7 + 1) * k.squash * (0.4 + gust);
         w.obj.setScale(w.sx * (1 + puff), w.sy * (1 - puff * 0.5));
       }
     }

@@ -274,6 +274,16 @@ for g, (rx, ry, sz) in enumerate(ROCKS):
 # stepping stones from the street across the garden to the west lawn
 for k, (sx, sy) in enumerate(((11.8, 16.6), (11.2, 17.3), (10.3, 17.6), (9.3, 18.1), (8.4, 18.9), (8.2, 19.9), (8.7, 20.8), (9.3, 21.6), (9.0, 22.6), (8.2, 23.3), (7.3, 23.6))):
     add(f"rg_step{k}", ellipsoid(G(sx, sy, 0.05), (0.34, D(0.24), 0.06), segs=12, rings=4), ("#d6cfc1", "#cfc8ba")[k % 2])
+# Jay, Nov 24: only the stepping stones are walkable; the raked sand is blocked (cells more than 1 tile from the stones)
+_ST = ((11.8, 16.6), (11.2, 17.3), (10.3, 17.6), (9.3, 18.1), (8.4, 18.9), (8.2, 19.9), (8.7, 20.8), (9.3, 21.6), (9.0, 22.6), (8.2, 23.3), (7.3, 23.6))
+def _stone_dist(px, py):
+    best = 9.0
+    for (ax, ay), (bx, by) in zip(_ST, _ST[1:]):
+        dx, dy = bx - ax, by - ay
+        t = max(0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)))
+        best = min(best, math.hypot(px - ax - t * dx, py - ay - t * dy))
+    return best
+GROUND_BLOCK.update((c, r) for r in range(16, 24) for c in range(2, 13) if _stone_dist(c + 0.5, r + 0.5) > 1.0)
 
 # the koi pond (south-east), blocked
 PC, PR, PRX, PRY = 39.5, 26.2, 4.2, 2.0
