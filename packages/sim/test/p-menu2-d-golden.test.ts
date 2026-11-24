@@ -11,6 +11,8 @@
 // PB-03 re-captured it on purpose: the two always-on Strike upgrades are retired (Spin Kick Finish's extra hit, Butterfly Flow's -8 Focus), so the yellow and green setups lose their strikeExtraHit and strikeCost effects, and every setup gains the new `strike` (Spin Kick: 30 Focus, one 2.5 hit, reach 1.4, lunge 0.7, recovery 8, today's Strike). No profile here has a Strike equipped, so every run is byte-identical.
 // GUARD-SCALE-01 re-captured it on purpose: Guardians are 1.5x bigger (body, danger circles; reach and start range grow by half the extra radius, reachGrowth 0.5), so only the boss room (keepers-hall, w-keepers-hall) of each run moves, and with it the run totals and the items that depend on that fight; every setup and every other room is byte-identical.
 // OV-B6 re-captured it on purpose: the Insight pool goes from 9 to the 12 cards OV-P5 tuned (4 new, Wind Step dropped, 6 numbers changed), so the offers after each room are drawn differently and every run moves from its first offer on (rooms, ticks, health). Setups are unchanged; capturing with the old 9 cards gives the old file exactly.
+// Jay, Nov 24 re-captured it on purpose: no automatic blocking (Mash guard off), so mid-swing hits are full hits
+// and Guided enemies hit at 0.7 (was 0.75); every setup is the same, the fights play out differently.
 import { describe, expect, it } from 'vitest';
 import { captureGolden } from './golden-capture';
 import golden from '../../../fixtures/golden/p-menu2-d-default-run.json';

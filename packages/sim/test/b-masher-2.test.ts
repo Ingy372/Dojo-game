@@ -56,17 +56,13 @@ describe('B-MASHER-2 Sensei steps back', () => {
     expect(takeMashGuardMoment(restoreRun(content, old)!, 'p1')).toBe(true);
   });
 
-  it('co-op: each player has their own Perfect Counters and Mash guard (Manager\'s call)', () => {
+  it('co-op: Mash guard is off for every player (Jay, Nov 24: no automatic blocking)', () => {
     const room = loadRoom({ id: 'arena', name: 'Arena', tiles: ['########', '#......#', '#..P...#', '#......#', '########'], enemies: [] });
     const world = createWorld(room, ['p1', 'p2'], {});
     const { p1, p2 } = world.players;
-    expect(mashGuardOn(p1)).toBe(true);
-    expect(mashGuardOn(p2)).toBe(true);
-    p1.perfects = COMBAT.counter.mashGuardPerfects;
+    expect(COMBAT.counter.mashGuardPerfects).toBe(0);
     expect(mashGuardOn(p1)).toBe(false);
-    expect(mashGuardOn(p2)).toBe(true);
-    p2.perfects = COMBAT.counter.mashGuardPerfects - 1;
-    expect(mashGuardOn(p2)).toBe(true);
+    expect(mashGuardOn(p2)).toBe(false);
   });
 
   it('the banner keeps off the players and balances its lines', () => {

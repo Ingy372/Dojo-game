@@ -163,7 +163,7 @@ describe('B-T3-TUNE-2: bot fight at Orange gear (great-hearth, tier 3)', () => {
     };
   };
 
-  it('typical wins every fight; the masher wins at least 75% on Standard; 12-15 s without pauses, 14-20 s with (floor 14: Manager, #295)', () => {
+  it('typical wins every fight; 12-15 s without pauses, 14-20 s with (floor 14: Manager, #295)', () => {
     const lines: string[] = [];
     const typical = fights('smart', 'typical', 'standard');
     const masher = fights('masher', 'novice', 'standard', MASHER_N);
@@ -173,7 +173,8 @@ describe('B-T3-TUNE-2: bot fight at Orange gear (great-hearth, tier 3)', () => {
     (globalThis as { console?: { log(s: string): void } }).console?.log(lines.join('\n'));
     expect(typical.reached).toBe(N);
     expect(typical.won).toBe(N);
-    expect(masher.won / masher.reached).toBeGreaterThanOrEqual(0.75);
+    // Jay, Nov 24: no automatic blocking, so mashing alone no longer carries a novice through Standard (by design).
+    void masher;
     expect(typical.noHolds).toBeGreaterThanOrEqual(12);
     expect(typical.noHolds).toBeLessThanOrEqual(15);
     expect(typical.withHolds).toBeGreaterThanOrEqual(14);

@@ -16,7 +16,9 @@ const BOTS: Record<string, { style: Style; skill: Skill }> = {
 const ORDER = ['kid', 'newer', 'careful', 'masher'];
 // LP-P1 table, belts 1-10 (kid / newer / careful / masher). Challenge before belt 4 is locked, so not checked.
 const TABLE: Record<Difficulty, number[][]> = {
-  standard: [[85, 101, 101, 72], [85, 101, 101, 74], [88, 101, 101, 86], [81, 101, 101, 72], [84, 101, 101, 70], [84, 101, 101, 71], [84, 101, 101, 71], [83, 101, 101, 72], [86, 101, 101, 73], [83, 101, 101, 72]],
+  // Jay, Nov 24 (no automatic blocking): belt 1 Standard re-measured, kid 85 -> 67 and masher 72 -> 61 (they win
+  // fewer runs). The other cells (run only with BALANCE=1) were measured with the old Mash guard; re-measure them.
+  standard: [[67, 101, 101, 61], [85, 101, 101, 74], [88, 101, 101, 86], [81, 101, 101, 72], [84, 101, 101, 70], [84, 101, 101, 71], [84, 101, 101, 71], [83, 101, 101, 72], [86, 101, 101, 73], [83, 101, 101, 72]],
   guided: [[99, 101, 101, 91], [99, 101, 101, 95], [99, 101, 101, 99], [98, 101, 101, 92], [99, 101, 101, 92], [99, 101, 101, 91], [97, 101, 101, 92], [98, 101, 101, 92], [97, 101, 101, 93], [97, 101, 101, 94]],
   challenge: [[], [], [], [75, 101, 101, 69], [78, 101, 101, 72], [77, 101, 101, 72], [75, 101, 101, 70], [76, 101, 101, 72], [76, 101, 101, 72], [75, 101, 101, 72]],
 };
