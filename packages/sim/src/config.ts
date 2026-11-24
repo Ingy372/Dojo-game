@@ -29,9 +29,9 @@ export const MOVEMENT = {
  * instead of slowing the whole wind-up down.
  */
 export const DIFFICULTY = {
-  // Guided: same fill speed as Standard, then a 0.5 s window (Jay, 2026-10-06).
+  // Guided: same fill speed as Standard, then a 0.7 s window (was 0.5 s, Jay 2026-10-06; widened Nov 24 with the stronger Great Counter).
   // B-TUNE-GUIDED: enemyPowerScale multiplies every enemy's Power (Health never changes).
-  guided: { counterWindowTicks: 10, fillScale: 1, enemyPowerScale: 0.7 },
+  guided: { counterWindowTicks: 14, fillScale: 1, enemyPowerScale: 0.7 },
   standard: { counterWindowTicks: 6, fillScale: 1, enemyPowerScale: 1 },
   challenge: { counterWindowTicks: 4, fillScale: 0.8, enemyPowerScale: 1 },
 } as const;
@@ -85,7 +85,8 @@ export const COMBAT = {
 
   /** Automatic basic attack against the nearest enemy in reach. */
   basicAttack: {
-    strength: 1,
+    /** Jay, Nov 24: lowered from 1 so the Great Counter carries more of the damage. */
+    strength: 0.6,
     /** Gap between the two bodies (in tiles) that still counts as in reach. */
     reach: 0.55,
     /** Ticks between basic attacks (12 ticks = 0.6 seconds). */
@@ -147,8 +148,8 @@ export const COMBAT = {
     sealStaggerBonusCap: 0.2,
     /** G2B-04: a thrown enemy tumbles this many tiles away from the player. */
     throwTumbleTiles: 1,
-    /** Perfect Counter: the counter hit uses this move strength (2x Power). */
-    perfectStrength: 2,
+    /** Perfect Counter: the counter hit uses this move strength (Jay, Nov 24: 3.5x Power, was 2x). */
+    perfectStrength: 3.5,
     /** Block: damage taken is multiplied by this. */
     blockDamageMultiplier: 0.5,
   },

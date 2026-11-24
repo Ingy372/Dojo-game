@@ -133,8 +133,9 @@ The game must launch within **6 months (by early April 2027)**. The month-by-mon
 These come from `docs/core-design.md` section 4. Keep them in a single config file so they're easy to change.
 
 - Tick rate: 20 per second.
-- Perfect Counter window: Guided 10 ticks, Standard 6 ticks, Challenge 4 ticks. Rooted Form adds 2 ticks.
-- Perfect Counter: no damage taken, enemy staggered 1 second, counter hit for 2x Power, +25 Focus.
+- Perfect Counter window: Guided 14 ticks (was 10; Nov 24), Standard 6 ticks, Challenge 4 ticks. Rooted Form adds 2 ticks.
+- Perfect Counter: no damage taken, enemy staggered 1 second, counter hit for 3.5x Power (was 2x; Jay, Nov 24), +25 Focus.
+- Auto attack: 0.6x Power every 0.6 seconds (was 1x; Jay, Nov 24: counters carry more of the damage).
 - Block (counter outside the window): half damage, no stagger.
 - Focus: 0 to 100. +5 per hit, +25 per Perfect Counter. Strikes cost 30 to 50. Virtues need 100.
 - Combo bonus: +5% / +10% / +15% damage at 10 / 20 / 30 hits; resets when hit.
