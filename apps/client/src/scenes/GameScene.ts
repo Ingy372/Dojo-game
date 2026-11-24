@@ -263,6 +263,8 @@ const DOOR_ART: Record<DoorKind, string> = {
 /** What the game scene is started with: a run in progress, or nothing for the practice room. */
 export interface GameSceneData {
   run?: RunState;
+  /** Nov 23: the opening cutscene just told the story, so the story cards are left out. */
+  skipStory?: boolean;
 }
 
 /** B-MASHER-a shield-bounce glow: soft gold, 0.4 s. */
@@ -517,7 +519,10 @@ export class GameScene extends Phaser.Scene {
 
   init(data: GameSceneData): void {
     this.run = data.run ?? null;
+    this.skipStory = !!data.skipStory;
   }
+
+  private skipStory = false;
 
   preload(): void {
     this.towerPack = towerPack(currentTraining().belt.tier);
@@ -2463,10 +2468,12 @@ export class GameScene extends Phaser.Scene {
     if (this.room.id !== 'tutorial-path') return start();
     // TUT-T3: the Tower door opens after the stones, but lets the hero in only after the bow.
     this.world.doorHold = true;
-    this.showStory(() => {
+    const go = () => {
       this.tutorialLead = STORY.opening.sensei;
       start();
-    });
+    };
+    if (this.skipStory) go();
+    else this.showStory(go);
   }
 
   /** TUT-B3: the story cards (tap to go on), before the first step. Play beats are never skipped. */

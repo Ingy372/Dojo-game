@@ -13,7 +13,7 @@ export interface PlayerLook {
   body: Body;
   /** e.g. "face-01" (6 faces). */
   face: string;
-  /** e.g. "hair-02" (12 hair styles). */
+  /** e.g. "hair-02" (18 hair styles; 13-18 added Nov 23 for balance). */
   hair: string;
   /** Positions in the art's palettes (10 swatches each). */
   skin: number;
@@ -26,7 +26,7 @@ export interface PlayerLook {
 }
 
 export const FACES = ['face-01', 'face-02', 'face-03', 'face-04', 'face-05', 'face-06'];
-export const HAIRS = Array.from({ length: 12 }, (_, i) => `hair-${String(i + 1).padStart(2, '0')}`);
+export const HAIRS = Array.from({ length: 18 }, (_, i) => `hair-${String(i + 1).padStart(2, '0')}`);
 export const SWATCHES = 10;
 
 /** The approved Batch 1 look: face 1, the short hair, warm skin, dark brown hair, white gi. */

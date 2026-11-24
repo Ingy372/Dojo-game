@@ -269,6 +269,48 @@
       "tint": true,
       "optional": false,
       "group": "hair"
+    },
+    {
+      "name": "hair-13",
+      "order": 32,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-14",
+      "order": 33,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-15",
+      "order": 34,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-16",
+      "order": 35,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-17",
+      "order": 36,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-18",
+      "order": 37,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
     }
   ],
   "animations": {
@@ -312,7 +354,13 @@
         "hair-09": "player-a_hair-09_kata_backfist.png",
         "hair-10": "player-a_hair-10_kata_backfist.png",
         "hair-11": "player-a_hair-11_kata_backfist.png",
-        "hair-12": "player-a_hair-12_kata_backfist.png"
+        "hair-12": "player-a_hair-12_kata_backfist.png",
+        "hair-13": "player-a_hair-13_kata_backfist.png",
+        "hair-14": "player-a_hair-14_kata_backfist.png",
+        "hair-15": "player-a_hair-15_kata_backfist.png",
+        "hair-16": "player-a_hair-16_kata_backfist.png",
+        "hair-17": "player-a_hair-17_kata_backfist.png",
+        "hair-18": "player-a_hair-18_kata_backfist.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -361,7 +409,13 @@
         "hair-09": "player-a_hair-09_kata_break_hold.png",
         "hair-10": "player-a_hair-10_kata_break_hold.png",
         "hair-11": "player-a_hair-11_kata_break_hold.png",
-        "hair-12": "player-a_hair-12_kata_break_hold.png"
+        "hair-12": "player-a_hair-12_kata_break_hold.png",
+        "hair-13": "player-a_hair-13_kata_break_hold.png",
+        "hair-14": "player-a_hair-14_kata_break_hold.png",
+        "hair-15": "player-a_hair-15_kata_break_hold.png",
+        "hair-16": "player-a_hair-16_kata_break_hold.png",
+        "hair-17": "player-a_hair-17_kata_break_hold.png",
+        "hair-18": "player-a_hair-18_kata_break_hold.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -410,7 +464,13 @@
         "hair-09": "player-a_hair-09_kata_break_hold_finish.png",
         "hair-10": "player-a_hair-10_kata_break_hold_finish.png",
         "hair-11": "player-a_hair-11_kata_break_hold_finish.png",
-        "hair-12": "player-a_hair-12_kata_break_hold_finish.png"
+        "hair-12": "player-a_hair-12_kata_break_hold_finish.png",
+        "hair-13": "player-a_hair-13_kata_break_hold_finish.png",
+        "hair-14": "player-a_hair-14_kata_break_hold_finish.png",
+        "hair-15": "player-a_hair-15_kata_break_hold_finish.png",
+        "hair-16": "player-a_hair-16_kata_break_hold_finish.png",
+        "hair-17": "player-a_hair-17_kata_break_hold_finish.png",
+        "hair-18": "player-a_hair-18_kata_break_hold_finish.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -459,7 +519,13 @@
         "hair-09": "player-a_hair-09_kata_front_kick_stacked.png",
         "hair-10": "player-a_hair-10_kata_front_kick_stacked.png",
         "hair-11": "player-a_hair-11_kata_front_kick_stacked.png",
-        "hair-12": "player-a_hair-12_kata_front_kick_stacked.png"
+        "hair-12": "player-a_hair-12_kata_front_kick_stacked.png",
+        "hair-13": "player-a_hair-13_kata_front_kick_stacked.png",
+        "hair-14": "player-a_hair-14_kata_front_kick_stacked.png",
+        "hair-15": "player-a_hair-15_kata_front_kick_stacked.png",
+        "hair-16": "player-a_hair-16_kata_front_kick_stacked.png",
+        "hair-17": "player-a_hair-17_kata_front_kick_stacked.png",
+        "hair-18": "player-a_hair-18_kata_front_kick_stacked.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -514,7 +580,13 @@
         "hair-09": "player-a_hair-09_kata_front_kick_stacked_left.png",
         "hair-10": "player-a_hair-10_kata_front_kick_stacked_left.png",
         "hair-11": "player-a_hair-11_kata_front_kick_stacked_left.png",
-        "hair-12": "player-a_hair-12_kata_front_kick_stacked_left.png"
+        "hair-12": "player-a_hair-12_kata_front_kick_stacked_left.png",
+        "hair-13": "player-a_hair-13_kata_front_kick_stacked_left.png",
+        "hair-14": "player-a_hair-14_kata_front_kick_stacked_left.png",
+        "hair-15": "player-a_hair-15_kata_front_kick_stacked_left.png",
+        "hair-16": "player-a_hair-16_kata_front_kick_stacked_left.png",
+        "hair-17": "player-a_hair-17_kata_front_kick_stacked_left.png",
+        "hair-18": "player-a_hair-18_kata_front_kick_stacked_left.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -569,7 +641,13 @@
         "hair-09": "player-a_hair-09_kata_high_block.png",
         "hair-10": "player-a_hair-10_kata_high_block.png",
         "hair-11": "player-a_hair-11_kata_high_block.png",
-        "hair-12": "player-a_hair-12_kata_high_block.png"
+        "hair-12": "player-a_hair-12_kata_high_block.png",
+        "hair-13": "player-a_hair-13_kata_high_block.png",
+        "hair-14": "player-a_hair-14_kata_high_block.png",
+        "hair-15": "player-a_hair-15_kata_high_block.png",
+        "hair-16": "player-a_hair-16_kata_high_block.png",
+        "hair-17": "player-a_hair-17_kata_high_block.png",
+        "hair-18": "player-a_hair-18_kata_high_block.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -618,7 +696,13 @@
         "hair-09": "player-a_hair-09_kata_inside_block.png",
         "hair-10": "player-a_hair-10_kata_inside_block.png",
         "hair-11": "player-a_hair-11_kata_inside_block.png",
-        "hair-12": "player-a_hair-12_kata_inside_block.png"
+        "hair-12": "player-a_hair-12_kata_inside_block.png",
+        "hair-13": "player-a_hair-13_kata_inside_block.png",
+        "hair-14": "player-a_hair-14_kata_inside_block.png",
+        "hair-15": "player-a_hair-15_kata_inside_block.png",
+        "hair-16": "player-a_hair-16_kata_inside_block.png",
+        "hair-17": "player-a_hair-17_kata_inside_block.png",
+        "hair-18": "player-a_hair-18_kata_inside_block.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -667,7 +751,13 @@
         "hair-09": "player-a_hair-09_kata_low_block.png",
         "hair-10": "player-a_hair-10_kata_low_block.png",
         "hair-11": "player-a_hair-11_kata_low_block.png",
-        "hair-12": "player-a_hair-12_kata_low_block.png"
+        "hair-12": "player-a_hair-12_kata_low_block.png",
+        "hair-13": "player-a_hair-13_kata_low_block.png",
+        "hair-14": "player-a_hair-14_kata_low_block.png",
+        "hair-15": "player-a_hair-15_kata_low_block.png",
+        "hair-16": "player-a_hair-16_kata_low_block.png",
+        "hair-17": "player-a_hair-17_kata_low_block.png",
+        "hair-18": "player-a_hair-18_kata_low_block.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -714,7 +804,13 @@
         "hair-09": "player-a_hair-09_kata_open_leg.png",
         "hair-10": "player-a_hair-10_kata_open_leg.png",
         "hair-11": "player-a_hair-11_kata_open_leg.png",
-        "hair-12": "player-a_hair-12_kata_open_leg.png"
+        "hair-12": "player-a_hair-12_kata_open_leg.png",
+        "hair-13": "player-a_hair-13_kata_open_leg.png",
+        "hair-14": "player-a_hair-14_kata_open_leg.png",
+        "hair-15": "player-a_hair-15_kata_open_leg.png",
+        "hair-16": "player-a_hair-16_kata_open_leg.png",
+        "hair-17": "player-a_hair-17_kata_open_leg.png",
+        "hair-18": "player-a_hair-18_kata_open_leg.png"
       },
       "stance": "open-leg",
       "note": "Open Leg Stance (the kata ready stance) loop, 1.5 s: feet about shoulder width, toes turned out a little, knees soft, fists in front of the belt. Slow breathing; feet never move"
@@ -759,7 +855,13 @@
         "hair-09": "player-a_hair-09_kata_punch.png",
         "hair-10": "player-a_hair-10_kata_punch.png",
         "hair-11": "player-a_hair-11_kata_punch.png",
-        "hair-12": "player-a_hair-12_kata_punch.png"
+        "hair-12": "player-a_hair-12_kata_punch.png",
+        "hair-13": "player-a_hair-13_kata_punch.png",
+        "hair-14": "player-a_hair-14_kata_punch.png",
+        "hair-15": "player-a_hair-15_kata_punch.png",
+        "hair-16": "player-a_hair-16_kata_punch.png",
+        "hair-17": "player-a_hair-17_kata_punch.png",
+        "hair-18": "player-a_hair-18_kata_punch.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -808,7 +910,13 @@
         "hair-09": "player-a_hair-09_kata_rear_leg_front_kick.png",
         "hair-10": "player-a_hair-10_kata_rear_leg_front_kick.png",
         "hair-11": "player-a_hair-11_kata_rear_leg_front_kick.png",
-        "hair-12": "player-a_hair-12_kata_rear_leg_front_kick.png"
+        "hair-12": "player-a_hair-12_kata_rear_leg_front_kick.png",
+        "hair-13": "player-a_hair-13_kata_rear_leg_front_kick.png",
+        "hair-14": "player-a_hair-14_kata_rear_leg_front_kick.png",
+        "hair-15": "player-a_hair-15_kata_rear_leg_front_kick.png",
+        "hair-16": "player-a_hair-16_kata_rear_leg_front_kick.png",
+        "hair-17": "player-a_hair-17_kata_rear_leg_front_kick.png",
+        "hair-18": "player-a_hair-18_kata_rear_leg_front_kick.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -863,7 +971,13 @@
         "hair-09": "player-a_hair-09_kata_rear_leg_front_kick_left.png",
         "hair-10": "player-a_hair-10_kata_rear_leg_front_kick_left.png",
         "hair-11": "player-a_hair-11_kata_rear_leg_front_kick_left.png",
-        "hair-12": "player-a_hair-12_kata_rear_leg_front_kick_left.png"
+        "hair-12": "player-a_hair-12_kata_rear_leg_front_kick_left.png",
+        "hair-13": "player-a_hair-13_kata_rear_leg_front_kick_left.png",
+        "hair-14": "player-a_hair-14_kata_rear_leg_front_kick_left.png",
+        "hair-15": "player-a_hair-15_kata_rear_leg_front_kick_left.png",
+        "hair-16": "player-a_hair-16_kata_rear_leg_front_kick_left.png",
+        "hair-17": "player-a_hair-17_kata_rear_leg_front_kick_left.png",
+        "hair-18": "player-a_hair-18_kata_rear_leg_front_kick_left.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -918,7 +1032,13 @@
         "hair-09": "player-a_hair-09_kata_reverse_inside_block.png",
         "hair-10": "player-a_hair-10_kata_reverse_inside_block.png",
         "hair-11": "player-a_hair-11_kata_reverse_inside_block.png",
-        "hair-12": "player-a_hair-12_kata_reverse_inside_block.png"
+        "hair-12": "player-a_hair-12_kata_reverse_inside_block.png",
+        "hair-13": "player-a_hair-13_kata_reverse_inside_block.png",
+        "hair-14": "player-a_hair-14_kata_reverse_inside_block.png",
+        "hair-15": "player-a_hair-15_kata_reverse_inside_block.png",
+        "hair-16": "player-a_hair-16_kata_reverse_inside_block.png",
+        "hair-17": "player-a_hair-17_kata_reverse_inside_block.png",
+        "hair-18": "player-a_hair-18_kata_reverse_inside_block.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -967,7 +1087,13 @@
         "hair-09": "player-a_hair-09_kata_reverse_punch.png",
         "hair-10": "player-a_hair-10_kata_reverse_punch.png",
         "hair-11": "player-a_hair-11_kata_reverse_punch.png",
-        "hair-12": "player-a_hair-12_kata_reverse_punch.png"
+        "hair-12": "player-a_hair-12_kata_reverse_punch.png",
+        "hair-13": "player-a_hair-13_kata_reverse_punch.png",
+        "hair-14": "player-a_hair-14_kata_reverse_punch.png",
+        "hair-15": "player-a_hair-15_kata_reverse_punch.png",
+        "hair-16": "player-a_hair-16_kata_reverse_punch.png",
+        "hair-17": "player-a_hair-17_kata_reverse_punch.png",
+        "hair-18": "player-a_hair-18_kata_reverse_punch.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -1016,7 +1142,13 @@
         "hair-09": "player-a_hair-09_kata_spear_hand.png",
         "hair-10": "player-a_hair-10_kata_spear_hand.png",
         "hair-11": "player-a_hair-11_kata_spear_hand.png",
-        "hair-12": "player-a_hair-12_kata_spear_hand.png"
+        "hair-12": "player-a_hair-12_kata_spear_hand.png",
+        "hair-13": "player-a_hair-13_kata_spear_hand.png",
+        "hair-14": "player-a_hair-14_kata_spear_hand.png",
+        "hair-15": "player-a_hair-15_kata_spear_hand.png",
+        "hair-16": "player-a_hair-16_kata_spear_hand.png",
+        "hair-17": "player-a_hair-17_kata_spear_hand.png",
+        "hair-18": "player-a_hair-18_kata_spear_hand.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -1065,7 +1197,13 @@
         "hair-09": "player-a_hair-09_kata_special_turn.png",
         "hair-10": "player-a_hair-10_kata_special_turn.png",
         "hair-11": "player-a_hair-11_kata_special_turn.png",
-        "hair-12": "player-a_hair-12_kata_special_turn.png"
+        "hair-12": "player-a_hair-12_kata_special_turn.png",
+        "hair-13": "player-a_hair-13_kata_special_turn.png",
+        "hair-14": "player-a_hair-14_kata_special_turn.png",
+        "hair-15": "player-a_hair-15_kata_special_turn.png",
+        "hair-16": "player-a_hair-16_kata_special_turn.png",
+        "hair-17": "player-a_hair-17_kata_special_turn.png",
+        "hair-18": "player-a_hair-18_kata_special_turn.png"
       },
       "holdLastFrame": true,
       "keyFrames": {
@@ -1125,7 +1263,13 @@
         "hair-09": "player-a_hair-09_stance_cat.png",
         "hair-10": "player-a_hair-10_stance_cat.png",
         "hair-11": "player-a_hair-11_stance_cat.png",
-        "hair-12": "player-a_hair-12_stance_cat.png"
+        "hair-12": "player-a_hair-12_stance_cat.png",
+        "hair-13": "player-a_hair-13_stance_cat.png",
+        "hair-14": "player-a_hair-14_stance_cat.png",
+        "hair-15": "player-a_hair-15_stance_cat.png",
+        "hair-16": "player-a_hair-16_stance_cat.png",
+        "hair-17": "player-a_hair-17_stance_cat.png",
+        "hair-18": "player-a_hair-18_stance_cat.png"
       },
       "stance": "cat",
       "note": "Cat stance loop, 1.5 s: left foot forward resting on its ball with the heel up, nearly all the weight on the bent back leg, hips set back, forward guard"
@@ -1168,7 +1312,13 @@
         "hair-09": "player-a_hair-09_stance_front.png",
         "hair-10": "player-a_hair-10_stance_front.png",
         "hair-11": "player-a_hair-11_stance_front.png",
-        "hair-12": "player-a_hair-12_stance_front.png"
+        "hair-12": "player-a_hair-12_stance_front.png",
+        "hair-13": "player-a_hair-13_stance_front.png",
+        "hair-14": "player-a_hair-14_stance_front.png",
+        "hair-15": "player-a_hair-15_stance_front.png",
+        "hair-16": "player-a_hair-16_stance_front.png",
+        "hair-17": "player-a_hair-17_stance_front.png",
+        "hair-18": "player-a_hair-18_stance_front.png"
       },
       "stance": "front",
       "note": "Front stance loop, 1.5 s: left foot forward, front knee over the ankle, back leg nearly straight with the back foot turned out, hips low. Lead fist forward, rear fist at the hip"
@@ -1211,7 +1361,13 @@
         "hair-09": "player-a_hair-09_stance_horse.png",
         "hair-10": "player-a_hair-10_stance_horse.png",
         "hair-11": "player-a_hair-11_stance_horse.png",
-        "hair-12": "player-a_hair-12_stance_horse.png"
+        "hair-12": "player-a_hair-12_stance_horse.png",
+        "hair-13": "player-a_hair-13_stance_horse.png",
+        "hair-14": "player-a_hair-14_stance_horse.png",
+        "hair-15": "player-a_hair-15_stance_horse.png",
+        "hair-16": "player-a_hair-16_stance_horse.png",
+        "hair-17": "player-a_hair-17_stance_horse.png",
+        "hair-18": "player-a_hair-18_stance_horse.png"
       },
       "stance": "horse",
       "note": "Horse stance loop, 1.5 s: feet wide and parallel, knees bent and pushed out, hips sunk, back upright, fists chambered at the hips"
@@ -1374,7 +1530,13 @@
       "hair-09",
       "hair-10",
       "hair-11",
-      "hair-12"
+      "hair-12",
+      "hair-13",
+      "hair-14",
+      "hair-15",
+      "hair-16",
+      "hair-17",
+      "hair-18"
     ],
     "note": "draw exactly one layer of each group, after the base layers (face, then hair)"
   },
@@ -1396,6 +1558,12 @@
     "hair-09": "two puffs: hair parted down the middle and gathered into two round coil puffs high on the head",
     "hair-10": "short twists: a soft cap covered in short, rounded twists that point up and out (they never reach the eyes)",
     "hair-11": "cornrows into braids: neat raised rows from the hairline to the back, ending in braids that hang behind the shoulders",
-    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils"
+    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils",
+    "hair-13": "spiky: short hair pulled up into soft spikes, the classic action-hero look",
+    "hair-14": "side-swept: short back and sides with a long fringe swept over to one side (above the brows)",
+    "hair-15": "long straight: hair to the shoulders with straight bangs, framing the face",
+    "hair-16": "high ponytail: hair pulled up into a long swinging ponytail, with side bangs",
+    "hair-17": "pigtails: hair parted in the middle and tied into two straight tails by the ears, with bangs",
+    "hair-18": "bob: a rounded chin-length bob with straight bangs"
   }
 }

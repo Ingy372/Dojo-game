@@ -1,0 +1,205 @@
+{
+ "pixelsPerTile": 80,
+ "camera": "orthographic, 35 deg down, looking north",
+ "sprites": {
+  "street-house-room": {
+   "size": [
+    1104,
+    952
+   ],
+   "layers": [
+    "floor",
+    "walls",
+    "props",
+    "foreground"
+   ],
+   "files": {
+    "floor": "street-house-room_floor.png",
+    "walls": "street-house-room_walls.png",
+    "props": "street-house-room_props.png",
+    "foreground": "street-house-room_foreground.png"
+   },
+   "anchorPx": [
+    32.0,
+    128.0
+   ],
+   "anchorNote": "the frame pixel of grid tile (0,0)'s top-left corner",
+   "place": "room",
+   "note": "The Street Smarts House (Nov 23). Draw floor, walls, props; then the y-sorted pieces and characters by sortRow; then foreground (the front wall) above everyone."
+  },
+  "desk": {
+   "size": [
+    224,
+    126
+   ],
+   "layers": [
+    "desk"
+   ],
+   "files": {
+    "desk": "desk_desk.png"
+   },
+   "anchorPx": [
+    112.0,
+    125.0
+   ],
+   "anchorTile": [
+    3.3,
+    3.0
+   ],
+   "footprintRect": [
+    1.95,
+    4.65,
+    2.3,
+    3.0
+   ],
+   "place": "prop",
+   "sortRow": 3.0,
+   "note": "Michael's desk in front of the story board, with books and a lamp."
+  },
+  "bench-a": {
+   "size": [
+    208,
+    69
+   ],
+   "layers": [
+    "bench-a"
+   ],
+   "files": {
+    "bench-a": "bench-a_bench-a.png"
+   },
+   "anchorPx": [
+    104.0,
+    68.0
+   ],
+   "anchorTile": [
+    4.85,
+    7.2
+   ],
+   "footprintRect": [
+    3.6,
+    6.1,
+    6.75,
+    7.2
+   ],
+   "place": "prop",
+   "sortRow": 7.2,
+   "note": "bench facing the story board (west)."
+  },
+  "bench-b": {
+   "size": [
+    208,
+    68
+   ],
+   "layers": [
+    "bench-b"
+   ],
+   "files": {
+    "bench-b": "bench-b_bench-b.png"
+   },
+   "anchorPx": [
+    104.0,
+    68.0
+   ],
+   "anchorTile": [
+    8.15,
+    7.2
+   ],
+   "footprintRect": [
+    6.9,
+    9.4,
+    6.75,
+    7.2
+   ],
+   "place": "prop",
+   "sortRow": 7.2,
+   "note": "bench facing the story board (east)."
+  },
+  "bookshelf": {
+   "size": [
+    111,
+    262
+   ],
+   "layers": [
+    "bookshelf"
+   ],
+   "files": {
+    "bookshelf": "bookshelf_bookshelf.png"
+   },
+   "anchorPx": [
+    55.0,
+    257.0
+   ],
+   "anchorTile": [
+    12.2,
+    4.6
+   ],
+   "footprintRect": [
+    11.6,
+    12.85,
+    3.0,
+    4.6
+   ],
+   "place": "prop",
+   "sortRow": 4.6,
+   "note": "bookshelf against the east wall."
+  },
+  "plant-a": {
+   "size": [
+    77,
+    115
+   ],
+   "layers": [
+    "plant-a"
+   ],
+   "files": {
+    "plant-a": "plant-a_plant-a.png"
+   },
+   "anchorPx": [
+    38.0,
+    110.0
+   ],
+   "anchorTile": [
+    0.7,
+    8.55
+   ],
+   "footprintRect": [
+    0.44,
+    0.96,
+    8.05,
+    8.55
+   ],
+   "place": "prop",
+   "sortRow": 8.55,
+   "note": "potted plant, front west corner."
+  },
+  "plant-b": {
+   "size": [
+    76,
+    115
+   ],
+   "layers": [
+    "plant-b"
+   ],
+   "files": {
+    "plant-b": "plant-b_plant-b.png"
+   },
+   "anchorPx": [
+    37.0,
+    110.0
+   ],
+   "anchorTile": [
+    12.3,
+    8.55
+   ],
+   "footprintRect": [
+    12.04,
+    12.56,
+    8.05,
+    8.55
+   ],
+   "place": "prop",
+   "sortRow": 8.55,
+   "note": "potted plant, front east corner."
+  }
+ }
+}

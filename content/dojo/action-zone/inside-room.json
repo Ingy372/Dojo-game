@@ -38,7 +38,7 @@
   "mmmmmmmmmrrrrrrrrrmmmmmmmmm",
   "mmmmmmmmmPPPPPPPPmmmmmmmmmm",
   "#######mmPPPPPPPPmm########",
-  ".........SSSSSSSSS.........",
+  ".PPPPP...SSSSSSSSS.........",
   ".PPPPP...SSSSSSSSS.........",
   ".........SSSSSSSSS.........",
   ".........SSSSSSSSS.........",
@@ -48,7 +48,7 @@
   "..........P......P.........",
   "############DDD############"
  ],
- "walkableCells": 364,
+ "walkableCells": 359,
  "blockers": [
   {
    "id": "wing-west",

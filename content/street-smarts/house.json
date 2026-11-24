@@ -1,0 +1,22 @@
+{
+  "_note": "The Street Smarts House (Nov 23; Jay picked it). Claude's DRAFT words for the safety tips poster, the lesson board and the badge wall, waiting on Jay's OK. Street Smarts rule: nothing graphic or frightening.",
+  "lessonsTitle": "Street Smarts Lessons",
+  "lessonsLine": "Pick a lesson to play.",
+  "stars": "{stars} of {max} stars",
+  "notPlayed": "New!",
+  "play": "Play",
+  "tipsTitle": "Safety Tips",
+  "tips": [
+    "Know your grown-up's phone number by heart.",
+    "Lost? Stay where you are and find a helper, like a worker with a name tag.",
+    "If something feels wrong, walk away and tell a grown-up you trust.",
+    "Always ask your grown-up before you go anywhere with anyone.",
+    "Keep two big steps of space from people you don't know."
+  ],
+  "badgesTitle": "Your Badges",
+  "badgesLine": "Finish a lesson to earn its badge. Get every star to make it gold!",
+  "badgeNone": "Not earned yet",
+  "badgeEarned": "Earned!",
+  "badgeGold": "Gold badge!",
+  "button": { "lessons": "Lessons", "tips": "Read", "badges": "Badges" }
+}

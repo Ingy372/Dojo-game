@@ -3,16 +3,18 @@
 // A not-best choice never shows danger: Sensei talks it over and the player tries again.
 
 import Phaser from 'phaser';
-import { advance, choose, currentLine, fillLine, loadScenario, recordScenario, scenarioStars, startScenario, type Profile, type Scenario, type ScenarioLine, type ScenarioState } from '@dojo/sim';
+import { advance, choose, currentLine, fillLine, loadScenario, recordScenario, scenarioCoins, scenarioStars, startScenario, type Profile, type Scenario, type ScenarioLine, type ScenarioState } from '@dojo/sim';
 import storeData from '../../../../content/street-smarts/store-separated.json';
 import uiData from '../../../../content/street-smarts/ui.json';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
+import { localDay } from '../game/lessons';
 import { sfx } from '../audio/Sfx';
 import { FONT, crisp, view, hiDpi } from '../ui/theme';
 import { GREEN } from '../ui/tokens';
 
-const SCENARIOS: Record<string, Scenario> = { [storeData.id]: loadScenario(storeData) };
+/** Every Street Smarts scenario (the Street Smarts House lists them). */
+export const SCENARIOS: Record<string, Scenario> = { [storeData.id]: loadScenario(storeData) };
 const UI = uiData as typeof uiData & { speakers: Record<string, string> };
 const SPEAK_KEY = 'dojo-ascent-street-speak';
 
@@ -27,13 +29,19 @@ export class StreetSmartsScene extends Phaser.Scene {
   private ui!: Phaser.GameObjects.Container;
   private speak = true;
   private picking = false;
+  /** Coins the last finish earned (Nov 23). */
+  private coinsEarned = 0;
 
   constructor() {
     super('StreetSmarts');
   }
 
-  init(data: { id?: string }): void {
+  /** Where Back goes: the Home Dojo, or (Nov 23) the Street Smarts House. */
+  private back = 'Dojo';
+
+  init(data: { id?: string; back?: string }): void {
     this.sc = SCENARIOS[data?.id ?? ''] ?? SCENARIOS[storeData.id];
+    this.back = data?.back ?? 'Dojo';
   }
 
   create(): void {
@@ -42,6 +50,7 @@ export class StreetSmartsScene extends Phaser.Scene {
     this.player = currentTraining().firstName;
     this.speak = loadSpeak(this.sc.ageBand);
     this.st = startScenario();
+    this.coinsEarned = 0;
     this.picking = this.profile.streetSmarts.grownup === null;
     this.ui = this.add.container(0, 0);
     this.render();
@@ -144,8 +153,10 @@ export class StreetSmartsScene extends Phaser.Scene {
     this.text(width / 2, height * 0.24, '★'.repeat(stars) + '☆'.repeat(max - stars), 48, '#ffd166', true).setOrigin(0.5);
     const msg = stars >= max ? fill(UI.starsAll) : `${fill(UI.starsEarned)} ${fill(UI.starsMore)}`;
     this.text(width / 2, height * 0.42, msg, 20, '#ffffff', true, width - 40).setOrigin(0.5).setAlign('center');
+    if (this.coinsEarned > 0) this.text(width / 2, height * 0.52, `+${this.coinsEarned} coins`, 20, '#ffd166', true).setOrigin(0.5);
     const w = Math.min(220, (width - 48) / 2);
     this.button(width / 2 - w - 8, height * 0.62, w, 56, UI.playAgain, 0x4a3f63, 17, () => {
+      this.coinsEarned = 0;
       this.st = startScenario();
       this.render();
     });
@@ -157,7 +168,10 @@ export class StreetSmartsScene extends Phaser.Scene {
     sfx.unlock();
     this.st = advance(this.sc, this.st);
     if (this.st.done) {
-      recordScenario(this.profile, this.sc.id, scenarioStars(this.sc, this.st));
+      const stars = scenarioStars(this.sc, this.st);
+      // Nov 23: lessons earn coins (the first finish and every new star most)
+      this.coinsEarned = scenarioCoins(this.profile, this.sc.id, stars, this.profile.streetSmarts.best[this.sc.id], localDay());
+      recordScenario(this.profile, this.sc.id, stars);
       writeSave(this.profile);
     }
     this.render();
@@ -171,7 +185,7 @@ export class StreetSmartsScene extends Phaser.Scene {
   private leave(): void {
     window.speechSynthesis?.cancel();
     this.cameras.main.fadeOut(250, 10, 8, 16);
-    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Dojo'));
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(this.back, { from: 'lesson' }));
   }
 
   private toggleSpeak(): void {

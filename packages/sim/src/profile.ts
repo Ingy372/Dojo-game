@@ -6,7 +6,7 @@ import { readBeltEntry, type BeltEntry } from './beltEntry';
 import { newBlessing, readBlessing, type Blessing } from './blessing';
 import { newDecorEarning, readDecorEarning, type DecorEarning } from './earning';
 import { isPlayLimit, type PlayLimit } from './playTime';
-import { COMBAT, CHALLENGE_FROM_TIER, DIFFICULTY, LOOT, type Difficulty, type Rarity } from './config';
+import { COMBAT, CHALLENGE_FROM_TIER, DIFFICULTY, LOOT, SELL_PRICE, type Difficulty, type Rarity } from './config';
 import type { Effect } from './effects';
 import { GEAR_SLOTS, rarityRank, type GearItem, type GearSlot } from './loot';
 import type { DojoState } from './dojo';
@@ -15,6 +15,7 @@ import type { ProgressSnapshot } from './rewards';
 import type { RunSummary } from './run';
 import { GUIDE_DONE } from './world';
 import { newShopSave, readCoins, readShopSave, runCoins, type ShopSave } from './shop';
+import { newCoinDay, readCoinDay, runCoinsToday, type CoinDay } from './economy';
 import { readJournal, type JournalEntry, type NamedContent } from './named';
 import { newLessonLog, readLessonLog, type LessonLog } from './lessons';
 import { newWelcomeWeekLog, readWelcomeWeekLog, type WelcomeWeekLog } from './unlocks';
@@ -126,6 +127,12 @@ export interface Profile {
   bestStreakWeeks: number;
   /** LP-B4: coins from runs and Class Chests, spent only in the looks shop (never below 0). */
   coins: number;
+  /** Nov 23 (economy): today's counts for the "full pay for the first few" rule. */
+  coinDay: CoinDay;
+  /** Nov 23: one-time coin bonuses already paid (e.g. "kata:keon", the first clean run). */
+  coinOnce: string[];
+  /** Nov 23: real achievements already paid in coins (null until the game first looks: then only noted). */
+  realPaid: string[] | null;
   /** LP-B4: looks bought in the shop and the ones worn. */
   shop: ShopSave;
   /**
@@ -294,6 +301,9 @@ export function newProfile(): Profile {
     kataBests: {},
     bestStreakWeeks: 0,
     coins: 0,
+    coinDay: newCoinDay(),
+    coinOnce: [],
+    realPaid: null,
     shop: newShopSave(),
     sealsSeen: [],
     trophiesSeen: [],
@@ -357,7 +367,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, pathIntroSeen: typeof p.pathIntroSeen === 'boolean' ? p.pathIntroSeen : !((p.runsPlayed ?? 0) > 0), creedSeen: p.creedSeen === true, homeTour: isHomeTourStop(p.homeTour) ? p.homeTour : null, homeTourDone: typeof p.homeTourDone === 'boolean' ? p.homeTourDone : (p.runsPlayed ?? 0) > 0, starWallBest: typeof p.starWallBest === 'number' && p.starWallBest > 0 ? Math.floor(p.starWallBest) : 0, kataBests: readKataBests(p.kataBests), bestStreakWeeks: typeof p.bestStreakWeeks === 'number' && p.bestStreakWeeks > 0 ? Math.floor(p.bestStreakWeeks) : 0, coins: readCoins(p.coins), shop: readShopSave(p.shop), sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], styleSeen: Array.isArray(p.styleSeen) ? p.styleSeen.filter((v) => typeof v === 'string') : null, styleHelpSeen: Array.isArray(p.styleHelpSeen) ? p.styleHelpSeen.filter((v) => typeof v === 'string') : [], senseiPick: p.senseiPick !== false, picksKnown: Array.isArray(p.picksKnown) ? p.picksKnown.filter((v) => typeof v === 'string') : null, blessing: readBlessing(p.blessing), ...migrateReadyStance(p, readLoadout(p.loadout)), ...readLoadoutV2Flags(p) };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, pathIntroSeen: typeof p.pathIntroSeen === 'boolean' ? p.pathIntroSeen : !((p.runsPlayed ?? 0) > 0), creedSeen: p.creedSeen === true, homeTour: isHomeTourStop(p.homeTour) ? p.homeTour : null, homeTourDone: typeof p.homeTourDone === 'boolean' ? p.homeTourDone : (p.runsPlayed ?? 0) > 0, starWallBest: typeof p.starWallBest === 'number' && p.starWallBest > 0 ? Math.floor(p.starWallBest) : 0, kataBests: readKataBests(p.kataBests), bestStreakWeeks: typeof p.bestStreakWeeks === 'number' && p.bestStreakWeeks > 0 ? Math.floor(p.bestStreakWeeks) : 0, coins: readCoins(p.coins), coinDay: readCoinDay(p.coinDay), coinOnce: Array.isArray(p.coinOnce) ? p.coinOnce.filter((v) => typeof v === 'string') : [], realPaid: Array.isArray(p.realPaid) ? p.realPaid.filter((v) => typeof v === 'string') : null, shop: readShopSave(p.shop), sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], styleSeen: Array.isArray(p.styleSeen) ? p.styleSeen.filter((v) => typeof v === 'string') : null, styleHelpSeen: Array.isArray(p.styleHelpSeen) ? p.styleHelpSeen.filter((v) => typeof v === 'string') : [], senseiPick: p.senseiPick !== false, picksKnown: Array.isArray(p.picksKnown) ? p.picksKnown.filter((v) => typeof v === 'string') : null, blessing: readBlessing(p.blessing), ...migrateReadyStance(p, readLoadout(p.loadout)), ...readLoadoutV2Flags(p) };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -435,12 +445,40 @@ export function letGo(profile: Profile, uid: string): void {
   profile.inventory = profile.inventory.filter((i) => i.uid !== uid);
 }
 
+/** What Hannah pays for a piece of gear at the pro shop (Nov 23). */
+export function sellValue(item: GearItem): number {
+  return SELL_PRICE[item.rarity];
+}
+
+/** Gear that can be sold: everything in the bag that isn't being worn. */
+export function sellable(profile: Profile): GearItem[] {
+  const worn = new Set(GEAR_SLOTS.map((s) => profile.equipped[s]).filter(Boolean));
+  return profile.inventory.filter((i) => !worn.has(i.uid));
+}
+
+/**
+ * Sells pieces of gear to Hannah: each leaves the bag and its price is added to the coins. Worn gear and unknown
+ * ids are skipped. Returns the coins paid (0 if nothing was sold).
+ */
+export function sellGear(profile: Profile, uids: readonly string[]): number {
+  const ok = new Set(sellable(profile).map((i) => i.uid));
+  let paid = 0;
+  for (const uid of new Set(uids)) {
+    if (!ok.has(uid)) continue;
+    const item = profile.inventory.find((i) => i.uid === uid)!;
+    paid += sellValue(item);
+    profile.inventory = profile.inventory.filter((i) => i.uid !== uid);
+  }
+  profile.coins += paid;
+  return paid;
+}
+
 /**
  * Brings a finished run home: items go into the bag (empty slots are filled
  * automatically), bad-luck protection updates, and personal bests are checked.
  * Returns which personal bests were beaten.
  */
-export function finishRun(profile: Profile, summary: RunSummary): BestKey[] {
+export function finishRun(profile: Profile, summary: RunSummary, day?: string): BestKey[] {
   const items = summary.items.map((item) => ({ ...item, uid: `i${profile.nextItemId++}` }));
   profile.inventory.push(...items);
   for (const item of items) {
@@ -450,7 +488,8 @@ export function finishRun(profile: Profile, summary: RunSummary): BestKey[] {
   const foundRare = items.some((i) => rarityRank(i.rarity) >= rarityRank(best));
   profile.dryRuns = foundRare ? 0 : Math.min(profile.dryRuns + 1, LOOT.guaranteedRareOnRun - 1);
   profile.runsPlayed++;
-  const coins = runCoins(summary);
+  // Nov 23: with the day given, the daily rule applies (full pay for the first few runs of the day, then half).
+  const coins = day === undefined ? runCoins(summary) : runCoinsToday(profile, runCoins(summary), day);
   profile.coins += coins;
 
   const newBests: BestKey[] = [];

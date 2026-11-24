@@ -95,12 +95,14 @@ export interface ShopCatalog {
 export interface ShopSave {
   owned: string[];
   wearing: Record<ShopSlot, string | null>;
+  /** Nov 23: the look the student is saving up for (the Wish), or null. */
+  wish: string | null;
 }
 
 const SLOTS: readonly ShopSlot[] = ['gi', 'hair', 'trail', 'puff', 'hit', 'win', 'wall', 'outfit', 'hat', 'back', 'aura', 'pet', 'decor'];
 
 export function newShopSave(): ShopSave {
-  return { owned: [], wearing: { gi: null, hair: null, trail: null, puff: null, hit: null, win: null, wall: null, outfit: null, hat: null, back: null, aura: null, pet: null, decor: null } };
+  return { owned: [], wearing: { gi: null, hair: null, trail: null, puff: null, hit: null, win: null, wall: null, outfit: null, hat: null, back: null, aura: null, pet: null, decor: null }, wish: null };
 }
 
 export function readShopSave(v: unknown): ShopSave {
@@ -109,7 +111,7 @@ export function readShopSave(v: unknown): ShopSave {
   const id = (x: unknown) => (typeof x === 'string' ? x : null);
   const wearing = newShopSave().wearing;
   for (const slot of SLOTS) wearing[slot] = id(s?.wearing?.[slot]);
-  return { owned: strings(s?.owned), wearing };
+  return { owned: strings(s?.owned), wearing, wish: id(s?.wish) };
 }
 
 /** Reads a saved coin total: a whole number, never below 0 (old saves start at 0). */

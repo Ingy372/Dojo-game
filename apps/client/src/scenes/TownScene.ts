@@ -8,7 +8,10 @@ import { reducedMotion } from '../game/motion';
 import { loadLook, SWATCHES } from '../game/look';
 import { currentTraining } from '../game/student';
 import { addExitCue } from '../ui/exitCue';
-import { FONT, MIN_TAP, S2, TYPE, crisp, view } from '../ui/theme';
+import { DPR, FONT, MIN_TAP, S2, TYPE, crisp, view } from '../ui/theme';
+import { TownSocial, type SocialPlayer } from '../ui/townSocial';
+import { playIntro } from '../ui/introCutscene';
+import type { RunState } from '@dojo/sim';
 import { button as roundButton } from '../ui/button';
 import { openShop, type ShopScreen } from '../ui/shop';
 import { SHOP_WORDS } from '../game/shop';
@@ -19,6 +22,8 @@ import townWalk from '../../../../content/dojo/action-zone/town-walk.json';
 
 export const TOWN_PACK = 'town';
 const WALK = loadTownWalk(townWalk);
+/** Every door in town: home, the Action Zone, and (Nov 23) the Street Smarts House. */
+const DOORS = [WALK.homeDoor, WALK.dojoDoor, ...(WALK.streetDoor ? [WALK.streetDoor] : [])];
 
 /** The town's stage: the student's real belt tier. Test link `?townstage=N` shows another stage (never in beta builds). */
 export function currentTownStage(): number {
@@ -58,7 +63,9 @@ function nightLight(sprite: LayeredSprite, colour: number): void {
 
 /** Where the hero came from: out of their own dojo (home), or out of the Action Zone (outside). */
 export interface TownSceneData {
-  from?: 'home' | 'outside';
+  from?: 'home' | 'outside' | 'street';
+  /** Nov 23: play the opening cutscene here, then start this tutorial run. */
+  intro?: { run: RunState };
   /** Back from the shop: stand here again (tiles), so the new look shows where the hero was. */
   at?: Vec2;
 }
@@ -68,11 +75,19 @@ const SHOP_W = 96;
 
 /** A pretend classmate for the crowd test (`?crowd=N`): walks between open spots, never blocks anyone. */
 interface Walker {
+  id: string;
+  name: string;
+  belt: number;
   sprite: LayeredSprite;
   box: Phaser.GameObjects.Container;
+  label: Phaser.GameObjects.Text;
   pos: Vec2;
   path: Vec2[];
   rest: number;
+  /** Pretend classmates are bots (they answer on their own). */
+  bot: true;
+  /** Nov 23: a party member following its leader (the social layer sets it); null = wander. */
+  follow: Vec2 | null;
 }
 
 const CROWD_NAMES = ['Ava M.', 'Leo R.', 'Mia T.', 'Kai B.', 'Zoe L.', 'Eli P.', 'Ivy C.', 'Max D.', 'Ana S.', 'Ben W.', 'Lily G.', 'Noah F.', 'Ruby H.', 'Sam K.', 'Nia J.', 'Owen V.', 'Maya N.', 'Theo A.', 'Isla Q.', 'Jude Y.'];
@@ -95,6 +110,11 @@ export class TownScene extends WalkScene {
   private shopButton: Phaser.GameObjects.Container | null = null;
   private shopRect: Phaser.Geom.Rectangle | null = null;
   private shop: ShopScreen | null = null;
+  /** Nov 23 (Jay): phrases and parties in town. */
+  private social: TownSocial | null = null;
+  /** Nov 23: the opening cutscene is playing (the camera and the hero belong to it). */
+  private intro: { run: RunState } | null = null;
+  private introRows = 7;
 
   constructor() {
     super('ActionZoneTown');
@@ -113,11 +133,17 @@ export class TownScene extends WalkScene {
     if ((input.kind === 'stick' && input.y < -0.3) || (input.kind === 'moveTo' && input.y < pos.y - 0.2)) this.arm('home-door');
   }
 
+  /** Read before preload, so the cutscene's art (the Shades) loads with the town. */
+  init(data?: unknown): void {
+    this.intro = (data as TownSceneData | undefined)?.intro ?? null;
+  }
+
   create(data?: unknown): void {
     this.tourHomeWait = false;
     this.lifted = false;
-    this.stage = currentTownStage();
-    this.night = isTownNight();
+    // The cutscene shows the town at its first stage, in daylight.
+    this.stage = this.intro ? 1 : currentTownStage();
+    this.night = this.intro ? false : isTownNight();
     this.rowsNow = 7;
     this.roomAt = townRoom(WALK, this.stage);
     super.create(data);
@@ -126,7 +152,12 @@ export class TownScene extends WalkScene {
     this.drawShopButton();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.drawShopButton, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.drawShopButton, this));
+    if (this.intro) {
+      this.startIntro(this.intro.run);
+      return;
+    }
     this.makeCrowd(Math.min(30, Math.max(0, Number(testFlags().get('crowd')) || 0)));
+    this.makeSocial();
     this.tourStop((data as TownSceneData | undefined)?.from);
   }
 
@@ -165,7 +196,46 @@ export class TownScene extends WalkScene {
   }
 
   protected roomPacks(): string[] {
-    return [TOWN_PACK];
+    // the cutscene's Shades come from the white belt monsters
+    return this.intro ? [TOWN_PACK, 'enemies-t1'] : [TOWN_PACK];
+  }
+
+  /** The opening cutscene (Jay, Nov 23), then the tutorial run. */
+  private startIntro(run: RunState): void {
+    this.paused = true;
+    this.shopButton?.destroy();
+    this.shopButton = null;
+    this.shopRect = null;
+    // four kids training in the practice yard
+    this.makeCrowd(4);
+    const yard = [{ x: 35.6, y: 6.2 }, { x: 37.4, y: 6.2 }, { x: 39.2, y: 6.2 }, { x: 36.5, y: 7.6 }];
+    this.walkers.forEach((w, i) => {
+      w.pos = { ...yard[i % yard.length] };
+      w.path = [];
+      w.rest = 1e9;
+      w.label.setVisible(false);
+      w.box.setPosition(w.pos.x * TILE, w.pos.y * TILE).setDepth(w.pos.y * TILE);
+    });
+    const me = this.world.players.p1;
+    playIntro({
+      scene: this,
+      world: this.worldLayer,
+      tile: TILE,
+      look: (p, rows) => {
+        this.lookAt = p;
+        this.introRows = rows;
+      },
+      heroVisible: (on) => this.player.setVisible(on),
+      placeHero: (p, face) => {
+        me.pos = { ...p };
+        me.path = null;
+        me.facing = { ...face };
+      },
+      walkHero: (path) => (me.path = path.map((p) => ({ ...p }))),
+      heroPos: () => me.pos,
+      kids: this.walkers.map((w) => w.sprite),
+      done: () => this.scene.start('Game', { run, skipStory: true }),
+    });
   }
 
   protected viewRows(): number {
@@ -192,6 +262,7 @@ export class TownScene extends WalkScene {
     const { width, height } = view(this);
     this.paused = true;
     this.shopButton?.setVisible(false);
+    this.social?.setHidden(true);
     const before = JSON.stringify(loadSave().shop.wearing);
     this.shop = openShop(this, width, height, loadSave(), currentTraining(), () => {
       this.shop?.layer.destroy();
@@ -204,18 +275,79 @@ export class TownScene extends WalkScene {
       }
       this.paused = false;
       this.shopButton?.setVisible(true);
+      this.social?.setHidden(false);
     });
   }
 
   protected overUi(x: number, y: number): boolean {
-    return !!this.shop || (!!this.shopRect && this.shopRect.contains(x, y));
+    if (this.shop || (this.shopRect && this.shopRect.contains(x, y))) return true;
+    // Nov 23: the Say / Party buttons and their cards, and a tap on a classmate (opens their card, doesn't walk)
+    return !!this.social && (this.social.hits(x, y) || this.social.playerAt(x, y) !== null);
+  }
+
+  /**
+   * Phrases and parties (Jay, Nov 23). A tap on a classmate opens their card; tap-to-move keeps working everywhere
+   * else, and the stick's corner always steers. Hidden during Sensei's town tour.
+   */
+  private makeSocial(): void {
+    const social = new TownSocial({
+      scene: this,
+      world: this.worldLayer,
+      tile: TILE,
+      myPos: () => this.world.players.p1.pos,
+      myName: () => currentTraining().firstName,
+      others: (): SocialPlayer[] => this.walkers,
+      toScreen: (p) => ({ x: this.worldLayer.x + p.x * TILE * this.zoom, y: this.worldLayer.y + p.y * TILE * this.zoom }),
+      setPaused: (on) => {
+        this.paused = on;
+        if (on) {
+          this.world.players.p1.path = null;
+          this.controls.reset();
+        }
+      },
+      botGoTo: (id, to) => {
+        const w = this.walkers.find((x) => x.id === id);
+        if (!w) return;
+        w.follow = to;
+        if (to) {
+          w.path = findPath(this.roomAt, w.pos, to, MOVEMENT.playerRadius) ?? [];
+          w.rest = 0.4;
+        }
+      },
+      setNameColour: (id, colour) => this.walkers.find((x) => x.id === id)?.label.setColor(colour),
+    });
+    this.social = social;
+    if (loadSave().homeTour === 'town') social.setHidden(true);
+    let downAt: { x: number; y: number } | null = null;
+    // A tap that starts on a button or card belongs to it, even if the card closes before the finger lifts.
+    const down = (p: Phaser.Input.Pointer) => {
+      const x = p.x / DPR;
+      const y = p.y / DPR;
+      downAt = social.hits(x, y) || (this.shopRect?.contains(x, y) ?? false) ? null : { x, y };
+    };
+    const up = (p: Phaser.Input.Pointer) => {
+      const x = p.x / DPR;
+      const y = p.y / DPR;
+      const from = downAt;
+      downAt = null;
+      if (!from || Math.hypot(x - from.x, y - from.y) > 12 || this.paused || this.shop || this.leaving) return;
+      const who = social.playerAt(x, y);
+      if (who) social.tapPlayer(who);
+    };
+    this.input.on('pointerdown', down);
+    this.input.on('pointerup', up);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.input.off('pointerdown', down);
+      this.input.off('pointerup', up);
+      this.social = null;
+    });
   }
 
   protected spawn(data: unknown): { pos: Vec2; facing: Facing } {
     const at = (data as TownSceneData | undefined)?.at;
     if (at) return { pos: { ...at }, facing: 'south' };
     const from = (data as TownSceneData | undefined)?.from;
-    const door = from === 'outside' ? WALK.dojoDoor : WALK.homeDoor;
+    const door = from === 'outside' ? WALK.dojoDoor : from === 'street' && WALK.streetDoor ? WALK.streetDoor : WALK.homeDoor;
     return { pos: { x: door.spawn[0], y: door.spawn[1] }, facing: 'south' };
   }
 
@@ -249,13 +381,13 @@ export class TownScene extends WalkScene {
     flat.sort((a, b) => a[0] - b[0]);
 
     const marks: Phaser.GameObjects.GameObject[] = [];
-    for (const door of [WALK.homeDoor, WALK.dojoDoor]) {
+    for (const door of DOORS) {
       const [cx, cy] = door.cue;
       // The Action Zone's tag sits between its doors and its own CMA MARTIAL ARTS sign.
       marks.push(addExitCue(this, cx * TILE, cy * TILE, TILE * 1.3, TILE * 0.8, 'up'));
       marks.push(
         this.add
-          .text(cx * TILE, (cy - (door === WALK.dojoDoor ? 1.95 : 1.25)) * TILE, door.label, {
+          .text(cx * TILE, (cy - (door === WALK.dojoDoor ? 1.95 : door === WALK.homeDoor ? 1.25 : 1.6)) * TILE, door.label, {
             fontFamily: FONT,
             fontStyle: 'bold',
             fontSize: '15px',
@@ -356,7 +488,7 @@ export class TownScene extends WalkScene {
 
   /** A tap on a door (or the building front around it) walks to the spot in front of it, inside its doorway. */
   protected tapTile(tile: Vec2): Vec2 {
-    for (const door of [WALK.homeDoor, WALK.dojoDoor]) {
+    for (const door of DOORS) {
       const [x0, x1, y0, y1] = door.enterRect;
       if (tile.x >= x0 - 0.8 && tile.x <= x1 + 0.8 && tile.y >= y0 - 3 && tile.y <= y1) return { x: (x0 + x1) / 2, y: y1 - 0.3 };
     }
@@ -374,7 +506,11 @@ export class TownScene extends WalkScene {
       this.leave('Dojo', { from: 'town' });
       return;
     }
-    if (this.entered('dojo-door', WALK.dojoDoor.enterRect, p)) this.leave('ActionZoneOutside', { from: 'town' });
+    if (this.entered('dojo-door', WALK.dojoDoor.enterRect, p)) {
+      this.leave('ActionZoneOutside', { from: 'town' });
+      return;
+    }
+    if (WALK.streetDoor && this.entered('street-door', WALK.streetDoor.enterRect, p)) this.leave('StreetHouse');
   }
 
   // ------------------------------------------------------------------ crowd test (?crowd=N): how roomy is the town?
@@ -399,13 +535,14 @@ export class TownScene extends WalkScene {
       });
       if (!sprite) return;
       const name = this.add
-        .text(0, -TILE * 1.55, CROWD_NAMES[i % CROWD_NAMES.length], { fontFamily: FONT, fontSize: '11px', color: '#ffffff', stroke: '#14121c', strokeThickness: 3 })
+        .text(0, -TILE * 1.55, CROWD_NAMES[i % CROWD_NAMES.length], { fontFamily: FONT, fontStyle: 'bold', fontSize: '11px', color: '#ffffff', stroke: '#14121c', strokeThickness: 3 })
         .setOrigin(0.5, 1)
         .setResolution(crisp() * 2);
       if (this.night) nightLight(sprite, NIGHT_HERO_TINT);
       const box = this.add.container(pick.x * TILE, pick.y * TILE, [sprite.container, name]);
       this.standLayer.add(box);
-      this.walkers.push({ sprite, box, pos: { ...pick }, path: [], rest: Math.random() * 2 });
+      const beltColour = Phaser.Display.Color.HexStringToColor(belt.color).color;
+      this.walkers.push({ id: `c${i}`, name: CROWD_NAMES[i % CROWD_NAMES.length], belt: beltColour, sprite, box, label: name, pos: { ...pick }, path: [], rest: Math.random() * 2, bot: true, follow: null });
     }
   }
 
@@ -416,8 +553,8 @@ export class TownScene extends WalkScene {
     // Near the buildings along the main street the camera looks a little higher, so the Action Zone's sign shows.
     // On the Tower path it pulls back and up, so the Tower rises above the gate.
     const p = this.world?.players.p1.pos;
-    let rows = 7;
-    if (p && (this.lookAt === null || this.lifted)) {
+    let rows = this.intro ? this.introRows : 7;
+    if (p && !this.intro && (this.lookAt === null || this.lifted)) {
       const onPath = p.x >= TOWER_PATH[0] && p.x <= TOWER_PATH[1] && p.y < TOWER_PATH[2];
       this.lifted = p.y < 12.5 && !this.paused;
       if (this.lifted && onPath) rows = TOWER_LOOK.rows;
@@ -428,6 +565,7 @@ export class TownScene extends WalkScene {
       this.refreshZoom();
     }
     super.update(time, delta);
+    this.social?.update();
     if (!this.walkers.length) return;
     const dt = Math.min(delta, 100) / 1000;
     const speed = MOVEMENT.speedTilesPerSecond * 0.7;
@@ -442,13 +580,21 @@ export class TownScene extends WalkScene {
         if (d <= step) {
           w.pos = { ...t };
           w.path.shift();
-          if (!w.path.length) w.rest = 1 + Math.random() * 4;
+          if (!w.path.length) w.rest = w.follow ? 0.3 : 1 + Math.random() * 4;
         } else {
           w.pos = { x: w.pos.x + (dx / d) * step, y: w.pos.y + (dy / d) * step };
           w.sprite.face(dx, dy);
         }
         moving = true;
       } else if ((w.rest -= dt) <= 0) {
+        if (w.follow) {
+          // a party member waits by its leader until the leader walks off again
+          w.rest = 0.5;
+          w.box.setPosition(w.pos.x * TILE, w.pos.y * TILE).setDepth(w.pos.y * TILE);
+          playLocomotion(w.sprite, 0);
+          w.sprite.update();
+          continue;
+        }
         const to = this.openCells[Math.floor(Math.random() * this.openCells.length)];
         w.path = findPath(this.roomAt, w.pos, to, MOVEMENT.playerRadius) ?? [];
         if (!w.path.length) w.rest = 0.5;

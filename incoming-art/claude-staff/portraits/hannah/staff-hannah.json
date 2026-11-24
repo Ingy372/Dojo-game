@@ -1,0 +1,49 @@
+{
+  "character": "staff-hannah",
+  "frameWidth": 512,
+  "frameHeight": 768,
+  "anchor": {
+    "x": 256.0,
+    "y": 675.84,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 320.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.6,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "S"
+  ],
+  "directionVectors": {
+    "S": [
+      0,
+      1
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "staff",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "npc_idle": {
+      "frames": 12,
+      "fps": 6,
+      "durationSec": 2.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "staff": "staff-hannah_staff_npc_idle.png"
+      }
+    }
+  },
+  "staff": "hannah",
+  "note": "Action Zone staff NPC (Claude, Nov 23). One flattened layer, no tints."
+}

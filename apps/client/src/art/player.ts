@@ -141,6 +141,8 @@ export function makeStandingCharacter(
   look: PlayerLook = DEFAULT_LOOK,
   /** The shop's preview: the sharp idle-only art when the shop has loaded it (it has no other animations). */
   stage = false,
+  /** Nov 23: draw from this pack instead (the character screen's turn-around art, all 8 directions). */
+  pack?: string,
 ): StandingCharacter {
   // The shop's stage uses its own sharp art (Nov 22, Jay: the preview looked pixelated). Elsewhere: the full-detail
   // pack, which has no skins, so a hero wearing one is drawn from the room packs (which carry every skin).
@@ -148,7 +150,8 @@ export function makeStandingCharacter(
   const sharp = stage ? characterArt(scene, stagePack(look.body), 'player') : null;
   const sharpSkins = stage && worn ? characterArt(scene, stageSkinPack(look.body), 'player') : null;
   const staged = sharp && (!worn || sharpSkins) ? (sharpSkins ? combineArt([sharp, sharpSkins]) : sharp) : null;
-  const art = staged ?? (worn ? roomArt(scene, look) : null) ?? characterArt(scene, bigLookPack(look), 'player') ?? roomArt(scene, look);
+  const chosen = pack ? characterArt(scene, pack, 'player') : null;
+  const art = chosen ?? staged ?? (worn ? roomArt(scene, look) : null) ?? characterArt(scene, bigLookPack(look), 'player') ?? roomArt(scene, look);
   if (!art) {
     const ch = makeCharacter(scene, x, y, r, belt, stripes);
     return { container: ch.container, sprite: null, retie: (b, n) => drawBelt(ch.belt, 0, r * 0.15, r * 1.9, r * 0.3, b, n) };

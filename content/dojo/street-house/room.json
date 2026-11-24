@@ -1,0 +1,109 @@
+{
+ "id": "street-house",
+ "name": "Street Smarts House",
+ "pixelsPerTile": 80,
+ "gridSize": [
+  13,
+  10
+ ],
+ "tileLegend": {
+  "#": "wall",
+  "P": "blocked prop",
+  ".": "floor",
+  "D": "front door (exit)"
+ },
+ "walkableChars": ".D",
+ "tiles": [
+  "#############",
+  "..PPP........",
+  ".PPPP........",
+  "...........PP",
+  "...........PP",
+  ".............",
+  "...PPPPPPP...",
+  ".............",
+  "P...........P",
+  "#####DDD#####"
+ ],
+ "spawn": {
+  "enter": [
+   6,
+   8
+  ]
+ },
+ "exit": {
+  "cells": [
+   [
+    5,
+    9
+   ],
+   [
+    6,
+    9
+   ],
+   [
+    7,
+    9
+   ]
+  ],
+  "rect": [
+   5.1,
+   7.9,
+   9.3,
+   10.0
+  ],
+  "to": "town"
+ },
+ "interactables": [
+  {
+   "id": "story-board",
+   "kind": "lessons",
+   "footprintRect": [
+    1.95,
+    4.65,
+    2.3,
+    3.0
+   ],
+   "approachTile": [
+    3,
+    3
+   ],
+   "approachFacing": "north"
+  },
+  {
+   "id": "safety-poster",
+   "kind": "tips",
+   "footprintRect": [
+    5.95,
+    7.35,
+    0.8,
+    1.0
+   ],
+   "approachTile": [
+    6,
+    1
+   ],
+   "approachFacing": "north"
+  },
+  {
+   "id": "badge-wall",
+   "kind": "badges",
+   "footprintRect": [
+    7.9,
+    12.1,
+    0.8,
+    1.0
+   ],
+   "approachTile": [
+    10,
+    1
+   ],
+   "approachFacing": "north"
+  }
+ ],
+ "foregroundSprites": [],
+ "michael": [
+  3.3,
+  1.75
+ ]
+}

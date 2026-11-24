@@ -1,0 +1,20 @@
+{
+ "ppt": 80,
+ "cols": 13.8,
+ "rowTop": -1.6,
+ "rowBottom": 10.3,
+ "originX": 32.0,
+ "originY": 128.0,
+ "groups": [
+  "bench-a",
+  "bench-b",
+  "bookshelf",
+  "desk",
+  "floor",
+  "foreground",
+  "plant-a",
+  "plant-b",
+  "props",
+  "walls"
+ ]
+}

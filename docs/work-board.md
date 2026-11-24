@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-11-18 by Claude Code.
+Last updated: 2026-11-23 by Claude Code.
 
 **What this file is:** the one list of open work. Each item has an ID, an owner and what it waits on. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
 
@@ -66,6 +66,16 @@ Jay has a few more visuals to list here.
 | VO-4 | Boss forms: Inferno Hearth, Warden Unbound, the final Guardian's 3 forms | Done, on `main` (Jay OK'd Nov 23) |
 | VO-5 | 16 shop decorations, 10 achievement trophies | Done, on `main` (Jay OK'd Nov 23) |
 
+
+## 2e. Pro shop, social town and coins (Jay, Nov 23; branch `claude/shop-hub`)
+
+| ID | What | Status |
+|---|---|---|
+| SH-1 | Shop at the Action Zone pro shop counter; Miss Hannah behind it | Built; Hannah's name and lines wait on Jay's OK |
+| SH-2 | Staff art for Jay, Hannah, Michael (hero v2 style) | Built; waits on Jay's OK; where Jay and Michael stand is Jay's call |
+| SH-3 | Sell tab (Hannah buys gear) | Built |
+| SH-4 | Phrases (15, draft) and parties in town | Built with pretend classmates; real players need the game server (later) |
+| SH-5 | Coin economy and the Wish (docs/economy.md) | Built; numbers wait on playtesting |
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 

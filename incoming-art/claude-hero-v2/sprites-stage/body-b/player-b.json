@@ -234,6 +234,48 @@
       "tint": true,
       "optional": false,
       "group": "hair"
+    },
+    {
+      "name": "hair-13",
+      "order": 32,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-14",
+      "order": 33,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-15",
+      "order": 34,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-16",
+      "order": 35,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-17",
+      "order": 36,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-18",
+      "order": 37,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
     }
   ],
   "animations": {
@@ -275,7 +317,13 @@
         "hair-09": "player-b_hair-09_idle.png",
         "hair-10": "player-b_hair-10_idle.png",
         "hair-11": "player-b_hair-11_idle.png",
-        "hair-12": "player-b_hair-12_idle.png"
+        "hair-12": "player-b_hair-12_idle.png",
+        "hair-13": "player-b_hair-13_idle.png",
+        "hair-14": "player-b_hair-14_idle.png",
+        "hair-15": "player-b_hair-15_idle.png",
+        "hair-16": "player-b_hair-16_idle.png",
+        "hair-17": "player-b_hair-17_idle.png",
+        "hair-18": "player-b_hair-18_idle.png"
       }
     }
   },
@@ -436,7 +484,13 @@
       "hair-09",
       "hair-10",
       "hair-11",
-      "hair-12"
+      "hair-12",
+      "hair-13",
+      "hair-14",
+      "hair-15",
+      "hair-16",
+      "hair-17",
+      "hair-18"
     ],
     "note": "draw exactly one layer of each group, after the base layers (face, then hair)"
   },
@@ -458,6 +512,12 @@
     "hair-09": "two puffs: hair parted down the middle and gathered into two round coil puffs high on the head",
     "hair-10": "short twists: a soft cap covered in short, rounded twists that point up and out (they never reach the eyes)",
     "hair-11": "cornrows into braids: neat raised rows from the hairline to the back, ending in braids that hang behind the shoulders",
-    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils"
+    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils",
+    "hair-13": "spiky: short hair pulled up into soft spikes, the classic action-hero look",
+    "hair-14": "side-swept: short back and sides with a long fringe swept over to one side (above the brows)",
+    "hair-15": "long straight: hair to the shoulders with straight bangs, framing the face",
+    "hair-16": "high ponytail: hair pulled up into a long swinging ponytail, with side bangs",
+    "hair-17": "pigtails: hair parted in the middle and tied into two straight tails by the ears, with bangs",
+    "hair-18": "bob: a rounded chin-length bob with straight bangs"
   }
 }

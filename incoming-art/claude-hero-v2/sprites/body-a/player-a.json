@@ -269,6 +269,48 @@
       "tint": true,
       "optional": false,
       "group": "hair"
+    },
+    {
+      "name": "hair-13",
+      "order": 32,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-14",
+      "order": 33,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-15",
+      "order": 34,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-16",
+      "order": 35,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-17",
+      "order": 36,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-18",
+      "order": 37,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
     }
   ],
   "animations": {
@@ -316,7 +358,13 @@
         "hair-09": "player-a_hair-09_bow.png",
         "hair-10": "player-a_hair-10_bow.png",
         "hair-11": "player-a_hair-11_bow.png",
-        "hair-12": "player-a_hair-12_bow.png"
+        "hair-12": "player-a_hair-12_bow.png",
+        "hair-13": "player-a_hair-13_bow.png",
+        "hair-14": "player-a_hair-14_bow.png",
+        "hair-15": "player-a_hair-15_bow.png",
+        "hair-16": "player-a_hair-16_bow.png",
+        "hair-17": "player-a_hair-17_bow.png",
+        "hair-18": "player-a_hair-18_bow.png"
       },
       "keyFrames": {
         "feet_together": 3,
@@ -369,7 +417,13 @@
         "hair-09": "player-a_hair-09_celebrate.png",
         "hair-10": "player-a_hair-10_celebrate.png",
         "hair-11": "player-a_hair-11_celebrate.png",
-        "hair-12": "player-a_hair-12_celebrate.png"
+        "hair-12": "player-a_hair-12_celebrate.png",
+        "hair-13": "player-a_hair-13_celebrate.png",
+        "hair-14": "player-a_hair-14_celebrate.png",
+        "hair-15": "player-a_hair-15_celebrate.png",
+        "hair-16": "player-a_hair-16_celebrate.png",
+        "hair-17": "player-a_hair-17_celebrate.png",
+        "hair-18": "player-a_hair-18_celebrate.png"
       },
       "keyFrames": {
         "arms_up": "4-12",
@@ -421,7 +475,13 @@
         "hair-09": "player-a_hair-09_counter.png",
         "hair-10": "player-a_hair-10_counter.png",
         "hair-11": "player-a_hair-11_counter.png",
-        "hair-12": "player-a_hair-12_counter.png"
+        "hair-12": "player-a_hair-12_counter.png",
+        "hair-13": "player-a_hair-13_counter.png",
+        "hair-14": "player-a_hair-14_counter.png",
+        "hair-15": "player-a_hair-15_counter.png",
+        "hair-16": "player-a_hair-16_counter.png",
+        "hair-17": "player-a_hair-17_counter.png",
+        "hair-18": "player-a_hair-18_counter.png"
       }
     },
     "dash": {
@@ -467,7 +527,13 @@
         "hair-09": "player-a_hair-09_dash.png",
         "hair-10": "player-a_hair-10_dash.png",
         "hair-11": "player-a_hair-11_dash.png",
-        "hair-12": "player-a_hair-12_dash.png"
+        "hair-12": "player-a_hair-12_dash.png",
+        "hair-13": "player-a_hair-13_dash.png",
+        "hair-14": "player-a_hair-14_dash.png",
+        "hair-15": "player-a_hair-15_dash.png",
+        "hair-16": "player-a_hair-16_dash.png",
+        "hair-17": "player-a_hair-17_dash.png",
+        "hair-18": "player-a_hair-18_dash.png"
       },
       "keyFrames": {
         "push": 1,
@@ -519,7 +585,13 @@
         "hair-09": "player-a_hair-09_defeat.png",
         "hair-10": "player-a_hair-10_defeat.png",
         "hair-11": "player-a_hair-11_defeat.png",
-        "hair-12": "player-a_hair-12_defeat.png"
+        "hair-12": "player-a_hair-12_defeat.png",
+        "hair-13": "player-a_hair-13_defeat.png",
+        "hair-14": "player-a_hair-14_defeat.png",
+        "hair-15": "player-a_hair-15_defeat.png",
+        "hair-16": "player-a_hair-16_defeat.png",
+        "hair-17": "player-a_hair-17_defeat.png",
+        "hair-18": "player-a_hair-18_defeat.png"
       },
       "keyFrames": {
         "ouch": 1,
@@ -571,7 +643,13 @@
         "hair-09": "player-a_hair-09_hit.png",
         "hair-10": "player-a_hair-10_hit.png",
         "hair-11": "player-a_hair-11_hit.png",
-        "hair-12": "player-a_hair-12_hit.png"
+        "hair-12": "player-a_hair-12_hit.png",
+        "hair-13": "player-a_hair-13_hit.png",
+        "hair-14": "player-a_hair-14_hit.png",
+        "hair-15": "player-a_hair-15_hit.png",
+        "hair-16": "player-a_hair-16_hit.png",
+        "hair-17": "player-a_hair-17_hit.png",
+        "hair-18": "player-a_hair-18_hit.png"
       },
       "keyFrames": {
         "recoil": 1,
@@ -617,7 +695,13 @@
         "hair-09": "player-a_hair-09_idle.png",
         "hair-10": "player-a_hair-10_idle.png",
         "hair-11": "player-a_hair-11_idle.png",
-        "hair-12": "player-a_hair-12_idle.png"
+        "hair-12": "player-a_hair-12_idle.png",
+        "hair-13": "player-a_hair-13_idle.png",
+        "hair-14": "player-a_hair-14_idle.png",
+        "hair-15": "player-a_hair-15_idle.png",
+        "hair-16": "player-a_hair-16_idle.png",
+        "hair-17": "player-a_hair-17_idle.png",
+        "hair-18": "player-a_hair-18_idle.png"
       }
     },
     "jab": {
@@ -660,7 +744,13 @@
         "hair-09": "player-a_hair-09_jab.png",
         "hair-10": "player-a_hair-10_jab.png",
         "hair-11": "player-a_hair-11_jab.png",
-        "hair-12": "player-a_hair-12_jab.png"
+        "hair-12": "player-a_hair-12_jab.png",
+        "hair-13": "player-a_hair-13_jab.png",
+        "hair-14": "player-a_hair-14_jab.png",
+        "hair-15": "player-a_hair-15_jab.png",
+        "hair-16": "player-a_hair-16_jab.png",
+        "hair-17": "player-a_hair-17_jab.png",
+        "hair-18": "player-a_hair-18_jab.png"
       },
       "keyFrames": {
         "impact": 2
@@ -711,7 +801,13 @@
         "hair-09": "player-a_hair-09_straighten.png",
         "hair-10": "player-a_hair-10_straighten.png",
         "hair-11": "player-a_hair-11_straighten.png",
-        "hair-12": "player-a_hair-12_straighten.png"
+        "hair-12": "player-a_hair-12_straighten.png",
+        "hair-13": "player-a_hair-13_straighten.png",
+        "hair-14": "player-a_hair-14_straighten.png",
+        "hair-15": "player-a_hair-15_straighten.png",
+        "hair-16": "player-a_hair-16_straighten.png",
+        "hair-17": "player-a_hair-17_straighten.png",
+        "hair-18": "player-a_hair-18_straighten.png"
       },
       "keyFrames": {
         "reach": "3-4",
@@ -760,7 +856,13 @@
         "hair-09": "player-a_hair-09_strike.png",
         "hair-10": "player-a_hair-10_strike.png",
         "hair-11": "player-a_hair-11_strike.png",
-        "hair-12": "player-a_hair-12_strike.png"
+        "hair-12": "player-a_hair-12_strike.png",
+        "hair-13": "player-a_hair-13_strike.png",
+        "hair-14": "player-a_hair-14_strike.png",
+        "hair-15": "player-a_hair-15_strike.png",
+        "hair-16": "player-a_hair-16_strike.png",
+        "hair-17": "player-a_hair-17_strike.png",
+        "hair-18": "player-a_hair-18_strike.png"
       },
       "keyFrames": {
         "impact": 4
@@ -805,7 +907,13 @@
         "hair-09": "player-a_hair-09_sweep.png",
         "hair-10": "player-a_hair-10_sweep.png",
         "hair-11": "player-a_hair-11_sweep.png",
-        "hair-12": "player-a_hair-12_sweep.png"
+        "hair-12": "player-a_hair-12_sweep.png",
+        "hair-13": "player-a_hair-13_sweep.png",
+        "hair-14": "player-a_hair-14_sweep.png",
+        "hair-15": "player-a_hair-15_sweep.png",
+        "hair-16": "player-a_hair-16_sweep.png",
+        "hair-17": "player-a_hair-17_sweep.png",
+        "hair-18": "player-a_hair-18_sweep.png"
       },
       "props": [
         "prop-broom"
@@ -850,7 +958,13 @@
         "hair-09": "player-a_hair-09_walk.png",
         "hair-10": "player-a_hair-10_walk.png",
         "hair-11": "player-a_hair-11_walk.png",
-        "hair-12": "player-a_hair-12_walk.png"
+        "hair-12": "player-a_hair-12_walk.png",
+        "hair-13": "player-a_hair-13_walk.png",
+        "hair-14": "player-a_hair-14_walk.png",
+        "hair-15": "player-a_hair-15_walk.png",
+        "hair-16": "player-a_hair-16_walk.png",
+        "hair-17": "player-a_hair-17_walk.png",
+        "hair-18": "player-a_hair-18_walk.png"
       },
       "groundMotion": {
         "strideTilesPerLoop": 1.5,
@@ -898,7 +1012,13 @@
         "hair-09": "player-a_hair-09_wipe.png",
         "hair-10": "player-a_hair-10_wipe.png",
         "hair-11": "player-a_hair-11_wipe.png",
-        "hair-12": "player-a_hair-12_wipe.png"
+        "hair-12": "player-a_hair-12_wipe.png",
+        "hair-13": "player-a_hair-13_wipe.png",
+        "hair-14": "player-a_hair-14_wipe.png",
+        "hair-15": "player-a_hair-15_wipe.png",
+        "hair-16": "player-a_hair-16_wipe.png",
+        "hair-17": "player-a_hair-17_wipe.png",
+        "hair-18": "player-a_hair-18_wipe.png"
       },
       "props": [
         "prop-rag"
@@ -1063,7 +1183,13 @@
       "hair-09",
       "hair-10",
       "hair-11",
-      "hair-12"
+      "hair-12",
+      "hair-13",
+      "hair-14",
+      "hair-15",
+      "hair-16",
+      "hair-17",
+      "hair-18"
     ],
     "note": "draw exactly one layer of each group, after the base layers (face, then hair)"
   },
@@ -1085,6 +1211,12 @@
     "hair-09": "two puffs: hair parted down the middle and gathered into two round coil puffs high on the head",
     "hair-10": "short twists: a soft cap covered in short, rounded twists that point up and out (they never reach the eyes)",
     "hair-11": "cornrows into braids: neat raised rows from the hairline to the back, ending in braids that hang behind the shoulders",
-    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils"
+    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils",
+    "hair-13": "spiky: short hair pulled up into soft spikes, the classic action-hero look",
+    "hair-14": "side-swept: short back and sides with a long fringe swept over to one side (above the brows)",
+    "hair-15": "long straight: hair to the shoulders with straight bangs, framing the face",
+    "hair-16": "high ponytail: hair pulled up into a long swinging ponytail, with side bangs",
+    "hair-17": "pigtails: hair parted in the middle and tied into two straight tails by the ears, with bangs",
+    "hair-18": "bob: a rounded chin-length bob with straight bangs"
   }
 }

@@ -7,7 +7,9 @@ S=incoming-art/claude-hero-v2/source
 W=$(cygpath -w "$PWD")
 for BODY in a b; do
   "$B" -b incoming-art/claude-run/source/player_run_$BODY.blend -P $S/upgrade_hero.py -- --head 1.3 --save "$W/$S/player_hero2_$BODY.blend"
+  "$B" -b $S/player_hero2_$BODY.blend -P $S/add_hairs.py -- --save "$W/$S/player_hero2_$BODY.blend"
   "$B" -b incoming-art/claude-kata-moves/source/player_kata_$BODY.blend -P $S/upgrade_hero.py -- --head 1.3 --save "$W/$S/player_hero2_kata_$BODY.blend"
+  "$B" -b $S/player_hero2_kata_$BODY.blend -P $S/add_hairs.py -- --save "$W/$S/player_hero2_kata_$BODY.blend"
 done
 for BODY in a b; do
   "$B" -b $S/player_hero2_$BODY.blend -P incoming-art/tools/render_sprites.py -- --out "$W/incoming-art/claude-hero-v2/sprites/body-$BODY" --name player-$BODY --height 160 --anchor-y 0.856 \

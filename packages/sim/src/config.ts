@@ -310,7 +310,7 @@ export const BLESSING = {
 
 /**
  * LP-B4 (L13, LP-P1 #494): coins, earned by playing and by real classes, spent only in the looks
- * shop. Fixed amounts, never random, never bought, never lost.
+ * shop. Fixed amounts, never random, never bought, never lost. Nov 23: see EARN for training and learning.
  */
 export const COINS = {
   /** Any finished run, won or lost (a rest before the first room is cleared pays nothing). */
@@ -323,6 +323,67 @@ export const COINS = {
   win: 10,
   /** Each Class Chest (one per real class). */
   classChest: 150,
+} as const;
+
+/**
+ * Nov 23 (Jay): Hannah buys unwanted Tower gear at the Action Zone pro shop, for a fixed price by rarity. Never
+ * random; gear being worn can't be sold (take it off first). Kept well under a run's pay, so selling helps but
+ * finishing runs (and real training) earns more.
+ */
+export const SELL_PRICE: Readonly<Record<Rarity, number>> = {
+  common: 5,
+  uncommon: 15,
+  rare: 40,
+  epic: 100,
+  legendary: 250,
+};
+
+/**
+ * The coin economy (Jay, Nov 23: "Hard work = Reward", see docs/economy.md). Real training pays the most, then
+ * learning in the game (clean kata, Street Smarts), then the Tower. Repeats of the same thing pay full only for the
+ * first few times each day. A promotion is always the biggest coin gift in the game.
+ */
+export const EARN = {
+  /** Real training (paid once each, when the game first sees it). */
+  promotion: 1000,
+  stripe: 300,
+  testApproved: 250,
+  signOff: 150,
+  /**
+   * Kata practice (Jay, Nov 23): the first time each kata is done with no mistakes pays a big one-time amount; after
+   * that every clean run pays an ok amount, and a run with mistakes pays very little. No daily limit on kata.
+   */
+  kataFirstClean: 250,
+  kataClean: 30,
+  kataWithMistakes: 3,
+  /** Street Smarts: the first finish, each star (a better choice found), and replays (the first few a day). */
+  scenarioFirst: 100,
+  scenarioStar: 40,
+  scenarioReplay: 10,
+  scenarioReplaysPerDay: 2,
+  /** Tower runs pay full for the first this-many runs a day, then this share. */
+  runsFullPerDay: 6,
+  runAfterShare: 0.5,
+} as const;
+
+/**
+ * Town social rules (Jay, Nov 23): preset phrases and parties. Ticks are 20 per second.
+ */
+export const SOCIAL = {
+  /** A player may say a phrase once every 3 seconds (no spamming the town). */
+  phraseCooldownTicks: 60,
+  /** How long a phrase bubble shows (ms, drawn by the client). */
+  bubbleMs: 3000,
+  /** How many phrases the list may hold, and the longest one (letters). */
+  phrasesMin: 8,
+  phrasesMax: 20,
+  phraseMaxChars: 24,
+  /** Players in one party, the leader included. */
+  partyMax: 4,
+  /** An invite waits 30 seconds for an answer, then quietly goes away. */
+  inviteTicks: 600,
+  /** The same player can't be invited again by the same player for 10 seconds (after a no, or an expired invite). */
+  reinviteTicks: 200,
 } as const;
 
 /**
