@@ -82,10 +82,11 @@ Jay has a few more visuals to list here.
 | ID | What | Status |
 |---|---|---|
 | GP-1 | Batch 1: live link hides Testing, grown-up check, invites Off, tap fixes, shop decor to storage, Home Dojo fixes | Built Nov 24; waits on Jay's phone test and OK for `main` |
-| GP-2 | Defeat screen: keep kind words, always pay a little XP and coins? | Waits on Jay |
-| GP-3 | Beginner Mash guard: Guided only, or end sooner? | Waits on Jay |
-| GP-4 | Batch 2: town Home button, corner map, door signs; coins on every run summary; cheap starter items | Waits on Jay's OK |
-| GP-5 | Kata beginner hint ("show me the next move")? | Waits on Jay |
+| GP-2 | Defeat screen | Jay, Nov 24: no change |
+| GP-3 | No automatic blocking (Mash guard off; Guided enemies 0.7) | Built Nov 24; waits on Jay's phone test |
+| GP-4 | Town mini map and door signs with pictures (no Home button, Jay) | Built Nov 24; icons wait on Jay's OK |
+| GP-5 | Kata Watch first (voice) and Hint (pays 3 coins) | Built Nov 24; words wait on Jay's OK |
+| GP-6 | Re-measure the coin table with BALANCE=1 (fights changed) | Next |
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 

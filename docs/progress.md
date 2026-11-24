@@ -1448,3 +1448,7 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - Not tested in the browser: the tutorial's door arrow tap and the steady Next button in Sensei's first tour (both need a brand-new profile's tutorial); Jay tries them on his phone.
 - **Next:** Jay plays the preview; answers the defeat-screen, Mash guard and town-map questions; then batch 2 (town Home button, map and signs; coins on every run summary) and copying to `main` with his OK.
 
+## Jay's answers built (2026-11-24, branch `claude/playtest-fixes`)
+- No automatic blocking (Guided enemies 0.75 -> 0.7 to keep the white-belt target), kata Watch first and Hint, the town mini map and the door signs with pictures. Details in decisions.md. 1,696 tests pass; type checks and both builds pass; checked in the browser at 844 x 390 (Watch to "Your turn!", a hinted run paying 3 coins, the map and all three signs).
+- **Next:** Jay plays the preview: a fight in Steady (no auto-blocks), kata Watch and Hint, and the town map and signs; OK (or changes) for the picture icons and the kata words; then copy to `main` with his OK. Still open: re-measure the coin table with BALANCE=1.
+
