@@ -40,13 +40,16 @@ export function senseiBubble(scene: Phaser.Scene, line: string, onNext?: () => v
   const { width, height } = view(scene);
   const w = Math.min(520, width - 32);
   const box = scene.add.container(0, 0).setDepth(65);
-  const text = scene.add
-    .text(width / 2, 0, line, { fontFamily: FONT, fontStyle: 'bold', fontSize: width < 720 ? '17px' : '19px', color: '#fff6e0', align: 'center', wordWrap: { width: w - 36, useAdvancedWrap: true }, lineSpacing: 3 })
-    .setOrigin(0.5, 0)
-    .setResolution(crisp());
+  const style = { fontFamily: FONT, fontStyle: 'bold', fontSize: width < 720 ? '17px' : '19px', color: '#fff6e0', align: 'center', wordWrap: { width: w - 36, useAdvancedWrap: true }, lineSpacing: 3 };
+  const text = scene.add.text(width / 2, 0, line, style).setOrigin(0.5, 0).setResolution(crisp());
+  // Grok playtest Nov 23 (B5): the box grew with each line, so the Next button jumped and taps missed it.
+  // Room for at least three lines keeps the button in one place for the usual short lines.
+  const probe = scene.add.text(0, 0, ['A', 'A', 'A'].join('\n'), style);
+  const textH = Math.max(text.height, probe.height);
+  probe.destroy();
   const pad = 14;
   const btnH = onNext ? MIN_TAP + 8 : 0;
-  const h = text.height + pad * 2 + 8 + btnH;
+  const h = textH + pad * 2 + 8 + btnH;
   const x = width / 2 - w / 2;
   const y = at === 'top' ? BUBBLE_TOP : height - h - 14;
   const g = scene.add.graphics();

@@ -107,7 +107,8 @@ export function abilityLabel(t: TrainingState, id: string): string {
   const a = t.abilities.find((x) => x.requirement.id === id);
   if (!a) return '';
   // R-STANCE-d2: katas unlock nothing for the beta.
-  if (a.requirement.type === 'kata') return 'Kata (its reward arrives in a later update)';
+  // Grok playtest Nov 23 (O4): "later update" read as unfinished; kata practice and its coins are in now.
+  if (a.requirement.type === 'kata') return 'Kata';
   const kind = a.kind === 'stance' ? 'Stance' : a.kind === 'strike' ? 'Strike upgrade' : 'Technique Seal';
   const name = a.stance?.name ?? a.perk?.name;
   return name ? `${kind}: ${name}` : `${kind} (power arrives in a later update)`;

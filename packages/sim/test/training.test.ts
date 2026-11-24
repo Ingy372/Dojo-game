@@ -174,7 +174,7 @@ describe('reward moments', () => {
     if (card.kind !== 'signOffs') throw new Error('expected a sign-offs card');
     expect(card.list[0].requirement.name).toBe('Basic Form 1');
     expect(card.list[0].requirement.signedOffBy).toBe('Sensei Jay');
-    expect(card.list[0].ability).toBe('Kata (its reward arrives in a later update)');
+    expect(card.list[0].ability).toBe('Kata');
     expect(card.list.find((x) => x.requirement.name === 'Cat Stance')?.ability).toBe('Stance: Cat Stance');
   });
 

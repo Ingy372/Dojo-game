@@ -17,6 +17,8 @@ import { GREEN } from '../ui/tokens';
 export const SCENARIOS: Record<string, Scenario> = { [storeData.id]: loadScenario(storeData) };
 const UI = uiData as typeof uiData & { speakers: Record<string, string> };
 const SPEAK_KEY = 'dojo-ascent-street-speak';
+/** A new button ignores a press this soon after it appears (B6). */
+const TAP_GUARD_MS = 350;
 
 /** Placeholder picture colours per speaker (until Street Smarts art arrives). */
 const SPEAKER_COLOR: Record<string, number> = { sensei: 0xd9a066, worker: GREEN, grownup: 0xff8fa3, shopper: 0x8a8fa8, player: 0x4ea3ff, narrator: 0x6f6658 };
@@ -160,7 +162,7 @@ export class StreetSmartsScene extends Phaser.Scene {
       this.st = startScenario();
       this.render();
     });
-    this.button(width / 2 + 8, height * 0.62, w, 56, UI.back, GREEN, 17, () => this.leave());
+    this.button(width / 2 + 8, height * 0.62, w, 56, this.back === 'StreetHouse' ? UI.backHouse : UI.back, GREEN, 17, () => this.leave());
     this.sayText(msg);
   }
 
@@ -226,10 +228,20 @@ export class StreetSmartsScene extends Phaser.Scene {
     const bg = this.add.rectangle(x, y, w, h, color).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35);
     this.ui.add(bg);
     this.text(x + w / 2, y + h / 2, label, size, '#ffffff', true, w - 12).setOrigin(0.5).setAlign('center');
-    bg.setInteractive({ useHandCursor: true }).on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-      sfx.unlock();
-      onTap();
-    });
+    // Grok playtest Nov 23 (B6): a fast Next tap picked the answer drawn in the same spot. A button only
+    // answers a press that started on it, and not in its first moment on screen.
+    const shownAt = this.time.now;
+    let pressed = false;
+    bg.setInteractive({ useHandCursor: true })
+      .on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
+        pressed = this.time.now - shownAt >= TAP_GUARD_MS;
+      })
+      .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        if (!pressed) return;
+        pressed = false;
+        sfx.unlock();
+        onTap();
+      });
   }
 }
 
