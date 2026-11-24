@@ -105,5 +105,6 @@ export function townRoom(walk: TownWalk, stage: number): Room {
   // The room needs a player start: where you come out of your own dojo (the scenes place the hero themselves).
   const tiles = townTiles(walk, stage).map((row) => row.split(''));
   tiles[Math.floor(walk.homeDoor.spawn[1])][Math.floor(walk.homeDoor.spawn[0])] = 'P';
-  return loadRoom({ id: walk.id, name: walk.name, tiles: tiles.map((row) => row.join('')) });
+  // Rounded corners: the hero glides round trees, lanterns and the pond instead of catching on square edges.
+  return { ...loadRoom({ id: walk.id, name: walk.name, tiles: tiles.map((row) => row.join('')) }), roundCorners: true };
 }

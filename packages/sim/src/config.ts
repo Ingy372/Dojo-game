@@ -19,6 +19,12 @@ export const MOVEMENT = {
   stickDeadZone: 0.15,
   /** Stops walking to a tapped spot if blocked for this many ticks. */
   stuckTicks: 10,
+  /**
+   * In rooms with rounded corners (the town), each outside corner of a blocked area is rounded off by this much, so
+   * bodies glide round trees, lanterns and the pond's edge instead of catching on square corners (Jay, Nov 24).
+   * 0.5 makes a lone blocked tile a circle as wide as the tile.
+   */
+  cornerRound: 0.5,
 } as const;
 
 /**

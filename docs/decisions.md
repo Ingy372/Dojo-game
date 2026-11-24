@@ -2201,3 +2201,6 @@ Grok's three-persona playtest and hand-off report (`docs/reviews/grok-playtest-2
 
 ## Nov 24: the rock garden's sand can't be walked on (Jay)
 - Only the stepping-stone path through the rock garden is walkable; the raked sand is blocked like the rocks. Kept in `town-walk.json` and in `build_town.py` (GROUND_BLOCK) so rerunning the town art keeps it.
+
+## Nov 24: rounded corners on town walk zones (Jay: "smoother, I'm getting a bit stuck")
+- In the town, outside corners of blocked areas are rounded (MOVEMENT.cornerRound = 0.5), so bodies slide round trees, lanterns, benches and the pond. Faces keep their full size (Jay would rather a block be a little big than too small). Tower rooms keep square walls.

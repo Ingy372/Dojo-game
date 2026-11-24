@@ -42,6 +42,8 @@ export interface Room {
   height: number;
   /** walls[row][column] is true where a wall is. */
   walls: boolean[][];
+  /** True where outside corners of blocked areas are rounded off (MOVEMENT.cornerRound), for smoother walking. */
+  roundCorners?: boolean;
   playerStart: Vec2;
   /** Where enemies start (centers of tiles), in the order listed in the file. */
   enemySpawns: EnemySpawn[];
