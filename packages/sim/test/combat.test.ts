@@ -292,69 +292,23 @@ describe('the counter', () => {
     }
   });
 
-  describe('Mash guard (B-MASHER-b)', () => {
-    it('a hit that lands mid-swing is a Block: half damage, same block event, combo and chain kept', () => {
+  describe('no automatic blocking (Jay, Nov 24; was the Mash guard, B-MASHER-b/2)', () => {
+    it('is off from the start: a hit that lands mid-swing is a full Hit, never a Block', () => {
       const { room, world, p } = setup();
-      counterAt(world, room, 0); // a Perfect Counter first, to start a chain
-      const chain = p.counterChain;
-      const health = p.health;
-      const events = counterAt(world, room, null);
-      expect(p.attackCooldown).toBeGreaterThan(0);
-      expect(events.some((ev) => ev.kind === 'block')).toBe(true);
-      expect(events.some((ev) => ev.kind === 'hit')).toBe(false);
-      expect(health - p.health).toBe(damage(brute.power, COMBAT.counter.blockDamageMultiplier, 0));
-      expect(p.counterChain).toBe(chain);
-      expect(p.combo).toBe(comboBeforeImpact + basicHits(events));
-    });
-
-    it('a Counter stays strictly better: no damage, a stagger and Focus', () => {
-      const mash = setup();
-      counterAt(mash.world, mash.room, null);
-      const mashLoss = mash.p.maxHealth - mash.p.health;
-      const counter = setup();
-      const events = counterAt(counter.world, counter.room, 0);
-      expect(events.some((ev) => ev.kind === 'perfectCounter')).toBe(true);
-      expect(counter.p.health).toBe(counter.p.maxHealth);
-      expect(mashLoss).toBeGreaterThan(0);
-      expect(counter.e.mode).toBe('stagger');
-      expect(mash.e.mode).not.toBe('stagger');
-      expect(counter.p.focus - focusBeforeImpact).toBeGreaterThan(mash.p.focus - focusBeforeImpact);
-    });
-  });
-
-  describe('Mash guard fades (B-MASHER-2, E3)', () => {
-    const tough = () => {
-      const s = setup();
-      s.e.health = 100000;
-      return s;
-    };
-    it('turns off after the room\'s 3rd Perfect Counter: a mid-swing hit is then a full Hit', () => {
-      const { room, world, p } = tough();
-      for (let i = 0; i < COMBAT.counter.mashGuardPerfects; i++) {
-        expect(mashGuardOn(p)).toBe(true);
-        const ev = counterAt(world, room, 0);
-        expect(ev.some((x) => x.kind === 'perfectCounter')).toBe(true);
-        expect(ev.some((x) => x.kind === 'mashGuardOff')).toBe(i === COMBAT.counter.mashGuardPerfects - 1);
-      }
-      expect(COMBAT.counter.mashGuardPerfects).toBe(3);
+      expect(COMBAT.counter.mashGuardPerfects).toBe(0);
       expect(mashGuardOn(p)).toBe(false);
       const events = counterAt(world, room, null);
       expect(p.attackCooldown).toBeGreaterThan(0);
-      expect(events.some((x) => x.kind === 'hit')).toBe(true);
-      expect(events.some((x) => x.kind === 'block')).toBe(false);
-      // A pressed Counter still Blocks or Perfects as before.
-      const late = counterAt(world, room, window + 1);
-      expect(late.some((x) => x.kind === 'block')).toBe(true);
+      expect(events.some((ev) => ev.kind === 'hit')).toBe(true);
+      expect(events.some((ev) => ev.kind === 'block')).toBe(false);
+      expect(events.some((ev) => ev.kind === 'mashGuardOff')).toBe(false);
     });
 
-    it('two Perfect Counters keep it on; each new room starts it again', () => {
-      const a = tough();
-      for (let i = 0; i < 2; i++) counterAt(a.world, a.room, 0);
-      expect(mashGuardOn(a.p)).toBe(true);
-      expect(counterAt(a.world, a.room, null).some((x) => x.kind === 'block')).toBe(true);
-      const next = tough();
-      expect(mashGuardOn(next.p)).toBe(true);
-      expect(counterAt(next.world, next.room, null).some((x) => x.kind === 'block')).toBe(true);
+    it('a pressed Counter still Perfects in the window and Blocks just after it', () => {
+      const s = setup();
+      s.e.health = 100000;
+      expect(counterAt(s.world, s.room, 0).some((x) => x.kind === 'perfectCounter')).toBe(true);
+      expect(counterAt(s.world, s.room, window + 1).some((x) => x.kind === 'block')).toBe(true);
     });
   });
 

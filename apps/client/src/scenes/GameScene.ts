@@ -184,6 +184,10 @@ const HUD_BOTTOM = 56;
 const HUD_BARS_BOTTOM = 51;
 /** G2B12-FIXES: the door hint's top edge, and the width each side keeps clear (the health bars on the left, the room label on the right). */
 const DOOR_HINT_TOP = 10;
+/** B2: how close (screen px) a tap must be to the door arrow to count as tapping it (a big target for small fingers). */
+const DOOR_ARROW_TAP_PX = 44;
+/** B4: after Got it, taps are ignored this long so the same tap can't also walk the hero. */
+const GOT_IT_QUIET_MS = 250;
 const DOOR_HINT_SIDE_PX = 222;
 /** Q-PREMIUM-2 M12: the hero's numbers start this far above the head (world px), step left, middle, right, and at most this many show at once. */
 const HERO_POP_RAISE_PX = 46;
@@ -489,6 +493,8 @@ export class GameScene extends Phaser.Scene {
   private doorHintOn = false;
   /** TUT-B5: in a tutorial room, a small gold arrow at the screen edge points at an open door that is off-screen. */
   private doorArrow!: Phaser.GameObjects.Graphics;
+  /** Grok playtest Nov 23 (B2): where the door arrow is drawn (screen) and the door it points at (tiles), so a tap on it walks there. */
+  private doorArrowHit: { x: number; y: number; door: { x: number; y: number } } | null = null;
   private senseiText: Phaser.GameObjects.Text | null = null;
   /** The 'Room clear!' line under the grade, while it shows (K23c: the ability pop-up keeps off it). */
   private gradeLine: Phaser.GameObjects.Text | null = null;
@@ -599,6 +605,14 @@ export class GameScene extends Phaser.Scene {
       skipDown(this.world, this.me);
       this.afterHelpUp?.();
     });
+    // B2: a tap on the door arrow walks the hero to that door, and closes Sensei's tip if one is up.
+    this.input.on(Phaser.Input.Events.POINTER_UP, (p: Phaser.Input.Pointer) => {
+      const hit = this.doorArrowHit;
+      if (!hit || !this.onDoorArrow(p.x / DPR, p.y / DPR)) return;
+      if (this.gotItBtn?.active) this.gotItBtn.emit(Phaser.Input.Events.GAMEOBJECT_POINTER_UP);
+      if (this.menuOpen || this.leaving) return;
+      this.controls.walkTo(hit.door);
+    });
     this.popups.clear();
     this.words.clear();
     this.heroPops = [];
@@ -669,7 +683,7 @@ export class GameScene extends Phaser.Scene {
       this,
       cam,
       (x, y) => ({ x: x / TILE, y: y / TILE }),
-      (x, y) => this.menuOpen || this.buttons.contains(x, y) || this.onHomeButton(x, y),
+      (x, y) => this.menuOpen || this.buttons.contains(x, y) || this.onHomeButton(x, y) || this.onDoorArrow(x, y),
     );
     this.makeHud();
     cam.ignore([...this.controls.objects, ...this.buttons.objects]);
@@ -2050,6 +2064,12 @@ export class GameScene extends Phaser.Scene {
 
   // ---------------------------------------------------------------- the run
 
+  /** B2: a point on (or close to) the door arrow. */
+  private onDoorArrow(x: number, y: number): boolean {
+    const hit = this.doorArrowHit;
+    return !!hit && Math.hypot(x - hit.x, y - hit.y) <= DOOR_ARROW_TAP_PX;
+  }
+
   private onHomeButton(x: number, y: number): boolean {
     return !this.run && !!this.roomLabel && this.roomLabel.getBounds().contains(x, y);
   }
@@ -2292,6 +2312,7 @@ export class GameScene extends Phaser.Scene {
   private drawDoorArrow(now: number): void {
     const g = this.doorArrow;
     g.clear();
+    this.doorArrowHit = null;
     // It stays up under a Got it tip (the close card says the door home is open), not under a menu.
     if (!this.run?.tutorial || !this.doorHintOn || (this.menuOpen && !this.gotItBtn?.active) || this.leaving) return;
     const { width, height } = view(this);
@@ -2299,6 +2320,7 @@ export class GameScene extends Phaser.Scene {
     const k = cam.zoom / DPR;
     const door = this.doorViews
       .map((d) => ({ x: (d.at.x * TILE - cam.worldView.x) * k, y: (d.at.y * TILE - cam.worldView.y) * k }))
+      .map((d, i) => ({ ...d, at: this.doorViews[i].at }))
       .find((d) => d.x < 0 || d.x > width || d.y < 0 || d.y > height);
     if (!door) return;
     const bob = reducedMotion() ? 0 : Math.abs(Math.sin(now / 200)) * 6;
@@ -2312,6 +2334,7 @@ export class GameScene extends Phaser.Scene {
       : [width - 6 + bob, Phaser.Math.Clamp(door.y, top, height - m), 1, 0];
     const bx = tx - dx * 14;
     const by = ty - dy * 14;
+    this.doorArrowHit = { x: bx, y: by, door: door.at };
     const shaft: [number, number, number, number] = [Math.min(bx, bx - dx * 14) - Math.abs(dy) * 4, Math.min(by, by - dy * 14) - Math.abs(dx) * 4, dx ? 14 : 8, dy ? 14 : 8];
     // A dark outline so the gold reads on the Keep's light floor (Tester, #540).
     g.lineStyle(4, 0x14121c, 1).strokeTriangle(tx, ty, bx + dy * 11, by - dx * 11, bx - dy * 11, by + dx * 11).strokeRect(...shaft);
@@ -2668,7 +2691,7 @@ export class GameScene extends Phaser.Scene {
       btn.destroy();
       this.gotItBtn = null;
       this.menuOpen = false;
-      this.controls.reset();
+      this.controls.ignoreTapsFor(GOT_IT_QUIET_MS);
       this.buttons.reset();
       const finished = gotIt(f, TUTORIAL);
       if (!finished) this.startTutorialTry(id);

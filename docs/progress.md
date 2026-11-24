@@ -1442,3 +1442,13 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - **Later Nov 23:** the re-render finished (every hero sheet, both bodies, 18 hairs, no chest patch; the staff) and all 137 hero, hair and staff packs are imported. The Street Smarts House is wired (door in town, Michael, lessons, tips, badges). 1,695 tests pass; type checks and both builds pass; checked in the browser. Pushed for a preview link.
 - **Next:** Jay plays the preview; OK (or changes) for the new hairstyles, Michael's name and lines, the safety tips and the cutscene words; then copy to `main` with his OK.
 - **On the live link (Nov 23, Jay: "Yes, go live"):** merged into `main`; checks and the live build passed. Jay tested everything ("everything is working good"); the blurry turn-around on desktop was fixed first.
+
+## Grok playtest, batch 1 (2026-11-24, branch `claude/playtest-fixes`)
+- Grok played as a 6-year-old, a 12-year-old and a parent; its report is in `docs/reviews/grok-playtest-2026-11-23.md`. Claude checked each claim against the code and fixed batch 1 (details in decisions.md): the live link hides the Testing screen, a harder grown-up check, invites start Off, the tap fixes, bought decorations reaching storage, and the small Home Dojo fixes. 1,695 tests pass; type checks and both builds pass; checked in the browser at 844 x 390.
+- Not tested in the browser: the tutorial's door arrow tap and the steady Next button in Sensei's first tour (both need a brand-new profile's tutorial); Jay tries them on his phone.
+- **Next:** Jay plays the preview; answers the defeat-screen, Mash guard and town-map questions; then batch 2 (town Home button, map and signs; coins on every run summary) and copying to `main` with his OK.
+
+## Jay's answers built (2026-11-24, branch `claude/playtest-fixes`)
+- No automatic blocking (Guided enemies 0.75 -> 0.7 to keep the white-belt target), kata Watch first and Hint, the town mini map and the door signs with pictures. Details in decisions.md. 1,696 tests pass; type checks and both builds pass; checked in the browser at 844 x 390 (Watch to "Your turn!", a hinted run paying 3 coins, the map and all three signs).
+- **Next:** Jay plays the preview: a fight in Steady (no auto-blocks), kata Watch and Hint, and the town map and signs; OK (or changes) for the picture icons and the kata words; then copy to `main` with his OK. Still open: re-measure the coin table with BALANCE=1.
+

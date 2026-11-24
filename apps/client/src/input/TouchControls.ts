@@ -25,6 +25,8 @@ export class TouchControls {
   private tapPointer: number | null = null;
   private pendingTap: { x: number; y: number } | null = null;
   private off = false;
+  /** Taps are ignored until this time (scene ms): see ignoreTapsFor. */
+  private quietUntil = 0;
 
   private readonly base: Phaser.GameObjects.Arc;
   private readonly knob: Phaser.GameObjects.Arc;
@@ -118,6 +120,21 @@ export class TouchControls {
     return { x: x / len, y: y / len };
   }
 
+  /** Asks to walk to a spot (room tiles), as if it was tapped (Grok playtest Nov 23, B2: the door arrow). */
+  walkTo(tile: { x: number; y: number }): void {
+    if (this.off) return;
+    this.pendingTap = { x: tile.x, y: tile.y };
+  }
+
+  /**
+   * Lets go and ignores new presses for a moment (Grok playtest Nov 23, B4: tapping Got it also walked the
+   * hero; a touch screen can send a copy of the same tap just after the card closes).
+   */
+  ignoreTapsFor(ms: number): void {
+    this.reset();
+    this.quietUntil = this.scene.time.now + ms;
+  }
+
   /** Lets go of everything (for example when the app goes to the background). */
   reset(): void {
     this.stickPointer = null;
@@ -146,7 +163,7 @@ export class TouchControls {
   }
 
   private onDown(pointer: Phaser.Input.Pointer): void {
-    if (this.off) return;
+    if (this.off || this.scene.time.now < this.quietUntil) return;
     if (this.isButton((pointer.x / DPR), (pointer.y / DPR))) return;
     if (this.stickPointer === null && this.inStickZone((pointer.x / DPR), (pointer.y / DPR)) && !this.isTapTarget((pointer.x / DPR), (pointer.y / DPR))) {
       this.stickPointer = pointer.id;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseKata, type KataDef } from '../src/katas';
 import {
+  askKataHint,
   formatKataTime,
   kataBeats,
   kataDone,
@@ -128,3 +129,35 @@ describe('kata practice (Jay, Nov 20)', () => {
     expect(room.kataSpot).toEqual({ center: { x: 13.5, y: 5.2 }, radius: 0.9 });
   });
 });
+
+describe('kata Hint button (Jay, Nov 24)', () => {
+  it('lights the next arrow, then the move, for this beat only, and marks the run hinted', () => {
+    const r = newKataRun(bf1);
+    expect(kataHint(r)).toBeNull();
+    const first = r.beats[0];
+    expect(askKataHint(r)).toEqual({ dir: first.dir });
+    expect(r.hinted).toBe(true);
+    expect(tapKataDir(r, first.dir)).toBe('ok');
+    expect(kataHint(r)).toEqual({ move: first.move });
+    expect(tapKataMove(r, first.move)).toBe('ok');
+    // The next beat starts with no glow, but the run stays hinted.
+    expect(kataHint(r)).toBeNull();
+    expect(r.hinted).toBe(true);
+    expect(r.wrong).toBe(0);
+  });
+
+  it('a hinted run counts as played but sets no bests', () => {
+    const prev = { bestMs: 40000, fewestWrong: 2, runs: 3 };
+    const res = recordKataRun(prev, 0, 30000, true);
+    expect(res.best).toEqual({ bestMs: 40000, fewestWrong: 2, runs: 4 });
+    expect(res.newBestTime).toBe(false);
+    expect(res.newFewest).toBe(false);
+  });
+
+  it('does nothing once the kata is done', () => {
+    const r = newKataRun(bf1);
+    r.index = r.beats.length;
+    expect(askKataHint(r)).toBeNull();
+  });
+});
+

@@ -34,8 +34,9 @@ describe('guided first Counter', () => {
   it('is off unless asked for, so a player who never taps Counter gets hit', () => {
     const w = world();
     expect(w.guide).toBeNull();
-    // Standing next to the brute the player auto-swings, so the Mash guard (B-MASHER-b) makes it a Block.
-    expect(untilSwing(w)).toContain('block');
+    // Jay, Nov 24: no automatic blocking. Auto-swinging next to the brute is still a full hit.
+    expect(untilSwing(w)).toContain('hit');
+    expect(untilSwing(world())).not.toContain('block');
     const still = world();
     expect(untilSwing(still, (x) => (holdSwing(x.players.p1), IDLE))).toContain('hit');
   });

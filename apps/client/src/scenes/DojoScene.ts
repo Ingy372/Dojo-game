@@ -313,6 +313,20 @@ export class DojoScene extends Phaser.Scene {
     if (this.restingOnArrival) this.time.delayedCall(500, () => this.showResting());
     if (!bowIsDue() && this.profile.homeTour) this.time.delayedCall(450, () => this.runTour());
     if (!bowIsDue()) this.offerResume();
+    // H3: with no bow (back from town, say), new pieces still arrive, with their card once the room is free.
+    if (!bowIsDue()) {
+      const pieces = this.newPiecesCard();
+      if (pieces) {
+        const show = (): void => {
+          if (this.mode !== 'play' || this.cardsOpen > 0 || this.leaving) {
+            this.time.delayedCall(300, show);
+            return;
+          }
+          pieces(() => this.renderUi());
+        };
+        this.time.delayedCall(400, show);
+      }
+    }
     if (bowIsDue()) {
       this.bowHoursAway = hoursAway;
       this.tryBow();
@@ -358,6 +372,10 @@ export class DojoScene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     if (!this.bowShown && this.bowHoursAway !== null) this.tryBow();
+    // Grok playtest Nov 23 (H1): Sensei's waiting tour line ("Walk to your Training Station") sat over the
+    // Decorate tray; it steps aside while decorating or in a menu.
+    const tourShows = this.mode === 'play' || this.mode === 'arriving';
+    for (const b of this.tourBits) if (b instanceof Phaser.GameObjects.Container && b.active) b.setVisible(tourShows || b.parentContainer !== null);
     if (this.mode !== 'play' || this.leaving) {
       this.controls.takeInput();
       this.elapsed = 0;
@@ -367,8 +385,9 @@ export class DojoScene extends Phaser.Scene {
         this.prevPos = { ...this.world.players.p1.pos };
         const input: PlayerInput = this.controls.takeInput();
         // Home Tour door stop: the hero arrived standing in the doorway, so a push (or tap) toward the
-        // door goes through it straight away.
-        if (this.tourDoorWait) {
+        // door goes through it straight away. Grok playtest Nov 23 (B3): the same for every arrival on the
+        // TOWN mat (before, the hero had to walk away from the door and back).
+        if (this.tourDoorWait || !this.doorArmed) {
           const p = this.world.players.p1.pos;
           if ((input.kind === 'stick' && input.y > 0.3) || (input.kind === 'moveTo' && input.y > p.y + 0.3)) this.doorArmed = true;
         }
@@ -452,14 +471,8 @@ export class DojoScene extends Phaser.Scene {
       steps.push(() => this.card(title, [CW.line, shown.join('\n')], CW.button, next, true));
     }
     // Nov 22: decorations bought in the Shop and in-game achievement trophies arrive in storage (each once).
-    const bought = giveShopDecor(this.profile, this.dojo, SHOP);
-    const trophies = giveAchievementPieces(this.profile, this.dojo, CONTENT);
-    if (bought.length + trophies.length > 0) {
-      writeSave(this.profile);
-      const names = (ids: string[]) => ids.map((id) => decorationDef(CONTENT.dojo, id).name);
-      const lines = [...names(trophies).map((n) => `Trophy: ${n}`), ...names(bought)].slice(0, 4);
-      steps.push(() => this.card(trophies.length ? 'You earned a trophy!' : 'New for your dojo!', [lines.join('\n'), 'Find it in Decorate, in your storage.'], 'Great!', next));
-    }
+    const pieces = this.newPiecesCard();
+    if (pieces) steps.push(() => pieces(next));
     // OV-B5: new classes add Blessing runs once, in whichever screen sees them first.
     const blessingAdded = creditBlessing(this.profile.blessing, t.classCheckIns);
     writeSave(this.profile);
@@ -513,6 +526,21 @@ export class DojoScene extends Phaser.Scene {
   }
 
   /** A gentle card with a title, a few short lines and one button. */
+  /**
+   * Hands over Shop decorations and achievement trophies not yet in storage, and returns the card that tells
+   * the player (null when there is nothing new). Grok playtest Nov 23 (H3): this used to run only with a bow,
+   * so a lantern bought in town never reached storage when the player walked straight home.
+   */
+  private newPiecesCard(): ((next: () => void) => void) | null {
+    const bought = giveShopDecor(this.profile, this.dojo, SHOP);
+    const trophies = giveAchievementPieces(this.profile, this.dojo, CONTENT);
+    if (bought.length + trophies.length === 0) return null;
+    writeSave(this.profile);
+    const names = (ids: string[]) => ids.map((id) => decorationDef(CONTENT.dojo, id).name);
+    const lines = [...names(trophies).map((n) => `Trophy: ${n}`), ...names(bought)].slice(0, 4);
+    return (next) => this.card(trophies.length ? 'You earned a trophy!' : 'New for your dojo!', [lines.join('\n'), 'Find it in Decorate, in your storage.'], 'Great!', next);
+  }
+
   private card(title: string, lines: string[], button: string, onClose: () => void, chest = false): void {
     const { width, height } = view(this);
     const w = Math.min(460, width - 40);

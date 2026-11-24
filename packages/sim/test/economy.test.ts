@@ -40,6 +40,10 @@ describe('coin economy (Nov 23, "Hard work = Reward")', () => {
     for (let i = 0; i < 10; i++) expect(kataCoins(p, 'keon', 0)).toEqual({ coins: EARN.kataClean, firstClean: false });
     expect(kataCoins(p, 'keon', 1).coins).toBe(EARN.kataWithMistakes);
     expect(kataCoins(p, 'basic-form-1', 0).firstClean).toBe(true);
+    // Jay, Nov 24: a run that used the Hint button pays like a run with mistakes, and keeps the first-clean bonus waiting.
+    const q = newProfile();
+    expect(kataCoins(q, 'pinan-1', 0, true)).toEqual({ coins: EARN.kataWithMistakes, firstClean: false });
+    expect(kataCoins(q, 'pinan-1', 0).firstClean).toBe(true);
     expect(EARN.kataFirstClean).toBeGreaterThan(EARN.kataClean * 5);
     expect(EARN.kataClean).toBeGreaterThan(EARN.kataWithMistakes * 5);
   });

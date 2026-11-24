@@ -371,7 +371,7 @@ export class HomeScene extends Phaser.Scene {
     const cx = rightX + rightW / 2;
     const h = pointer ? 92 : 60;
     const cy = pad + h / 2;
-    const shade = this.add.rectangle(cx, cy, w, h, 0x221d2e).setStrokeStyle(3, 0xffd166).setInteractive();
+    const shade = this.add.rectangle(cx, cy, w, h, 0x221d2e).setStrokeStyle(3, 0xffd166);
     box.add(shade);
     const line = (y: number, str: string, size: number, color: string) =>
       box.add(
@@ -389,7 +389,9 @@ export class HomeScene extends Phaser.Scene {
       done = true;
       this.tweens.add({ targets: box, alpha: 0, duration: still ? 0 : 300, onComplete: () => (box.destroy(), onDone()) });
     };
-    shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, close);
+    // Grok playtest Nov 23 (B21/H5): the card covers the Board's tabs and ate the tap meant for them. Any tap
+    // now closes it and still reaches what is underneath.
+    this.input.once(Phaser.Input.Events.POINTER_DOWN, close);
     this.time.delayedCall(KO.pointerMs, close);
     box.setAlpha(0);
     this.tweens.add({ targets: box, alpha: 1, duration: still ? 0 : 300 });

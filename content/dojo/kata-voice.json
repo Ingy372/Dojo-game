@@ -1,0 +1,15 @@
+{
+  "notes": "Kata practice words for Watch first and the Hint button (Jay, Nov 24). Spoken aloud with the phone's own voice: the direction word, then the move's name from kata-moves.json. Claude's drafts, waiting on Jay's OK.",
+  "dirs": { "L": "Left", "R": "Right", "F": "Front", "B": "Back" },
+  "kiai": "Kiai!",
+  "watchButton": "Watch",
+  "watchTitle": "Watch first",
+  "watchLine": "Listen and watch. Then it's your turn.",
+  "hintButton": "Hint",
+  "hintNote": "A hint pays 3 coins.",
+  "yourTurn": "Your turn!",
+  "yourTurnLine": "Now you try it.",
+  "tryIt": "Try it",
+  "done": "Done",
+  "hintedResult": "Done with a hint."
+}

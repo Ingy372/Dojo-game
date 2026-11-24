@@ -8,6 +8,7 @@
 
 import Phaser from 'phaser';
 import {
+  askKataHint,
   formatKataTime,
   kataHint,
   kataMoveIds,
@@ -22,6 +23,8 @@ import {
   type PracticeBeat,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
+import { hush, speak } from '../audio/voice';
+import VOICE from '../../../../content/dojo/kata-voice.json';
 import { hasTouch } from '../input/TouchControls';
 import { reducedMotion } from '../game/motion';
 import { drawBelt, hex, type BeltColors } from './belt';
@@ -83,7 +86,8 @@ export class KataMenu {
     /** The belt each kata belongs to (its colour shows on the kata's row). */
     private readonly belts: ReadonlyMap<string, BeltColors | undefined>,
     private readonly bests: Readonly<Record<string, KataBest>>,
-    private readonly onPick: (k: KataDef, timeTrial: boolean) => void,
+    /** `watch`: Watch first (Jay, Nov 24): the kata is shown and said aloud, nothing to tap. */
+    private readonly onPick: (k: KataDef, timeTrial: boolean, watch: boolean) => void,
     private readonly onClose: () => void,
   ) {
     this.layer = scene.add.container(0, 0).setDepth(110);
@@ -190,6 +194,15 @@ export class KataMenu {
     const chev = s.add.graphics().lineStyle(3, INK_NUM, 0.9);
     chev.beginPath().moveTo(w / 2 - 22, -6).lineTo(w / 2 - 15, 1).lineTo(w / 2 - 22, 8).strokePath();
     c.add(chev);
+    // Jay, Nov 24: a Watch button on each kata: Sensei shows it and says each move before the student tries.
+    const ww = 74;
+    const wh = Math.min(34, h - 12);
+    const wx = w / 2 - 34 - ww / 2;
+    const wg = s.add.graphics();
+    wg.fillStyle(0x1b1429, 0.9).fillRoundedRect(wx - ww / 2, -wh / 2, ww, wh, wh / 2).lineStyle(2, GOLD, 0.85).strokeRoundedRect(wx - ww / 2, -wh / 2, ww, wh, wh / 2);
+    c.add([wg, text(s, wx, 0, VOICE.watchButton, 14, '#ffd166').setOrigin(0.5)]);
+    const room = avail - ww - 8;
+    for (const t of [name, info]) if (t.width * t.scaleX > room) t.setScale(room / t.width);
     const zone = s.add.zone(x + w / 2, y + h / 2, w, h).setInteractive({ useHandCursor: true });
     zone.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
       if (!reducedMotion()) s.tweens.add({ targets: c, scale: 0.96, duration: 70 });
@@ -200,7 +213,13 @@ export class KataMenu {
       sfx.tap();
       this.finish(k);
     });
-    this.layer.add([c, zone]);
+    const watchZone = s.add.zone(x + w / 2 + wx, y + h / 2, ww + 8, h).setInteractive({ useHandCursor: true });
+    watchZone.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      sfx.unlock();
+      sfx.tap();
+      this.finish(k, true);
+    });
+    this.layer.add([c, zone, watchZone]);
   }
 
   /** The Time Trial switch: a stopwatch, the words, and a slider that turns green when on. */
@@ -240,12 +259,12 @@ export class KataMenu {
     this.layer.add([c, zone]);
   }
 
-  private finish(k: KataDef | null): void {
+  private finish(k: KataDef | null, watch = false): void {
     if (this.done) return;
     this.done = true;
     this.close.destroy();
     this.layer.destroy();
-    if (k) this.onPick(k, this.timeTrial);
+    if (k) this.onPick(k, watch ? false : this.timeTrial, watch);
     else this.onClose();
   }
 }
@@ -277,6 +296,8 @@ export interface KataPadHooks {
   done(wrong: number, ms: number | null): void;
   /** The X: stop practising. */
   quit(): void;
+  /** Watch first finished showing the kata: the scene bows out, then calls `showWatchEnd`. */
+  watched?(): void;
 }
 
 interface PadButton {
@@ -313,6 +334,12 @@ export class KataPad {
   private keyCleanup: Array<() => void> = [];
   /** Screen x of the middle of the open space between the arrow pad and the technique buttons. */
   freeCenterX = 0;
+  /** The Hint button's box (practice only). */
+  private hintBtn: { x: number; y: number; w: number; h: number } | null = null;
+  private demoTimer: Phaser.Time.TimerEvent | null = null;
+  /** In Watch first: the button lit by the demo, and the step being shown. */
+  private demoKey: string | null = null;
+  private demoStep = 1;
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -320,6 +347,8 @@ export class KataPad {
     allMoves: readonly KataMoveDef[],
     private readonly timeTrial: boolean,
     private readonly hooks: KataPadHooks,
+    /** Jay, Nov 24: Watch first. The pad plays the kata itself, lighting and saying each arrow and move. */
+    private readonly watch = false,
   ) {
     const byId = new Map(allMoves.map((m) => [m.id, m]));
     this.moves = kataMoveIds(kata).map((id) => byId.get(id)!);
@@ -339,8 +368,87 @@ export class KataPad {
 
   /** Shows the pad and starts listening to taps (after the bow and the Open Leg Stance). */
   start(): void {
-    this.active = true;
     this.scene.tweens.add({ targets: this.layer, alpha: 1, duration: reducedMotion() ? 0 : 200 });
+    if (this.watch) {
+      this.say(VOICE.watchLine);
+      speak(VOICE.watchLine);
+      this.demoTimer = this.scene.time.delayedCall(2400, () => this.demoBeat());
+      return;
+    }
+    this.active = true;
+  }
+
+  /**
+   * Watch first: one beat. The arrow lights and its direction is said (the hero turns), then the move lights and its
+   * name is said (the hero does it). Slow on purpose, so a new belt can follow along.
+   */
+  private demoBeat(): void {
+    const r = this.run;
+    if (r.index >= r.beats.length) {
+      this.demoKey = null;
+      this.refresh();
+      this.demoTimer = this.scene.time.delayedCall(700, () => this.hooks.watched?.());
+      return;
+    }
+    const beat = r.beats[r.index];
+    const move = this.moves.find((m) => m.id === beat.move)!;
+    this.demoKey = beat.dir;
+    this.demoStep = beat.step;
+    tapKataDir(r, beat.dir);
+    this.press(beat.dir);
+    sfx.kataArrow();
+    speak(VOICE.dirs[beat.dir as keyof typeof VOICE.dirs]);
+    this.hooks.face(beat.dir, beat);
+    this.refresh();
+    this.demoTimer = this.scene.time.delayedCall(900, () => {
+      const index = r.index;
+      this.demoKey = beat.move;
+      tapKataMove(r, beat.move);
+      this.press(beat.move);
+      sfx.kataRight(index, beat.kiai);
+      speak(beat.kiai ? `${move.name}. ${VOICE.kiai}` : move.name);
+      this.hooks.beat(beat, move, index);
+      this.refresh();
+      // A special turn takes longer to play than a plain move.
+      this.demoTimer = this.scene.time.delayedCall(beat.anim ? 2600 : 1700, () => this.demoBeat());
+    });
+  }
+
+  /** Hint (Jay, Nov 24): lights and says the next arrow, or the move once the arrow is chosen. The run pays 3 coins. */
+  private useHint(): void {
+    if (!this.active) return;
+    sfx.unlock();
+    this.startClock();
+    const h = askKataHint(this.run);
+    if (!h) return;
+    sfx.tap();
+    speak('dir' in h ? VOICE.dirs[h.dir as keyof typeof VOICE.dirs] : (this.moves.find((m) => m.id === h.move)?.name ?? ''));
+    this.refresh();
+  }
+
+  /** Watch first is over: "Your turn!" with Try it (plays the same kata) and Done. */
+  showWatchEnd(o: { tryIt: () => void; done: () => void }): void {
+    const s = this.scene;
+    const { width, height } = view(s);
+    const cw = Math.min(360, width - 2 * MARGIN);
+    const ch = 180;
+    const c = s.add.container(width / 2, height / 2).setDepth(115);
+    const g = s.add.graphics();
+    g.fillStyle(0x221a33, 0.96).fillRoundedRect(-cw / 2, -ch / 2, cw, ch, 18).lineStyle(3, GOLD, 0.8).strokeRoundedRect(-cw / 2, -ch / 2, cw, ch, 18);
+    c.add(g);
+    c.add(text(s, 0, -ch / 2 + 16, VOICE.yourTurn, 26, '#ffd166').setOrigin(0.5, 0));
+    c.add(text(s, 0, -ch / 2 + 58, VOICE.yourTurnLine, 16).setOrigin(0.5, 0));
+    speak(VOICE.yourTurn);
+    const bw = (cw - 60) / 2;
+    button(s, { x: -cw / 2 + 20, y: ch / 2 - 62, w: bw, h: 44, label: VOICE.tryIt, color: 0x6a3fb0, size: 18, onTap: o.tryIt }, c);
+    button(s, { x: cw / 2 - 20 - bw, y: ch / 2 - 62, w: bw, h: 44, label: VOICE.done, color: 0x3a3150, size: 18, onTap: o.done }, c);
+    if (!reducedMotion()) s.tweens.add({ targets: c, scale: { from: 0.8, to: 1 }, alpha: { from: 0, to: 1 }, duration: 220, ease: 'Back.Out' });
+    this.card = c;
+  }
+
+  /** True once the Hint button was used in this run. */
+  get hinted(): boolean {
+    return this.run.hinted;
   }
 
   /** Called every frame: the running clock. */
@@ -350,10 +458,15 @@ export class KataPad {
 
   /** True for a screen point on any of the pad's controls (so the scene ignores it). */
   contains(x: number, y: number): boolean {
+    const hb = this.hintBtn;
+    if (hb && x >= hb.x - 4 && x <= hb.x + hb.w + 4 && y >= hb.y - 4 && y <= hb.y + hb.h + 4) return true;
     return this.buttons.some((b) => (b.round ? Math.hypot(x - b.x, y - b.y) <= b.hw + 6 : Math.abs(x - b.x) <= b.hw + 4 && Math.abs(y - b.y) <= b.hh + 4)) || Math.hypot(x - this.close.x, y - this.close.y) < 40;
   }
 
   destroy(): void {
+    this.demoTimer?.remove();
+    this.demoTimer = null;
+    hush();
     this.keyCleanup.forEach((f) => f());
     this.keyCleanup = [];
     this.close.destroy();
@@ -369,6 +482,17 @@ export class KataPad {
     const { width, height } = view(s);
     this.missText.setX(width / 2);
     this.timeText?.setX(width / 2);
+    if (this.watch) this.missText.setVisible(false);
+    else {
+      // The Hint button: top right, left of the close X.
+      const hw = 92;
+      const hh = 44;
+      const hx = width - MARGIN - 56 - hw;
+      const hy = MARGIN - 6;
+      this.hintBtn = { x: hx, y: hy, w: hw, h: hh };
+      button(s, { x: hx, y: hy, w: hw, h: hh, label: VOICE.hintButton, color: 0x3a3150, size: 17, onTap: () => this.useHint() }, this.layer);
+      this.layer.add(text(s, hx + hw / 2, hy + hh + 4, VOICE.hintNote, 10, '#d8cdee').setOrigin(0.5, 0));
+    }
     // The arrow pad: a cross, bottom left.
     const cx = MARGIN + ARROW_R * 3 + 4;
     const cy = height - MARGIN - ARROW_R * 3 - 4;
@@ -451,6 +575,7 @@ export class KataPad {
       if (i < NUMBER_KEYS.length) on(NUMBER_KEYS[i], () => this.tapMove(m.id));
     });
     on('ESC', () => this.hooks.quit());
+    if (!this.watch) on('H', () => this.useHint());
   }
 
   // ---- taps
@@ -511,7 +636,7 @@ export class KataPad {
   }
 
   /** The finish card: misses, the time if timed, and the bests. "Again" plays the same kata. */
-  showResult(o: { wrong: number; ms: number | null; best: KataBest; newBestTime: boolean; newFewest: boolean; coins?: number; firstClean?: boolean; again: () => void; done: () => void }): void {
+  showResult(o: { wrong: number; ms: number | null; best: KataBest; newBestTime: boolean; newFewest: boolean; coins?: number; firstClean?: boolean; hinted?: boolean; again: () => void; done: () => void }): void {
     const s = this.scene;
     const { width, height } = view(s);
     const cw = Math.min(380, width - 2 * MARGIN);
@@ -521,7 +646,7 @@ export class KataPad {
     g.fillStyle(0x221a33, 0.96).fillRoundedRect(-cw / 2, -ch / 2, cw, ch, 18).lineStyle(3, GOLD, 0.8).strokeRoundedRect(-cw / 2, -ch / 2, cw, ch, 18);
     c.add(g);
     c.add(text(s, 0, -ch / 2 + 14, 'Kata complete!', 24, '#ffd166').setOrigin(0.5, 0));
-    const lines = [o.wrong === 0 ? 'No misses. Clean form!' : `Misses: ${o.wrong}`];
+    const lines = [o.hinted ? (o.wrong === 0 ? VOICE.hintedResult : `${VOICE.hintedResult}  Misses: ${o.wrong}`) : o.wrong === 0 ? 'No misses. Clean form!' : `Misses: ${o.wrong}`];
     if (o.ms !== null) lines.push(`Time: ${formatKataTime(o.ms)}`);
     const bests: string[] = [];
     if (o.newFewest) bests.push('Fewest misses yet!');
@@ -545,10 +670,11 @@ export class KataPad {
     const steps = this.kata.steps.length;
     this.stepText.setText(r.index >= r.beats.length ? `Step ${steps} of ${steps}` : `Step ${beat.step} of ${steps}`);
     this.missText.setText(`Misses: ${r.wrong}`);
+    if (this.watch) this.stepText.setText(`${VOICE.watchTitle}: step ${this.demoStep} of ${steps}`);
     const hint = kataHint(r);
-    const glowKey = hint ? ('dir' in hint ? hint.dir : hint.move) : null;
+    const glowKey = this.demoKey ?? (hint ? ('dir' in hint ? hint.dir : hint.move) : null);
     for (const b of this.buttons) {
-      const on = b.key === glowKey || (b.key === r.dir && DIRS.includes(b.key as Facing));
+      const on = b.key === glowKey || (!this.watch && b.key === r.dir && DIRS.includes(b.key as Facing));
       if (b.glow.visible !== on) {
         b.glow.setVisible(on);
         this.scene.tweens.killTweensOf(b.glow);

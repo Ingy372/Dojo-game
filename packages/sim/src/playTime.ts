@@ -33,21 +33,32 @@ export function playTimeUp(clock: PlayClock, limitMinutes: number): boolean {
   return limitMinutes > 0 && clock.playedMs >= limitMinutes * 60_000;
 }
 
-/** A grown-up gate question: "what is a + b?" with 4 choices, one right. `rand` returns [0, 1). */
+/**
+ * A grown-up gate question: "type forty-seven plus twenty-six" (Grok playtest Nov 23, P2: four choices let an
+ * 8-year-old guess or work it out). Two two-digit numbers written in words, the answer typed on a keypad with no
+ * choices to pick from. `rand` returns [0, 1).
+ */
 export interface GateQuestion {
   a: number;
   b: number;
+  /** a and b in words, for the question line. */
+  aWords: string;
+  bWords: string;
   answer: number;
-  choices: number[];
 }
 
 export function makeGateQuestion(rand: () => number): GateQuestion {
-  const a = 12 + Math.floor(rand() * 8);
-  const b = 6 + Math.floor(rand() * 4);
-  const answer = a + b;
-  const wrong = [answer - 10, answer + 1, answer - 2, answer + 10, answer - 1].filter((n) => n > 0);
-  const picks = new Set<number>([answer]);
-  while (picks.size < 4) picks.add(wrong[Math.floor(rand() * wrong.length)]);
-  const choices = [...picks].sort((x, y) => x - y);
-  return { a, b, answer, choices };
+  const a = 21 + Math.floor(rand() * 29);
+  const b = 21 + Math.floor(rand() * 29);
+  return { a, b, aWords: numberWords(a), bWords: numberWords(b), answer: a + b };
+}
+
+const ONES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+/** 0-99 in words: 47 -> "forty-seven". */
+export function numberWords(n: number): string {
+  if (n < 20) return ONES[n];
+  const t = TENS[Math.floor(n / 10)];
+  return n % 10 ? `${t}-${ONES[n % 10]}` : t;
 }

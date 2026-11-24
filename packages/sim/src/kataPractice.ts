@@ -78,10 +78,14 @@ export interface KataRun {
   wrong: number;
   /** Wrong taps on this beat (the hint shows from KATA_HINT_AFTER). */
   missesHere: number;
+  /** Jay, Nov 24: the Hint button was used on this beat (the next arrow or move glows). */
+  hintHere: boolean;
+  /** The Hint button was used anywhere in this run: it pays like a run with mistakes and sets no bests. */
+  hinted: boolean;
 }
 
 export function newKataRun(k: KataDef): KataRun {
-  return { beats: kataBeats(k), index: 0, dir: null, wrong: 0, missesHere: 0 };
+  return { beats: kataBeats(k), index: 0, dir: null, wrong: 0, missesHere: 0, hintHere: false, hinted: false };
 }
 
 export const kataDone = (r: KataRun): boolean => r.index >= r.beats.length;
@@ -117,14 +121,26 @@ export function tapKataMove(r: KataRun, move: string): MoveResult {
   r.index++;
   r.dir = null;
   r.missesHere = 0;
+  r.hintHere = false;
   return 'ok';
 }
 
 /** What should glow as a hint after a couple of misses: the arrow, or (once it is chosen) the move. */
 export function kataHint(r: KataRun): { dir: Facing } | { move: string } | null {
-  if (kataDone(r) || r.missesHere < KATA_HINT_AFTER) return null;
+  if (kataDone(r) || (r.missesHere < KATA_HINT_AFTER && !r.hintHere)) return null;
   const b = r.beats[r.index];
   return r.dir === null ? { dir: b.dir } : { move: b.move };
+}
+
+/**
+ * Jay, Nov 24: "show me the next move". Lights the next arrow (or, once it is tapped, the move) for this beat. The run
+ * is marked hinted: it pays like a run with mistakes and sets no bests. Null once the kata is done.
+ */
+export function askKataHint(r: KataRun): { dir: Facing } | { move: string } | null {
+  if (kataDone(r)) return null;
+  r.hintHere = true;
+  r.hinted = true;
+  return kataHint(r);
 }
 
 /** A kata's best results, kept in the save. */
@@ -141,8 +157,10 @@ export interface KataBest {
  * Folds one finished run into the best results. `ms` is null when the time trial was off.
  * `newFewest` is only true when an earlier finish is beaten (the first finish is not a "new best").
  */
-export function recordKataRun(prev: KataBest | undefined, wrong: number, ms: number | null): { best: KataBest; newBestTime: boolean; newFewest: boolean } {
+export function recordKataRun(prev: KataBest | undefined, wrong: number, ms: number | null, hinted = false): { best: KataBest; newBestTime: boolean; newFewest: boolean } {
   const p = prev ?? { bestMs: null, fewestWrong: null, runs: 0 };
+  // A run that used the Hint button counts as played, but sets no bests (Jay, Nov 24).
+  if (hinted) return { best: { ...p, runs: p.runs + 1 }, newBestTime: false, newFewest: false };
   const fasterTime = ms !== null && (p.bestMs === null || ms < p.bestMs);
   const fewer = p.fewestWrong === null || wrong < p.fewestWrong;
   return {

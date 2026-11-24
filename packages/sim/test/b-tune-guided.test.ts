@@ -1,4 +1,4 @@
-// B-TUNE-GUIDED: Guided enemies hit softer (Power x0.75, rounded, at least 1). Health never changes.
+// B-TUNE-GUIDED: Guided enemies hit softer (Power x0.7 since Nov 24, was x0.75, rounded, at least 1). Health never changes.
 import { describe, expect, it } from 'vitest';
 import { DIFFICULTY, buildTraining, characterSetup, createWorld, loadEnemy, loadFeed, loadRoom, newProfile, type Difficulty } from '../src';
 import bruteData from '../../../content/enemies/brute.json';
@@ -22,14 +22,14 @@ const enemyOn = (difficulty: Difficulty, types: Record<string, ReturnType<typeof
 
 describe('B-TUNE-GUIDED enemyPowerScale', () => {
   it('Guided is 0.75 and the other settings are 1.0', () => {
-    expect(DIFFICULTY.guided.enemyPowerScale).toBe(0.75);
+    expect(DIFFICULTY.guided.enemyPowerScale).toBe(0.7); // Jay, Nov 24: 0.75 -> 0.7 when automatic blocking went away
     expect(DIFFICULTY.standard.enemyPowerScale).toBe(1);
     expect(DIFFICULTY.challenge.enemyPowerScale).toBe(1);
   });
 
   it('Guided scales Power in a fight with no belt scale (practice rooms), and keeps Health', () => {
     const g = enemyOn('guided');
-    expect(g.power).toBe(Math.round(brute.power * 0.75));
+    expect(g.power).toBe(Math.round(brute.power * DIFFICULTY.guided.enemyPowerScale));
     expect(g.maxHealth).toBe(brute.maxHealth);
   });
 
@@ -43,7 +43,7 @@ describe('B-TUNE-GUIDED enemyPowerScale', () => {
     const s = enemyOn('standard', { brute }, sc);
     const g = enemyOn('guided', { brute }, sc);
     expect(s.power).toBe(Math.round(brute.power * 2));
-    expect(g.power).toBe(Math.round(brute.power * 2 * 0.75));
+    expect(g.power).toBe(Math.round(brute.power * 2 * DIFFICULTY.guided.enemyPowerScale));
     expect(g.maxHealth).toBe(s.maxHealth);
   });
 
@@ -53,7 +53,7 @@ describe('B-TUNE-GUIDED enemyPowerScale', () => {
 
   it('scales a disarmed weapon too', () => {
     const w = enemyOn('guided', { brute: bopper }).weapon!;
-    expect(w.disarmedPower).toBe(Math.max(1, Math.round(bopper.weapon!.disarmedPower * 0.75)));
+    expect(w.disarmedPower).toBe(Math.max(1, Math.round(bopper.weapon!.disarmedPower * DIFFICULTY.guided.enemyPowerScale)));
   });
 });
 
