@@ -98,13 +98,12 @@ describe('PB-02 family ranks', () => {
     expect(equippedSealEffects(t, fams, ['throw', 'nope'])).toEqual([]);
   });
 
-  it('characterSetup: no loadout = no Seals; with Seals in the slots = those families only', () => {
+  it('Tool Belt (Nov 24): Seals in the slots no longer add effects to a fight; tools do instead', () => {
     const t = training(yellow);
     const none = characterSetup(newProfile(), t, content.abilities);
     const guarded = characterSetup({ ...newProfile(), loadout: { ...emptyLoadout(), seals: ['guard'] } }, t, content.abilities);
-    expect(guarded.effects.length).toBeGreaterThan(none.effects.length);
-    for (const e of familyEffects(fam('guard'), signedOffTechniques(t))) expect(guarded.effects).toContainEqual(e);
-    for (const e of familyEffects(fam('counter'), signedOffTechniques(t))) expect(guarded.effects).not.toContainEqual(e);
+    expect(guarded.effects).toEqual(none.effects);
+    for (const e of familyEffects(fam('guard'), signedOffTechniques(t))) expect(guarded.effects).not.toContainEqual(e);
   });
 });
 

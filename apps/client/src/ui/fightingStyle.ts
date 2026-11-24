@@ -13,7 +13,11 @@ export const STYLE_WORDS = words;
 
 /** OV-B1: the kid line for one Sensei's Pick result, with real move names. */
 export function pickLineText(l: PickLine, abilities: AbilityContent): string {
-  const name = (id: string) => (l.slot === 'strike' ? abilities.strikeDefs.find((s) => s.id === id)?.name : abilities.families.find((f) => f.id === id)?.name) ?? id;
+  const toolName = (id: string) => {
+    const t = abilities.tools.find((x) => String(x.technique) === id);
+    return t ? `#${t.technique} ${t.name}` : undefined;
+  };
+  const name = (id: string) => (l.slot === 'strike' ? abilities.strikeDefs.find((s) => s.id === id)?.name : l.slot === 'tool' ? toolName(id) : abilities.families.find((f) => f.id === id)?.name) ?? id;
   const t = words.senseiPick;
   const line = l.kind === 'added' ? t.added : l.kind === 'swapped' ? t.swapped : t.ready;
   return line.replace('{move}', name(l.move)).replace('{old}', l.out ? name(l.out) : '');

@@ -6,6 +6,7 @@ import {
   buildTraining,
   canHold,
   characterSetup,
+  equippedSealEffects,
   createWorld,
   emptyLoadout,
   isHeld,
@@ -43,7 +44,8 @@ function setup(seals: string[], staggerTicks?: number): PlayerSetup {
   const feed = loadFeed(green);
   const t = buildTraining(feed, content.abilities, { ms: Date.parse(feed.asOf), weekday: 3 });
   const c = characterSetup({ ...newProfile(), loadout: { ...emptyLoadout(), seals } }, t, content.abilities);
-  const mods = modsFrom(c.effects, TICKS_PER_SECOND);
+  // Tool Belt (Nov 24): Seals no longer reach fights; this file tests the same mechanics as always-on mods (as Insights or gear give them).
+  const mods = modsFrom([...c.effects, ...equippedSealEffects(t, content.abilities.families, seals)], TICKS_PER_SECOND);
   return { ...c, power: c.power - trainingStats(t).power, mods: staggerTicks === undefined ? mods : { ...mods, staggerTicks } };
 }
 

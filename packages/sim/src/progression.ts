@@ -7,7 +7,7 @@ import type { Effect } from './effects';
 import type { FeedBelt } from './feed';
 import { playerStats, type Loadout, type Profile } from './profile';
 import { earnedPicks, normalizeSlots, sealSlots, type LoadoutEarned } from './loadout';
-import { equippedSealEffects } from './sealFamilies';
+import { toolPockets, toolSetups } from './tools';
 import { kataPowerEffects, resolveKataPowerId } from './kataPowers';
 import { equippedStrikeSetup, resolveStrikeId } from './strikes';
 import type { RunSummary } from './run';
@@ -125,10 +125,8 @@ export interface CharacterSetup extends PlayerSetup {
 export function characterSetup(profile: Profile, training: TrainingState, abilities: AbilityContent): CharacterSetup {
   const gear = playerStats(profile);
   const level = effectiveLevel(profile, training);
-  // PB-02: Seals are the families in the student's Seal slots, at the student's rank in each. No
-  // slot filled (or no family earned) means no Seal effects.
+  // Tool Belt: Seals no longer apply; the tools in the pockets fire in fights instead.
   const loadout = normalizeLoadout(profile.loadout, training, abilities, profile.grandfatheredStances);
-  const seals = equippedSealEffects(training, abilities.families, loadout?.seals ?? []);
   // PB-04: the one kata power in the Kata slot (a placeholder adds nothing).
   const kata = kataPowerEffects(abilities.kataPowers, loadout?.kata ?? null);
   // R-BAL-12: real training adds whole-number stats on top of gear and level.
@@ -140,7 +138,8 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
     guard: gear.guard + trained.guard,
     // B-TUNE-GUIDED: a testing fixture's pinned stats replace the worked-out ones.
     ...training.pinnedStats,
-    effects: [...seals, ...kata, ...gear.effects],
+    effects: [...kata, ...gear.effects],
+    tools: toolSetups(abilities.tools, loadout?.tools ?? []),
     // PB-03: the Strike is the one in the Strike slot (Spin Kick when empty). The old always-on Strike upgrades are retired.
     strike: equippedStrikeSetup(abilities.strikeDefs, loadout?.strike ?? null),
     ...loadoutAbilities(profile.loadout, training, abilities, profile.grandfatheredStances),
@@ -159,7 +158,7 @@ export function normalizeLoadout(loadout: Loadout | null, training: TrainingStat
   // PB-03: an old Strike id means the Strike with the same kick combo number (`resolveStrikeId`).
   // PB-04: a kata id (saved before kata powers existed) means that kata's power.
   const resolved = { ...loadout, strike: resolveStrikeId(abilities.strikeDefs, loadout.strike), kata: resolveKataPowerId(abilities.kataPowers, loadout.kata) };
-  return { stance: ok ? loadout.stance : null, virtue: loadout.virtue, ...normalizeSlots(resolved, earned, sealSlots(training.tier)) };
+  return { stance: ok ? loadout.stance : null, virtue: loadout.virtue, ...normalizeSlots(resolved, earned, sealSlots(training.tier), toolPockets(training)) };
 }
 
 /**

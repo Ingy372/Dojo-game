@@ -6,6 +6,7 @@
       "power": 10,
       "guard": 0,
       "effects": [],
+      "tools": [],
       "strike": {
         "id": "spin-kick",
         "focusCost": 30,
@@ -503,6 +504,7 @@
       "power": 10,
       "guard": 0,
       "effects": [],
+      "tools": [],
       "strike": {
         "id": "spin-kick",
         "focusCost": 30,
@@ -1000,6 +1002,7 @@
       "power": 13,
       "guard": 7,
       "effects": [],
+      "tools": [],
       "strike": {
         "id": "spin-kick",
         "focusCost": 30,
@@ -1521,6 +1524,7 @@
       "power": 13,
       "guard": 7,
       "effects": [],
+      "tools": [],
       "strike": {
         "id": "spin-kick",
         "focusCost": 30,
@@ -2042,6 +2046,7 @@
       "power": 23,
       "guard": 19,
       "effects": [],
+      "tools": [],
       "strike": {
         "id": "spin-kick",
         "focusCost": 30,
@@ -2597,6 +2602,7 @@
       "power": 23,
       "guard": 19,
       "effects": [],
+      "tools": [],
       "strike": {
         "id": "spin-kick",
         "focusCost": 30,
@@ -3152,6 +3158,7 @@
       "power": 37,
       "guard": 3,
       "effects": [],
+      "tools": [],
       "strike": {
         "id": "spin-kick",
         "focusCost": 30,
@@ -3724,6 +3731,7 @@
       "power": 37,
       "guard": 3,
       "effects": [],
+      "tools": [],
       "strike": {
         "id": "spin-kick",
         "focusCost": 30,

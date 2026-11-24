@@ -4,7 +4,9 @@
 // kata power (PB-04).
 
 import type { AbilityContent } from './abilities';
-import { SEAL_SLOTS_BY_TIER } from './config';
+import { SEAL_SLOTS_BY_TIER, TOOL_BELT } from './config';
+import type { SealFamilyDef } from './abilities';
+import { earnedTools } from './tools';
 import { emptyLoadout, type Loadout, type Profile } from './profile';
 import { unlockedFamilies } from './sealFamilies';
 import { earnedKataPowers } from './kataPowers';
@@ -28,6 +30,8 @@ export interface LoadoutEarned {
   strikes: readonly string[];
   families: readonly string[];
   kataPowers: readonly string[];
+  /** Tool Belt: technique numbers with an earned tool, oldest first. */
+  tools: readonly number[];
 }
 
 /**
@@ -37,7 +41,7 @@ export interface LoadoutEarned {
  */
 export function earnedPicks(training: TrainingState, abilities: AbilityContent): LoadoutEarned {
   const strikes = earnedStrikes(training, abilities.strikeDefs);
-  return { strikes, families: unlockedFamilies(training, abilities.families), kataPowers: earnedKataPowers(training, abilities.kataPowers) };
+  return { strikes, families: unlockedFamilies(training, abilities.families), kataPowers: earnedKataPowers(training, abilities.kataPowers), tools: earnedTools(training, abilities.tools) };
 }
 
 /**
@@ -46,9 +50,12 @@ export function earnedPicks(training: TrainingState, abilities: AbilityContent):
  * past `slots` are dropped from the end. Never an error. Stance and Virtue are left to
  * `normalizeLoadout`.
  */
-export function normalizeSlots(loadout: Loadout, earned: LoadoutEarned, slots: number): Pick<Loadout, 'strike' | 'kata' | 'seals'> {
+export function normalizeSlots(loadout: Loadout, earned: LoadoutEarned, slots: number, pockets: number = TOOL_BELT.maxPockets): Pick<Loadout, 'strike' | 'kata' | 'seals' | 'tools'> {
   const seals = loadout.seals.filter((f, i, all) => earned.families.includes(f) && all.indexOf(f) === i).slice(0, slots);
+  // Tool Belt: tools not earned or repeated are dropped, then any past the pockets from the end.
+  const tools = (loadout.tools ?? []).filter((n, i, all) => earned.tools.includes(n) && all.indexOf(n) === i).slice(0, pockets);
   return {
+    tools,
     strike: loadout.strike !== null && earned.strikes.includes(loadout.strike) ? loadout.strike : null,
     kata: loadout.kata !== null && earned.kataPowers.includes(loadout.kata) ? loadout.kata : null,
     seals,
@@ -143,53 +150,54 @@ export function seedStrikeSlot(profile: Profile, abilities: AbilityContent, earn
  */
 export interface PickLine {
   kind: 'added' | 'swapped' | 'ready';
-  slot: 'strike' | 'seal';
+  slot: 'strike' | 'seal' | 'tool';
   move: string;
   out?: string;
 }
 
 /**
- * OV-B1 (review 6.3): after a sign-off, the newest Kick goes in the Strike slot and the newest
- * Defense families go in Seal slots; when the slots are full the oldest Seal rests. With Sensei's
- * Pick off nothing moves. Each move is handled once (`picksKnown`); the first check only records
- * what is already earned. Returns one line per new move, in the order earned.
+ * OV-B1 (review 6.3): after a sign-off, the newest Kick goes in the Strike slot and (Tool Belt) the
+ * newest tools go in pockets; when the pockets are full the oldest tool rests. Seal families are no
+ * longer picked (the Tool Belt replaced them). With Sensei's Pick off nothing moves. Each move is
+ * handled once (`picksKnown`; tools as "tool-<n>"); the first check only records what is already
+ * earned. Returns one line per new move, in the order earned (a tool's move is its number as text).
  */
-export function senseiPick(profile: Profile, earned: LoadoutEarned, tier: number): PickLine[] {
+export function senseiPick(profile: Profile, earned: LoadoutEarned, tier: number, pockets: number = TOOL_BELT.startPockets): PickLine[] {
+  const toolKey = (n: number) => `tool-${n}`;
   if (profile.picksKnown === null) {
-    profile.picksKnown = [...earned.strikes, ...earned.families];
+    profile.picksKnown = [...earned.strikes, ...earned.tools.map(toolKey)];
     return [];
   }
   const known = new Set(profile.picksKnown);
   const strikes = earned.strikes.filter((id) => !known.has(id));
-  const families = earned.families.filter((id) => !known.has(id));
-  if (strikes.length === 0 && families.length === 0) return [];
-  profile.picksKnown = [...profile.picksKnown, ...strikes, ...families];
+  const tools = earned.tools.filter((n) => !known.has(toolKey(n)));
+  if (strikes.length === 0 && tools.length === 0) return [];
+  profile.picksKnown = [...profile.picksKnown, ...strikes, ...tools.map(toolKey)];
   const ready = (slot: PickLine['slot']) => (move: string): PickLine => ({ kind: 'ready', slot, move });
-  if (!profile.senseiPick) return [...strikes.map(ready('strike')), ...families.map(ready('seal'))];
+  if (!profile.senseiPick) return [...strikes.map(ready('strike')), ...tools.map(String).map(ready('tool'))];
 
   const lines: PickLine[] = strikes.slice(0, -1).map(ready('strike'));
   const base = profile.loadout ?? emptyLoadout();
-  const kept = normalizeSlots(base, earned, sealSlots(tier));
+  const kept = normalizeSlots(base, earned, sealSlots(tier), pockets);
   let strike = kept.strike;
   const newest = strikes[strikes.length - 1];
   if (newest !== undefined) {
     lines.push(strike === null ? { kind: 'added', slot: 'strike', move: newest } : { kind: 'swapped', slot: 'strike', move: newest, out: strike });
     strike = newest;
   }
-  const slots = sealSlots(tier);
-  const fit = families.length > slots ? families.length - slots : 0;
-  lines.push(...families.slice(0, fit).map(ready('seal')));
-  let seals = kept.seals;
-  for (const f of families.slice(fit)) {
-    if (seals.length < slots) {
-      lines.push({ kind: 'added', slot: 'seal', move: f });
-      seals = [...seals, f];
+  const fit = tools.length > pockets ? tools.length - pockets : 0;
+  lines.push(...tools.slice(0, fit).map(String).map(ready('tool')));
+  let pocketed = kept.tools;
+  for (const n of tools.slice(fit)) {
+    if (pocketed.length < pockets) {
+      lines.push({ kind: 'added', slot: 'tool', move: String(n) });
+      pocketed = [...pocketed, n];
     } else {
-      lines.push({ kind: 'swapped', slot: 'seal', move: f, out: seals[0] });
-      seals = [...seals.slice(1), f];
+      lines.push({ kind: 'swapped', slot: 'tool', move: String(n), out: String(pocketed[0]) });
+      pocketed = [...pocketed.slice(1), n];
     }
   }
-  profile.loadout = { ...base, strike, seals };
+  profile.loadout = { ...base, strike, tools: pocketed };
   return lines;
 }
 
@@ -201,4 +209,49 @@ export function dismissSlotNote(profile: Profile): void {
 /** The earned picks and the belt tier for a student, ready for `seedLoadoutV2`. */
 export function seedInputFor(training: TrainingState, abilities: AbilityContent): LoadoutSeedInput {
   return { tier: training.tier, earned: earnedPicks(training, abilities) };
+}
+
+export type EquipToolResult = 'ok' | 'already' | 'notEarned' | 'full';
+
+/**
+ * Tool Belt: puts a tool in a free pocket. 'notEarned' = its technique isn't signed off, 'already' =
+ * it is in a pocket, 'full' = every pocket is used (the screen asks which one to swap). The loadout
+ * is returned unchanged unless the result is 'ok'.
+ */
+export function equipTool(loadout: Loadout, technique: number, earned: readonly number[], pockets: number): { loadout: Loadout; result: EquipToolResult } {
+  if (!earned.includes(technique)) return { loadout, result: 'notEarned' };
+  if (loadout.tools.includes(technique)) return { loadout, result: 'already' };
+  if (loadout.tools.length >= pockets) return { loadout, result: 'full' };
+  return { loadout: { ...loadout, tools: [...loadout.tools, technique] }, result: 'ok' };
+}
+
+/** Tool Belt: swaps the tool in pocket `out` for `technique`. Unchanged if either is not valid. */
+export function swapTool(loadout: Loadout, out: number, technique: number, earned: readonly number[]): Loadout {
+  if (!earned.includes(technique) || loadout.tools.includes(technique) || !loadout.tools.includes(out)) return loadout;
+  return { ...loadout, tools: loadout.tools.map((n) => (n === out ? technique : n)) };
+}
+
+/** Tool Belt: takes a tool out of its pocket. Always allowed. */
+export function removeTool(loadout: Loadout, technique: number): Loadout {
+  return { ...loadout, tools: loadout.tools.filter((n) => n !== technique) };
+}
+
+/**
+ * Tool Belt: the one-time conversion of a save from before tools (guarded by `toolBeltSeeded`).
+ * Pockets fill with the earned tools of the Seal families that were equipped (in slot order, each
+ * family's techniques in number order), then the newest earned tools, up to `pockets`. Every earned
+ * tool is marked known to Sensei's Pick so none of them shows again as new. Returns true if it ran.
+ */
+export function seedToolBelt(profile: Profile, earned: readonly number[], pockets: number, families: readonly SealFamilyDef[]): boolean {
+  if (profile.toolBeltSeeded) return false;
+  const base = profile.loadout ?? emptyLoadout();
+  const fromSeals = base.seals.flatMap((id) => (families.find((f) => f.id === id)?.ranks.map((r) => r.technique) ?? []).filter((n) => earned.includes(n)).sort((x, y) => x - y));
+  const order = [...fromSeals, ...[...earned].reverse()];
+  const tools = order.filter((n, i) => order.indexOf(n) === i).slice(0, pockets);
+  const head = tools.filter((n) => fromSeals.includes(n));
+  const newest = tools.filter((n) => !fromSeals.includes(n)).sort((x, y) => x - y);
+  if (tools.length > 0 || profile.loadout) profile.loadout = { ...base, tools: [...head, ...newest] };
+  if (profile.picksKnown !== null) profile.picksKnown = [...profile.picksKnown, ...earned.map((n) => `tool-${n}`).filter((k) => !profile.picksKnown!.includes(k))];
+  profile.toolBeltSeeded = true;
+  return true;
 }

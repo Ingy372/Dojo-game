@@ -25,7 +25,7 @@ function oldSave(loadout: unknown = { stance: 'cat-stance', virtue: 'second-wind
   return { ...p, runsPlayed: 12, stanceMigrated: true, loadout };
 }
 // The families this student earned, oldest first (PB-02 supplies the real list).
-const input = (tier: number, families: string[], strikes: string[] = []): LoadoutSeedInput => ({ tier, earned: { strikes, families, kataPowers: [] } });
+const input = (tier: number, families: string[], strikes: string[] = []): LoadoutSeedInput => ({ tier, earned: { strikes, families, kataPowers: [], tools: [] } });
 
 describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
   it('fills Seal slots with the families earned first, up to the belt (White 2, Yellow 2, Orange 3)', () => {
@@ -42,7 +42,7 @@ describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
 
   it('keeps the Stance and Virtue, and leaves kata empty', () => {
     const r = migrateLoadoutV2({ ...emptyLoadout(), stance: 'cat-stance', virtue: 'second-wind' }, input(2, ['escape', 'counter'])).loadout!;
-    expect(r).toMatchObject({ stance: 'cat-stance', virtue: 'second-wind', kata: null, seals: ['escape', 'counter'] });
+    expect(r).toMatchObject({ stance: 'cat-stance', virtue: 'second-wind', kata: null, seals: ['escape', 'counter'], tools: [] });
   });
 
   it('a student with nothing earned and no loadout stays null, with no note', () => {
@@ -67,7 +67,7 @@ describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
     expect(seedLoadoutV2(p, input(2, ['escape', 'counter', 'guard'], ['jumping-spins']))).toBe(true);
     expect(p.loadoutV2).toBe(true);
     expect(p.showSlotNote).toBe(true);
-    expect(p.loadout).toEqual({ stance: 'cat-stance', virtue: 'second-wind', strike: 'jumping-spins', kata: null, seals: ['escape', 'counter'] });
+    expect(p.loadout).toEqual({ stance: 'cat-stance', virtue: 'second-wind', strike: 'jumping-spins', kata: null, seals: ['escape', 'counter'], tools: [] });
     const once = copy(p);
     expect(seedLoadoutV2(p, input(2, ['escape', 'counter', 'guard'], ['jumping-spins']))).toBe(false);
     expect(p).toEqual(once);
@@ -96,10 +96,10 @@ describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
   it('an old save with no loadout at all is seeded too', () => {
     const p = loadProfile(oldSave(null));
     seedLoadoutV2(p, input(2, ['escape', 'counter']));
-    expect(p.loadout).toEqual({ stance: null, virtue: null, strike: null, kata: null, seals: ['escape', 'counter'] });
+    expect(p.loadout).toEqual({ stance: null, virtue: null, strike: null, kata: null, seals: ['escape', 'counter'], tools: [] });
   });
 
-  it('Power, Health and the Stances are unchanged by the seed; only the Seal effects come from the slots (PB-02)', () => {
+  it('Power, Health and the Stances are unchanged by the seed; Seals in slots add no effects since the Tool Belt (Nov 24)', () => {
     for (const fixture of [yellow, green, orange]) {
       const t = training(fixture);
       const before = loadProfile(oldSave());
@@ -110,7 +110,7 @@ describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
       const { effects: a, strike: _s, ...rest } = characterSetup(after, t, content.abilities);
       const { effects: b, strike: _b, ...restBefore } = characterSetup(before, t, content.abilities);
       expect(rest).toEqual(restBefore);
-      expect(a.length).toBeGreaterThan(b.length);
+      expect(a).toEqual(b);
     }
   });
 

@@ -115,7 +115,8 @@ describe('PB-05 Fighting Style screen', () => {
     expect(swapped.session.loadout?.seals).not.toContain(families[0]);
   });
 
-  it('does not give the push until Advancing is in a slot', () => {
+  // Tool Belt (Nov 24): a Seal in a slot no longer changes a fight (Task 7 replaces this screen's Seal tray with the Tool Belt).
+  it('a Seal in a slot no longer gives the push', () => {
     // Yellow's #4 is still catch-up, so Advancing is not earned there. Orange has it signed off.
     const t = belts.orange;
     expect(buildStyle(t, content.abilities, null).trays.seal.find((p) => p.id === 'advancing')?.earned).toBe(true);
@@ -124,7 +125,7 @@ describe('PB-05 Fighting Style screen', () => {
     const got = equip(t, null, 'seal', 0, 'advancing');
     expect(got.taps).toBeLessThanOrEqual(3);
     const after = characterSetup({ ...newProfile(), loadout: got.session.loadout }, t, content.abilities);
-    expect(after.effects.some((e) => e.type === 'counterPush' && e.amount === 1.5)).toBe(true);
+    expect(after.effects.some((e) => e.type === 'counterPush')).toBe(false);
   });
 
   it('a chosen kata power is only a placeholder (PB-04): the fight does not change', () => {

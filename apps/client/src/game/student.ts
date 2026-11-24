@@ -2,7 +2,7 @@
 // from the fake profiles in fixtures/, picked on the hidden testing screen. Their dates
 // are moved so each profile looks "fresh" (its last update is now).
 
-import { applyBeltEntry, buildTraining, earnedPicks, loadFeed, seedInputFor, seedLoadoutV2, seedStrikeSlot, shiftFeedDates, type StudentFeed, type TrainingState } from '@dojo/sim';
+import { applyBeltEntry, buildTraining, earnedPicks, earnedTools, loadFeed, seedInputFor, seedLoadoutV2, seedStrikeSlot, seedToolBelt, shiftFeedDates, toolPockets, type StudentFeed, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
 import { loadSave, writeSave } from './save';
 
@@ -72,10 +72,12 @@ export function currentTraining(): TrainingState {
  */
 export function seedLoadout(): boolean {
   const profile = loadSave();
-  if (profile.loadoutV2 && profile.strikeSeeded) return false;
+  if (profile.loadoutV2 && profile.strikeSeeded && profile.toolBeltSeeded) return false;
   const training = currentTraining();
   if (!profile.loadoutV2) seedLoadoutV2(profile, seedInputFor(training, CONTENT.abilities));
-  else seedStrikeSlot(profile, CONTENT.abilities, earnedPicks(training, CONTENT.abilities).strikes);
+  else if (!profile.strikeSeeded) seedStrikeSlot(profile, CONTENT.abilities, earnedPicks(training, CONTENT.abilities).strikes);
+  // Tool Belt: an older save's Seals become tools, once.
+  seedToolBelt(profile, earnedTools(training, CONTENT.abilities.tools), toolPockets(training), CONTENT.abilities.families);
   writeSave(profile);
   return true;
 }
