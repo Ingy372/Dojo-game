@@ -23,7 +23,21 @@ STAFF = {
     "michael": dict(face="05", grin=0.100, buff=True, hair="03", skin="#c98c62", hairc="#4a403b", gi="#f4f4f4", lapel="#e8e8e8", belt="#1b1b1f",
                     iris="#4a3020", beard="#a59e96", mustache=True, smile=True),
 }
+# Everyday people for the Street Smarts store (Jay, Nov 24): no gi and no belt, a shirt, trousers and shoes. The store
+# staff (worker, cashier) wear the store's blue vest with a white name tag, so kids can spot who works there.
+CIV = dict(
+    mom=dict(body="b", face="02", hair="14", skin="#e9b48f", hairc="#5a3a22", shirt="#d9577a", pants="#3d5a8a", shoes="#f4f4f4", iris="#5a7a4a", grin=0.07),
+    dad=dict(body="a", face="04", hair="05", skin="#d9a27a", hairc="#2e2420", shirt="#3f8f6a", pants="#4a4a55", shoes="#2a2a2a", iris="#4a3020", grin=0.08),
+    worker=dict(body="a", face="01", hair="07", skin="#8d5a3c", hairc="#1e1a18", shirt="#f2f2f2", pants="#2e3440", shoes="#202020", iris="#3a2418", grin=0.09, vest="#2f74c8"),
+    cashier=dict(body="b", face="05", hair="11", skin="#f0c8a8", hairc="#c8823a", shirt="#f6d55c", pants="#2e3440", shoes="#202020", iris="#4a6a8a", grin=0.07, vest="#2f74c8"),
+    shopper=dict(body="a", face="03", hair="09", skin="#e0b090", hairc="#6a4a30", shirt="#8a7a9a", pants="#7a6a52", shoes="#4a3a2a", iris="#4a3020"),
+    stranger=dict(body="b", face="06", hair="16", skin="#c08060", hairc="#2a2020", shirt="#e8a040", pants="#3d5a8a", shoes="#e8e8e8", iris="#3a2418"),
+)
+for k, v in CIV.items():
+    v.update(civ=True, gi=v["shirt"], lapel=v["shirt"], belt=v["shirt"])
+    STAFF[k] = v
 P = STAFF[a.who]
+CIVIL = bool(P.get("civ"))
 sc = bpy.context.scene
 rig = bpy.data.objects["MartialArtistRig"]
 root = bpy.data.objects["CHAR_ROOT"]
@@ -51,7 +65,7 @@ for c in list(bpy.data.collections):
     n = c.name
     if not n.startswith("L_"):
         continue
-    if (c.get("sprite_group") and n not in keep) or n.startswith("L_prop-") or n in ("L_belt-center", "L_belt-center-edge", "L_belt-sheen") or "tape" in n:
+    if (c.get("sprite_group") and n not in keep) or n.startswith("L_prop-") or n in ("L_belt-center", "L_belt-center-edge", "L_belt-sheen") or "tape" in n             or (CIVIL and n.startswith("L_belt")):
         drop.append(c)
 for c in drop:
     for ob in list(c.objects):
@@ -90,7 +104,12 @@ for ob in list(bpy.data.objects):
         if not m or m.name.startswith("OUTLINE") or not m.node_tree:
             continue
         hexc = None
-        if m.name.startswith("SKIN"):
+        base_name = ob.name.split(".")[0]
+        if CIVIL and m.name.startswith("SKIN") and base_name in ("foot", "ankle"):
+            hexc = P["shoes"]
+        elif CIVIL and m.name.startswith("GI") and base_name in ("gi_thigh", "gi_knee", "gi_shin"):
+            hexc = P["pants"]
+        elif m.name.startswith("SKIN"):
             hexc = P["skin"]
         elif m.name.startswith("HAIR"):
             hexc = P["hairc"]
@@ -407,6 +426,41 @@ if P.get("buff"):
                 w = mw @ v.co
                 v.co = inv @ Vector((c.x + (w.x - c.x) * sx, c.y + (w.y - c.y) * sy, c.z + (w.z - c.z) * sz))
 
+# ---- everyday clothes: no lapels (a plain shirt); the store staff's vest and name tag
+if CIVIL:
+    for o in [o for o in bpy.data.objects if o.name.startswith("gi_lapel")]:
+        bpy.data.objects.remove(o, do_unlink=True)
+if P.get("vest"):
+    vest_m = flat_mat("VEST_EDGE", P["vest"])
+    gi_src = next(m for m in bpy.data.materials if m.name.startswith("GI__"))
+    vest_body = tinted(bpy.data.materials[gi_src.name.split("__")[0]], P["vest"])
+    for part in ("gi_torso", "gi_skirt"):
+        src = bpy.data.objects[part]
+        # the outline shell's faces are turned inside out, so it grows along -normal
+        for name, push in ((part, 0.014), (part + "_outline", -0.014)):
+            o = bpy.data.objects.get(name)
+            if not o:
+                continue
+            v = o.copy(); v.data = o.data.copy(); v.name = name.replace(part, "vest_" + part)
+            for c in o.users_collection:
+                c.objects.link(v)
+            for vert in v.data.vertices:
+                vert.co += vert.normal * push
+            if not name.endswith("_outline"):
+                v.data.materials.clear(); v.data.materials.append(vest_body)
+    tor = bpy.data.objects["gi_torso"]
+    pts = [tor.matrix_world @ vv.co for vv in tor.data.vertices]
+    ymin = min(p.y for p in pts); zlo = min(p.z for p in pts); zhi = max(p.z for p in pts)
+    xs = [p.x for p in pts]; cx = (min(xs) + max(xs)) / 2; half = (max(xs) - min(xs)) / 2
+    tag_m = flat_mat("NAME_TAG", "#ffffff"); stripe_m = flat_mat("NAME_TAG_STRIPE", "#e8574a")
+    tz = zlo + (zhi - zlo) * 0.66; tx = cx + half * 0.38
+    for name, (w, h, dy), m_ in (("name_tag", (0.11, 0.075, 0.0), tag_m), ("name_tag_stripe", (0.11, 0.022, -0.004), stripe_m)):
+        me = bpy.data.meshes.new(name); bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1.0); bm.to_mesh(me); bm.free()
+        ob = bpy.data.objects.new(name, me); me.materials.append(m_)
+        zc = tz if name == "name_tag" else tz + 0.075 / 2 - 0.011
+        ob.location = (tx, ymin - 0.03 + dy, zc); ob.scale = (w, 0.012, h)
+        attach(ob, "chest")
+
 # ---- one flattened layer: every L_ collection merged into L_staff
 staff = bpy.data.collections.new("L_staff"); sc.collection.children.link(staff)
 staff["sprite_order"] = 0; staff["sprite_tint"] = False
@@ -474,9 +528,13 @@ def wave_pose(bn, t):
 
 make_action("npc_idle", 12, 6, idle_pose)
 make_action("npc_wave", 8, 10, wave_pose)
+if CIVIL:
+    # an easy walk (the hero's old walk, before it became a run), for walking round the store
+    wk = bpy.data.actions["walk_before_claude_run"]
+    wk.name = "npc_walk"; wk["sprite_fps"] = 12; wk["sprite_loop"] = True; wk.use_fake_user = True
 bow["sprite_loop"] = False; bow.use_fake_user = True
 for act in list(bpy.data.actions):
-    if act.name not in ("npc_idle", "npc_wave", "bow"):
+    if act.name not in ("npc_idle", "npc_wave", "bow", "npc_walk"):
         if "sprite_fps" in act:
             del act["sprite_fps"]
 rig.animation_data.action = bpy.data.actions["npc_idle"]

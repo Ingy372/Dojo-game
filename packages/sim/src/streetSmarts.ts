@@ -7,6 +7,32 @@ export interface ScenarioChoice {
   text: string;
   stars: number;
   next: string;
+  /** On a tap choice: the person (cast id) or place (room mark) the player taps for this answer. */
+  target?: string;
+}
+
+/** The cut-scene moves a stage cue can make (Nov 24: Street Smarts plays like a cut scene). */
+export const STAGE_ACTIONS = ['place', 'walk', 'face', 'emote', 'anim', 'hide', 'show', 'camera', 'pause'] as const;
+export type StageAction = (typeof STAGE_ACTIONS)[number];
+export const STAGE_EMOTES = ['question', 'toy', 'hearts', 'sound'] as const;
+export const STAGE_DIRS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'] as const;
+
+/**
+ * One cut-scene move, played in order with the others on its line (with: true runs alongside the one before).
+ * Marks (to, via, fit) are named spots in the scenario's room file; the client draws the moves, the rules only check them.
+ */
+export interface StageCue {
+  do: StageAction;
+  who?: string;
+  to?: string;
+  via?: string[];
+  dir?: string;
+  emote?: string;
+  anim?: string;
+  fit?: string[];
+  secs?: number;
+  speed?: 'walk' | 'hurry';
+  with?: boolean;
 }
 
 export interface ScenarioLine {
@@ -18,6 +44,12 @@ export interface ScenarioLine {
   choices?: ScenarioChoice[];
   /** Go back to the choice with this id (only on the last line of a retry branch). */
   retry?: string;
+  /** Cut-scene moves played when the line starts. */
+  stage?: StageCue[];
+  /** 'after': the words wait until the moves are done (default: they come with the moves). */
+  say?: 'with' | 'after';
+  /** The answers are picked by tapping people or places in the scene (each choice has a target). */
+  tap?: boolean;
 }
 
 export interface ScenarioScene {
@@ -29,6 +61,8 @@ export interface ScenarioScene {
 
 export interface Scenario {
   id: string;
+  /** The room the cut scene plays in (content/street-smarts/<room>-room.json), or '' for none. */
+  room: string;
   location: string;
   ageBand: string;
   topic: string;
@@ -46,8 +80,32 @@ export function loadScenario(data: unknown): Scenario {
   const d = data as Record<string, unknown>;
   const where = `Street Smarts "${String(d?.id)}"`;
   if (!d || typeof d.id !== 'string' || !Array.isArray(d.scenes) || d.scenes.length === 0) throw new Error(`${where}: needs an id and scenes`);
+  const cast = new Set(['player', ...((Array.isArray(d.characters) ? d.characters : []) as { id: string }[]).map((c) => c.id)]);
   const checkLine = (l: ScenarioLine, at: string) => {
     if (!l || typeof l.speaker !== 'string' || typeof l.text !== 'string' || l.text.trim() === '') throw new Error(`${where}: ${at} needs a speaker and text`);
+    if (l.say !== undefined && l.say !== 'with' && l.say !== 'after') throw new Error(`${where}: ${at} "say" must be "with" or "after"`);
+    if (l.stage !== undefined && !Array.isArray(l.stage)) throw new Error(`${where}: ${at} stage must be a list`);
+    (l.stage ?? []).forEach((c, i) => checkCue(c, `${at} stage ${i + 1}`));
+  };
+  const checkCue = (c: StageCue, at: string) => {
+    const bad = (why: string) => new Error(`${where}: ${at}: ${why}`);
+    if (!c || !(STAGE_ACTIONS as readonly string[]).includes(c.do)) throw bad(`unknown stage move "${c?.do}"`);
+    const needsWho = ['place', 'walk', 'face', 'anim', 'hide', 'show'].includes(c.do);
+    if (needsWho || c.who !== undefined) {
+      if (typeof c.who !== 'string' || !cast.has(c.who)) throw bad(`"${c.who}" isn't in the cast`);
+    }
+    if ((c.do === 'place' || c.do === 'walk') && typeof c.to !== 'string') throw bad(`${c.do} needs "to"`);
+    if (c.via !== undefined && (!Array.isArray(c.via) || c.via.some((m) => typeof m !== 'string'))) throw bad('"via" must be a list of marks');
+    if (c.dir !== undefined && !(STAGE_DIRS as readonly string[]).includes(c.dir)) throw bad(`unknown direction "${c.dir}"`);
+    if (c.do === 'face' && c.dir === undefined) throw bad('face needs "dir"');
+    if (c.do === 'emote') {
+      if (!(STAGE_EMOTES as readonly string[]).includes(String(c.emote))) throw bad(`unknown emote "${c.emote}"`);
+      if (c.who === undefined && typeof c.to !== 'string') throw bad('emote needs "who" or "to"');
+    }
+    if (c.do === 'anim' && typeof c.anim !== 'string') throw bad('anim needs "anim"');
+    if (c.do === 'camera' && (!Array.isArray(c.fit) || c.fit.length === 0)) throw bad('camera needs "fit"');
+    if (c.do === 'pause' && !(typeof c.secs === 'number' && c.secs > 0)) throw bad('pause needs "secs"');
+    if (c.speed !== undefined && c.speed !== 'walk' && c.speed !== 'hurry') throw bad('speed must be "walk" or "hurry"');
   };
   const scenes: ScenarioScene[] = [];
   const choiceIds = new Set<string>();
@@ -62,6 +120,7 @@ export function loadScenario(data: unknown): Scenario {
         if (!l.id) throw new Error(`${where}: a choice in ${raw.id} needs an id`);
         if (l.choices.length < 2 || l.choices.length > MAX_CHOICES) throw new Error(`${where}: ${l.id} needs 2-${MAX_CHOICES} choices`);
         if (!l.choices.some((c) => c.stars > 0)) throw new Error(`${where}: ${l.id} needs a good choice`);
+        if (l.tap && l.choices.some((c) => typeof c.target !== 'string' || !c.target)) throw new Error(`${where}: every answer to tap choice ${l.id} needs a target`);
         for (const c of l.choices) {
           if (typeof c.text !== 'string' || !Number.isInteger(c.stars) || c.stars < 0 || c.stars > 3) throw new Error(`${where}: ${l.id} has a bad choice`);
           if (!branches[c.next]) throw new Error(`${where}: ${l.id} goes to a missing branch "${c.next}"`);
@@ -77,13 +136,31 @@ export function loadScenario(data: unknown): Scenario {
         if (l.choices) throw new Error(`${where}: branch "${name}" can't hold a choice`);
         if (l.retry && (i !== lines.length - 1 || !ids.has(l.retry))) throw new Error(`${where}: branch "${name}" retries a choice that isn't in its scene`);
       });
+      // A not-best answer is talked over, never acted out.
+      if (lines[lines.length - 1].retry && lines.some((l) => l.stage?.length)) throw new Error(`${where}: retry branch "${name}" can't move anyone`);
     }
     scenes.push({ id: raw.id, kind: String(raw.kind ?? 'story'), lines: raw.lines, branches });
   }
   const starChoices = Array.isArray(d.starChoices) ? (d.starChoices as string[]) : [...choiceIds];
   for (const id of starChoices) if (!choiceIds.has(id)) throw new Error(`${where}: star choice "${id}" isn't in the script`);
   const max = Number((d.stars as { max?: unknown })?.max ?? starChoices.length);
-  return { id: d.id, location: String(d.location ?? ''), ageBand: String(d.ageBand ?? ''), topic: String(d.topic ?? ''), scenes, starChoices, maxStars: max };
+  return { id: d.id, room: String(d.room ?? ''), location: String(d.location ?? ''), ageBand: String(d.ageBand ?? ''), topic: String(d.topic ?? ''), scenes, starChoices, maxStars: max };
+}
+
+/** Every room mark a scenario's stage cues and tap answers use (so a test can check them against the room file). */
+export function stageMarks(sc: Scenario): string[] {
+  const cast = new Set<string>(['player']);
+  const marks = new Set<string>();
+  const lines = sc.scenes.flatMap((s) => [...s.lines, ...Object.values(s.branches).flat()]);
+  for (const l of lines)
+    for (const c of l.stage ?? []) {
+      if (c.who) cast.add(c.who);
+      if (c.to) marks.add(c.to);
+      for (const m of [...(c.via ?? []), ...(c.fit ?? [])]) marks.add(m);
+    }
+  // A tap answer on a person points at them; one on a place points at a mark.
+  for (const l of lines) for (const ch of l.tap ? (l.choices ?? []) : []) if (ch.target && !cast.has(ch.target)) marks.add(ch.target);
+  return [...marks].sort();
 }
 
 /** Where the player is in a scenario. Plain data, so it can be saved or sent. */
