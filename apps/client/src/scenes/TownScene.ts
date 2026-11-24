@@ -10,6 +10,7 @@ import { currentTraining } from '../game/student';
 import { addExitCue } from '../ui/exitCue';
 import { DPR, FONT, MIN_TAP, S2, TYPE, crisp, view } from '../ui/theme';
 import { TownSocial, type SocialPlayer } from '../ui/townSocial';
+import { TownMiniMap, placeSign, type MapPlace, type PlaceKind } from '../ui/townMap';
 import { playIntro } from '../ui/introCutscene';
 import type { RunState } from '@dojo/sim';
 import { button as roundButton } from '../ui/button';
@@ -24,6 +25,11 @@ export const TOWN_PACK = 'town';
 const WALK = loadTownWalk(townWalk);
 /** Every door in town: home, the Action Zone, and (Nov 23) the Street Smarts House. */
 const DOORS = [WALK.homeDoor, WALK.dojoDoor, ...(WALK.streetDoor ? [WALK.streetDoor] : [])];
+/** Jay, Nov 24: each door's picture on its sign and on the mini map. */
+const doorKind = (door: TownDoor): PlaceKind => (door === WALK.homeDoor ? 'home' : door === WALK.dojoDoor ? 'dojo' : 'street');
+/** The mini map's first row (the rows above are the hills) and where the Tower path ends, in room tiles. */
+const MAP_TOP_ROW = 4;
+const MAP_TOWER: Vec2 = { x: 30.3, y: 5.2 };
 
 /** The town's stage: the student's real belt tier. Test link `?townstage=N` shows another stage (never in beta builds). */
 export function currentTownStage(): number {
@@ -112,6 +118,8 @@ export class TownScene extends WalkScene {
   private shop: ShopScreen | null = null;
   /** Nov 23 (Jay): phrases and parties in town. */
   private social: TownSocial | null = null;
+  /** Jay, Nov 24: the mini map, top left. It shows the way; it never moves the player. */
+  private miniMap: TownMiniMap | null = null;
   /** Nov 23: the opening cutscene is playing (the camera and the hero belong to it). */
   private intro: { run: RunState } | null = null;
   private introRows = 7;
@@ -149,6 +157,7 @@ export class TownScene extends WalkScene {
     super.create(data);
     if (this.night) nightLight(this.hero, NIGHT_HERO_TINT);
     this.shop = null;
+    this.miniMap = null;
     this.drawShopButton();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.drawShopButton, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.drawShopButton, this));
@@ -158,6 +167,7 @@ export class TownScene extends WalkScene {
     }
     this.makeCrowd(Math.min(30, Math.max(0, Number(testFlags().get('crowd')) || 0)));
     this.makeSocial();
+    this.makeMiniMap();
     this.tourStop((data as TownSceneData | undefined)?.from);
   }
 
@@ -243,6 +253,22 @@ export class TownScene extends WalkScene {
     return this.rowsNow;
   }
 
+  /** The mini map in the top-left corner, sized to the screen (Jay, Nov 24). */
+  private makeMiniMap(): void {
+    const places: MapPlace[] = [...DOORS.map((d) => ({ kind: doorKind(d), at: { x: d.cue[0], y: d.cue[1] } })), { kind: 'tower', at: MAP_TOWER }];
+    this.miniMap = new TownMiniMap(this, this.roomAt, places, MAP_TOP_ROW);
+    const place = () => {
+      const { width } = view(this);
+      this.miniMap?.layout(S2 + 4, S2 + 4, Math.max(110, Math.min(170, width * 0.17)));
+    };
+    place();
+    this.scale.on(Phaser.Scale.Events.RESIZE, place);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.scale.off(Phaser.Scale.Events.RESIZE, place);
+      this.miniMap = null;
+    });
+  }
+
   /** The Shop button, top right (redrawn when the screen changes size). */
   private drawShopButton(): void {
     this.shopButton?.destroy();
@@ -281,6 +307,7 @@ export class TownScene extends WalkScene {
 
   protected overUi(x: number, y: number): boolean {
     if (this.shop || (this.shopRect && this.shopRect.contains(x, y))) return true;
+    if (this.miniMap?.contains(x, y)) return true;
     // Nov 23: the Say / Party buttons and their cards, and a tap on a classmate (opens their card, doesn't walk)
     return !!this.social && (this.social.hits(x, y) || this.social.playerAt(x, y) !== null);
   }
@@ -385,22 +412,8 @@ export class TownScene extends WalkScene {
       const [cx, cy] = door.cue;
       // The Action Zone's tag sits between its doors and its own CMA MARTIAL ARTS sign.
       marks.push(addExitCue(this, cx * TILE, cy * TILE, TILE * 1.3, TILE * 0.8, 'up'));
-      marks.push(
-        this.add
-          .text(cx * TILE, (cy - (door === WALK.dojoDoor ? 1.95 : door === WALK.homeDoor ? 1.25 : 1.6)) * TILE, door.label, {
-            fontFamily: FONT,
-            fontStyle: 'bold',
-            fontSize: '15px',
-            color: '#fff6e0',
-            stroke: '#14121c',
-            strokeThickness: 4,
-            backgroundColor: 'rgba(20,18,28,0.6)',
-            padding: { x: 7, y: 2 },
-          })
-          .setOrigin(0.5, 1)
-          .setResolution(crisp() * 2)
-          .setDepth(door.cue[1] * TILE + 1),
-      );
+      // Jay, Nov 24: each sign has the place's picture beside its name, so a non-reader knows the door too.
+      marks.push(placeSign(this, doorKind(door), door.label, cx * TILE, (cy - (door === WALK.dojoDoor ? 1.95 : door === WALK.homeDoor ? 1.25 : 1.6)) * TILE).setDepth(door.cue[1] * TILE + 1));
     }
     // Door labels sort with the pieces so a roof never covers them.
     this.standLayer.add(marks.filter((_m, i) => i % 2 === 1));
@@ -566,6 +579,7 @@ export class TownScene extends WalkScene {
     }
     super.update(time, delta);
     this.social?.update();
+    if (this.miniMap && this.world) this.miniMap.update(this.world.players.p1.pos, this.walkers.map((w) => w.pos), time);
     if (!this.walkers.length) return;
     const dt = Math.min(delta, 100) / 1000;
     const speed = MOVEMENT.speedTilesPerSecond * 0.7;
