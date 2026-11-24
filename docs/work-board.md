@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-11-23 by Claude Code.
+Last updated: 2026-11-24 by Claude Code.
 
 **What this file is:** the one list of open work. Each item has an ID, an owner and what it waits on. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
 
@@ -76,6 +76,16 @@ Jay has a few more visuals to list here.
 | SH-3 | Sell tab (Hannah buys gear) | Built |
 | SH-4 | Phrases (15, draft) and parties in town | Built with pretend classmates; real players need the game server (later) |
 | SH-5 | Coin economy and the Wish (docs/economy.md) | Built; numbers wait on playtesting |
+
+## 2f. Grok playtest (Nov 23 report; branch `claude/playtest-fixes`)
+
+| ID | What | Status |
+|---|---|---|
+| GP-1 | Batch 1: live link hides Testing, grown-up check, invites Off, tap fixes, shop decor to storage, Home Dojo fixes | Built Nov 24; waits on Jay's phone test and OK for `main` |
+| GP-2 | Defeat screen: keep kind words, always pay a little XP and coins? | Waits on Jay |
+| GP-3 | Beginner Mash guard: Guided only, or end sooner? | Waits on Jay |
+| GP-4 | Batch 2: town Home button, corner map, door signs; coins on every run summary; cheap starter items | Waits on Jay's OK |
+| GP-5 | Kata beginner hint ("show me the next move")? | Waits on Jay |
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 
