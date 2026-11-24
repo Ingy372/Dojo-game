@@ -5,7 +5,7 @@ import { makePlayerSprite, playLocomotion } from '../art/player';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { testFlags } from '../game/beta';
 import { reducedMotion } from '../game/motion';
-import { TownLife } from '../fx/townLife';
+import { TownLife, type SwayKind } from '../fx/townLife';
 import { loadLook, SWATCHES } from '../game/look';
 import { currentTraining } from '../game/student';
 import { addExitCue } from '../ui/exitCue';
@@ -386,7 +386,7 @@ export class TownScene extends WalkScene {
 
   protected drawRoom(): void {
     const w = WALK.tiles[0].length;
-    const swayers: [Phaser.GameObjects.Image[], boolean][] = [];
+    const swayers: [Phaser.GameObjects.Image[], SwayKind][] = [];
     const all = Object.entries(staticSprites(this, TOWN_PACK)) as [string, TownSprite][];
     // The picture starts above row 0: the hills, the sky and the Tower.
     const top = Math.min(0, ...all.filter(([, s]) => s.place === 'ground').map(([, s]) => s.anchorTile?.[1] ?? 0));
@@ -405,7 +405,7 @@ export class TownScene extends WalkScene {
       if (s.drawScale) for (const img of images) img.setScale(s.drawScale);
       if (this.night && !lit) for (const img of images) img.setTint(NIGHT_TINT);
       const glows = lit ? this.glows(s, pools) : [];
-      if (SWAYS.test(id) && s.place !== 'ground') swayers.push([images, !/shrub|bamboo|flowers/.test(id)]);
+      if (SWAYS.test(id) && s.place !== 'ground') swayers.push([images, /shrub|bamboo|flowers/.test(id) ? 'bush' : 'tree']);
       if (s.place === 'ground') ground.push(...images);
       else if (s.place === 'lit-ground' || s.place === 'flat') flat.push([s.sortRow ?? -1, [...images, ...glows]]);
       else {
@@ -431,7 +431,7 @@ export class TownScene extends WalkScene {
     this.worldLayer.addAt(lifeGround, this.worldLayer.getIndex(this.standLayer));
     this.life?.destroy();
     this.life = new TownLife({ scene: this, stand: this.standLayer, ground: lifeGround, tile: TILE, width: w, top, night: this.night, stage: this.stage, still: reducedMotion(), nightTint: NIGHT_TINT });
-    for (const [imgs, big] of swayers) this.life.sway(imgs, big);
+    for (const [imgs, kind] of swayers) this.life.sway(imgs, kind);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.life?.destroy();
       this.life = null;

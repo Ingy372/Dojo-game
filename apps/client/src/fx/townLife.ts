@@ -42,15 +42,39 @@ const SAKURA: [number, number][] = [
   [17.5, 20.8],
   [28.5, 20.8],
 ];
-const POND = { x: 39.5, y: 26.2, rx: 4.2, ry: 2.0 };
+/** The rock garden's raked sand (tiles), its rock groups (x, y, size), its corner bushes and its bamboo water spout. */
+const GARDEN: Rect = [2.4, 12.6, 16.0, 24.0];
+const GARDEN_ROCKS: [number, number, number][] = [
+  [5.0, 18.2, 1.25],
+  [10.0, 19.6, 1.0],
+  [6.4, 22.3, 0.9],
+];
+const GARDEN_BUSHES: [number, number, number][] = [
+  [3.2, 16.9, 0xff8fc0],
+  [3.2, 23.7, 0xe0559a],
+  [13.6, 16.6, 0xe0559a],
+  [13.6, 23.6, 0xff8fc0],
+];
+const SPOUT: [number, number] = [11.65, 22.45];
+const BASIN: [number, number] = [11.45, 23.05];
+const POND ={ x: 39.5, y: 26.2, rx: 4.2, ry: 2.0 };
 const FLOWER_COLOURS = [0xffd23f, 0xff8fb1, 0xffffff, 0xb48cff, 0xff6b5b, 0x7fd3ff];
 const BUTTERFLY_COLOURS = [0xffd23f, 0xffffff, 0x8fd0ff, 0xffa64d];
 
+/** How strongly each kind of plant moves in the breeze (degrees, and how fast it flutters). */
+export type SwayKind = 'tree' | 'bush' | 'grass';
+const SWAY: Record<SwayKind, { amp: number; speed: number; squash: number }> = {
+  tree: { amp: 2.6, speed: 0.0019, squash: 0.018 },
+  bush: { amp: 2.4, speed: 0.0026, squash: 0.03 },
+  grass: { amp: 9, speed: 0.0042, squash: 0 },
+};
+
 interface Swayer {
   obj: Phaser.GameObjects.Image;
-  amp: number;
-  speed: number;
+  kind: SwayKind;
   phase: number;
+  sx: number;
+  sy: number;
 }
 
 export class TownLife {
@@ -63,27 +87,39 @@ export class TownLife {
     this.s = s;
     this.makeTextures();
     this.flowers();
+    this.gardenPlants();
     if (s.still) return;
     this.pond();
     this.petals();
+    this.rockGarden();
     if (s.night) return;
     this.butterflies();
     this.clouds();
     this.birds();
   }
 
-  /** Trees and bushes lean gently in the breeze (pinned at their base). */
-  sway(images: Phaser.GameObjects.Image[], big: boolean): void {
+  /** Trees, bushes and grass bend in the breeze, pinned at their base. */
+  sway(images: Phaser.GameObjects.Image[], kind: SwayKind): void {
     if (this.s.still) return;
     const phase = Math.random() * Math.PI * 2;
-    for (const obj of images) this.swayers.push({ obj, amp: big ? 0.9 : 1.6, speed: big ? 0.0011 : 0.0016, phase });
+    for (const obj of images) this.swayers.push({ obj, kind, phase, sx: obj.scaleX, sy: obj.scaleY });
   }
 
   update(time: number): void {
-    // a slow gust rolls across the town from left to right
+    // Gusts roll across the town from left to right: each plant is pushed over (downwind), then springs back
+    // and flutters. Two slow waves mixed, so the gusts never repeat in an obvious way.
     for (const w of this.swayers) {
-      const gust = 0.65 + 0.35 * Math.sin(time * 0.00031 - w.obj.x * 0.004);
-      w.obj.angle = Math.sin(time * w.speed + w.phase) * w.amp * gust;
+      const k = SWAY[w.kind];
+      const wave = Math.sin(time * 0.00052 - w.obj.x * 0.0035) * 0.6 + Math.sin(time * 0.00021 - w.obj.x * 0.0011 + 1.3) * 0.4;
+      const gust = Math.max(0, wave) ** 1.5;
+      const flutter = Math.sin(time * k.speed * (1 + gust) + w.phase) * (0.35 + 0.65 * gust);
+      const bend = gust * 0.9 + flutter * 0.6;
+      w.obj.angle = bend * k.amp;
+      if (k.squash) {
+        // the crown puffs and settles a little as the wind moves through the leaves
+        const puff = Math.sin(time * k.speed * 1.7 + w.phase * 2) * k.squash * (0.4 + gust);
+        w.obj.setScale(w.sx * (1 + puff), w.sy * (1 - puff * 0.5));
+      }
     }
     for (const b of this.blooms) {
       const a = Phaser.Math.DegToRad(b.stem.angle);
@@ -151,6 +187,42 @@ export class TownLife {
       g.lineTo(17, 2);
       g.strokePath();
     });
+    // a round azalea bush: dark outline, two greens; its blossoms are a separate picture tinted per bush
+    make('life-azalea', 56, 40, (g) => {
+      const blobs: [number, number, number][] = [[16, 24, 13], [30, 18, 15], [42, 25, 12], [28, 28, 11]];
+      g.fillStyle(0x2f4a35);
+      for (const [x, y, r] of blobs) g.fillCircle(x, y, r + 1.6);
+      g.fillStyle(0x4f9a4f);
+      for (const [x, y, r] of blobs) g.fillCircle(x, y, r);
+      g.fillStyle(0x6cbf5f);
+      for (const [x, y, r] of blobs) g.fillCircle(x - r * 0.25, y - r * 0.3, r * 0.6);
+    });
+    make('life-azalea-bloom', 56, 40, (g) => {
+      g.fillStyle(0xffffff);
+      const dots = [[10, 20], [17, 14], [24, 22], [29, 9], [35, 16], [41, 21], [47, 26], [22, 31], [33, 29], [14, 28], [38, 10], [44, 15]];
+      for (const [x, y] of dots) g.fillCircle(x, y, 2.6);
+    });
+    // a fern: a stem with leaflets on both sides
+    make('life-fern', 20, 28, (g) => {
+      g.fillStyle(0x3e8a3f);
+      g.fillRect(9, 4, 2, 24);
+      g.fillStyle(0x5cae4c);
+      for (let k = 0; k < 6; k++) {
+        const y = 6 + k * 3.6;
+        const w = 9 - k * 0.9;
+        g.fillEllipse(10 - w / 2, y, w, 3);
+        g.fillEllipse(10 + w / 2, y, w, 3);
+      }
+    });
+    make('life-leaf', 10, 8, (g) => {
+      g.fillStyle(0xffffff);
+      g.fillTriangle(0, 4, 5, 0, 10, 4);
+      g.fillTriangle(0, 4, 5, 8, 10, 4);
+    });
+    make('life-drop', 4, 6, (g) => {
+      g.fillStyle(0xbfe8ff);
+      g.fillEllipse(2, 3, 4, 6);
+    });
     make('life-soft', 64, 64, (g) => {
       for (let r = 32; r > 0; r -= 2) {
         g.fillStyle(0xffffff, 0.06);
@@ -199,22 +271,137 @@ export class TownLife {
         stem.setDepth(y);
         bloom.setDepth(y + 0.1);
         stand.add([stem, bloom]);
-        this.sway([stem], false);
+        this.sway([stem], 'grass');
         if (!this.s.still) this.swayBloom(bloom, stem, size);
       }
     }
-    for (let c = 0; c < 40; c++) {
+    const greens = [0xffffff, 0xd8f0c0, 0xa8d890, 0xe8ffd0];
+    for (let c = 0; c < 90; c++) {
       const at = this.pick(LAWNS);
-      const tuft = scene.add.image(at.x * tile, at.y * tile, 'life-tuft').setOrigin(0.5, 1).setDisplaySize(tile * 0.32, tile * 0.24).setDepth(at.y * tile);
+      const tuft = scene.add.image(at.x * tile, at.y * tile, 'life-tuft').setOrigin(0.5, 1).setDisplaySize(tile * (0.3 + Math.random() * 0.16), tile * (0.24 + Math.random() * 0.14)).setDepth(at.y * tile).setTint(greens[c % greens.length]);
       if (night) tuft.setTint(nightTint);
       stand.add(tuft);
-      this.sway([tuft], false);
+      this.sway([tuft], 'grass');
     }
   }
 
   /** The flower head follows its stem's lean. */
   private swayBloom(bloom: Phaser.GameObjects.Image, stem: Phaser.GameObjects.Image, size: number): void {
     this.blooms.push({ bloom, stem, x: bloom.x, y: bloom.y, len: size * 0.72 });
+  }
+
+  // ---------------------------------------------------------------- the rock garden (Jay, Nov 24: it "can use something")
+  /** Azalea bushes in the garden's corners, ferns and tiny flowers round the moss islands. */
+  private gardenPlants(): void {
+    const { scene, tile, stand, night, nightTint } = this.s;
+    const add = (img: Phaser.GameObjects.Image, y: number) => {
+      img.setDepth(y * tile);
+      if (night) img.setTint(nightTint);
+      stand.add(img);
+      return img;
+    };
+    for (const [x, y, pink] of GARDEN_BUSHES) {
+      const w = tile * 1.05;
+      const bush = add(scene.add.image(x * tile, y * tile, 'life-azalea').setOrigin(0.5, 0.92).setDisplaySize(w, w * 0.72), y);
+      const bloom = scene.add.image(x * tile, y * tile, 'life-azalea-bloom').setOrigin(0.5, 0.92).setDisplaySize(w, w * 0.72).setTint(night ? 0x9a5a8a : pink).setDepth(y * tile + 0.1);
+      stand.add(bloom);
+      this.sway([bush, bloom], 'bush');
+    }
+    for (const [rx, ry, r] of GARDEN_ROCKS) {
+      const n = 5;
+      for (let k = 0; k < n; k++) {
+        // round the front (bottom) edge of the island, so they don't hide behind the rocks
+        const a = Math.PI * (0.05 + (k / (n - 1)) * 0.9) + (Math.random() - 0.5) * 0.3;
+        const x = rx + Math.cos(a) * r;
+        const y = ry + Math.sin(a) * r * 0.55;
+        const fern = add(scene.add.image(x * tile, y * tile, 'life-fern').setOrigin(0.5, 1).setDisplaySize(tile * 0.36, tile * 0.48).setFlipX(k % 2 === 0), y);
+        this.sway([fern], 'grass');
+        if (k % 2) {
+          const fx = x + (Math.random() - 0.5) * 0.3;
+          const fy = y + 0.12;
+          const col = [0xffffff, 0xd9b8ff, 0xfff1a8][k % 3];
+          const f = add(scene.add.image(fx * tile, fy * tile, 'life-bloom').setDisplaySize(tile * 0.16, tile * 0.16), fy);
+          f.setTint(night ? nightTint : col);
+        }
+      }
+    }
+  }
+
+  /** Water drips from the bamboo spout into its basin, red leaves blow over the sand, dragonflies hover, the sand glints. */
+  private rockGarden(): void {
+    const { scene, tile, stand, ground } = this.s;
+    const [sx, sy] = SPOUT;
+    const [bx, by] = BASIN;
+    this.every(500, 900, () => {
+      const d = scene.add.image(sx * tile, sy * tile, 'life-drop').setDisplaySize(tile * 0.05, tile * 0.08).setDepth(by * tile + 1);
+      stand.add(d);
+      scene.tweens.add({
+        targets: d,
+        x: bx * tile,
+        y: (by - 0.1) * tile,
+        duration: 380,
+        ease: 'Quad.easeIn',
+        onComplete: () => {
+          d.destroy();
+          const ring = scene.add.ellipse(bx * tile, (by - 0.1) * tile, tile * 0.1, tile * 0.05).setStrokeStyle(1.2, 0xffffff, 0.8).setFillStyle().setDepth(by * tile + 1);
+          stand.add(ring);
+          scene.tweens.add({ targets: ring, scaleX: 2.6, scaleY: 2.6, alpha: 0, duration: 700, onComplete: () => ring.destroy() });
+        },
+      });
+    });
+    // autumn leaves from the garden's west side, tumbling east over the raked sand
+    this.every(1400, 3200, () => {
+      const y = (GARDEN[2] + Math.random() * (GARDEN[3] - GARDEN[2])) * tile;
+      const x = (GARDEN[0] - 0.6) * tile;
+      const leaf = scene.add.image(x, y, 'life-leaf').setDisplaySize(tile * 0.21, tile * 0.16).setDepth(y);
+      leaf.setTint(this.s.night ? 0x7a4a5a : [0xd9472b, 0xf08a24, 0xc23a3a, 0xf2b134][Math.floor(Math.random() * 4)]);
+      stand.add(leaf);
+      const time = 6000 + Math.random() * 4000;
+      const run = (GARDEN[1] - GARDEN[0] + 1.2) * tile * (0.6 + Math.random() * 0.4);
+      scene.tweens.add({ targets: leaf, x: x + run, duration: time, ease: 'Sine.easeInOut' });
+      scene.tweens.add({ targets: leaf, y: y + tile * 0.25, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      scene.tweens.add({ targets: leaf, angle: 360 * (Math.random() < 0.5 ? 1 : -1), duration: 1600 + Math.random() * 900, repeat: -1 });
+      scene.tweens.add({ targets: leaf, alpha: 0, delay: time - 800, duration: 800, onComplete: () => leaf.destroy() });
+    });
+    if (this.s.night) return;
+    for (let i = 0; i < 2; i++) this.dragonfly(i ? 0x3fb8c9 : 0xd9472b);
+    this.every(500, 1200, () => {
+      const x = (GARDEN[0] + 0.3 + Math.random() * (GARDEN[1] - GARDEN[0] - 0.6)) * tile;
+      const y = (GARDEN[2] + 0.3 + Math.random() * (GARDEN[3] - GARDEN[2] - 0.6)) * tile;
+      const g = scene.add.image(x, y, 'life-soft').setDisplaySize(tile * 0.12, tile * 0.12).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0);
+      ground.add(g);
+      scene.tweens.add({ targets: g, alpha: 0.8, duration: 500, yoyo: true, onComplete: () => g.destroy() });
+    });
+  }
+
+  /** A dragonfly: hovers, then darts to a new spot over the garden. */
+  private dragonfly(colour: number): void {
+    const { scene, tile, stand } = this.s;
+    const box = scene.add.container((GARDEN[0] + 2) * tile, (GARDEN[2] + 2) * tile);
+    const body = scene.add.rectangle(0, 0, tile * 0.22, tile * 0.035, colour);
+    const wings = [-1, 1].map((side) => scene.add.image(-tile * 0.02, side * tile * 0.05, 'life-wing').setDisplaySize(tile * 0.14, tile * 0.07).setAlpha(0.55).setAngle(side * 20));
+    const shadow = scene.add.image(0, tile * 0.6, 'life-soft').setDisplaySize(tile * 0.2, tile * 0.06).setTint(0x000000).setAlpha(0.15);
+    box.add([shadow, body, ...wings]);
+    stand.add(box);
+    scene.tweens.add({ targets: wings, alpha: 0.2, duration: 45, yoyo: true, repeat: -1 });
+    const dart = () => {
+      if (!box.active) return;
+      const to = {
+        x: (GARDEN[0] + 0.5 + Math.random() * (GARDEN[1] - GARDEN[0] - 1)) * tile,
+        y: (GARDEN[2] + 0.5 + Math.random() * (GARDEN[3] - GARDEN[2] - 1)) * tile,
+      };
+      box.setScale(to.x < box.x ? -1 : 1, 1);
+      scene.tweens.add({
+        targets: box,
+        x: to.x,
+        y: to.y,
+        duration: 350 + Math.random() * 300,
+        ease: 'Cubic.easeOut',
+        onUpdate: () => box.setDepth(box.y + tile * 0.6),
+        onComplete: () => scene.time.delayedCall(900 + Math.random() * 2200, dart),
+      });
+    };
+    dart();
   }
 
   // ---------------------------------------------------------------- butterflies
@@ -323,18 +510,18 @@ export class TownLife {
       const q = Math.sqrt(Math.random()) * 0.75;
       return { x: (POND.x + Math.cos(a) * POND.rx * q) * tile, y: (POND.y + Math.sin(a) * POND.ry * q) * tile };
     };
-    this.every(900, 2200, () => {
+    this.every(3800, 7500, () => {
       const p = spot();
-      const ring = scene.add.ellipse(p.x, p.y, tile * 0.3, tile * 0.14).setStrokeStyle(2, 0xffffff, 0.7).setFillStyle();
+      const ring = scene.add.ellipse(p.x, p.y, tile * 0.3, tile * 0.14).setStrokeStyle(1.5, 0xffffff, 0.5).setFillStyle();
       ground.add(ring);
-      scene.tweens.add({ targets: ring, scaleX: 3.2, scaleY: 3.2, alpha: 0, duration: 1800, ease: 'Sine.easeOut', onComplete: () => ring.destroy() });
+      scene.tweens.add({ targets: ring, scaleX: 3.6, scaleY: 3.6, alpha: 0, duration: 3400, ease: 'Sine.easeOut', onComplete: () => ring.destroy() });
     });
     if (this.s.night) return;
-    this.every(150, 400, () => {
+    this.every(700, 1600, () => {
       const p = spot();
       const s = scene.add.image(p.x, p.y, 'life-soft').setDisplaySize(tile * 0.22, tile * 0.08).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0);
       ground.add(s);
-      scene.tweens.add({ targets: s, alpha: 0.9, duration: 350, yoyo: true, onComplete: () => s.destroy() });
+      scene.tweens.add({ targets: s, alpha: 0.7, duration: 700, yoyo: true, onComplete: () => s.destroy() });
     });
   }
 }
