@@ -7,7 +7,10 @@ import type { StanceDef, VirtueKind } from './abilities';
 import { circleHitsWall, pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
 import { BOW, COMBAT, DIFFICULTY, MIN_WINDUP_TICKS, MOVEMENT, SIM_VIEW, TICKS_PER_SECOND, realSecondsToTicks, type Difficulty } from './config';
-import { noMods, type PlayerMods } from './effects';
+import { combineMods, noMods, type PlayerMods } from './effects';
+import type { ToolSetup } from './tools';
+import type { ToolTrigger } from './abilities';
+import { TOOL_BELT } from './config';
 import { namedDef, type NamedRules, type NamedSpawn } from './named';
 import { eliteDef, eliteWindup, type EliteKind, type EliteRules, type EliteSpawn } from './elite';
 import { challengeDef, type ChallengeAt, type EnemyAttackDef, type EnemyDef } from './enemy';
@@ -53,6 +56,10 @@ export interface PlayerState {
   pendingStrikeHits: PendingStrikeHit[];
   /** The tick Counter was last pressed, or -1. */
   counterPressedTick: number;
+  /** Tool Belt: the equipped tools and the ticks each still waits (0 = ready). */
+  tools: { setup: ToolSetup; cooldown: number }[];
+  /** Tool Belt: the tick this player last landed a hit, or -1 (the 'crowded' trigger only counts while fighting). */
+  lastLandedTick: number;
   /** Ticks of guard pose left after pressing Counter (0 = not guarding). */
   guardTicks: number;
   /** Ticks before Counter can be pressed again after a guard that countered nothing. */
@@ -190,6 +197,8 @@ export interface EnemyState {
 export type AttackMove = 'basic' | 'strike' | 'counter' | 'chain' | 'ripple' | 'reflect';
 
 export type CombatEvent =
+  /** Tool Belt: a tool fired (its technique number). */
+  | { kind: 'toolFired'; playerId: PlayerId; technique: number }
   | { kind: 'playerAttack'; playerId: PlayerId; enemyId: EnemyId; move: AttackMove; damage: number; defeated: boolean }
   /** An elite was defeated: its Focus reward (S1 #3), already added. */
   | { kind: 'eliteFocus'; playerId: PlayerId; enemyId: EnemyId; focus: number }
@@ -422,6 +431,8 @@ export interface PlayerSetup {
   virtue?: VirtueSetup | null;
   /** PB-03: the equipped Strike. Missing = Spin Kick (today's Strike, from COMBAT.strike). */
   strike?: StrikeSetup;
+  /** Tool Belt: the equipped tools (missing or empty = none). */
+  tools?: ToolSetup[];
 }
 
 /** PB-03: a Strike as a fight uses it (a StrikeDef without the words). */
@@ -483,6 +494,8 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       strike: options.player?.strike ? cloneStrike(options.player.strike) : defaultStrike(),
       pendingStrikeHits: [],
       counterPressedTick: -1,
+      tools: (options.player?.tools ?? []).map((setup) => ({ setup, cooldown: 0 })),
+      lastLandedTick: -1,
       guardTicks: 0,
       counterLockout: 0,
       opening: null,
@@ -859,6 +872,8 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.counterLockout > 0) p.counterLockout--;
   if (p.dashCooldown > 0) p.dashCooldown--;
   if (p.stanceCooldown > 0) p.stanceCooldown--;
+  for (const t of p.tools) if (t.cooldown > 0) t.cooldown--;
+  if (crowded(world, p)) fireTools(world, p, 'crowded');
   if (p.virtueTicks > 0 && --p.virtueTicks === 0) {
     p.virtueShield = 0;
     world.events.push({ kind: 'virtueEnd', playerId: p.id });
@@ -871,13 +886,14 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
 
   if (input.action === 'dash' && p.guardTicks === 0 && p.dashTicks === 0 && p.dashCooldown === 0) {
     startDash(world, p, input);
+    fireTools(world, p, 'dash');
   } else if (input.action === 'counter' && p.guardTicks === 0 && p.dashTicks === 0 && p.counterLockout === 0) {
     p.counterPressedTick = world.tick;
     p.guardTicks = Math.max(COMBAT.counter.guardTicks, counterWindowTicks(world, p) + COMBAT.counter.blockTicksAfterWindow);
     p.path = null;
     world.events.push({ kind: 'counterPressed', playerId: p.id });
   } else if (input.action === 'strike' && p.guardTicks === 0 && p.dashTicks === 0 && p.strikeRecovery === 0) {
-    tryStrike(world, p, room);
+    withTools(world, p, 'strike', () => tryStrike(world, p, room));
   } else if (input.action === 'stance' && p.stances.length > 1 && p.stanceCooldown === 0) {
     p.stance = (p.stance + 1) % p.stances.length;
     p.stanceCooldown = COMBAT.stanceSwitchTicks;
@@ -1117,6 +1133,7 @@ function landHit(
 
 /** Damage lands on an enemy. */
 function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: AttackMove, dmg: number): void {
+  p.lastLandedTick = world.tick;
   // Guarding aura: a protected enemy takes less from every kind of player damage. Applied last,
   // after all bonuses, rounded, at least 1.
   if (e.guardedBy && world.elites) dmg = Math.max(1, Math.round(dmg * world.elites.guarding.damageScale));
@@ -1473,86 +1490,92 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
     const disciplined = p.virtue?.kind === 'discipline' && p.virtueTicks > 0;
     if (guarding && a.counterable !== false && (disciplined || world.tick - p.counterPressedTick < counterWindowTicks(world, p))) {
       // Perfect Counter: no damage, enemy staggered, counter hit for 2x Power, Focus by chain (+25, +30, +35, +40).
-      p.guardTicks = 0;
-      p.counterChain++;
-      world.progress.perfects++;
-      p.perfects++;
-      world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id, chain: p.counterChain });
-      if (p.perfects === COMBAT.counter.mashGuardPerfects) world.events.push({ kind: 'mashGuardOff', playerId: p.id });
-      // Bell Room twist: each Perfect Counter rings a bell, up to the number needed.
-      const bellsNeeded = world.twist?.bells ?? 0;
-      if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
-      if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
-      landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, chainFocus(p.counterChain));
-      // Double Punch / Slip and Double: quick extra punches, no extra Focus.
-      for (let i = 0; i < p.mods.counterHits && e.mode !== 'defeated'; i++) landHit(world, p, e, 'counter', p.mods.counterHitStrength, 0);
-      if (e.mode !== 'defeated' && canThrow(p, e)) {
-        // G2B-04 Outside Reap: the attacker tumbles a tile away and is down for a while (brutes and swarmers; never Guardians or elites).
-        e.mode = 'thrown';
-        e.modeTicks = p.mods.counterThrowTicks;
-        const away = directionTo(p.pos, e.pos);
-        e.pos = { x: e.pos.x + away.x * COMBAT.counter.throwTumbleTiles, y: e.pos.y + away.y * COMBAT.counter.throwTumbleTiles };
-        pushOutOfWalls(room, e.pos, e.def.radius);
-        world.events.push({ kind: 'thrown', playerId: p.id, enemyId: e.id });
-      } else if (e.mode !== 'defeated') {
-        e.mode = 'stagger';
-        // G2B-04 Lock cap: the hold (stagger + Counter #6 + any Lock rank) never passes holdCapTicks.
-        e.modeTicks = Math.min(COMBAT.counter.holdCapTicks, COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks);
-        // T5: the Opening: STRIKE glows gold for a free finisher on this enemy. Not after a ground slam
-        // (a landing circle), whose best answer stays "move out of the red".
-        if (!a.landing) {
-          p.opening = { enemyId: e.id, ticks: COMBAT.opening.ticks };
-          world.events.push({ kind: 'openingReady', playerId: p.id, enemyId: e.id });
-        }
-        // L8-B2 Lock: the same stagger also holds the attacker (never a Guardian, boss or elite).
-        e.held = p.mods.counterLock && canHold(e);
-        if (e.held) world.events.push({ kind: 'held', playerId: p.id, enemyId: e.id });
-        // Disarm: this attacker's next attack is weaker.
-        if (p.mods.disarm > 0) {
-          e.disarmed = Math.max(e.disarmed, p.mods.disarm);
-          e.disarmLeft = Math.max(e.disarmLeft ?? 0, 1, p.mods.disarmAttacks);
-        }
-        // Self-defense #4 (Advancing; name OPEN): the attacker is pushed away from the player (bosses stay put).
-        if (p.mods.counterPush > 0 && !e.def.boss) {
+      // Tool Belt: tools on 'greatCounter' fire, and their effects join this counter.
+      withTools(world, p, 'greatCounter', () => {
+        p.guardTicks = 0;
+        p.counterChain++;
+        world.progress.perfects++;
+        p.perfects++;
+        world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id, chain: p.counterChain });
+        if (p.perfects === COMBAT.counter.mashGuardPerfects) world.events.push({ kind: 'mashGuardOff', playerId: p.id });
+        // Bell Room twist: each Perfect Counter rings a bell, up to the number needed.
+        const bellsNeeded = world.twist?.bells ?? 0;
+        if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
+        if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
+        landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, chainFocus(p.counterChain));
+        // Double Punch / Slip and Double: quick extra punches, no extra Focus.
+        for (let i = 0; i < p.mods.counterHits && e.mode !== 'defeated'; i++) landHit(world, p, e, 'counter', p.mods.counterHitStrength, 0);
+        if (e.mode !== 'defeated' && canThrow(p, e)) {
+          // G2B-04 Outside Reap: the attacker tumbles a tile away and is down for a while (brutes and swarmers; never Guardians or elites).
+          e.mode = 'thrown';
+          e.modeTicks = p.mods.counterThrowTicks;
           const away = directionTo(p.pos, e.pos);
-          e.pos = { x: e.pos.x + away.x * p.mods.counterPush, y: e.pos.y + away.y * p.mods.counterPush };
+          e.pos = { x: e.pos.x + away.x * COMBAT.counter.throwTumbleTiles, y: e.pos.y + away.y * COMBAT.counter.throwTumbleTiles };
           pushOutOfWalls(room, e.pos, e.def.radius);
-        }
-      }
-      // Ripple Counter: the counter also hits every other enemy nearby.
-      if (p.mods.rippleRadius > 0) {
-        for (const o of world.enemies) {
-          if (o === e || !isEnemyPresent(o)) continue;
-          if (bodyGap(p.pos, R, o.pos, o.def.radius) <= p.mods.rippleRadius) {
-            landHit(world, p, o, 'ripple', p.mods.rippleStrength, 0);
+          world.events.push({ kind: 'thrown', playerId: p.id, enemyId: e.id });
+        } else if (e.mode !== 'defeated') {
+          e.mode = 'stagger';
+          // G2B-04 Lock cap: the hold (stagger + Counter #6 + any Lock rank) never passes holdCapTicks.
+          e.modeTicks = Math.min(COMBAT.counter.holdCapTicks, COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks);
+          // T5: the Opening: STRIKE glows gold for a free finisher on this enemy. Not after a ground slam
+          // (a landing circle), whose best answer stays "move out of the red".
+          if (!a.landing) {
+            p.opening = { enemyId: e.id, ticks: COMBAT.opening.ticks };
+            world.events.push({ kind: 'openingReady', playerId: p.id, enemyId: e.id });
+          }
+          // L8-B2 Lock: the same stagger also holds the attacker (never a Guardian, boss or elite).
+          e.held = p.mods.counterLock && canHold(e);
+          if (e.held) world.events.push({ kind: 'held', playerId: p.id, enemyId: e.id });
+          // Disarm: this attacker's next attack is weaker.
+          if (p.mods.disarm > 0) {
+            e.disarmed = Math.max(e.disarmed, p.mods.disarm);
+            e.disarmLeft = Math.max(e.disarmLeft ?? 0, 1, p.mods.disarmAttacks);
+          }
+          // Self-defense #4 (Advancing; name OPEN): the attacker is pushed away from the player (bosses stay put).
+          if (p.mods.counterPush > 0 && !e.def.boss) {
+            const away = directionTo(p.pos, e.pos);
+            e.pos = { x: e.pos.x + away.x * p.mods.counterPush, y: e.pos.y + away.y * p.mods.counterPush };
+            pushOutOfWalls(room, e.pos, e.def.radius);
           }
         }
-      }
+        // Ripple Counter: the counter also hits every other enemy nearby.
+        if (p.mods.rippleRadius > 0) {
+          for (const o of world.enemies) {
+            if (o === e || !isEnemyPresent(o)) continue;
+            if (bodyGap(p.pos, R, o.pos, o.def.radius) <= p.mods.rippleRadius) {
+              landHit(world, p, o, 'ripple', p.mods.rippleStrength, 0);
+            }
+          }
+        }
+      });
     } else if (a.counterable !== false && (guarding || (p.attackCooldown > 0 && mashGuardOn(p)))) {
       // Block: half damage (never against a dash-only attack: dash out instead), no stagger. The combo is kept.
-      // B-MASHER-b Mash guard: a hit that lands during the player's own basic-attack swing (attackCooldown)
-      // counts as the same Block, for everyone. B-MASHER-2 (E3): only until the room's 3rd Perfect Counter.
-      p.guardTicks = 0;
-      const share = blockShare(p);
-      // C430: a no-damage push (Bellows Puff) is simply held off by a Block: no damage, no slide, nothing to bounce back.
-      const dmg = e.def.push ? 0 : damage(power, a.strength * share * weak, guardOf(p));
-      world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
-      if (p.mods.dashOnBlock) p.dashCooldown = 0;
-      // L-PREMIUM-b (Manager, decided): a Block made by the Mash guard, not by a Counter press, is a
-      // Counter window with no answer, so it is a miss. A real Block (guarding) or a Dash never is.
-      if (!guarding && !counterPressedLately(world, p) && p.dashTicks === 0) noteCounterMiss(world, p);
-      if (dmg > 0 || !e.def.push) hurt(world, p, dmg);
-      // Iron Skin: part of the full hit bounces back (shields stop it, unless Shield Breaker).
-      if (!e.def.push && p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
-        const back = Math.max(1, Math.round(damage(e.def.power, a.strength, guardOf(p)) * p.mods.blockReflect));
-        hurtEnemy(world, p, e, 'reflect', back);
-        // High Block Strike: a bounced hit leaves the attacker off-balance.
-        if (p.mods.reflectStaggerTicks > 0 && e.mode !== 'defeated' && e.mode !== 'thrown') {
-          e.mode = 'stagger';
-          e.modeTicks = Math.max(e.modeTicks, p.mods.reflectStaggerTicks);
-          e.held = false;
+      // Tool Belt: tools on 'block' fire, and their effects join this Block.
+      withTools(world, p, 'block', () => {
+        // B-MASHER-b Mash guard: a hit that lands during the player's own basic-attack swing (attackCooldown)
+        // counts as the same Block, for everyone. B-MASHER-2 (E3): only until the room's 3rd Perfect Counter.
+        p.guardTicks = 0;
+        const share = blockShare(p);
+        // C430: a no-damage push (Bellows Puff) is simply held off by a Block: no damage, no slide, nothing to bounce back.
+        const dmg = e.def.push ? 0 : damage(power, a.strength * share * weak, guardOf(p));
+        world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
+        if (p.mods.dashOnBlock) p.dashCooldown = 0;
+        // L-PREMIUM-b (Manager, decided): a Block made by the Mash guard, not by a Counter press, is a
+        // Counter window with no answer, so it is a miss. A real Block (guarding) or a Dash never is.
+        if (!guarding && !counterPressedLately(world, p) && p.dashTicks === 0) noteCounterMiss(world, p);
+        if (dmg > 0 || !e.def.push) hurt(world, p, dmg);
+        // Iron Skin: part of the full hit bounces back (shields stop it, unless Shield Breaker).
+        if (!e.def.push && p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
+          const back = Math.max(1, Math.round(damage(e.def.power, a.strength, guardOf(p)) * p.mods.blockReflect));
+          hurtEnemy(world, p, e, 'reflect', back);
+          // High Block Strike: a bounced hit leaves the attacker off-balance.
+          if (p.mods.reflectStaggerTicks > 0 && e.mode !== 'defeated' && e.mode !== 'thrown') {
+            e.mode = 'stagger';
+            e.modeTicks = Math.max(e.modeTicks, p.mods.reflectStaggerTicks);
+            e.held = false;
+          }
         }
-      }
+      });
     } else if (e.def.push) {
       // C430: a no-damage push. No damage, so the combo stays and it is not a Counter miss; the player slides away.
       pushPlayer(world, room, p, e, e.def.push.distanceTiles);
@@ -1565,6 +1588,8 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
       // L-PREMIUM-b: a Counter window with no answer at all (no recent Counter press, no Dash) is a miss.
       if (a.counterable !== false && !counterPressedLately(world, p) && p.dashTicks === 0) noteCounterMiss(world, p);
       hurt(world, p, dmg);
+      // Tool Belt: a comeback tool answers the hit (not when the hit put the player down).
+      if (p.downTicks === 0) fireTools(world, p, 'hit');
     }
   }
 }
@@ -1998,4 +2023,62 @@ export function isHeld(e: EnemyState): boolean {
 /** G2B-04: a Perfect Counter throws this enemy (Outside Reap equipped, a throwable brute or swarmer, never a Guardian or an elite). */
 export function canThrow(p: { mods: { counterThrowTicks: number } }, e: EnemyState): boolean {
   return p.mods.counterThrowTicks > 0 && e.def.throwable === true && !e.def.boss && e.elite === null;
+}
+
+/**
+ * Tool Belt: fires every ready tool with this trigger, in technique order: each starts its cooldown and
+ * sends a toolFired event. An areaHit tool hits every enemy within its radius right away (and, with a
+ * disarm, kicks their weapons aside); a disarm with no areaHit, away from a counter, kicks the weapon of
+ * the closest enemy within 1.5 tiles. Returns the fired tools' mods added up (noMods if none fired), for
+ * the action that fired them.
+ */
+function fireTools(world: WorldState, p: PlayerState, trigger: ToolTrigger): PlayerMods {
+  const ready = p.tools.filter((t) => t.setup.trigger === trigger && t.cooldown === 0).sort((a, b) => a.setup.technique - b.setup.technique);
+  let m = noMods();
+  for (const t of ready) {
+    t.cooldown = t.setup.cooldownTicks;
+    world.events.push({ kind: 'toolFired', playerId: p.id, technique: t.setup.technique });
+    m = combineMods(m, t.setup.mods);
+  }
+  if (ready.length === 0) return m;
+  if (m.areaHitStrength > 0) {
+    for (const o of world.enemies) {
+      if (!isEnemyPresent(o) || bodyGap(p.pos, R, o.pos, o.def.radius) > m.areaHitRadius) continue;
+      landHit(world, p, o, 'ripple', m.areaHitStrength, 0);
+      if (m.disarm > 0 && trigger !== 'greatCounter') disarmEnemy(o, m);
+    }
+  } else if (m.disarm > 0 && trigger !== 'greatCounter') {
+    const near = nearestEnemy(world, p, 1.5);
+    if (near) disarmEnemy(near, m);
+  }
+  return m;
+}
+
+function disarmEnemy(e: EnemyState, m: PlayerMods): void {
+  e.disarmed = Math.max(e.disarmed, m.disarm);
+  e.disarmLeft = Math.max(e.disarmLeft ?? 0, 1, m.disarmAttacks);
+}
+
+/** Tool Belt: runs an action with the fired tools' effects added to the player's own for just that action. */
+function withTools(world: WorldState, p: PlayerState, trigger: ToolTrigger, action: () => void): void {
+  if (p.tools.length === 0) {
+    action();
+    return;
+  }
+  const extra = fireTools(world, p, trigger);
+  const own = p.mods;
+  p.mods = combineMods(own, extra);
+  try {
+    action();
+  } finally {
+    p.mods = own;
+  }
+}
+
+/** Tool Belt: enough enemies close while the player is fighting (landed a hit lately). */
+function crowded(world: WorldState, p: PlayerState): boolean {
+  if (!p.tools.some((t) => t.setup.trigger === 'crowded' && t.cooldown === 0)) return false;
+  if (p.lastLandedTick < 0 || world.tick - p.lastLandedTick > TOOL_BELT.crowdedRecentHitTicks) return false;
+  const close = world.enemies.filter((e) => isEnemyPresent(e) && bodyGap(p.pos, R, e.pos, e.def.radius) <= TOOL_BELT.crowdedRadius).length;
+  return close >= TOOL_BELT.crowdedCount;
 }
