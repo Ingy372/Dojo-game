@@ -101,7 +101,8 @@ describe('Q-PREMIUM-2 L4 / L5 / L7 / L9 / L10 / L11', () => {
     const s = read('scenes/HomeScene.ts');
     expect(s).toMatch(/const rightX = pad \+ Math\.min\(300, width \* 0\.38\) \+ pad;/);
     expect(s).not.toMatch(/0x000000, 0\.35\)\.setOrigin\(0\)\.setInteractive/);
-    expect(s).toMatch(/shade\.on\(Phaser\.Input\.Events\.GAMEOBJECT_POINTER_DOWN, close\)/);
+    // Grok playtest Nov 23 (B21): any tap closes it and still reaches the tab underneath.
+    expect(s).toMatch(/this\.input\.once\(Phaser\.Input\.Events\.POINTER_DOWN, close\)/);
   });
 });
 

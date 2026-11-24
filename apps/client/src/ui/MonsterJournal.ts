@@ -159,7 +159,11 @@ export function drawMonsterJournal(scene: Phaser.Scene, box: Phaser.GameObjects.
     subtitle.setText(shown === 0 ? (CONTENT.named.tierNames[String(tier)] ?? '') : '');
     pages[shown]();
   };
-  turn(0);
+  // Grok playtest Nov 23 (B22): the named-monster page came first and is often still all "?", so the Journal
+  // looked empty while beaten kinds sat on later pages. Open on the first page with a met card.
+  const kindPage = kinds.findIndex((kd) => kd.met);
+  const namedMet = named.some((m) => !!journal[m.id]?.met);
+  turn(namedMet || kindPage < 0 ? 0 : 1 + Math.floor(kindPage / CARD_YS.length));
 
   // Big page-turn arrows at the page's bottom corners.
   const ay = midY + (ph / 2) * scale - 22;

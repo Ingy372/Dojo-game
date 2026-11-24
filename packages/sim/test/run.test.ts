@@ -20,6 +20,7 @@ import {
   wrapUpRun,
   tickPlayClock,
   makeGateQuestion,
+  numberWords,
   playTimeUp,
   isPlayLimit,
   loadProfile,
@@ -276,16 +277,19 @@ describe('play-time limit (M7-P9)', () => {
     expect(playTimeUp(c, 15)).toBe(false);
   });
 
-  it('the grown-up gate asks a sum with 4 different choices, one right', () => {
+  it('the grown-up gate asks a sum of two two-digit numbers in words, with no choices to guess from', () => {
     let seed = 1;
     const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
     for (let i = 0; i < 200; i++) {
       const q = makeGateQuestion(rand);
       expect(q.answer).toBe(q.a + q.b);
-      expect(q.choices).toContain(q.answer);
-      expect(new Set(q.choices).size).toBe(4);
-      expect(q.choices.every((n) => n > 0)).toBe(true);
+      expect(q.a).toBeGreaterThanOrEqual(21);
+      expect(q.b).toBeLessThanOrEqual(49);
+      expect(q.aWords).toBe(numberWords(q.a));
+      expect(q.aWords).not.toMatch(/\d/);
+      expect(q).not.toHaveProperty('choices');
     }
+    expect([numberWords(47), numberWords(30), numberWords(13), numberWords(21)]).toEqual(['forty-seven', 'thirty', 'thirteen', 'twenty-one']);
   });
 
   it('only off/15/30/45/60 are valid, default off, bad saves fall back to off', () => {

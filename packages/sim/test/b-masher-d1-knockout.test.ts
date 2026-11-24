@@ -76,7 +76,8 @@ describe('B-MASHER-d1 Screen 3 pointer order', () => {
     const home = src('scenes/HomeScene.ts');
     expect(home).toMatch(/this\.welcomeHome\(homePointer\(this\.training\.path\.nextClassDay, resting \|\| isPlayTimeUp\(this\.profile\)\), \(\) => this\.refresh\(\)\)/);
     expect(home).toMatch(/this\.time\.delayedCall\(KO\.pointerMs, close\)/);
-    expect(home).toMatch(/shade\.on\(Phaser\.Input\.Events\.GAMEOBJECT_POINTER_DOWN, close\)/);
+    // Grok playtest Nov 23 (B21): any tap closes it and still reaches the tab underneath.
+    expect(home).toMatch(/this\.input\.once\(Phaser\.Input\.Events\.POINTER_DOWN, close\)/);
   });
 });
 

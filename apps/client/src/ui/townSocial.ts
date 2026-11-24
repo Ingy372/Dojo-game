@@ -6,6 +6,7 @@
 // they answer like simple bots so the whole flow can be tried on a phone.
 import Phaser from 'phaser';
 import {
+  APP_KEY_PREFIX,
   SOCIAL,
   acceptInvite,
   declineInvite,
@@ -106,6 +107,8 @@ export class TownSocial {
 
   constructor(private readonly host: SocialHost) {
     this.scene = host.scene;
+    // Grok playtest Nov 23 (P4): party invites start Off; the player's choice is kept on this phone.
+    if (!invitesOnSaved()) setInvitesOff(this.state, ME, true);
     this.hud = this.scene.add.container(0, 0).setDepth(55);
     this.layout();
     this.scene.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
@@ -566,6 +569,7 @@ export class TownSocial {
     const bw = party ? (w - 3 * S2) / 2 : w - 2 * S2;
     button(this.scene, { x: x + S2, y: by, w: bw, h: MIN_TAP, label: off ? W.invitesOff : W.invitesOn, color: off ? 0x5a4a6a : 0x2f6a8a, size: TYPE.body, onTap: () => {
       setInvitesOff(this.state, ME, !off);
+      saveInvitesOn(off);
       if (!off) this.closeInviteCard();
       sfx.tap();
       this.openParty();
@@ -615,5 +619,25 @@ export class TownSocial {
     const c = this.scene.add.container(0, 0, [g, t]).setDepth(60);
     this.toastLayer = c;
     this.scene.tweens.add({ targets: c, alpha: 0, delay: 1600, duration: 400, onComplete: () => c.destroy() });
+  }
+}
+
+const INVITES_KEY = `${APP_KEY_PREFIX}invites-on`;
+
+/** True once the player turned party invites on (they start off, P4). */
+function invitesOnSaved(): boolean {
+  try {
+    return localStorage.getItem(INVITES_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function saveInvitesOn(on: boolean): void {
+  try {
+    if (on) localStorage.setItem(INVITES_KEY, '1');
+    else localStorage.removeItem(INVITES_KEY);
+  } catch {
+    // Storage is off: invites start off again next visit, the safe side.
   }
 }
