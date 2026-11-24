@@ -44,7 +44,7 @@ something.
 - **Store room** at the town's camera angle: aisles, a toy shelf, the counter with a register, the
   front door, a ceiling speaker. Built like the Street Smarts House (`incoming-art/claude-street-house`).
 - **People** on the hero v2 model like the staff (`incoming-art/claude-staff`): Mom, Dad, a store
-  worker (vest and name tag), a cashier, a shopper (ordinary clothes), and a grown-up with a kid.
+  worker (vest and name tag), a cashier, a shopper (ordinary clothes) and a stranger in an aisle (ordinary clothes).
   Animations: idle, walk (4 directions), wave. The hug and emotes are drawn in code.
 - A preview sheet for Jay first; then the import step packs them.
 
