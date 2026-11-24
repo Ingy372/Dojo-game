@@ -1,0 +1,8 @@
+{
+  "_note": "Tool Belt stage 1: one signature move per kata for the KATA button, from drafts/content/tool-belt-stage-1.md (Jay: 'Draft is OK', Nov 24). kata and requirement must match content/katas (a test checks). Every enemy within radius (tiles) of the hero takes a hit of this strength (a share of Power, like a Strike's 2.5), is pushed knockTiles away (bosses stay put) and is stunned staggerTicks (capped by COMBAT.counter.holdCapTicks). cooldownTicks: 20 = 1 second. anim = hero motion (stand-in until new art).",
+  "moves": [
+    { "id": "kiai", "kata": "basic-form-1", "requirement": "white-kata", "name": "Kiai!", "text": "A huge KIAI stuns everyone close and pushes them back a little.", "cooldownTicks": 500, "radius": 2.0, "strength": 1.0, "knockTiles": 0.5, "staggerTicks": 24, "anim": "counter" },
+    { "id": "four-corners", "kata": "basic-form-2", "requirement": "yellow-kata", "name": "Four Corners", "text": "Blocks and front kicks to all four sides knock everyone far back.", "cooldownTicks": 440, "radius": 2.4, "strength": 1.5, "knockTiles": 1.5, "staggerTicks": 10, "anim": "strike" },
+    { "id": "iron-wall", "kata": "keon", "requirement": "orange-kata", "name": "Iron Wall", "text": "Every block, then a mighty reverse punch that blasts everyone close.", "cooldownTicks": 560, "radius": 1.6, "strength": 4.0, "knockTiles": 1.0, "staggerTicks": 20, "anim": "counter" }
+  ]
+}

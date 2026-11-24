@@ -42,6 +42,10 @@ export interface RawContent {
   strikes: unknown;
   /** PB-04: content/abilities/kata-powers.json. */
   kataPowers: unknown;
+  /** Tool Belt: content/abilities/tools.json (missing = no tools). */
+  tools?: unknown;
+  /** Tool Belt: content/abilities/kata-signatures.json (missing = no kata moves). */
+  kataSignatures?: unknown;
   dojoRoom: unknown;
   decorations: unknown;
   twists: unknown;
@@ -109,7 +113,7 @@ export function loadContent(raw: RawContent): Content {
     enemies,
     insights: loadInsights(raw.insights),
     loot,
-    abilities: loadAbilities(raw.abilities, raw.sealFamilies, raw.strikes, raw.kataPowers),
+    abilities: loadAbilities(raw.abilities, raw.sealFamilies, raw.strikes, raw.kataPowers, raw.tools, raw.kataSignatures),
     dojo,
     twists: loadTwists(raw.twists),
     elites,

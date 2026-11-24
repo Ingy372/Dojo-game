@@ -99,6 +99,50 @@ export interface StrikeDef {
   legacyIds: string[];
 }
 
+/** Tool Belt: what the player does that fires a tool. Never a timer (spec: the hero never plays itself). */
+export type ToolTrigger = 'greatCounter' | 'block' | 'strike' | 'dash' | 'crowded' | 'hit';
+export const TOOL_TRIGGERS: readonly ToolTrigger[] = ['greatCounter', 'block', 'strike', 'dash', 'crowded', 'hit'];
+export type ToolAnim = 'jab' | 'counter' | 'strike' | 'dash' | 'none';
+const TOOL_ANIMS: readonly ToolAnim[] = ['jab', 'counter', 'strike', 'dash', 'none'];
+
+/** Tool Belt: one tool per self-defense technique (content/abilities/tools.json). */
+export interface ToolDef {
+  /** The self-defense technique number; its sign-off earns the tool. */
+  technique: number;
+  name: string;
+  /** One line reminding the student of the real technique. */
+  reminder: string;
+  /** What it does, in plain words. */
+  text: string;
+  trigger: ToolTrigger;
+  /** Ticks before it can fire again (at least one second). */
+  cooldownTicks: number;
+  /** The hero motion played when it fires. */
+  anim: ToolAnim;
+  effects: Effect[];
+}
+
+/** Tool Belt: a kata's signature move for the KATA button (content/abilities/kata-signatures.json). */
+export interface KataSignatureDef {
+  id: string;
+  /** The content/katas id. */
+  kata: string;
+  /** That kata's curriculum requirement: its sign-off earns the move. */
+  requirement: string;
+  name: string;
+  text: string;
+  cooldownTicks: number;
+  /** Tiles around the hero. */
+  radius: number;
+  /** Move strength (a share of Power, like a Strike's 2.5). */
+  strength: number;
+  /** How far each enemy is pushed (tiles; bosses stay put). */
+  knockTiles: number;
+  /** How long each enemy is stunned (capped by COMBAT.counter.holdCapTicks). */
+  staggerTicks: number;
+  anim: string;
+}
+
 export interface KataPowerDef {
   id: string;
   /** The content/katas id. */
@@ -140,6 +184,10 @@ export interface AbilityContent {
   strikeDefs: StrikeDef[];
   /** PB-04: the kata powers for the Kata slot (empty if `loadAbilities` was given no kata power file). */
   kataPowers: KataPowerDef[];
+  /** Tool Belt: the tools (empty if `loadAbilities` was given no tool file). */
+  tools: ToolDef[];
+  /** Tool Belt: the kata signature moves (empty if `loadAbilities` was given no kata move file). */
+  kataSignatures: KataSignatureDef[];
 }
 
 export class AbilityError extends Error {
@@ -162,7 +210,7 @@ function num(v: unknown, where: string): number {
   return v as number;
 }
 
-export function loadAbilities(data: unknown, familyData?: unknown, strikeData?: unknown, kataPowerData?: unknown): AbilityContent {
+export function loadAbilities(data: unknown, familyData?: unknown, strikeData?: unknown, kataPowerData?: unknown, toolData?: unknown, kataSignatureData?: unknown): AbilityContent {
   const d = data as Record<string, unknown>;
   if (!d || typeof d !== 'object') fail('the file is not an object');
   const listOf = (key: string): Record<string, unknown>[] => {
@@ -240,7 +288,7 @@ export function loadAbilities(data: unknown, familyData?: unknown, strikeData?: 
     };
   });
 
-  return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues, families: familyData === undefined ? [] : loadSealFamilies(familyData), strikeDefs: strikeData === undefined ? [] : loadStrikeDefs(strikeData), kataPowers: kataPowerData === undefined ? [] : loadKataPowers(kataPowerData, stances) };
+  return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues, families: familyData === undefined ? [] : loadSealFamilies(familyData), strikeDefs: strikeData === undefined ? [] : loadStrikeDefs(strikeData), kataPowers: kataPowerData === undefined ? [] : loadKataPowers(kataPowerData, stances), tools: toolData === undefined ? [] : loadTools(toolData), kataSignatures: kataSignatureData === undefined ? [] : loadKataSignatures(kataSignatureData) };
 }
 
 const FAMILY_IDS: readonly SealFamilyId[] = ['escape', 'advancing', 'counter', 'guard', 'throw', 'disarm', 'lock-arm', 'lock-wrist'];
@@ -359,5 +407,51 @@ export function loadKataPowers(data: unknown, stances: readonly StanceDef[]): Ka
     const power = effects.filter((e) => e.type === 'powerScale').reduce((sum, e) => sum + e.amount, 0);
     if (topStance + power > STANCE_POWER_CAP + 1e-9) fail(`${w}: a Stance plus this power is over the +${Math.round(STANCE_POWER_CAP * 100)}% damage cap`);
     return { id, kata, requirement: str(p.requirement, `${w}.requirement`), name: str(p.name, `${w}.name`), text: str(p.text, `${w}.text`), status: p.status as KataPowerDef['status'], effects };
+  });
+}
+
+/** Tool Belt: checks content/abilities/tools.json. Every technique once, a known trigger and motion, a cooldown of at least one second, known effects. */
+export function loadTools(data: unknown): ToolDef[] {
+  const d = data as Record<string, unknown>;
+  if (!d || typeof d !== 'object' || !Array.isArray(d.tools)) fail('tools: the file needs a "tools" list');
+  const seen = new Set<number>();
+  return (d.tools as Record<string, unknown>[]).map((t, i) => {
+    const w = `tools[${i + 1}]`;
+    const technique = num(t.technique, `${w}.technique`);
+    if (!Number.isInteger(technique) || technique < 1) fail(`${w}.technique must be a whole number of 1 or more`);
+    if (seen.has(technique)) fail(`${w}: technique #${technique} is listed twice`);
+    seen.add(technique);
+    if (!TOOL_TRIGGERS.includes(t.trigger as ToolTrigger)) fail(`${w}.trigger must be one of: ${TOOL_TRIGGERS.join(', ')}`);
+    if (!TOOL_ANIMS.includes(t.anim as ToolAnim)) fail(`${w}.anim must be one of: ${TOOL_ANIMS.join(', ')}`);
+    const cooldownTicks = num(t.cooldownTicks, `${w}.cooldownTicks`);
+    if (!Number.isInteger(cooldownTicks) || cooldownTicks < 20) fail(`${w}.cooldownTicks must be a whole number of 20 (one second) or more`);
+    if (!Array.isArray(t.effects) || t.effects.length === 0) fail(`${w}.effects must be a list with at least one effect`);
+    const effects = (t.effects as unknown[]).map((e) => loadEffect(e, (problem) => fail(`${w}: ${problem}`)));
+    return { technique, name: str(t.name, `${w}.name`), reminder: str(t.reminder, `${w}.reminder`), text: str(t.text, `${w}.text`), trigger: t.trigger as ToolTrigger, cooldownTicks, anim: t.anim as ToolAnim, effects };
+  });
+}
+
+/** Tool Belt: checks content/abilities/kata-signatures.json. No repeated ids or katas; every number present and 0 or more. (A test checks each kata against content/katas.) */
+export function loadKataSignatures(data: unknown): KataSignatureDef[] {
+  const d = data as Record<string, unknown>;
+  if (!d || typeof d !== 'object' || !Array.isArray(d.moves)) fail('kata moves: the file needs a "moves" list');
+  const ids = new Set<string>();
+  const katas = new Set<string>();
+  return (d.moves as Record<string, unknown>[]).map((m, i) => {
+    const w = `moves[${i + 1}]`;
+    const id = str(m.id, `${w}.id`);
+    const kata = str(m.kata, `${w}.kata`);
+    if (ids.has(id)) fail(`${w}: the id "${id}" is used twice`);
+    if (katas.has(kata)) fail(`${w}: the kata "${kata}" already has a move`);
+    ids.add(id);
+    katas.add(kata);
+    const n = (key: string): number => {
+      const v = num(m[key], `${w}.${key}`);
+      if (v < 0) fail(`${w}.${key} must be 0 or more`);
+      return v;
+    };
+    const cooldownTicks = n('cooldownTicks');
+    if (!Number.isInteger(cooldownTicks) || cooldownTicks < 20) fail(`${w}.cooldownTicks must be a whole number of 20 (one second) or more`);
+    return { id, kata, requirement: str(m.requirement, `${w}.requirement`), name: str(m.name, `${w}.name`), text: str(m.text, `${w}.text`), cooldownTicks, radius: n('radius'), strength: n('strength'), knockTiles: n('knockTiles'), staggerTicks: Math.round(n('staggerTicks')), anim: str(m.anim, `${w}.anim`) };
   });
 }

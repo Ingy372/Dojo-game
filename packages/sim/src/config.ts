@@ -270,6 +270,13 @@ export function gearCapsForTier(tier: number): (typeof GEAR_CAPS)[keyof typeof G
  * Green and Blue 3, Red and up 4 (after the beta). A tier past the last row uses the last row.
  * The one table, read by `sealSlots` in loadout.ts. PLACEHOLDER from the Redesign table.
  */
+/**
+ * Tool Belt (docs/superpowers/specs/2026-11-24-tool-belt-design.md). Pockets: startPockets, +1 per signed-off kata,
+ * at most maxPockets (10 by brown belt). A tool with the 'crowded' trigger fires when at least crowdedCount enemies are
+ * within crowdedRadius tiles and the player landed a hit in the last crowdedRecentHitTicks (so only while fighting).
+ */
+export const TOOL_BELT = { startPockets: 3, maxPockets: 10, crowdedCount: 3, crowdedRadius: 1.5, crowdedRecentHitTicks: 20 } as const;
+
 export const SEAL_SLOTS_BY_TIER: readonly number[] = [2, 2, 3, 3, 3, 4];
 
 // ---------------------------------------------------------------- the training link (milestone 4)
