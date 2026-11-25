@@ -2,6 +2,9 @@
 // section 4), measured the way LP-P1 measured it (same bots, artists, seeds).
 // Standard belt 1 runs every time; the whole table runs with BALANCE=1.
 import { describe, expect, it } from 'vitest';
+
+// The rules package has no browser or Node types; the test runner still has a console for the printed table.
+declare const console: { log(...args: unknown[]): void };
 import { ARTISTS } from '../r-bal-12-artists';
 import { testContent } from '../load-content';
 import { SKILLS, playRoom, type Skill, type Style } from './bot';
@@ -19,7 +22,8 @@ const TABLE: Record<Difficulty, number[][]> = {
   // GP-6 (Nov 25): the whole table re-measured with BALANCE=1 after Jay's Nov 24 changes (no automatic blocking,
   // the damage shift, the Tool Belt). Kid and masher now lose most runs, so they sit near the 60-coin floor.
   standard: [[63, 101, 101, 60], [62, 101, 101, 60], [61, 101, 101, 60], [62, 101, 101, 60], [63, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60]],
-  guided: [[94, 101, 101, 62], [88, 101, 101, 62], [85, 101, 101, 65], [90, 101, 101, 61], [89, 101, 101, 61], [89, 101, 101, 61], [85, 101, 101, 61], [85, 101, 101, 61], [85, 101, 101, 61], [88, 101, 101, 62]],
+  // Guided re-measured again after the Mash guard came back on Guided only (Jay, Nov 25) at enemy Power 0.75.
+  guided: [[100, 101, 101, 83], [99, 101, 101, 84], [96, 101, 101, 89], [98, 101, 101, 83], [96, 101, 101, 82], [96, 101, 101, 83], [97, 101, 101, 82], [98, 101, 101, 84], [99, 101, 101, 85], [99, 101, 101, 84]],
   challenge: [[], [], [], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60]],
 };
 

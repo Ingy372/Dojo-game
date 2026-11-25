@@ -1,6 +1,6 @@
 // B-MASHER-2 (E3, #296): the "Sensei steps back" moment shows once per run, with its text from content/.
 import { describe, expect, it } from 'vitest';
-import { COMBAT, createWorld, loadRoom, mashGuardOn, restoreRun, startRun } from '../src';
+import { createWorld, loadRoom, mashGuardOn, restoreRun, startRun } from '../src';
 import { testContent } from './load-content';
 import { MASH_GUARD_LINE, takeMashGuardMoment } from '../../../apps/client/src/game/mashGuardMoment';
 import mashGuardText from '../../../content/settings/mash-guard.json';
@@ -56,13 +56,16 @@ describe('B-MASHER-2 Sensei steps back', () => {
     expect(takeMashGuardMoment(restoreRun(content, old)!, 'p1')).toBe(true);
   });
 
-  it('co-op: Mash guard is off for every player (Jay, Nov 24: no automatic blocking)', () => {
+  it('co-op: Mash guard is off for every player on Standard, on for each on Guided (Jay, Nov 24 and 25)', () => {
     const room = loadRoom({ id: 'arena', name: 'Arena', tiles: ['########', '#......#', '#..P...#', '#......#', '########'], enemies: [] });
     const world = createWorld(room, ['p1', 'p2'], {});
     const { p1, p2 } = world.players;
-    expect(COMBAT.counter.mashGuardPerfects).toBe(0);
-    expect(mashGuardOn(p1)).toBe(false);
-    expect(mashGuardOn(p2)).toBe(false);
+    expect(mashGuardOn(p1, 'standard')).toBe(false);
+    expect(mashGuardOn(p2, 'standard')).toBe(false);
+    expect(mashGuardOn(p1, 'guided')).toBe(true);
+    p1.perfects = 3;
+    expect(mashGuardOn(p1, 'guided')).toBe(false);
+    expect(mashGuardOn(p2, 'guided')).toBe(true);
   });
 
   it('the banner keeps off the players and balances its lines', () => {

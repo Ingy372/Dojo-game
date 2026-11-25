@@ -2254,3 +2254,10 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
 - **Live (Nov 25):** Jay asked for it on the live game after the preview was up, so the Bible picture went live with it.
 - **The Lord's Prayer (Nov 25, Jay: "add the Lord's Prayer too"):** added as the eighth prayer, in the King James wording of Matthew 6:9-13, word for word (the faith pack's reference translation). **Claude's call on the wording; it is on the preview only and waits for Jay to confirm the wording before it goes live.**
 - **Lord's Prayer wording (Jay, Nov 25: "Trespasses wording"):** the game shows the traditional wording ("who art in heaven", "on earth", "forgive us our trespasses, as we forgive those who trespass against us", "for ever and ever"). This replaces the King James wording Claude first used. Jay asked for it on the live game.
+
+## Nov 25: automatic block back on Guided only (Jay)
+
+- Jay: "Yes, add it", after the coin re-measure showed a button-masher losing almost every climb even on Guided.
+- The Mash guard is now a difficulty setting (`DIFFICULTY.*.mashGuardPerfects`): **Guided 3** (a hit during the hero's own attack swing counts as a Block until the room's 3rd Great Counter, then it switches off for that room, as before Nov 24), **Standard and Challenge 0** (no automatic blocking, Jay's Nov 24 rule stands there).
+- Guided monsters hit at **0.75** of their Power again (Claude's call). The 0.7 from Nov 24 was only there to make up for losing the block. With both back, Guided plays as it did before Nov 24.
+- Measured on Guided (coins per climb, 101 = a full win): kid bot 96–100, button-masher 82–89 (was about 61 without the block). Standard and Challenge are unchanged.

@@ -1520,7 +1520,7 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
         world.progress.perfects++;
         p.perfects++;
         world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id, chain: p.counterChain });
-        if (p.perfects === COMBAT.counter.mashGuardPerfects) world.events.push({ kind: 'mashGuardOff', playerId: p.id });
+        if (p.perfects === DIFFICULTY[world.difficulty].mashGuardPerfects) world.events.push({ kind: 'mashGuardOff', playerId: p.id });
         // Bell Room twist: each Perfect Counter rings a bell, up to the number needed.
         const bellsNeeded = world.twist?.bells ?? 0;
         if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
@@ -1571,7 +1571,7 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
           }
         }
       });
-    } else if (a.counterable !== false && (guarding || (p.attackCooldown > 0 && mashGuardOn(p)))) {
+    } else if (a.counterable !== false && (guarding || (p.attackCooldown > 0 && mashGuardOn(p, world.difficulty)))) {
       // Block: half damage (never against a dash-only attack: dash out instead), no stagger. The combo is kept.
       // Tool Belt: tools on 'block' fire, and their effects join this Block.
       withTools(world, p, 'block', () => {
@@ -2016,7 +2016,6 @@ function directionTo(from: Vec2, to: Vec2): Vec2 {
   return d > 0 ? { x: dx / d, y: dy / d } : { x: 0, y: 1 };
 }
 
-/** B-MASHER-2 (E3): Mash guard helps a player until they make COMBAT.counter.mashGuardPerfects Perfect Counters in this room; each new room starts it again. In co-op each player has their own. */
 /**
  * Q-PREM-F11: a tap on KO Screen 1 skips the rest of the knock-out pause, so on a floor
  * room the next tick ends the run (playerOut) right away. The practice room, which starts
@@ -2029,8 +2028,9 @@ export function skipDown(world: WorldState, playerId: PlayerId): boolean {
   return true;
 }
 
-export function mashGuardOn(p: PlayerState): boolean {
-  return p.perfects < COMBAT.counter.mashGuardPerfects;
+/** B-MASHER-2 Mash guard: on until the player makes DIFFICULTY[difficulty].mashGuardPerfects Perfect Counters in this room (Guided only since Nov 25); each new room starts it again. In co-op each player has their own. */
+export function mashGuardOn(p: PlayerState, difficulty: Difficulty): boolean {
+  return p.perfects < DIFFICULTY[difficulty].mashGuardPerfects;
 }
 
 /** L8-B2: a Perfect Counter can hold this enemy (any but a Guardian, boss or elite). */
