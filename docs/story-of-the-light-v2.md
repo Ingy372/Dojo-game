@@ -321,10 +321,10 @@ The seven questions from version 1 still stand (Eli's name, extra verses, naming
 - [x] **Eli's notebook pages:** write them. Drafted above; each line still needs Jay's OK.
 - [x] **The hero being proud at Yellow** without the player choosing it: yes.
 
-**Still open:**
-
-- [ ] **Sensei's three new lines.** Approve, change or cut each:
+- [x] **Sensei's three new lines:** yes, all three (Jay, Nov 25):
   1. Why Sensei hasn't brought Eli home: "I can clear a floor. I can't make him come home."
   2. Green belt, on earned belts vs. the free gift: "A belt is earned. It tells the truth about your training. But nobody trains their way into being loved. That part was always a gift."
   3. Brown/Black belt, on the wind verse: "You can't see what changed inside Eli. But everybody can see him carrying the baker's flour."
+**Still open:**
+
 - [ ] **The 30 notebook pages:** approve, change or cut each.
