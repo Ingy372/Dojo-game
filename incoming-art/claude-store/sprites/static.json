@@ -1,0 +1,263 @@
+{
+ "pixelsPerTile": 80,
+ "camera": "orthographic, 35 deg down, looking north",
+ "sprites": {
+  "street-store-room": {
+   "size": [
+    1344,
+    952
+   ],
+   "layers": [
+    "floor",
+    "walls",
+    "props",
+    "foreground"
+   ],
+   "files": {
+    "floor": "street-store-room_floor.png",
+    "walls": "street-store-room_walls.png",
+    "props": "street-store-room_props.png",
+    "foreground": "street-store-room_foreground.png"
+   },
+   "anchorPx": [
+    32.0,
+    128.0
+   ],
+   "anchorNote": "the frame pixel of grid tile (0,0)'s top-left corner",
+   "place": "room",
+   "note": "The Street Smarts store (Nov 24). Draw floor, walls, props; then the y-sorted pieces and people by sortRow; then foreground (the front wall) above everyone."
+  },
+  "island-a": {
+   "size": [
+    424,
+    162
+   ],
+   "layers": [
+    "island-a"
+   ],
+   "files": {
+    "island-a": "island-a_island-a.png"
+   },
+   "anchorPx": [
+    212.0,
+    157.0
+   ],
+   "anchorTile": [
+    3.6,
+    3.8
+   ],
+   "footprintRect": [
+    1.0,
+    6.2,
+    3.2,
+    3.8
+   ],
+   "place": "prop",
+   "sortRow": 3.8,
+   "note": "aisle shelves, back row west (aisle sign 1)."
+  },
+  "island-b": {
+   "size": [
+    344,
+    162
+   ],
+   "layers": [
+    "island-b"
+   ],
+   "files": {
+    "island-b": "island-b_island-b.png"
+   },
+   "anchorPx": [
+    172.0,
+    157.0
+   ],
+   "anchorTile": [
+    10.3,
+    3.8
+   ],
+   "footprintRect": [
+    8.2,
+    12.4,
+    3.2,
+    3.8
+   ],
+   "place": "prop",
+   "sortRow": 3.8,
+   "note": "aisle shelves, back row east (aisle sign 2)."
+  },
+  "island-c": {
+   "size": [
+    200,
+    143
+   ],
+   "layers": [
+    "island-c"
+   ],
+   "files": {
+    "island-c": "island-c_island-c.png"
+   },
+   "anchorPx": [
+    100.0,
+    138.0
+   ],
+   "anchorTile": [
+    2.2,
+    5.3
+   ],
+   "footprintRect": [
+    1.0,
+    3.4,
+    4.7,
+    5.3
+   ],
+   "place": "prop",
+   "sortRow": 5.3,
+   "note": "aisle shelves, front row, lower (aisle sign 3)."
+  },
+  "island-d": {
+   "size": [
+    184,
+    142
+   ],
+   "layers": [
+    "island-d"
+   ],
+   "files": {
+    "island-d": "island-d_island-d.png"
+   },
+   "anchorPx": [
+    92.0,
+    138.0
+   ],
+   "anchorTile": [
+    5.1,
+    5.3
+   ],
+   "footprintRect": [
+    4.0,
+    6.2,
+    4.7,
+    5.3
+   ],
+   "place": "prop",
+   "sortRow": 5.3,
+   "note": "aisle shelves, front row, lower (aisle sign 4)."
+  },
+  "display": {
+   "size": [
+    172,
+    123
+   ],
+   "layers": [
+    "display"
+   ],
+   "files": {
+    "display": "display_display.png"
+   },
+   "anchorPx": [
+    63.0,
+    122.0
+   ],
+   "anchorTile": [
+    5.0,
+    6.65
+   ],
+   "footprintRect": [
+    4.25,
+    6.32,
+    5.95,
+    6.65
+   ],
+   "place": "prop",
+   "sortRow": 6.65,
+   "note": "the little display the worker stocks, with a box of stock."
+  },
+  "counter": {
+   "size": [
+    270,
+    165
+   ],
+   "layers": [
+    "counter"
+   ],
+   "files": {
+    "counter": "counter_counter.png"
+   },
+   "anchorPx": [
+    135.0,
+    165.0
+   ],
+   "anchorTile": [
+    11.2,
+    6.75
+   ],
+   "footprintRect": [
+    9.55,
+    12.85,
+    5.95,
+    6.75
+   ],
+   "place": "prop",
+   "sortRow": 6.75,
+   "note": "the checkout counter with the register."
+  },
+  "boxes": {
+   "size": [
+    152,
+    139
+   ],
+   "layers": [
+    "boxes"
+   ],
+   "files": {
+    "boxes": "boxes_boxes.png"
+   },
+   "anchorPx": [
+    76.0,
+    134.0
+   ],
+   "anchorTile": [
+    1.3,
+    8.3
+   ],
+   "footprintRect": [
+    0.4,
+    2.2,
+    7.4,
+    8.3
+   ],
+   "place": "prop",
+   "sortRow": 8.3,
+   "note": "a stack of boxes (the hiding spot)."
+  },
+  "carts": {
+   "size": [
+    104,
+    132
+   ],
+   "layers": [
+    "carts"
+   ],
+   "files": {
+    "carts": "carts_carts.png"
+   },
+   "anchorPx": [
+    60.0,
+    157.0
+   ],
+   "anchorTile": [
+    14.9,
+    6.95
+   ],
+   "footprintRect": [
+    14.2,
+    15.45,
+    5.8,
+    6.95
+   ],
+   "place": "prop",
+   "sortRow": 6.95,
+   "note": "shopping carts by the door."
+  }
+ }
+}

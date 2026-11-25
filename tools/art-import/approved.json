@@ -2823,6 +2823,76 @@
           "json": "incoming-art/claude-street-house/sprites/static.json"
         }
       ]
+    },
+    "street-store": {
+      "note": "The Street Smarts store (Claude, Nov 24; Jay picked a Blender store): the room layers and its y-sorted pieces. Waiting on Jay's OK of the art.",
+      "sources": [
+        {
+          "id": "street-store",
+          "type": "static",
+          "json": "incoming-art/claude-store/sprites/static.json"
+        }
+      ]
+    },
+    "people-mom": {
+      "note": "Street Smarts store person (Claude, Nov 24, waiting on Jay's OK): mom, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/mom/people-mom.json"
+        }
+      ]
+    },
+    "people-dad": {
+      "note": "Street Smarts store person (Claude, Nov 24, waiting on Jay's OK): dad, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/dad/people-dad.json"
+        }
+      ]
+    },
+    "people-worker": {
+      "note": "Street Smarts store person (Claude, Nov 24, waiting on Jay's OK): worker, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/worker/people-worker.json"
+        }
+      ]
+    },
+    "people-cashier": {
+      "note": "Street Smarts store person (Claude, Nov 24, waiting on Jay's OK): cashier, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/cashier/people-cashier.json"
+        }
+      ]
+    },
+    "people-shopper": {
+      "note": "Street Smarts store person (Claude, Nov 24, waiting on Jay's OK): shopper, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/shopper/people-shopper.json"
+        }
+      ]
+    },
+    "people-stranger": {
+      "note": "Street Smarts store person (Claude, Nov 24, waiting on Jay's OK): stranger, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/stranger/people-stranger.json"
+        }
+      ]
     }
   }
 }

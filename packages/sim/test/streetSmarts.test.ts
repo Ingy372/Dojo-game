@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_CHOICES, streetSmartsOpen, advance, choose, currentLine, fillLine, loadScenario, loadProfile, newProfile, recordScenario, scenarioStars, startScenario, type Scenario, type ScenarioState } from '../src';
+import { MAX_CHOICES, STAGE_ACTIONS, stageMarks, streetSmartsOpen, advance, choose, currentLine, fillLine, loadScenario, loadProfile, newProfile, recordScenario, scenarioStars, startScenario, type Scenario, type ScenarioState } from '../src';
 import store from '../../../content/street-smarts/store-separated.json';
+import storeRoom from '../../../content/street-smarts/store-room.json';
 
 const sc = loadScenario(store);
 const clone = () => JSON.parse(JSON.stringify(store));
@@ -25,8 +26,9 @@ const worst = (id: string) => sc.scenes.flatMap((s) => s.lines).find((l) => l.id
 
 describe('Street Smarts: store scenario', () => {
   it('loads the approved script with three star choices', () => {
-    expect(sc.scenes.map((s) => s.id)).toEqual(['intro', 'stay', 'helper', 'voice', 'offer', 'reunion', 'sensei-reflect']);
-    expect(sc.starChoices).toEqual(['choice-stay', 'choice-helper', 'choice-offer']);
+    expect(sc.scenes.map((s) => s.id)).toEqual(['intro', 'first', 'helper', 'voice', 'offer', 'reunion', 'sensei-reflect']);
+    expect(sc.starChoices).toEqual(['choice-first', 'choice-helper', 'choice-offer']);
+    expect(sc.room).toBe('store');
     expect(sc.maxStars).toBe(3);
   });
 
@@ -34,24 +36,24 @@ describe('Street Smarts: store scenario', () => {
     const { st, seen } = play((id) => best(id));
     expect(st.done).toBe(true);
     expect(scenarioStars(sc, st)).toBe(3);
-    expect(seen).toContain('{player} gives {grownup} a big hug.');
-    expect(seen[seen.length - 1]).toBe('That is how you get home safe.');
+    expect(seen).toContain("There you are! I'm so glad you followed what we practiced.");
+    expect(seen[seen.length - 1]).toBe("That's what got you home safe and sound!");
   });
 
   it('a not-best answer pauses, Sensei reflects, and the same choice comes back', () => {
     let st = startScenario();
     while (!currentLine(sc, st)!.choices) st = advance(sc, st);
-    st = choose(sc, st, worst('choice-stay'));
-    expect(currentLine(sc, st)!.text).toBe("Let's see what could have gone differently.");
+    st = choose(sc, st, worst('choice-first'));
+    expect(currentLine(sc, st)!.speaker).toBe('sensei');
     while (!currentLine(sc, st)!.choices) st = advance(sc, st);
-    expect(currentLine(sc, st)!.id).toBe('choice-stay');
+    expect(currentLine(sc, st)!.id).toBe('choice-first');
   });
 
   it('every wrong-first run still finishes, with no star for the retried choices', () => {
     const { st, seen } = play((id, n) => (n === 1 ? worst(id) : best(id)));
     expect(st.done).toBe(true);
     expect(scenarioStars(sc, st)).toBe(0);
-    expect(seen[seen.length - 1]).toBe('That is how you get home safe.');
+    expect(seen[seen.length - 1]).toBe("That's what got you home safe and sound!");
   });
 
   it('voice is required to continue but earns no star', () => {
@@ -69,9 +71,46 @@ describe('Street Smarts: store scenario', () => {
         }
   });
 
-  it('every helper choice except hiding is a good answer', () => {
+  it('only people who work at the store are good helpers, picked by tapping them', () => {
     const helper = sc.scenes.find((s) => s.id === 'helper')!.lines.find((l) => l.choices)!;
-    expect(helper.choices!.filter((c) => c.stars === 0).map((c) => c.text)).toEqual(['Hide and wait alone.']);
+    expect(helper.tap).toBe(true);
+    expect(helper.choices!.filter((c) => c.stars > 0).map((c) => c.target)).toEqual(['worker', 'cashier']);
+    expect(helper.choices!.filter((c) => c.stars === 0).map((c) => c.target)).toEqual(['stranger', 'hide-spot']);
+  });
+
+  it('the first answer is to go to the front for help (Jay, Nov 24)', () => {
+    const first = sc.scenes.find((s) => s.id === 'first')!.lines[0];
+    expect(first.choices![best('choice-first')].text).toBe('Go to the front and find someone who can help me.');
+  });
+
+  it('a retry never moves anyone, so a not-best answer is never acted out', () => {
+    for (const scene of sc.scenes)
+      for (const lines of Object.values(scene.branches))
+        if (lines[lines.length - 1].retry) for (const l of lines) expect(l.stage ?? []).toEqual([]);
+    const a = clone();
+    a.scenes[1].branches['run-retry'][0].stage = [{ do: 'face', who: 'player', dir: 'N' }];
+    expect(() => loadScenario(a)).toThrow(/retry branch/);
+  });
+
+  it('every stage cue is a known move by someone in the cast, at a place in the store room', () => {
+    const marks = new Set(Object.keys(storeRoom.marks));
+    for (const m of stageMarks(sc)) expect(marks.has(m), m).toBe(true);
+    const a = clone();
+    a.scenes[0].lines[0].stage[0].do = 'teleport';
+    expect(() => loadScenario(a)).toThrow(/stage/);
+    const b = clone();
+    b.scenes[0].lines[0].stage[0].who = 'ghost';
+    expect(() => loadScenario(b)).toThrow(/ghost/);
+    const c = clone();
+    c.scenes[0].lines[0].stage.push({ do: 'walk', who: 'player' });
+    expect(() => loadScenario(c)).toThrow(/needs "to"/);
+    expect(STAGE_ACTIONS).toContain('walk');
+  });
+
+  it('a tap choice needs a target on every answer', () => {
+    const a = clone();
+    delete a.scenes[2].lines[0].choices[1].target;
+    expect(() => loadScenario(a)).toThrow(/target/);
   });
 
   it('allows 2-4 buttons: the store script loads, 5 or 1 fail', () => {
@@ -109,7 +148,7 @@ describe('Street Smarts: store scenario', () => {
     a.scenes[1].lines[0].choices[0].next = 'nope';
     expect(() => loadScenario(a)).toThrow(/missing branch/);
     const b = clone();
-    b.scenes[1].branches['stay-retry'].at(-1).retry = 'choice-helper';
+    b.scenes[1].branches['run-retry'].at(-1).retry = 'choice-helper';
     expect(() => loadScenario(b)).toThrow(/retries/);
     const c = clone();
     c.starChoices = ['choice-nope'];

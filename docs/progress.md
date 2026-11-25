@@ -1452,6 +1452,12 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - No automatic blocking (Guided enemies 0.75 -> 0.7 to keep the white-belt target), kata Watch first and Hint, the town mini map and the door signs with pictures. Details in decisions.md. 1,696 tests pass; type checks and both builds pass; checked in the browser at 844 x 390 (Watch to "Your turn!", a hinted run paying 3 coins, the map and all three signs).
 - **Next:** Jay plays the preview: a fight in Steady (no auto-blocks), kata Watch and Hint, and the town map and signs; OK (or changes) for the picture icons and the kata words; then copy to `main` with his OK. Still open: re-measure the coin table with BALANCE=1.
 
+## Street Smarts cut scene (2026-11-24, branch `claude/street-cutscene`)
+- "Lost in the store" now plays like a cut scene in a Blender store with Blender people (Mom or Dad, a worker and cashier in blue vests with name tags, a shopper, a stranger). About 20 short lines instead of 35, no Next taps: it stops only for 3 questions and 1 tap-a-person moment. Jay's round 2 script. Details in decisions.md.
+- 1,699 tests pass; type checks and both builds pass; checked in the browser at 844 x 390 and 667 x 375 (the whole lesson, a wrong answer and its retry, the stranger and cashier taps, Skip on a replay, the end screen).
+- Jay played it: add 3-4 aisles, "everything else is good to go". Four numbered aisles added (checked in the browser).
+- **On the live link (Nov 24, Jay: "Yes, go live"):** merged into `main` after bringing in Tool Belt stage 1; 1,739 tests, type checks and both builds pass.
+- **Next:** Jay's OK of the Street Smarts art stands; the next Street Smarts lessons can use the same cut-scene format (each script still needs Jay's approval).
 
 ## Tool Belt, stage 1 (2026-11-24, branch `claude/tool-belt`)
 
