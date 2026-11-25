@@ -2251,3 +2251,4 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
   - A soft gold glow under the Bible so it reads as something to walk up to.
   - The Bible picture was made in Blender with the dojo's toon look (`incoming-art/claude-az-inside/source/make_bible.py`). **New art: waits for Jay's OK.**
   - Reading a prayer gives nothing in the game and nothing is saved or counted. It is never a lock, a quiz or a reward.
+- **Live (Nov 25):** Jay asked for it on the live game after the preview was up, so the Bible picture went live with it.

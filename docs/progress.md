@@ -1501,3 +1501,4 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - The prayer menu: the note about what prayer is and is not on top, seven prayers to pick under it, each shown large with Back and Read to me. Jay approved the words (details in decisions.md).
 - 1,770 tests pass; type checks and both builds pass. Checked in the browser at 844 x 390 and 667 x 375: the Bible on the box, the Pray button, the menu, a prayer, Back, the X. A tap on the Bible started the hero walking to it; the walk was not watched to the end (the preview pane was hidden, which slows the game's clock).
 - **Next:** Jay tries it on his phone: OK (or changes) for the Bible picture and the menu; then copy to `main` with his OK.
+- **On the live link (Nov 25, Jay: "add it to the live game"):** merged into `main` with GitHub's checks green. Going live is also his OK for the Bible picture; he can still change it.
