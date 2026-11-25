@@ -1504,3 +1504,10 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - **On the live link (Nov 25, Jay: "add it to the live game"):** merged into `main` with GitHub's checks green. Going live is also his OK for the Bible picture; he can still change it.
 - **Lord's Prayer (Nov 25):** added on the branch as the eighth prayer (King James wording). 1,770 tests, type checks and both builds pass; checked in the browser at 667 x 375 (the eight buttons, the full prayer on one screen). **Next:** Jay confirms the wording, then it goes on `main`.
 - **Lord's Prayer on the live link (Nov 25):** Jay chose the "trespasses" wording; merged into `main` with the checks green. The prayer menu now has eight prayers.
+
+## Nov 25: download size (CW-4, branch `claude/download-size`)
+
+- Measured a fresh build: 235 MB in all (art 225 MB, sound 7.5 MB, code about 2 MB). Report and ideas to shrink the phone app: `docs/reviews/download-size-2026-11-25.md`.
+- **Fixed:** every Tower climb loaded every belt's monster art (about 30 MB). Each room now loads only its own monsters, what they call in or split into, and a boss's later forms (`apps/client/src/art/enemyPacks.ts`). A white belt now skips about 21 MB of Orange art. A new test checks that every room has the art for every monster it can show, at every health.
+- All tests, type checks and the build pass. **Not checked in the browser:** the app window was minimized, so the preview couldn't draw. Jay climbs once on his phone to make sure every monster still shows.
+- **Next (Jay decides):** the phone app would be about 235 MB. The report suggests packing the art a little smaller first (Jay compares on his phone), then downloading extra looks on first use once the server exists.
