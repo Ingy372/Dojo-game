@@ -1,0 +1,181 @@
+{
+  "notes": "Street Smarts lesson 4, 'Picked on at recess'. Script approved by Jay on Nov 24 (docs/superpowers/specs/2026-11-24-street-smarts-lessons-2-5-design.md); played as a cut scene in the Blender school playground (room: content/street-smarts/playground-room.json). Teaches standing tall, walking away and telling a teacher: a martial artist doesn't start fights. Nobody is hit or pushed on screen. A retry branch never moves anyone.",
+  "id": "playground-teasing",
+  "location": "playground",
+  "room": "playground",
+  "ageBand": "6-9",
+  "topic": "Picked on at recess",
+  "priorities": ["de-escalation", "avoidance", "get-help"],
+  "characters": [
+    { "id": "sensei", "role": "Sensei", "name": null, "title": "Sensei", "note": "His portrait rises at the corner with a chime." },
+    { "id": "kid", "role": "Kid", "name": null, "title": null, "note": "Another kid who teases and takes the ball. Never hits; says sorry at the end." },
+    { "id": "friend1", "role": "Friend", "name": null, "title": null, "note": "A friend by the slide." },
+    { "id": "friend2", "role": "Friend", "name": null, "title": null, "note": "A friend by the slide." },
+    { "id": "teacher", "role": "Teacher", "name": null, "title": null, "note": "The teacher on duty, with a school badge. Kind and fair." }
+  ],
+  "scenes": [
+    {
+      "id": "intro",
+      "kind": "story",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "{player} is playing ball at recess.",
+          "stage": [
+            { "do": "place", "who": "teacher", "to": "teacher", "dir": "S" },
+            { "do": "place", "who": "friend1", "to": "friend1", "dir": "SW", "with": true },
+            { "do": "place", "who": "friend2", "to": "friend2", "dir": "W", "with": true },
+            { "do": "place", "who": "player", "to": "player-ball", "dir": "S", "with": true },
+            { "do": "camera", "fit": ["player-ball", "kid-talk", "friends", "teacher"], "with": true },
+            { "do": "emote", "who": "player", "emote": "ball" }
+          ]
+        },
+        {
+          "speaker": "kid",
+          "text": "Give me that ball. You're too slow to play.",
+          "expression": "neutral",
+          "say": "after",
+          "stage": [
+            { "do": "place", "who": "kid", "to": "kid-start", "dir": "E" },
+            { "do": "walk", "who": "kid", "to": "kid-talk" },
+            { "do": "face", "who": "kid", "dir": "NE" },
+            { "do": "face", "who": "player", "dir": "SW", "with": true }
+          ]
+        },
+        {
+          "speaker": "sensei",
+          "text": "Take a big breath. Stand tall.",
+          "expression": "neutral",
+          "stage": [{ "do": "emote", "who": "kid", "emote": "ball" }]
+        }
+      ]
+    },
+    {
+      "id": "stand",
+      "kind": "de-escalation",
+      "lines": [
+        {
+          "id": "choice-stand",
+          "speaker": "narrator",
+          "text": "What do you do?",
+          "choices": [
+            { "text": "Stand tall and say, \"Stop. I don't like that.\"", "stars": 1, "next": "stand-good" },
+            { "text": "Push them.", "stars": 0, "next": "push-retry" },
+            { "text": "Call them a mean name.", "stars": 0, "next": "name-retry" }
+          ]
+        }
+      ],
+      "branches": {
+        "stand-good": [
+          {
+            "speaker": "player",
+            "text": "Stop. I don't like that.",
+            "expression": "neutral",
+            "stage": [{ "do": "emote", "who": "player", "emote": "shout", "text": "Stop!" }]
+          }
+        ],
+        "push-retry": [
+          { "speaker": "sensei", "text": "Martial artists don't start fights. What else can you do?", "expression": "thinking", "retry": "choice-stand" }
+        ],
+        "name-retry": [
+          { "speaker": "sensei", "text": "Does a mean word make it better or worse?", "expression": "thinking", "retry": "choice-stand" }
+        ]
+      }
+    },
+    {
+      "id": "walk",
+      "kind": "avoidance",
+      "lines": [
+        { "speaker": "kid", "text": "Whatever. You can't make me.", "expression": "neutral" },
+        {
+          "id": "choice-walk",
+          "speaker": "narrator",
+          "text": "The kid keeps teasing. What now?",
+          "choices": [
+            { "text": "Walk away to my friends.", "stars": 1, "next": "walk-good" },
+            { "text": "Stay and argue.", "stars": 0, "next": "argue-retry" }
+          ]
+        }
+      ],
+      "branches": {
+        "walk-good": [
+          {
+            "speaker": "narrator",
+            "text": "{player} walks away to friends.",
+            "stage": [
+              { "do": "walk", "who": "player", "to": "player-friends" },
+              { "do": "face", "who": "player", "dir": "S" }
+            ]
+          }
+        ],
+        "argue-retry": [
+          { "speaker": "sensei", "text": "The longer you stay, the bigger it gets.", "expression": "thinking", "retry": "choice-walk" }
+        ]
+      }
+    },
+    {
+      "id": "tell",
+      "kind": "get-help",
+      "lines": [
+        {
+          "id": "choice-tell",
+          "speaker": "narrator",
+          "text": "Who should you tell? Tap them.",
+          "tap": true,
+          "stage": [{ "do": "camera", "fit": ["player-friends", "teacher", "slide-hide", "friend2"] }],
+          "choices": [
+            { "text": "The teacher", "target": "teacher", "stars": 1, "next": "tell-good" },
+            { "text": "Your friend", "target": "friend1", "stars": 0, "next": "friend-retry" },
+            { "text": "Hide behind the slide", "target": "slide-hide", "stars": 0, "next": "hide-retry" }
+          ]
+        }
+      ],
+      "branches": {
+        "tell-good": [
+          {
+            "speaker": "teacher",
+            "text": "Thank you for telling me. I'll talk to them.",
+            "expression": "happy",
+            "say": "after",
+            "stage": [
+              { "do": "walk", "who": "player", "to": "player-teacher" },
+              { "do": "face", "who": "player", "dir": "NW" },
+              { "do": "face", "who": "teacher", "dir": "SE", "with": true }
+            ]
+          },
+          {
+            "speaker": "kid",
+            "text": "Sorry.",
+            "expression": "neutral",
+            "say": "after",
+            "stage": [
+              { "do": "camera", "fit": ["teacher-kid", "player-kid", "kid-talk", "player-teacher"] },
+              { "do": "walk", "who": "teacher", "to": "teacher-kid", "with": true },
+              { "do": "walk", "who": "player", "to": "player-kid", "with": true },
+              { "do": "face", "who": "teacher", "dir": "SW" },
+              { "do": "face", "who": "player", "dir": "W", "with": true },
+              { "do": "face", "who": "kid", "dir": "E", "with": true },
+              { "do": "emote", "who": "player", "emote": "ball" }
+            ]
+          }
+        ],
+        "friend-retry": [
+          { "speaker": "sensei", "text": "Friends are great, but can they make it stop?", "expression": "thinking", "retry": "choice-tell" }
+        ],
+        "hide-retry": [
+          { "speaker": "sensei", "text": "If you hide, who will know you need help?", "expression": "thinking", "retry": "choice-tell" }
+        ]
+      }
+    },
+    {
+      "id": "sensei-reflect",
+      "kind": "reflection",
+      "lines": [
+        { "speaker": "sensei", "text": "You stood tall, walked away, and told a teacher.", "expression": "proud" },
+        { "speaker": "sensei", "text": "That's how a martial artist wins without fighting!", "expression": "happy", "animation": "bow" }
+      ]
+    }
+  ],
+  "stars": { "max": 3, "rule": "Best choices on the first try at stand, walk and tell earn 1 star each.", "note": "Street Smarts power is 0." },
+  "starChoices": ["choice-stand", "choice-walk", "choice-tell"]
+}

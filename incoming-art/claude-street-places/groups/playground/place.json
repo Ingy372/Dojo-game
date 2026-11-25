@@ -1,0 +1,134 @@
+{
+ "size": [
+  16,
+  10
+ ],
+ "start": [
+  "player-ball",
+  "kid-talk",
+  "friends"
+ ],
+ "cast": {
+  "kid": "people-kid",
+  "friend1": "people-friend1",
+  "friend2": "people-friend2",
+  "teacher": "people-teacher"
+ },
+ "marks": {
+  "player-ball": [
+   5.2,
+   5.6
+  ],
+  "kid-start": [
+   -1.0,
+   8.2
+  ],
+  "kid-talk": [
+   3.8,
+   6.2
+  ],
+  "friend1": [
+   10.6,
+   5.1
+  ],
+  "friend2": [
+   11.4,
+   5.7
+  ],
+  "friends": [
+   10.9,
+   5.4
+  ],
+  "player-friends": [
+   9.7,
+   5.6
+  ],
+  "teacher": [
+   7.6,
+   2.6
+  ],
+  "slide-hide": [
+   12.6,
+   2.1
+  ],
+  "player-teacher": [
+   8.4,
+   3.3
+  ],
+  "teacher-kid": [
+   4.6,
+   5.6
+  ],
+  "player-kid": [
+   5.8,
+   6.1
+  ],
+  "kid-away": [
+   -1.2,
+   8.6
+  ]
+ },
+ "id": "playground",
+ "pieces": {
+  "slide": {
+   "anchorTile": [
+    12.6,
+    4.6
+   ],
+   "footprintRect": [
+    11.7,
+    13.6,
+    2.4,
+    4.6
+   ],
+   "sortRow": 4.6,
+   "note": "the school slide (friends wait by it; 'hide behind the slide' is north of it).",
+   "actor": false
+  },
+  "hoop": {
+   "anchorTile": [
+    4.6,
+    1.6
+   ],
+   "footprintRect": [
+    4.4,
+    4.8,
+    1.4,
+    1.6
+   ],
+   "sortRow": 1.6,
+   "note": "a basketball hoop against the wall.",
+   "actor": false
+  },
+  "bench": {
+   "anchorTile": [
+    9.6,
+    2.5
+   ],
+   "footprintRect": [
+    8.6,
+    10.6,
+    2.0,
+    2.5
+   ],
+   "sortRow": 2.5,
+   "note": "a bench by the school door.",
+   "actor": false
+  },
+  "tree": {
+   "anchorTile": [
+    15.0,
+    7.6
+   ],
+   "footprintRect": [
+    14.4,
+    15.6,
+    7.0,
+    7.6
+   ],
+   "sortRow": 7.6,
+   "note": "a shady tree.",
+   "actor": false
+  }
+ }
+}

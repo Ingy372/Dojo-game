@@ -1,0 +1,164 @@
+{
+ "size": [
+  16,
+  10
+ ],
+ "start": [
+  "player-start",
+  "safe-wait",
+  "trees"
+ ],
+ "cast": {
+  "guard": "people-guard",
+  "kid1": "people-friend1",
+  "kid2": "people-friend2",
+  "car": "static:car"
+ },
+ "marks": {
+  "player-start": [
+   11.0,
+   4.6
+  ],
+  "safe-wait": [
+   4.4,
+   5.1
+  ],
+  "shelter-back": [
+   10.6,
+   1.75
+  ],
+  "trees": [
+   14.8,
+   3.7
+  ],
+  "guard": [
+   2.6,
+   5.75
+  ],
+  "kid1": [
+   5.1,
+   4.1
+  ],
+  "kid2": [
+   5.9,
+   4.7
+  ],
+  "step-back": [
+   4.6,
+   4.2
+  ],
+  "by-guard": [
+   3.4,
+   5.1
+  ],
+  "car-in": [
+   21.0,
+   7.6
+  ],
+  "car-stop": [
+   6.6,
+   7.6
+  ],
+  "car-out": [
+   -5.0,
+   7.6
+  ],
+  "curb": [
+   6.6,
+   6.6
+  ]
+ },
+ "id": "busstop",
+ "pieces": {
+  "shelter": {
+   "anchorTile": [
+    10.8,
+    3.4
+   ],
+   "footprintRect": [
+    9.0,
+    12.6,
+    2.2,
+    3.4
+   ],
+   "sortRow": 3.4,
+   "note": "the bus shelter (glass sides, a roof and a seat); 'behind the shelter' is the tap spot north of it.",
+   "actor": false
+  },
+  "busSign": {
+   "anchorTile": [
+    8.2,
+    5.8
+   ],
+   "footprintRect": [
+    8.1,
+    8.3,
+    5.7,
+    5.8
+   ],
+   "sortRow": 5.8,
+   "note": "the bus stop sign by the curb.",
+   "actor": false
+  },
+  "trees": {
+   "anchorTile": [
+    14.8,
+    3.3
+   ],
+   "footprintRect": [
+    13.8,
+    15.8,
+    2.6,
+    3.3
+   ],
+   "sortRow": 3.3,
+   "note": "trees at the east end ('by the trees').",
+   "actor": false
+  },
+  "bench": {
+   "anchorTile": [
+    5.0,
+    2.6
+   ],
+   "footprintRect": [
+    4.0,
+    6.0,
+    2.1,
+    2.6
+   ],
+   "sortRow": 2.6,
+   "note": "a bench where the kids wait.",
+   "actor": false
+  },
+  "hydrant": {
+   "anchorTile": [
+    13.0,
+    5.8
+   ],
+   "footprintRect": [
+    12.85,
+    13.15,
+    5.65,
+    5.8
+   ],
+   "sortRow": 5.8,
+   "note": "a fire hydrant.",
+   "actor": false
+  },
+  "car": {
+   "anchorTile": [
+    8.0,
+    7.6
+   ],
+   "footprintRect": [
+    6.6,
+    9.4,
+    6.9,
+    7.9
+   ],
+   "sortRow": null,
+   "note": "the car that pulls up (a cast actor: its own sprite, moved by the script).",
+   "actor": true
+  }
+ }
+}

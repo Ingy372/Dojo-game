@@ -24,8 +24,19 @@
     "shopper": "Shopper",
     "player": "{player}",
     "cashier": "Cashier",
-    "stranger": "Stranger"
+    "stranger": "Stranger",
+    "driver": "Driver",
+    "guard": "Crossing guard",
+    "kid": "Kid",
+    "teacher": "Teacher",
+    "gamer": "GameStar22"
   },
   "unlockTier": 2,
-  "skip": "Skip ▶▶"
+  "skip": "Skip ▶▶",
+  "pickGrownupAt": {
+    "store": "Who are you at the store with?",
+    "park": "Who are you at the park with?",
+    "bus stop": "Who picks you up after school?",
+    "home": "Who's home with you?"
+  }
 }

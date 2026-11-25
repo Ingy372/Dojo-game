@@ -175,3 +175,88 @@ describe('Street Smarts save', () => {
     expect(loadProfile(old).streetSmarts).toEqual({ best: {}, grownup: null });
   });
 });
+
+// Nov 24: lessons 2-5 (Jay approved the scripts), each in its own Blender place.
+import park from '../../../content/street-smarts/park-candy.json';
+import parkRoom from '../../../content/street-smarts/park-room.json';
+import busstop from '../../../content/street-smarts/busstop-ride.json';
+import busstopRoom from '../../../content/street-smarts/busstop-room.json';
+import playground from '../../../content/street-smarts/playground-teasing.json';
+import playgroundRoom from '../../../content/street-smarts/playground-room.json';
+import home from '../../../content/street-smarts/home-online.json';
+import homeRoom from '../../../content/street-smarts/home-room.json';
+
+const LESSONS: [unknown, { id: string; marks: Record<string, number[]>; cast: Record<string, unknown> }][] = [
+  [store, storeRoom],
+  [park, parkRoom],
+  [busstop, busstopRoom],
+  [playground, playgroundRoom],
+  [home, homeRoom],
+];
+
+function playAny(s: Scenario, pick: (line: { id?: string; choices?: { stars: number }[] }, n: number) => number) {
+  let st = startScenario();
+  const tries: Record<string, number> = {};
+  for (let guard = 0; guard < 500 && !st.done; guard++) {
+    const line = currentLine(s, st)!;
+    if (line.choices) {
+      tries[line.id!] = (tries[line.id!] ?? 0) + 1;
+      st = choose(s, st, pick(line, tries[line.id!]));
+    } else st = advance(s, st);
+  }
+  return st;
+}
+
+describe('Street Smarts: all five lessons', () => {
+  for (const [data, room] of LESSONS) {
+    const s = loadScenario(data);
+    describe(s.id, () => {
+      it('plays in its own room, and every place it uses is marked there', () => {
+        expect(s.room).toBe(room.id);
+        const marks = new Set(Object.keys(room.marks));
+        for (const m of stageMarks(s)) expect(marks.has(m), m).toBe(true);
+      });
+
+      it('everyone who moves has art in the room cast', () => {
+        const movers = new Set(s.scenes.flatMap((sc) => [...sc.lines, ...Object.values(sc.branches).flat()]).flatMap((l) => (l.stage ?? []).map((c) => c.who)).filter((w): w is string => !!w && w !== 'player'));
+        for (const w of movers) expect(room.cast[w], w).toBeTruthy();
+      });
+
+      it('best answers earn every star; wrong-first answers still finish with none', () => {
+        const top = playAny(s, (l) => l.choices!.findIndex((c) => c.stars > 0));
+        expect(top.done).toBe(true);
+        expect(scenarioStars(s, top)).toBe(s.maxStars);
+        const low = playAny(s, (l, n) => (n === 1 ? l.choices!.findIndex((c) => c.stars === 0) : l.choices!.findIndex((c) => c.stars > 0)));
+        expect(low.done).toBe(true);
+        expect(scenarioStars(s, low)).toBe(0);
+      });
+
+      it('every not-best answer is a gentle retry that moves no one', () => {
+        for (const scene of s.scenes)
+          for (const line of scene.lines)
+            for (const c of line.choices ?? []) {
+              const branch = scene.branches[c.next];
+              if (c.stars === 0) {
+                expect(branch[branch.length - 1].retry).toBe(line.id);
+                for (const l of branch) expect(l.stage ?? []).toEqual([]);
+              }
+            }
+      });
+
+      it('keeps lines short (12 words for ages 6-9, 14 for 10-13) and has no phone numbers', () => {
+        const max = s.ageBand === '6-9' ? 12 : 14;
+        for (const scene of s.scenes)
+          for (const line of [...scene.lines, ...Object.values(scene.branches).flat()]) {
+            expect(line.text.split(/\s+/).length, line.text).toBeLessThanOrEqual(max);
+            expect(line.text).not.toMatch(/\d{3}/);
+          }
+      });
+    });
+  }
+
+  it('a shout bubble needs its words', () => {
+    const a = JSON.parse(JSON.stringify(park));
+    delete a.scenes[1].branches['say-good'][0].stage[0].text;
+    expect(() => loadScenario(a)).toThrow(/shout/);
+  });
+});

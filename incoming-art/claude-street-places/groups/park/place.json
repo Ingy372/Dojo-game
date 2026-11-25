@@ -1,0 +1,161 @@
+{
+ "size": [
+  16,
+  10
+ ],
+ "start": [
+  "enter-player",
+  "slide-player",
+  "bench-grownup"
+ ],
+ "cast": {
+  "grownup": {
+   "Mom": "people-mom",
+   "Dad": "people-dad"
+  },
+  "stranger": "people-shopper"
+ },
+ "marks": {
+  "enter-player": [
+   15.6,
+   7.3
+  ],
+  "enter-grownup": [
+   16.2,
+   7.5
+  ],
+  "bench-grownup": [
+   12.3,
+   6.55
+  ],
+  "slide-player": [
+   3.2,
+   4.85
+  ],
+  "stranger-start": [
+   16.4,
+   8.6
+  ],
+  "stranger-mid": [
+   8.4,
+   7.4
+  ],
+  "stranger-talk": [
+   4.6,
+   5.3
+  ],
+  "stranger-away": [
+   16.6,
+   8.4
+  ],
+  "trees": [
+   1.8,
+   8.6
+  ],
+  "slide": [
+   2.5,
+   4.2
+  ],
+  "player-bench": [
+   11.2,
+   6.75
+  ],
+  "path-bend": [
+   9.0,
+   6.4
+  ]
+ },
+ "id": "park",
+ "pieces": {
+  "slide": {
+   "anchorTile": [
+    2.6,
+    4.6
+   ],
+   "footprintRect": [
+    1.7,
+    3.5,
+    2.4,
+    4.6
+   ],
+   "sortRow": 4.6,
+   "note": "the slide (the player plays here; 'back to the slide' tap spot).",
+   "actor": false
+  },
+  "swings": {
+   "anchorTile": [
+    7.0,
+    3.6
+   ],
+   "footprintRect": [
+    5.3,
+    8.7,
+    3.3,
+    3.7
+   ],
+   "sortRow": 3.7,
+   "note": "the swings.",
+   "actor": false
+  },
+  "bench": {
+   "anchorTile": [
+    12.2,
+    6.2
+   ],
+   "footprintRect": [
+    11.1,
+    13.3,
+    5.7,
+    6.2
+   ],
+   "sortRow": 6.2,
+   "note": "the bench by the path (the grown-up waits here).",
+   "actor": false
+  },
+  "trees": {
+   "anchorTile": [
+    1.6,
+    8.4
+   ],
+   "footprintRect": [
+    0.2,
+    3.2,
+    7.3,
+    8.4
+   ],
+   "sortRow": 8.4,
+   "note": "a clump of trees and bushes at the front corner ('over by the trees').",
+   "actor": false
+  },
+  "lamp": {
+   "anchorTile": [
+    14.0,
+    6.5
+   ],
+   "footprintRect": [
+    13.85,
+    14.15,
+    6.35,
+    6.5
+   ],
+   "sortRow": 6.5,
+   "note": "a park lamp.",
+   "actor": false
+  },
+  "bin": {
+   "anchorTile": [
+    9.9,
+    6.0
+   ],
+   "footprintRect": [
+    9.6,
+    10.2,
+    5.7,
+    6.0
+   ],
+   "sortRow": 6.0,
+   "note": "a trash can.",
+   "actor": false
+  }
+ }
+}

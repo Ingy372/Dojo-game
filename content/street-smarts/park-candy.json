@@ -1,0 +1,182 @@
+{
+  "notes": "Street Smarts lesson 2, 'Candy at the park'. Script approved by Jay on Nov 24 (docs/superpowers/specs/2026-11-24-street-smarts-lessons-2-5-design.md); played as a cut scene in the Blender park (room: content/street-smarts/park-room.json). Stage cues work as in store-separated.json. A retry branch never moves anyone.",
+  "id": "park-candy",
+  "location": "park",
+  "room": "park",
+  "ageBand": "6-9",
+  "topic": "Candy at the park",
+  "priorities": ["avoidance", "get-help"],
+  "characters": [
+    { "id": "sensei", "role": "Sensei", "name": null, "title": "Sensei", "note": "Not in the park: his portrait rises at the corner with a chime." },
+    { "id": "grownup", "role": "Player's grown-up", "name": null, "title": null, "note": "Mom or Dad (the player's pick), by the bench. Calm and glad to be told." },
+    { "id": "stranger", "role": "Stranger", "name": null, "title": null, "note": "An ordinary grown-up with candy. Friendly, never scary; just walks away." }
+  ],
+  "scenes": [
+    {
+      "id": "intro",
+      "kind": "story",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "{player} is at the park with {grownup}.",
+          "stage": [
+            { "do": "place", "who": "grownup", "to": "enter-grownup", "dir": "W" },
+            { "do": "place", "who": "player", "to": "enter-player", "dir": "W", "with": true },
+            { "do": "camera", "fit": ["enter-player", "slide-player", "bench-grownup"], "with": true },
+            { "do": "walk", "who": "grownup", "to": "bench-grownup" },
+            { "do": "walk", "who": "player", "to": "slide-player", "via": ["path-bend"], "with": true },
+            { "do": "face", "who": "grownup", "dir": "S" },
+            { "do": "face", "who": "player", "dir": "S", "with": true },
+            { "do": "anim", "who": "player", "anim": "celebrate" }
+          ]
+        },
+        {
+          "speaker": "stranger",
+          "text": "Hi there! Want some candy?",
+          "expression": "happy",
+          "say": "after",
+          "stage": [
+            { "do": "place", "who": "stranger", "to": "stranger-start", "dir": "W" },
+            { "do": "camera", "fit": ["slide-player", "stranger-mid"], "with": true },
+            { "do": "walk", "who": "stranger", "to": "stranger-talk", "via": ["stranger-mid"] },
+            { "do": "face", "who": "stranger", "dir": "NW" },
+            { "do": "face", "who": "player", "dir": "SE", "with": true },
+            { "do": "emote", "who": "stranger", "emote": "candy" }
+          ]
+        },
+        { "speaker": "sensei", "text": "Take a big breath. You know what to do.", "expression": "neutral" }
+      ]
+    },
+    {
+      "id": "say",
+      "kind": "choice",
+      "lines": [
+        {
+          "id": "choice-say",
+          "speaker": "narrator",
+          "text": "What do you say?",
+          "choices": [
+            { "text": "No thank you!", "stars": 1, "next": "say-good" },
+            { "text": "Yes please!", "stars": 0, "next": "yes-retry" },
+            { "text": "What kind of candy?", "stars": 0, "next": "ask-retry" }
+          ]
+        }
+      ],
+      "branches": {
+        "say-good": [
+          {
+            "speaker": "sensei",
+            "text": "Good. You can always say no thank you.",
+            "expression": "proud",
+            "stage": [{ "do": "emote", "who": "player", "emote": "shout", "text": "No thank you!" }]
+          }
+        ],
+        "yes-retry": [
+          { "speaker": "sensei", "text": "Does {grownup} know this person?", "expression": "thinking", "retry": "choice-say" }
+        ],
+        "ask-retry": [
+          { "speaker": "sensei", "text": "Talking longer keeps you close to someone you don't know.", "expression": "thinking", "retry": "choice-say" }
+        ]
+      }
+    },
+    {
+      "id": "go",
+      "kind": "get-help",
+      "lines": [
+        {
+          "speaker": "stranger",
+          "text": "I have more over by the trees. Come see!",
+          "expression": "happy",
+          "stage": [
+            { "do": "anim", "who": "stranger", "anim": "wave" },
+            { "do": "camera", "fit": ["slide", "trees", "bench-grownup", "stranger-talk"], "with": true }
+          ]
+        },
+        {
+          "id": "choice-go",
+          "speaker": "narrator",
+          "text": "Where do you go? Tap it.",
+          "tap": true,
+          "choices": [
+            { "text": "{grownup}", "target": "grownup", "stars": 1, "next": "go-good" },
+            { "text": "The trees", "target": "trees", "stars": 0, "next": "trees-retry" },
+            { "text": "Back to the slide", "target": "slide", "stars": 0, "next": "slide-retry" }
+          ]
+        }
+      ],
+      "branches": {
+        "go-good": [
+          {
+            "speaker": "sensei",
+            "text": "Yes! Go straight to your safe grown-up.",
+            "expression": "proud",
+            "stage": [
+              { "do": "walk", "who": "player", "to": "player-bench", "via": ["path-bend"], "speed": "hurry" },
+              { "do": "camera", "fit": ["player-bench", "bench-grownup", "stranger-talk"], "with": true },
+              { "do": "face", "who": "player", "dir": "E" },
+              { "do": "face", "who": "grownup", "dir": "W", "with": true }
+            ]
+          }
+        ],
+        "trees-retry": [
+          { "speaker": "sensei", "text": "Is {grownup} over there?", "expression": "thinking", "retry": "choice-go" }
+        ],
+        "slide-retry": [
+          { "speaker": "sensei", "text": "Is that person still close to you?", "expression": "thinking", "retry": "choice-go" }
+        ]
+      }
+    },
+    {
+      "id": "tell",
+      "kind": "voice",
+      "lines": [
+        { "speaker": "grownup", "text": "Hi, sweetie. Is everything okay?", "expression": "happy" },
+        {
+          "id": "choice-tell",
+          "speaker": "narrator",
+          "text": "What do you tell {grownup}?",
+          "choices": [
+            { "text": "A grown-up I don't know offered me candy.", "stars": 1, "next": "tell-good" },
+            { "text": "Nothing. Let's keep playing.", "stars": 0, "next": "tell-retry" }
+          ]
+        }
+      ],
+      "branches": {
+        "tell-good": [
+          {
+            "speaker": "grownup",
+            "text": "Thank you for telling me.",
+            "expression": "happy",
+            "stage": [
+              { "do": "walk", "who": "stranger", "to": "stranger-away" },
+              { "do": "hide", "who": "stranger" }
+            ]
+          },
+          {
+            "speaker": "grownup",
+            "text": "You can always tell me anything.",
+            "expression": "happy",
+            "stage": [
+              { "do": "camera", "fit": ["player-bench", "bench-grownup"] },
+              { "do": "emote", "who": "player", "emote": "hearts", "with": true },
+              { "do": "emote", "who": "grownup", "emote": "hearts", "with": true }
+            ]
+          }
+        ],
+        "tell-retry": [
+          { "speaker": "sensei", "text": "How can {grownup} help if they don't know?", "expression": "thinking", "retry": "choice-tell" }
+        ]
+      }
+    },
+    {
+      "id": "sensei-reflect",
+      "kind": "reflection",
+      "lines": [
+        { "speaker": "sensei", "text": "You said no, went to your grown-up, and told them.", "expression": "proud" },
+        { "speaker": "sensei", "text": "That's how you stay safe!", "expression": "happy", "animation": "bow" }
+      ]
+    }
+  ],
+  "stars": { "max": 3, "rule": "Best choices on the first try at say, go and tell earn 1 star each.", "note": "Street Smarts power is 0." },
+  "starChoices": ["choice-say", "choice-go", "choice-tell"]
+}
