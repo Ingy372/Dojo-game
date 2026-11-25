@@ -1,12 +1,12 @@
 // PB-05: Fighting Style slot cards. Tap a card, then a pick. A full Seal row asks which one to swap.
 import { describe, expect, it } from 'vitest';
-import { buildTraining, characterSetup, loadFeed, newProfile, type Loadout, type TrainingState } from '../src';
+import { buildTraining, characterSetup, loadFeed, newProfile, toolPockets, type Loadout, type TrainingState } from '../src';
 import { testContent } from './load-content';
 import white from '../../../fixtures/2-white-belt-3-signoffs.json';
 import yellow from '../../../fixtures/3-yellow-belt.json';
 import orange from '../../../fixtures/6-orange-typical.json';
 import green from '../../../fixtures/4-green-belt.json';
-import { applyStyleTap, buildStyle, nextSealBelt, styleHelp, styleScreenLayout, type StyleSession, type StyleSlot, type StyleTap } from '../../../apps/client/src/ui/fightingStyle';
+import { applyStyleTap, buildStyle, styleHelp, styleScreenLayout, type StyleSession, type StyleSlot, type StyleTap } from '../../../apps/client/src/ui/fightingStyle';
 import { MIN_TAP } from '../../../apps/client/src/ui/tokens';
 
 const content = testContent();
@@ -48,22 +48,26 @@ function equip(t: TrainingState, start: Loadout | null, slot: StyleSlot, index: 
 describe('PB-05 Fighting Style screen', () => {
   const belts = { white: training(white), yellow: training(yellow), orange: training(orange) } as const;
 
-  it('shows the five slot kinds, the Seal cards for the belt, and a quiet lock under Orange', () => {
-    for (const [name, t] of Object.entries(belts)) {
+  it('shows the five slot kinds, a Tool Belt pocket per kata (3 to start), and one quiet locked pocket', () => {
+    for (const t of Object.values(belts)) {
       const m = buildStyle(t, content.abilities, null);
       expect(m.cards.map((c) => c.slot).filter((s, i, all) => all.indexOf(s) === i)).toEqual(['stance', 'virtue', 'strike', 'kata', 'seal']);
-      const seals = m.cards.filter((c) => c.slot === 'seal');
-      const open = seals.filter((c) => c.locked === null);
-      expect(open.length).toBe(name === 'orange' ? 3 : 2);
-      if (name === 'orange') expect(seals.every((c) => c.locked === null)).toBe(true);
-      else expect(seals.filter((c) => c.locked !== null).map((c) => c.locked)).toEqual([nextSealBelt(t.tier, t.belts)]);
-      for (const id of ['lock-arm', 'lock-wrist']) {
-        // L8-B2: Lock is live, so under Green it waits at the dojo like any family not yet earned.
-        expect(m.trays.seal.find((p) => p.id === id)?.comingLater).toBe(false);
-        expect(m.trays.seal.find((p) => p.id === id)?.earned).toBe(false);
-      }
+      const pockets = m.cards.filter((c) => c.slot === 'seal');
+      expect(pockets.filter((c) => c.locked === null).length).toBe(toolPockets(t));
+      expect(pockets.filter((c) => c.locked !== null).map((c) => c.locked)).toEqual(['Learn a kata!']);
+      expect(m.cards.find((c) => c.slot === 'seal')?.label).toBe('Tool');
+      // Every stage 1 tool shows: earned ones first, the rest waiting at the dojo.
+      expect(m.trays.seal.map((p) => p.id).sort((x, y) => Number(x) - Number(y))).toEqual(content.abilities.tools.map((x) => String(x.technique)));
       expect(m.cards.some((c) => c.slot === 'kata')).toBe(true);
     }
+  });
+
+  it('a tool card names the real technique, when it fires and what it does, with no numbers in the words', () => {
+    const p = buildStyle(belts.orange, content.abilities, null).trays.seal.find((x) => x.id === '7')!;
+    expect(p.name).toBe('#7 Palm Heel');
+    expect(p.line).toContain('Fires: when you Great Counter.');
+    expect(p.line).toContain('In class: Outside block, wrap and trap, palm heel.');
+    expect(p.line).not.toMatch(/[0-9]/);
   });
 
   it('equips every earned pick in each slot in at most 3 taps', () => {
@@ -85,7 +89,7 @@ describe('PB-05 Fighting Style screen', () => {
             expect(shown.cards.filter((c) => c.slot === 'seal' && c.pick).map((c) => c.pick!.id)).toContain(pick.id);
           } else if (card.slot === 'kata') {
             expect(loadout?.kata).toBe(pick.id);
-            expect(shown.cards.find((c) => c.slot === 'kata')?.pick?.line).toBe('Power coming soon');
+            expect(shown.cards.find((c) => c.slot === 'kata')?.pick?.line).toBe(content.abilities.kataSignatures.find((m) => m.id === pick.id)!.text);
           } else {
             expect(shown.current[card.slot as 'stance' | 'virtue']?.id).toBe(pick.id);
           }
@@ -94,50 +98,58 @@ describe('PB-05 Fighting Style screen', () => {
     }
   });
 
-  it('asks which Seal to swap when the row is full, and Cancel leaves it alone', () => {
+  it('asks which tool to swap when the pockets are full, and Cancel leaves it alone', () => {
     const t = belts.yellow;
-    const families = buildStyle(t, content.abilities, null).trays.seal.filter((p) => p.earned).map((p) => p.id);
-    expect(families.length).toBeGreaterThan(2);
+    const tools = buildStyle(t, content.abilities, null).trays.seal.filter((p) => p.earned).map((p) => p.id);
+    const pockets = toolPockets(t);
+    expect(tools.length).toBeGreaterThan(pockets);
     let loadout: Loadout | null = null;
-    loadout = equip(t, loadout, 'seal', 0, families[0]).session.loadout;
-    loadout = equip(t, loadout, 'seal', 1, families[1]).session.loadout;
+    for (let i = 0; i < pockets; i++) loadout = equip(t, loadout, 'seal', i, tools[i]).session.loadout;
     let session: StyleSession = { ...fresh(), loadout };
     const open = applyStyleTap(session, { kind: 'card', slot: 'seal', index: 0 }, t, content.abilities);
     session = open.session;
-    const full = applyStyleTap(session, { kind: 'pick', id: families[2] }, t, content.abilities);
-    expect(full.session.swap).toBe(families[2]);
+    const extra = tools[pockets];
+    const full = applyStyleTap(session, { kind: 'pick', id: extra }, t, content.abilities);
+    expect(full.session.swap).toBe(extra);
     expect(full.session.loadout).toBe(session.loadout);
     const cancelled = applyStyleTap(full.session, { kind: 'cancel' }, t, content.abilities);
     expect(cancelled.session.swap).toBeNull();
-    expect(cancelled.session.loadout?.seals).toEqual([families[0], families[1]]);
+    expect(cancelled.session.loadout?.tools).toEqual(tools.slice(0, pockets).map(Number));
     const swapped = applyStyleTap(full.session, { kind: 'card', slot: 'seal', index: 0 }, t, content.abilities);
-    expect(swapped.session.loadout?.seals).toContain(families[2]);
-    expect(swapped.session.loadout?.seals).not.toContain(families[0]);
+    expect(swapped.session.loadout?.tools).toContain(Number(extra));
+    expect(swapped.session.loadout?.tools).not.toContain(Number(tools[0]));
   });
 
-  it('does not give the push until Advancing is in a slot', () => {
-    // Yellow's #4 is still catch-up, so Advancing is not earned there. Orange has it signed off.
+  it('a tool put in a pocket goes into the fight, in at most 3 taps', () => {
     const t = belts.orange;
-    expect(buildStyle(t, content.abilities, null).trays.seal.find((p) => p.id === 'advancing')?.earned).toBe(true);
-    const before = characterSetup(newProfile(), t, content.abilities);
-    expect(before.effects.some((e) => e.type === 'counterPush')).toBe(false);
-    const got = equip(t, null, 'seal', 0, 'advancing');
+    const got = equip(t, null, 'seal', 0, '4');
     expect(got.taps).toBeLessThanOrEqual(3);
-    const after = characterSetup({ ...newProfile(), loadout: got.session.loadout }, t, content.abilities);
-    expect(after.effects.some((e) => e.type === 'counterPush' && e.amount === 1.5)).toBe(true);
+    const p = { ...newProfile(), senseiPick: false, loadout: got.session.loadout };
+    expect(characterSetup(p, t, content.abilities).tools?.map((x) => x.technique)).toEqual([4]);
   });
 
-  it('a chosen kata power is only a placeholder (PB-04): the fight does not change', () => {
+  it('take out empties the pocket', () => {
+    const t = belts.orange;
+    const got = equip(t, null, 'seal', 0, '4');
+    const open = applyStyleTap({ ...fresh(), loadout: got.session.loadout }, { kind: 'card', slot: 'seal', index: 0 }, t, content.abilities);
+    const out = applyStyleTap(open.session, { kind: 'take-out' }, t, content.abilities);
+    expect(out.session.loadout?.tools).toEqual([]);
+  });
+
+  it('Tool Belt: a chosen kata move goes on the KATA button and adds no always-on effects', () => {
     const t = belts.white;
     const kata = buildStyle(t, content.abilities, null).trays.kata.find((p) => p.earned);
-    expect(kata?.id).toBe('basic-form-1-power');
+    expect(kata?.id).toBe('kiai');
     const p = newProfile();
+    p.senseiPick = false;
     const before = characterSetup(p, t, content.abilities);
+    expect(before.kataMove).toBeNull();
     p.loadout = equip(t, null, 'kata', 0, kata!.id).session.loadout;
     const after = characterSetup(p, t, content.abilities);
+    expect(after.kataMove?.id).toBe('kiai');
     expect(after.effects).toEqual(before.effects);
     expect(after.strike).toEqual(before.strike);
-    expect(buildStyle(t, content.abilities, p.loadout).cards.find((c) => c.slot === 'kata')?.pick?.name).toBe('Basic Form 1');
+    expect(buildStyle(t, content.abilities, p.loadout).cards.find((c) => c.slot === 'kata')?.pick?.name).toBe('Kiai!');
   });
 
   it('puts a New dot on an unseen earned pick and clears it once that card is opened', () => {
@@ -152,7 +164,7 @@ describe('PB-05 Fighting Style screen', () => {
 
   it('shows one help line, then never that line again, and waits when its tip already showed', () => {
     const first = styleHelp([], [], ['open']);
-    expect(first).toEqual({ id: 'help-slots', line: 'Tap a slot, then pick a Seal.', yielded: false });
+    expect(first).toEqual({ id: 'help-slots', line: 'Tap a slot, then pick a tool.', yielded: false });
     expect(styleHelp(['help-slots'], [], ['open'])).toBeNull();
     const waited = styleHelp([], ['seal-unlock-equip-tip'], ['open']);
     expect(waited?.yielded).toBe(true);
@@ -160,7 +172,7 @@ describe('PB-05 Fighting Style screen', () => {
     const seal = styleHelp(['help-slots'], [], ['seal']);
     expect(seal?.id).toBe('help-seals');
     const swap = styleHelp(['help-slots', 'help-seals'], [], ['swap']);
-    expect(swap?.line).toBe('Slots full? Pick a Seal to swap.');
+    expect(swap?.line).toBe('Pockets full? Pick a tool to swap.');
   });
 
   it('keeps every card and the tray at least 44 pt on the two phone sizes', () => {
@@ -213,9 +225,12 @@ describe('PB-05 Fighting Style screen', () => {
         if (!bit) continue;
         // Curriculum names are shown as written (Basic Form 1, Self-Defense #4). The words around them have no digits.
         let left = bit;
-        for (const name of names) if (name) left = left.split(name).join('');
+        // Longest first, so a tool name ("#3 Spin Back Fist") goes before a shorter name inside it ("Back Fist").
+        for (const name of [...names].sort((x, y) => (y?.length ?? 0) - (x?.length ?? 0))) if (name) left = left.split(name).join('');
         // L8-SPEC section 4: a Seal's stage is shown as "Stage 2" (the one number the spec adds).
         left = left.replace(/Stage [1-4]/, '');
+        // Tool Belt: a self-defense number is shown as written ("#7", the real technique's number).
+        left = left.replace(/#\d+/g, '');
         expect(left).not.toMatch(/\d/);
       }
     }

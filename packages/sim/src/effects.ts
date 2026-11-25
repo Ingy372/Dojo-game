@@ -28,7 +28,8 @@ export type EffectType =
   | 'reflectStaggers'
   | 'disarmAttacks'
   | 'counterThrow'
-  | 'downBonus';
+  | 'downBonus'
+  | 'areaHit';
 
 export interface Effect {
   type: EffectType;
@@ -114,6 +115,10 @@ export interface PlayerMods {
   counterThrowTicks: number;
   /** G2B-04 (#12 Reap and Finish): extra damage share against a thrown (down) enemy. */
   downBonus: number;
+  /** Tool Belt: a tool's hit on every enemy within areaHitRadius of the hero, at this move strength (0 = none). */
+  areaHitStrength: number;
+  /** ...within this many tiles (the largest radius wins). */
+  areaHitRadius: number;
 }
 
 export function noMods(): PlayerMods {
@@ -150,6 +155,8 @@ export function noMods(): PlayerMods {
     disarmAttacks: 0,
     counterThrowTicks: 0,
     downBonus: 0,
+    areaHitStrength: 0,
+    areaHitRadius: 0,
   };
 }
 
@@ -243,6 +250,10 @@ export function modsFrom(effects: readonly Effect[], ticksPerSecond: number): Pl
       case 'downBonus':
         m.downBonus += e.amount;
         break;
+      case 'areaHit':
+        m.areaHitStrength += e.amount;
+        m.areaHitRadius = Math.max(m.areaHitRadius, e.radius ?? 0);
+        break;
     }
   }
   return m;
@@ -275,6 +286,7 @@ const TYPES: readonly EffectType[] = [
   'disarmAttacks',
   'counterThrow',
   'downBonus',
+  'areaHit',
 ];
 
 /**
@@ -299,7 +311,7 @@ export function loadEffect(data: unknown, fail: (problem: string) => never): Eff
   };
   const type = e.type as EffectType;
   const out: Effect = { type, amount: num('amount', !SWITCHES.includes(type)) ?? 0 };
-  const radius = num('radius', type === 'rippleCounter');
+  const radius = num('radius', type === 'rippleCounter' || type === 'areaHit');
   const everyHits = num('everyHits', type === 'comboSpeed');
   const seconds = num('seconds', type === 'comboSpeed');
   const below = num('below', type === 'lowHealthFocus');
@@ -312,4 +324,29 @@ export function loadEffect(data: unknown, fail: (problem: string) => never): Eff
   if (focusOnBreak !== undefined) out.focusOnBreak = focusOnBreak;
   if (hits !== undefined) out.hits = hits;
   return out;
+}
+
+/** Mods that stack by taking the larger value (radii, lengths), not by adding. Matches modsFrom. */
+const MAX_MODS: ReadonlySet<keyof PlayerMods> = new Set<keyof PlayerMods>(['rippleRadius', 'areaHitRadius', 'counterHitStrength', 'comboSpeedTicks', 'lowHealthBelow', 'reflectStaggerTicks', 'disarmAttacks', 'counterThrowTicks']);
+
+/**
+ * Tool Belt: two sets of mods as one, stacked the same way modsFrom stacks effects (numbers add,
+ * switches turn on, radii and lengths take the larger, the low-health Focus scale multiplies, the
+ * caps hold). Used for the mods of the tools that fire on top of the player's always-on mods.
+ */
+export function combineMods(a: PlayerMods, b: PlayerMods): PlayerMods {
+  const out = { ...a } as Record<keyof PlayerMods, number | boolean>;
+  for (const key of Object.keys(b) as (keyof PlayerMods)[]) {
+    const x = a[key];
+    const y = b[key];
+    if (typeof x === 'boolean') out[key] = x || (y as boolean);
+    else if (key === 'lowHealthFocusScale') out[key] = x * (y as number);
+    else if (MAX_MODS.has(key)) out[key] = Math.max(x, y as number);
+    else out[key] = x + (y as number);
+  }
+  const m = out as unknown as PlayerMods;
+  m.attackSpeed = Math.min(0.6, m.attackSpeed);
+  m.disarm = Math.min(0.9, m.disarm);
+  if (b.comboSpeedEvery > 0) m.comboSpeedEvery = b.comboSpeedEvery;
+  return m;
 }

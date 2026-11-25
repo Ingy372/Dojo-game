@@ -6,15 +6,15 @@
       "session": 1,
       "screen": "Fighting Style, the slot cards",
       "trigger": "the first time the Fighting Style screen opens",
-      "line": "Tap a slot, then pick a Seal.",
+      "line": "Tap a slot, then pick a tool.",
       "yieldsTo": "seal-unlock-equip-tip"
     },
     {
       "id": "help-seals",
       "session": 2,
-      "screen": "Fighting Style, a Seal card",
+      "screen": "Fighting Style, a Tool Belt pocket",
       "trigger": "the first time the student taps a Seal card",
-      "line": "Seals grow as you learn moves in class.",
+      "line": "Every move you learn in class is a new tool.",
       "yieldsTo": "seal-unlock-equip-tip"
     },
     {
@@ -22,7 +22,7 @@
       "session": 3,
       "screen": "Fighting Style, the swap question",
       "trigger": "the first time all Seal slots are full and a new Seal is tapped",
-      "line": "Slots full? Pick a Seal to swap."
+      "line": "Pockets full? Pick a tool to swap."
     },
     {
       "id": "help-kata-class",

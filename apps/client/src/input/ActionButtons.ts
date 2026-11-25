@@ -12,6 +12,7 @@ const COUNTER_RADIUS = 48;
 const STRIKE_RADIUS = 38;
 const DASH_RADIUS = 32;
 const VIRTUE_RADIUS = 30;
+const KATA_RADIUS = 32;
 const MARGIN = 26;
 
 interface Button {
@@ -43,6 +44,9 @@ export class ActionButtons {
   /** Ring around Strike showing Focus filling toward the Strike cost. */
   private readonly strikeRing: Phaser.GameObjects.Graphics;
   private readonly virtue: Button | null = null;
+  /** Tool Belt: the KATA button (once a kata is signed off), and its recharge ring. */
+  private readonly kata: Button | null = null;
+  private readonly kataRing: Phaser.GameObjects.Graphics | null = null;
   /** L7: Virtue is on screen (Focus full and not already active). */
   private virtueShown = false;
 
@@ -50,7 +54,7 @@ export class ActionButtons {
     private readonly scene: Phaser.Scene,
     /** Called on every button touch (used to switch on sound). */
     private readonly onTouch: () => void,
-    has: { virtue: boolean } = { virtue: false },
+    has: { virtue: boolean; kata?: boolean } = { virtue: false },
     /** Called each time Virtue appears (Focus just became full). */
     private readonly onVirtueReady: () => void = () => {},
   ) {
@@ -69,9 +73,14 @@ export class ActionButtons {
       labelColor(this.virtue, ACTION_LABEL.dark);
       this.virtue.container.setVisible(false);
     }
+    if (has.kata) {
+      this.kata = this.makeButton('kata', 'KATA', KATA_RADIUS, AC.kata.ready);
+      this.kataRing = scene.add.graphics();
+      this.kata.container.add(this.kataRing);
+    }
     this.layout();
     scene.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown, this);
-    // Nov 17 (desktop): keys for the buttons. Space or K = Counter, J = Strike, L or Shift = Dash, E = Virtue.
+    // Nov 17 (desktop): keys for the buttons. Space or K = Counter, J = Strike, L or Shift = Dash, E = Virtue, I = Kata.
     const kb = scene.input.keyboard;
     if (kb) {
       const bind = (codes: string[], b: () => Button | null) =>
@@ -80,11 +89,12 @@ export class ActionButtons {
       bind(['J'], () => this.strike);
       bind(['L', 'SHIFT'], () => this.dash);
       bind(['E'], () => this.virtue);
+      bind(['I'], () => this.kata);
       scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => kb.removeAllKeys(false));
     }
     if (!hasTouch()) {
       // On a computer, each button shows its key underneath.
-      const hint: [Button | null, string][] = [[this.counter, 'Space'], [this.strike, 'J'], [this.dash, 'L'], [this.virtue, 'E']];
+      const hint: [Button | null, string][] = [[this.counter, 'Space'], [this.strike, 'J'], [this.dash, 'L'], [this.virtue, 'E'], [this.kata, 'I']];
       for (const [b, k] of hint) {
         if (!b) continue;
         const t = scene.add
@@ -122,6 +132,8 @@ export class ActionButtons {
     this.strike.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS - 22, cy - 34);
     this.dash.container.setPosition(cx + 6, cy - COUNTER_RADIUS - DASH_RADIUS - 24);
     this.virtue?.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS - 30, cy - 34 - STRIKE_RADIUS - VIRTUE_RADIUS - 18);
+    // Tool Belt: KATA sits left of STRIKE, a little lower, in reach of the thumb.
+    this.kata?.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS * 2 - KATA_RADIUS - 40, cy + 2);
   }
 
   /** The button pressed since the last tick, if any (sent once). */
@@ -250,6 +262,21 @@ export class ActionButtons {
     else this.strike.container.setScale(1);
 
     if (this.virtue) this.showVirtue(alive && p.focus >= COMBAT.focus.max && p.virtueTicks === 0);
+
+    if (this.kata && this.kataRing && p.kataMove) {
+      const kataReady = alive && p.kataCooldown === 0;
+      this.kata.face.setFillStyle(kataReady ? AC.kata.ready : AC.kata.dim, FACE_ALPHA);
+      this.kata.face.setStrokeStyle(4, 0xffffff, kataReady ? 0.8 : 0.35);
+      labelColor(this.kata, kataReady ? ACTION_LABEL.light : ACTION_LABEL.dim);
+      this.kataRing.clear();
+      if (p.kataCooldown > 0) {
+        const done = 1 - p.kataCooldown / p.kataMove.cooldownTicks;
+        this.kataRing.lineStyle(4, 0xc9a8ff, 0.85);
+        this.kataRing.beginPath();
+        this.kataRing.arc(0, 0, KATA_RADIUS + 4, -Math.PI / 2, -Math.PI / 2 + done * Math.PI * 2);
+        this.kataRing.strokePath();
+      }
+    }
   }
 
   /** L7: Virtue appears in its one spot when Focus is full, with a short calm grow (none with Reduced motion). */
@@ -301,7 +328,7 @@ export class ActionButtons {
   }
 
   private all(): Button[] {
-    return [this.counter, this.strike, this.dash, this.virtue].filter((b): b is Button => b !== null);
+    return [this.counter, this.strike, this.dash, this.virtue, this.kata].filter((b): b is Button => b !== null);
   }
 
   private hit(b: Button, x: number, y: number): boolean {

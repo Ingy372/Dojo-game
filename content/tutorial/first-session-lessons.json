@@ -220,6 +220,35 @@
       "ignoresSessionLimit": false,
       "fadingFollowUp": false,
       "scroll": false
+    },
+    {
+      "id": "lesson-tool-belt",
+      "triggerKey": "firstToolFired",
+      "order": 16,
+      "trigger": "Tool Belt stage 1: the first time one of the player's tools fires in a fight. Words from drafts/content/tool-belt-stage-1.md (Jay: 'Draft is OK', Nov 24). Counts as that session's one new thing; not on the Scroll (no practice room).",
+      "screens": [
+        "Every technique you learn in class is a new tool.",
+        "Your tools live in your Tool Belt.",
+        "Fight well, and your tools jump in on their own!"
+      ],
+      "earliestSession": 1,
+      "ignoresSessionLimit": false,
+      "fadingFollowUp": false,
+      "scroll": false
+    },
+    {
+      "id": "lesson-kata-button",
+      "triggerKey": "firstKataButton",
+      "order": 17,
+      "trigger": "Tool Belt stage 1: the first fight with a kata signature move on the KATA button. Words from drafts/content/tool-belt-stage-1.md (Jay: 'Draft is OK', Nov 24). Counts as that session's one new thing; not on the Scroll (no practice room).",
+      "screens": [
+        "You learned your kata. It has a power!",
+        "Tap KATA when enemies are close."
+      ],
+      "earliestSession": 1,
+      "ignoresSessionLimit": false,
+      "fadingFollowUp": false,
+      "scroll": false
     }
   ],
   "maxNewLessonsPerRoom": 1,

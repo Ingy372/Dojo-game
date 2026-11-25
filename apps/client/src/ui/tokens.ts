@@ -211,5 +211,7 @@ export const ACTION_COLORS = {
   virtue: { ready: 0xffb02e, dim: 0x5a4a34 },
   dash: { ready: 0x277a56 /* = GREEN */, dim: 0x2f4a3e },
   stance: { ready: 0x3a5a8a, dim: 0x34405a },
+  /** Tool Belt: the KATA button (a kata's signature move). */
+  kata: { ready: 0x7b4fc9, dim: 0x41385a },
 } as const;
 export const ACTION_LABEL = { light: '#ffffff', dark: '#14121c', dim: '#d8d2c8' } as const;

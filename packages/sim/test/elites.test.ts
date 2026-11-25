@@ -203,6 +203,7 @@ describe('Guarding aura', () => {
     e.attackCenter = { ...p.pos };
     updateGuards(world);
     expect(e.guardedBy).toBe(g.id);
+    e.health = 1000; // Nov 24: the stronger Great Counter would defeat a swarmer outright; this test is about the stagger
     const healthBefore = p.health;
     stepWorld(world, room, { p1: { kind: 'none', action: 'counter' } });
     expect(world.events.some((ev) => ev.kind === 'perfectCounter')).toBe(true);

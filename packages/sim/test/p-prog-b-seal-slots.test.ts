@@ -12,7 +12,7 @@ const training = (data: unknown) => {
   return buildTraining(feed, content.abilities, { ms: Date.parse(feed.asOf), weekday: 3 });
 };
 const ALL = ['counter', 'guard', 'escape', 'disarm', 'throw'];
-const earned = (families: string[] = ALL) => ({ strikes: ['jumping-spins'], families, kataPowers: ['basic-form-1-power'] });
+const earned = (families: string[] = ALL) => ({ strikes: ['jumping-spins'], families, kataPowers: ['basic-form-1-power'], tools: [] });
 
 describe('PB-01 sealSlots', () => {
   it('is 2 for White and Yellow, 3 for Orange, 3 for Green and Blue, 4 from Red', () => {
@@ -45,18 +45,18 @@ describe('PB-01 equipSeal, swapSeal, removeSeal', () => {
   });
 
   it('asks for a swap when full and changes nothing', () => {
-    const full: Loadout = { ...none, seals: ['escape', 'counter'] };
+    const full: Loadout = { ...none, seals: ['escape', 'counter'], tools: [] };
     const r = equipSeal(full, 'guard', ALL, 2);
     expect(r.result).toBe('full');
     expect(r.loadout).toBe(full);
   });
 
   it('never puts a family in two slots', () => {
-    const one: Loadout = { ...none, seals: ['escape'] };
+    const one: Loadout = { ...none, seals: ['escape'], tools: [] };
     const r = equipSeal(one, 'escape', ALL, 3);
     expect(r.result).toBe('already');
     expect(r.loadout).toBe(one);
-    expect(swapSeal({ ...none, seals: ['escape', 'counter'] }, 'counter', 'escape', ALL).seals).toEqual(['escape', 'counter']);
+    expect(swapSeal({ ...none, seals: ['escape', 'counter'], tools: [] }, 'counter', 'escape', ALL).seals).toEqual(['escape', 'counter']);
   });
 
   it('does not equip a family that is not earned', () => {
@@ -66,35 +66,35 @@ describe('PB-01 equipSeal, swapSeal, removeSeal', () => {
   });
 
   it('swaps one Seal for another in the same place', () => {
-    const full: Loadout = { ...none, seals: ['escape', 'counter'] };
+    const full: Loadout = { ...none, seals: ['escape', 'counter'], tools: [] };
     expect(swapSeal(full, 'escape', 'guard', ALL).seals).toEqual(['guard', 'counter']);
     expect(swapSeal(full, 'disarm', 'guard', ALL)).toBe(full);
     expect(swapSeal(full, 'escape', 'lock-arm', ALL)).toBe(full);
   });
 
   it('removing is always allowed, and removing one that is not there does nothing', () => {
-    const full: Loadout = { ...none, seals: ['escape', 'counter'] };
+    const full: Loadout = { ...none, seals: ['escape', 'counter'], tools: [] };
     expect(removeSeal(full, 'escape').seals).toEqual(['counter']);
     expect(removeSeal(full, 'guard').seals).toEqual(['escape', 'counter']);
     expect(removeSeal(removeSeal(full, 'escape'), 'counter').seals).toEqual([]);
   });
 
   it('keeps the other slots when a Seal changes', () => {
-    const l: Loadout = { stance: 'cat-stance', virtue: 'second-wind', strike: 'jumping-spins', kata: 'k', seals: ['escape'] };
+    const l: Loadout = { stance: 'cat-stance', virtue: 'second-wind', strike: 'jumping-spins', kata: 'k', seals: ['escape'], tools: [] };
     const r = equipSeal(l, 'counter', ALL, 2).loadout;
-    expect(r).toEqual({ ...l, seals: ['escape', 'counter'] });
-    expect(removeSeal(r, 'escape')).toEqual({ ...l, seals: ['counter'] });
+    expect(r).toEqual({ ...l, seals: ['escape', 'counter'], tools: [] });
+    expect(removeSeal(r, 'escape')).toEqual({ ...l, seals: ['counter'], tools: [] });
   });
 });
 
 describe('PB-01 normalizing a loadout', () => {
-  const l: Loadout = { ...emptyLoadout(), strike: 'jumping-spins', kata: 'basic-form-1-power', seals: ['escape', 'lock', 'counter', 'escape', 'guard'] };
+  const l: Loadout = { ...emptyLoadout(), strike: 'jumping-spins', kata: 'basic-form-1-power', seals: ['escape', 'lock', 'counter', 'escape', 'guard'], tools: [] };
 
   it('drops unearned picks to their defaults, repeats, and extras past the slots (from the end)', () => {
-    expect(normalizeSlots(l, earned(), 2)).toEqual({ strike: 'jumping-spins', kata: 'basic-form-1-power', seals: ['escape', 'counter'] });
+    expect(normalizeSlots(l, earned(), 2)).toEqual({ strike: 'jumping-spins', kata: 'basic-form-1-power', seals: ['escape', 'counter'], tools: [] });
     expect(normalizeSlots(l, earned(), 3).seals).toEqual(['escape', 'counter', 'guard']);
     expect(normalizeSlots(l, earned(['escape']), 3).seals).toEqual(['escape']);
-    expect(normalizeSlots(l, { strikes: [], families: [], kataPowers: [] }, 3)).toEqual({ strike: null, kata: null, seals: [] });
+    expect(normalizeSlots(l, { strikes: [], families: [], kataPowers: [], tools: [] }, 3)).toEqual({ strike: null, kata: null, seals: [], tools: [] });
   });
 
   it('normalizeLoadout applies it with the belt\'s slot count (Yellow: 2, Orange: 3)', () => {
@@ -106,7 +106,7 @@ describe('PB-01 normalizing a loadout', () => {
 
   it('an earned kata power is kept (PB-04), one not earned is dropped; Seals are kept if earned (Yellow has Escape, Counter, Guard); Stance and Virtue are untouched', () => {
     const n = normalizeLoadout({ ...l, virtue: 'second-wind' }, training(yellow), content.abilities)!;
-    expect(n).toEqual({ stance: null, virtue: 'second-wind', strike: 'jumping-spins', kata: 'basic-form-1-power', seals: ['escape', 'counter'] });
+    expect(n).toEqual({ stance: null, virtue: 'second-wind', strike: 'jumping-spins', kata: 'kiai', seals: ['escape', 'counter'], tools: [] });
     expect(normalizeLoadout({ ...l, kata: 'keon-power' }, training(yellow), content.abilities)!.kata).toBeNull();
   });
 

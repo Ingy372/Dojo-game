@@ -13,6 +13,12 @@
 // OV-B6 re-captured it on purpose: the Insight pool goes from 9 to the 12 cards OV-P5 tuned (4 new, Wind Step dropped, 6 numbers changed), so the offers after each room are drawn differently and every run moves from its first offer on (rooms, ticks, health). Setups are unchanged; capturing with the old 9 cards gives the old file exactly.
 // Jay, Nov 24 re-captured it on purpose: no automatic blocking (Mash guard off), so mid-swing hits are full hits
 // and Guided enemies hit at 0.7 (was 0.75); every setup is the same, the fights play out differently.
+// Jay, Nov 24 (Tool Belt stage 1) re-captured it on purpose: auto attack 0.6 (was 1), Great Counter 3.5x (was 2x), Guided
+// counter window 14 ticks (was 10); every setup is the same, the fights play out differently.
+// Tool Belt Task 5 re-captured it on purpose: each setup gains "tools": [] (no tools in the pockets); every run is the same.
+// Tool Belt Task 6 re-captured it on purpose: each setup gains its "kataMove" (Sensei picks the newest earned); the bot never presses KATA, so every run is the same.
+// Tool Belt Task 7 re-captured it on purpose: with Sensei's Pick on and empty pockets, the newest earned tools now come along, so tools fire and the fights change.
+// Tool Belt Task 8 re-captured it on purpose: the bot now presses KATA (two or more enemies close), so the fights change.
 import { describe, expect, it } from 'vitest';
 import { captureGolden } from './golden-capture';
 import golden from '../../../fixtures/golden/p-menu2-d-default-run.json';

@@ -4,6 +4,7 @@ import {
   DIFFICULTY,
   buildTraining,
   characterSetup,
+  equippedSealEffects,
   createWorld,
   emptyLoadout,
   loadEnemy,
@@ -42,8 +43,9 @@ const room = loadRoom({
 function character(data: unknown, seals: string[] = []) {
   const feed = loadFeed(data);
   const t = buildTraining(feed, content.abilities, { ms: Date.parse(feed.asOf), weekday: 3 });
-  const c = characterSetup({ ...newProfile(), loadout: { ...emptyLoadout(), seals } }, t, content.abilities);
-  return { ...c, mods: modsFrom(c.effects, TICKS_PER_SECOND) };
+  const c = characterSetup({ ...newProfile(), senseiPick: false, loadout: { ...emptyLoadout(), seals } }, t, content.abilities);
+  // Tool Belt (Nov 24): Seals no longer reach fights; this file tests the same mechanics as always-on mods (as Insights or gear give them).
+  return { ...c, mods: modsFrom([...c.effects, ...equippedSealEffects(t, content.abilities.families, seals)], TICKS_PER_SECOND) };
 }
 
 /** The same character without R-BAL-12 training Power, so the counter does not defeat the enemy. */

@@ -175,7 +175,7 @@ function fight(player: PlayerSetup): WorldState {
 
 describe('PB-03 filling the Strike slot for saves PB-02 already seeded', () => {
   // A save PB-02 seeded: loadoutV2 done, no Strike (none could be earned), no strikeSeeded flag yet.
-  function pb02Save(loadout: unknown = { stance: 'cat-stance', virtue: null, strike: null, kata: null, seals: ['escape', 'counter'] }) {
+  function pb02Save(loadout: unknown = { stance: 'cat-stance', virtue: null, strike: null, kata: null, seals: ['escape', 'counter'], tools: [] }) {
     const p = copy(newProfile()) as unknown as Record<string, unknown>;
     delete p.strikeSeeded;
     return { ...p, runsPlayed: 12, loadoutV2: true, showSlotNote: true, loadout };
@@ -191,7 +191,7 @@ describe('PB-03 filling the Strike slot for saves PB-02 already seeded', () => {
   it('puts the newest earned Strike in the slot once, and running it again changes nothing', () => {
     const p = loadProfile(pb02Save());
     expect(seedStrikeSlot(p, content.abilities, earnedOf(green))).toBe(true);
-    expect(p.loadout).toEqual({ stance: 'cat-stance', virtue: null, strike: 'butterfly-flow', kata: null, seals: ['escape', 'counter'] });
+    expect(p.loadout).toEqual({ stance: 'cat-stance', virtue: null, strike: 'butterfly-flow', kata: null, seals: ['escape', 'counter'], tools: [] });
     const once = copy(p);
     expect(seedStrikeSlot(p, content.abilities, earnedOf(green))).toBe(false);
     expect(p).toEqual(once);
@@ -199,7 +199,7 @@ describe('PB-03 filling the Strike slot for saves PB-02 already seeded', () => {
   });
 
   it('keeps a Strike that was already picked (old ids resolved), and leaves the slot empty when nothing is earned', () => {
-    const kept = loadProfile(pb02Save({ stance: null, virtue: null, strike: 'quick-combo', kata: null, seals: [] }));
+    const kept = loadProfile(pb02Save({ stance: null, virtue: null, strike: 'quick-combo', kata: null, seals: [], tools: [] }));
     seedStrikeSlot(kept, content.abilities, earnedOf(yellow));
     expect(kept.loadout!.strike).toBe('jumping-spins');
     const none = loadProfile(pb02Save());

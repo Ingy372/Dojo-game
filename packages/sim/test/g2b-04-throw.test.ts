@@ -8,6 +8,7 @@ import {
   canThrow,
   capSealEffects,
   characterSetup,
+  equippedSealEffects,
   createWorld,
   emptyLoadout,
   loadEnemy,
@@ -45,8 +46,9 @@ const room = loadRoom({
 function gentle(data: unknown, seals: string[]): PlayerSetup {
   const feed = loadFeed(data);
   const t = buildTraining(feed, content.abilities, { ms: Date.parse(feed.asOf), weekday: 3 });
-  const c = characterSetup({ ...newProfile(), loadout: { ...emptyLoadout(), seals } }, t, content.abilities);
-  return { ...c, power: c.power - trainingStats(t).power, mods: modsFrom(c.effects, TICKS_PER_SECOND) };
+  const c = characterSetup({ ...newProfile(), senseiPick: false, loadout: { ...emptyLoadout(), seals } }, t, content.abilities);
+  // Tool Belt (Nov 24): Seals no longer reach fights; this file tests the same mechanics as always-on mods (as Insights or gear give them).
+  return { ...c, power: c.power - trainingStats(t).power, mods: modsFrom([...c.effects, ...equippedSealEffects(t, content.abilities.families, seals)], TICKS_PER_SECOND) };
 }
 const world = (player?: PlayerSetup): WorldState => createWorld(room, ['p1'], { enemyTypes: { brute }, difficulty: 'standard', player });
 

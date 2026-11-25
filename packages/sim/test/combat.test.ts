@@ -128,7 +128,7 @@ describe('basic attacks', () => {
   it('hits the nearest enemy automatically, adding Focus and combo', () => {
     const { room, world, p, e } = setup();
     stepUntil(world, room, 'playerAttack');
-    expect(e.health).toBe(brute.maxHealth - 8);
+    expect(e.health).toBe(brute.maxHealth - damage(10, COMBAT.basicAttack.strength, brute.guard));
     expect(p.focus).toBe(COMBAT.focus.perHit);
     expect(p.combo).toBe(1);
   });
@@ -211,7 +211,7 @@ describe('the counter', () => {
       expect(e.mode).toBe('stagger');
       expect(e.modeTicks).toBe(COMBAT.counter.perfectStaggerTicks);
       const counterHit = events.find((ev) => ev.kind === 'playerAttack' && ev.move === 'counter');
-      expect(counterHit).toMatchObject({ damage: damage(COMBAT.player.power, 2, brute.guard) });
+      expect(counterHit).toMatchObject({ damage: damage(COMBAT.player.power, COMBAT.counter.perfectStrength, brute.guard) });
       expect(before).toBeGreaterThan(e.health);
     }
   });
@@ -354,7 +354,7 @@ describe('Strike', () => {
     const { room, world, p, e } = setup();
     stepWorld(world, room, { p1: { kind: 'none', action: 'strike' } });
     expect(world.events).toContainEqual({ kind: 'strikeRefused', playerId: 'p1', reason: 'focus' });
-    expect(e.health).toBe(brute.maxHealth - 8); // only the basic attack landed
+    expect(e.health).toBe(brute.maxHealth - damage(10, COMBAT.basicAttack.strength, brute.guard)); // only the basic attack landed
     expect(p.focus).toBe(5);
   });
 
@@ -440,5 +440,24 @@ describe('fair and repeatable', () => {
     const { room, world } = setup();
     for (let i = 0; i < 100; i++) stepWorld(world, room, { p1: IDLE });
     expect(JSON.parse(JSON.stringify(world))).toEqual(world);
+  });
+});
+
+describe('Nov 24 damage shift (Jay): auto attack down, Great Counter up', () => {
+  it('a basic attack hits for 0.6x Power', () => {
+    const { world, room } = setup();
+    let hit: CombatEvent | undefined;
+    for (let i = 0; i < 400 && !hit; i++) {
+      stepWorld(world, room, { p1: { kind: 'moveTo', x: world.enemies[0].pos.x, y: world.enemies[0].pos.y } });
+      hit = world.events.find((ev) => ev.kind === 'playerAttack' && ev.move === 'basic');
+    }
+    expect(hit && 'damage' in hit ? hit.damage : -1).toBe(damage(10, 0.6, brute.guard));
+  });
+
+  it('a Great Counter hits for 3.5x Power', () => {
+    const { world, room } = setup();
+    const events = counterAt(world, room, 2);
+    const hit = events.find((ev) => ev.kind === 'playerAttack' && ev.move === 'counter');
+    expect(hit && 'damage' in hit ? hit.damage : -1).toBe(damage(10, 3.5, brute.guard));
   });
 });

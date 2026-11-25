@@ -9,14 +9,14 @@ const base = () => copy(newProfile());
 describe('PB-01 loadout save', () => {
   it('round-trips all five fields through a save and load', () => {
     const p = newProfile();
-    p.loadout = { stance: 'cat-stance', virtue: 'second-wind', strike: 'jumping-spins', kata: 'basic-form-1-power', seals: ['escape', 'counter'] };
+    p.loadout = { stance: 'cat-stance', virtue: 'second-wind', strike: 'jumping-spins', kata: 'basic-form-1-power', seals: ['escape', 'counter'], tools: [] };
     const back = loadProfile(JSON.parse(JSON.stringify(p)));
     expect(back.loadout).toEqual(p.loadout);
   });
 
   it('an old { stance, virtue } save loads, with the new slots empty', () => {
     const s = { ...base(), loadout: { stance: 'front-stance', virtue: 'second-wind' } };
-    expect(loadProfile(s).loadout).toEqual({ stance: 'front-stance', virtue: 'second-wind', strike: null, kata: null, seals: [] });
+    expect(loadProfile(s).loadout).toEqual({ stance: 'front-stance', virtue: 'second-wind', strike: null, kata: null, seals: [], tools: [] });
   });
 
   it('an old { form } save loads (the R-STANCE-a shape) and keeps its fixture shape', () => {
@@ -31,7 +31,7 @@ describe('PB-01 loadout save', () => {
     const old = base();
     delete (old as Partial<typeof old>).loadout;
     expect(loadProfile(old).loadout).toBeNull();
-    for (const junk of ['x', 5, [], { seals: 'escape' }, { strike: 3, kata: {}, seals: [1, null] }]) expect(readLoadout(junk)).toBeNull();
+    for (const junk of ['x', 5, [], { seals: 'escape' }, { strike: 3, kata: {}, seals: [1, null], tools: [] }]) expect(readLoadout(junk)).toBeNull();
   });
 
   it('odd ids, repeats and the wrong shape are dropped, never an error', () => {
@@ -39,12 +39,12 @@ describe('PB-01 loadout save', () => {
       stance: 'cat-stance', virtue: null, strike: 'Jumping Spins', kata: 'constructor',
       seals: ['escape', 'escape', 'toString', 'Bad Id', 7, null, 'counter', '__proto__'],
     })!;
-    expect(l).toEqual({ stance: 'cat-stance', virtue: null, strike: null, kata: null, seals: ['escape', 'counter'] });
+    expect(l).toEqual({ stance: 'cat-stance', virtue: null, strike: null, kata: null, seals: ['escape', 'counter'], tools: [] });
     expect(readLoadout({ stance: 'cat-stance', seals: 'escape' })!.seals).toEqual([]);
   });
 
   it('a new slot alone is enough to count as a loadout', () => {
-    expect(readLoadout({ seals: ['guard'] })).toEqual({ ...emptyLoadout(), seals: ['guard'] });
+    expect(readLoadout({ seals: ['guard'], tools: [] })).toEqual({ ...emptyLoadout(), seals: ['guard'], tools: [] });
     expect(readLoadout({ strike: 'jumping-spins' })).toEqual({ ...emptyLoadout(), strike: 'jumping-spins' });
     expect(readLoadout({ kata: 'keon-power' })).toEqual({ ...emptyLoadout(), kata: 'keon-power' });
   });

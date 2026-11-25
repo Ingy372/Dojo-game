@@ -138,6 +138,6 @@ describe('R-STANCE-d2 stance sign-offs add no stats', () => {
     const rows = list?.kind === 'signOffs' ? list.list.map((r) => signOffsRow(r.requirement, r.ability.split(' (')[0], false).text) : [];
     expect(rows).toContain('✓ Stance: Front Stance');
     expect(rows.some((t) => /Stance: .*Stance: /.test(t) || t.startsWith('✓ Front Stance:'))).toBe(false);
-    expect(rows).toContain('✓ Basic Form 1: Kata');
+    expect(rows).toContain('✓ Basic Form 1: Kata move + a Tool Belt pocket');
   });
 });

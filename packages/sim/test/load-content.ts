@@ -7,6 +7,8 @@ import abilities from '../../../content/abilities/abilities.json';
 import sealFamilies from '../../../content/abilities/seal-families.json';
 import strikes from '../../../content/abilities/strikes.json';
 import kataPowers from '../../../content/abilities/kata-powers.json';
+import tools from '../../../content/abilities/tools.json';
+import kataSignatures from '../../../content/abilities/kata-signatures.json';
 import dojoRoom from '../../../content/dojo/home-dojo.json';
 import decorations from '../../../content/dojo/decorations.json';
 import twists from '../../../content/twists/twists.json';
@@ -21,7 +23,7 @@ const enemies = import.meta.glob('../../../content/enemies/*.json', { eager: tru
 /** The content folder's files, before loading (for tests that add a bad file). */
 export function testRawContent() {
   const sorted = (files: Record<string, unknown>) => Object.keys(files).sort().map((k) => files[k]);
-  return { rooms: sorted(rooms), enemies: sorted(enemies), insights, gear, drops, abilities, sealFamilies, strikes, kataPowers, dojoRoom, decorations, twists, elites, named, guardianScale, floorSets };
+  return { rooms: sorted(rooms), enemies: sorted(enemies), insights, gear, drops, abilities, sealFamilies, strikes, kataPowers, tools, kataSignatures, dojoRoom, decorations, twists, elites, named, guardianScale, floorSets };
 }
 
 /** All the game's content, read from the content folder. */
