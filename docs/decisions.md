@@ -2232,3 +2232,21 @@ Jay: explain every system through the tutorial so nothing is hidden, with a stor
 - **Chapter 2's mess is scripted and looks-only:** dust up to 60% of the normal cap, cleaned like any dust (and earns Calm Mind like any clean). Nothing is removed or blocked.
 - Sensei lines with no button now keep only their own height (all walk-there stops), so they cover less of the room.
 - All chapter words are Claude's drafts in `content/tutorial/chapters.json` (`placeholder: true`), 8 words or fewer each, waiting on Jay's OK.
+## Street Smarts lessons 2-5 (2026-11-24, branch `claude/street-lessons`)
+- **Jay picked the four topics and approved the scripts** (Nov 24: "Yes, these four"; "Yes, build them"). Design: `docs/superpowers/specs/2026-11-24-street-smarts-lessons-2-5-design.md`.
+  - 2, park (6-9): candy from a grown-up you don't know.
+  - 3, bus stop (10-13): a car offers a ride.
+  - 4, playground (6-9): a kid picks on you at recess.
+  - 5, home (10-13): someone online asks where you go to school.
+- **Jay asked Claude to do all the Blender work and put the lessons on the live link without waiting for him.** So the new art (four places, a crossing guard, a teacher, three kids, a car) went live without his separate OK. It stays open to his changes.
+- **Claude's calls:**
+  - Six short connecting lines (listed in the design).
+  - The park stranger is played by the store's shopper art.
+  - The driver never leaves the car.
+  - The ball changes hands as one pop-up.
+  - Lines may be up to 14 words for ages 10-13. The store and the 6-9 lessons stay at 12.
+  - The Mom/Dad question asks about each place, and the playground (with no grown-up) skips it.
+- **Unanswered check questions,** kept as written until Jay says otherwise:
+  - the line "Don't tell your parents. It's our secret." (online lesson);
+  - "Push them" as a wrong answer;
+  - Sensei's end lines.

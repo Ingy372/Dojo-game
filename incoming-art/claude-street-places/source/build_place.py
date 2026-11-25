@@ -265,7 +265,7 @@ def busstop():
         size=[16, 10], start=["player-start", "safe-wait", "trees"],
         cast={"guard": "people-guard", "kid1": "people-friend1", "kid2": "people-friend2", "car": "static:car"},
         marks={"player-start": [11.0, 4.6], "safe-wait": [4.4, 5.1], "shelter-back": [10.6, 1.75], "trees": [14.8, 3.7],
-               "guard": [2.6, 5.75], "kid1": [5.1, 4.1], "kid2": [5.9, 4.7], "step-back": [4.6, 4.2], "by-guard": [3.4, 5.1],
+               "guard": [2.6, 5.75], "kid1": [5.1, 4.1], "kid2": [5.9, 4.7], "step-back": [3.9, 4.35], "by-guard": [3.75, 5.2],
                "car-in": [21.0, 7.6], "car-stop": [6.6, 7.6], "car-out": [-5.0, 7.6], "curb": [6.6, 6.6]})
 
 
@@ -391,7 +391,7 @@ def home():
     return dict(
         size=[16, 10], start=["player-tablet", "kitchen-grownup", "tablet"],
         cast={"grownup": {"Mom": "people-mom", "Dad": "people-dad"}},
-        marks={"player-tablet": [4.1, 4.75], "tablet": [4.1, 3.65, 0.55], "couch": [3.7, 2.7], "kitchen-grownup": [12.2, 2.5],
+        marks={"player-tablet": [4.1, 4.75], "tablet": [4.1, 3.65, 0.55], "couch": [1.75, 2.55], "kitchen-grownup": [12.2, 2.5],
                "player-kitchen": [10.3, 3.3], "grownup-table": [5.3, 4.6], "player-table": [3.9, 4.75], "door-in": [8.5, 8.8]})
 
 
