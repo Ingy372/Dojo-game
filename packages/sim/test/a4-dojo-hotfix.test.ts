@@ -17,7 +17,7 @@ const between = (s: string, from: string, to: string): string => s.slice(s.index
 
 describe('A4-DOJO-hotfix bug 2: the stepped-back banner goes away', () => {
   const game = file('scenes/GameScene.ts');
-  const body = between(game, 'private senseiStepsBack(', 'private shieldGlow(');
+  const body = between(game, 'private senseiStepsBack(', 'private playerScreenBoxes(');
 
   it('holds for 2.2 s, the Manager\'s B-MASHER-2 number', () => {
     expect(MASH_GUARD_HOLD_MS).toBe(2200);

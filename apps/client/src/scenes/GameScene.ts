@@ -125,6 +125,7 @@ import { CONTENT } from '../game/content';
 import { homeDojo, setBowDue } from '../game/dojo';
 import { NAMED_PACK, NamedView } from '../game/named';
 import { reducedMotion } from '../game/motion';
+import { FightFx, SHIELD_GLOW_COLOR } from '../fx/fightFx';
 import { RATING, overlaps, ratingWordTop } from '../ui/ratingWord';
 import { THROWN_LOOK, getUpAngle, thrownPose } from '../ui/thrownPose';
 import { drawPatternTell } from '../game/patternTells';
@@ -273,9 +274,6 @@ export interface GameSceneData {
   skipStory?: boolean;
 }
 
-/** B-MASHER-a shield-bounce glow: soft gold, 0.4 s. */
-const SHIELD_GLOW_COLOR = 0xf2c75c;
-const SHIELD_GLOW_MS = 400;
 /** B-MASHER-2: stands for "this run" in rooms played without a run (the training room). */
 const NO_RUN_KEY: { mashGuardSeen: string[] } = { mashGuardSeen: [] };
 
@@ -1562,7 +1560,7 @@ export class GameScene extends Phaser.Scene {
       switch (ev.kind) {
         case 'eliteFocus': {
           // Elite reward: a small blue-white Focus pop (not a pickup to chase).
-          if (ev.focus > 0) this.focusPop(this.world.players[ev.playerId]?.pos ?? { x: 0, y: 0 }, `+${ev.focus} Focus`);
+          if (ev.focus > 0) this.fx.focusPop(this.world.players[ev.playerId]?.pos ?? { x: 0, y: 0 }, `+${ev.focus} Focus`);
           break;
         }
         case 'playerAttack': {
@@ -1577,7 +1575,7 @@ export class GameScene extends Phaser.Scene {
             v.sprite.play('hit', { restart: true });
           } else v.hitUntil = this.time.now + 250;
           const heavy = ev.move !== 'basic';
-          this.sparks(e.pos, heavy ? 12 : 5, heavy ? COLORS.gold : 0xffffff);
+          this.fx.sparks(e.pos, heavy ? 12 : 5, heavy ? COLORS.gold : 0xffffff);
           if (ev.playerId === this.me && this.shopFx.hit) playFx(this, this.shopFx.hit, e.pos.x * TILE, e.pos.y * TILE, this.fxPlace());
           this.floatText(e.pos, `${ev.damage}`, heavy ? RATING.color : '#ffffff', heavy ? 30 : 22);
           // The character punches (the automatic jab only when standing, so walking stays smooth).
@@ -1594,12 +1592,12 @@ export class GameScene extends Phaser.Scene {
             this.impact(FEEL.strike);
           } else if (ev.move === 'chain' || ev.move === 'ripple' || ev.move === 'reflect') {
             sfx.hit();
-            this.ring(e.pos, ev.move === 'ripple' ? COLORS.gold : 0xffffff, 0.8, 0.7);
+            this.fx.ring(e.pos, ev.move === 'ripple' ? COLORS.gold : 0xffffff, 0.8, 0.7);
           }
           if (ev.defeated) {
             sfx.enemyDown();
             this.impact(FEEL.enemyDown);
-            this.setFree(e.pos, !!e.def.boss);
+            this.fx.setFree(e.pos, !!e.def.boss);
             // LP-B2: a freed Guardian's faith line, from the school's pack (none for Guardians it has no line for).
             const faith = e.def.boss ? guardianLine(FAITH, e.def.id) : null;
             if (faith) this.senseiSay(faith, 1800);
@@ -1613,7 +1611,7 @@ export class GameScene extends Phaser.Scene {
           this.heroDo('counter', 8); // the counter punch
           this.impact(FEEL.perfect);
           this.flashScreen(0xffffff, 0.55, 220);
-          this.ring(p.pos, COLORS.gold, 2.2);
+          this.fx.ring(p.pos, COLORS.gold, 2.2);
           this.popWord('GREAT!', RATING.color, RATING.great);
           if (ev.playerId === this.me && !this.world.guide) this.lesson('firstPerfectUnaided');
           break;
@@ -1631,12 +1629,12 @@ export class GameScene extends Phaser.Scene {
           this.heroDo('strike');
           this.impact(FEEL.perfect);
           if (e) {
-            this.ring(e.pos, COLORS.gold, 1.8);
-            this.sparks(e.pos, 14, COLORS.gold);
+            this.fx.ring(e.pos, COLORS.gold, 1.8);
+            this.fx.sparks(e.pos, 14, COLORS.gold);
           }
           for (const id of ev.bumped) {
             const b = this.enemy(id);
-            if (b) this.sparks(b.pos, 8, 0xffffff);
+            if (b) this.fx.sparks(b.pos, 8, 0xffffff);
           }
           this.popWord(ev.bumped.length > 0 ? 'KNOCKOUT!' : 'FINISHER!', RATING.color, RATING.great);
           break;
@@ -1650,8 +1648,8 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.block();
           this.impact(FEEL.block, this.shakeScale('block'));
-          this.ring(p.pos, COLORS.shield, 1.2);
-          this.sparks(p.pos, 6, COLORS.shield);
+          this.fx.ring(p.pos, COLORS.shield, 1.2);
+          this.fx.sparks(p.pos, 6, COLORS.shield);
           this.floatText(p.pos, `BLOCK  -${ev.damage}`, '#9ad1ff', 22);
           if (ev.playerId === this.me) this.lesson('firstBlock');
           break;
@@ -1669,7 +1667,7 @@ export class GameScene extends Phaser.Scene {
         case 'bell': {
           const p = this.world.players[this.me];
           sfx.loot(ev.count === ev.of ? 2 : 0);
-          this.ring(p.pos, COLORS.gold, 1.6);
+          this.fx.ring(p.pos, COLORS.gold, 1.6);
           this.floatText(p.pos, ev.count === ev.of ? 'Ding! Bonus prize!' : `Ding! Bell ${ev.count} of ${ev.of}`, '#ffd166', 24, 1.1);
           this.drawTwistBells();
           break;
@@ -1742,7 +1740,7 @@ export class GameScene extends Phaser.Scene {
             if (this.warnings.get(ev.enemyId)?.inside && this.world.players[this.me]?.health > 0) this.lesson('firstStepOut');
           }
           this.warnings.delete(ev.enemyId);
-          if (e?.attackCenter) this.ring(e.attackCenter, 0xffffff, currentAttack(e).areaRadius, 0.6);
+          if (e?.attackCenter) this.fx.ring(e.attackCenter, 0xffffff, currentAttack(e).areaRadius, 0.6);
           break;
         }
         case 'counterPressed':
@@ -1755,13 +1753,13 @@ export class GameScene extends Phaser.Scene {
           sfx.dash();
           this.heroDo('dash');
           if (ev.playerId === this.me && this.shopFx.puff) playFx(this, this.shopFx.puff, p.pos.x * TILE, (p.pos.y + 0.15) * TILE, this.fxPlace());
-          this.dashTrail(p.pos);
+          this.fx.dashTrail(p.pos, this.world.players[this.me].dashDir);
           break;
         }
         case 'stanceChange': {
           const p = this.world.players[ev.playerId];
           sfx.insight();
-          this.ring(p.pos, 0x6fb7ff, 1.2);
+          this.fx.ring(p.pos, 0x6fb7ff, 1.2);
           this.floatText(p.pos, activeStance(p).name, '#9ad1ff', 22, 1);
           break;
         }
@@ -1769,7 +1767,7 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.stripe();
           this.flashScreen(0xffd166, 0.35, 260);
-          this.ring(p.pos, COLORS.gold, 2.4);
+          this.fx.ring(p.pos, COLORS.gold, 2.4);
           this.popWord(p.virtue?.name ?? 'Virtue', RATING.color, RATING.name);
           if (ev.healed > 0) this.floatText(p.pos, `+${ev.healed}`, '#5cd65c', 26, 1.2);
           break;
@@ -1782,7 +1780,7 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           const def = CONTENT.abilities.tools.find((t) => t.technique === ev.technique);
           if (def && def.anim !== 'none' && !this.heroAction) this.heroDo(def.anim);
-          this.ring(p.pos, 0xc9a8ff, 1.3, 0.7);
+          this.fx.ring(p.pos, 0xc9a8ff, 1.3, 0.7);
           sfx.insight();
           this.toolRow?.fired(ev.technique);
           this.lesson('firstToolFired');
@@ -1796,7 +1794,7 @@ export class GameScene extends Phaser.Scene {
           this.heroDo(move?.anim === 'strike' ? 'strike' : 'counter');
           this.impact(FEEL.perfect);
           this.flashScreen(0xc9a8ff, 0.4, 240);
-          this.ring(p.pos, 0xc9a8ff, move?.radius ?? 2);
+          this.fx.ring(p.pos, 0xc9a8ff, move?.radius ?? 2);
           if (move) this.popWord(move.name, '#e8d8ff', RATING.name);
           break;
         }
@@ -1811,7 +1809,7 @@ export class GameScene extends Phaser.Scene {
         case 'shieldSoak': {
           const p = this.world.players[ev.playerId];
           sfx.block();
-          this.ring(p.pos, COLORS.gold, 1.3);
+          this.fx.ring(p.pos, COLORS.gold, 1.3);
           this.floatText(p.pos, `SHIELDED ${ev.soaked}`, '#ffd166', 22);
           break;
         }
@@ -1849,7 +1847,7 @@ export class GameScene extends Phaser.Scene {
           break;
         case 'breath': {
           const p = this.world.players[ev.playerId];
-          this.ring(p.pos, COLORS.health, 1.4);
+          this.fx.ring(p.pos, COLORS.health, 1.4);
           this.floatText(p.pos, `+${ev.healed} catch your breath`, '#5cd65c', 20, 1.1);
           break;
         }
@@ -1862,7 +1860,7 @@ export class GameScene extends Phaser.Scene {
         case 'speedBurst': {
           const p = this.world.players[ev.playerId];
           sfx.dash();
-          this.ring(p.pos, 0x5cd6b0, 1.3);
+          this.fx.ring(p.pos, 0x5cd6b0, 1.3);
           this.floatText(p.pos, 'WIND STEP!', '#5cd6b0', 20);
           break;
         }
@@ -1931,8 +1929,8 @@ export class GameScene extends Phaser.Scene {
         case 'goalReached': {
           const p = this.world.players[this.me];
           sfx.appear();
-          this.ring(p.pos, COLORS.gold, 1.6);
-          this.sparks(p.pos, 14, COLORS.gold);
+          this.fx.ring(p.pos, COLORS.gold, 1.6);
+          this.fx.sparks(p.pos, 14, COLORS.gold);
           if (this.goalView) {
             this.tweens.killTweensOf(this.goalView);
             this.tweens.add({ targets: this.goalView, alpha: 0, scale: 2, duration: 400, onComplete: () => this.goalView?.destroy() });
@@ -1947,17 +1945,17 @@ export class GameScene extends Phaser.Scene {
           if (this.run?.tutorial) this.tutorialDid('openChest');
           const at = this.room.chest;
           // Chest v2 (Jay, Nov 18): the room dims a little and a gold ring closes in on the chest while it shakes...
-          if (at) this.chestCharge(at, this.chestTiming().burstMs);
+          if (at) this.fx.chestCharge(at, this.chestTiming().burstMs);
           this.time.delayedCall(this.chestTiming().burstMs, () => {
             sfx.chest();
             if (at) {
               // ...then the lid bursts: a flash, a thump and a shower of gold.
               this.flashScreen(0xfff6d8, 0.5, 260);
               this.impact(FEEL.perfect);
-              this.ring(at, COLORS.gold, 2.4);
-              this.ring(at, 0xffffff, 1.4);
-              this.sparks(at, 30, COLORS.gold);
-              this.sparks(at, 12, 0xffffff);
+              this.fx.ring(at, COLORS.gold, 2.4);
+              this.fx.ring(at, 0xffffff, 1.4);
+              this.fx.sparks(at, 30, COLORS.gold);
+              this.fx.sparks(at, 12, 0xffffff);
             }
           });
           break;
@@ -1965,13 +1963,13 @@ export class GameScene extends Phaser.Scene {
         case 'shrineUsed': {
           const p = this.world.players[ev.playerId];
           sfx.shrine();
-          this.ring(p.pos, COLORS.health, 1.8);
+          this.fx.ring(p.pos, COLORS.health, 1.8);
           this.floatText(p.pos, ev.healed > 0 ? `+${ev.healed} health` : 'Rested', '#5cd65c', 24);
           break;
         }
         case 'doorsOpen': {
           sfx.doors();
-          for (const d of this.doorViews) this.ring(d.at, DOOR_LOOK[d.kind].color, 1.2);
+          for (const d of this.doorViews) this.fx.ring(d.at, DOOR_LOOK[d.kind].color, 1.2);
           const one = this.doorViews.length === 1;
           if (this.run?.tutorial && this.room.kind === 'boss') this.tutorialTip('tutorial-door');
           this.doorHint.setText(one ? 'The door is open!' : 'The doors are open!\nPick one.');
@@ -1996,7 +1994,7 @@ export class GameScene extends Phaser.Scene {
           const e = this.enemy(ev.enemyId);
           if (e) {
             sfx.appear();
-            this.ring(e.pos, this.enemyViews.get(e.id)?.color ?? COLORS.brute, 1.2);
+            this.fx.ring(e.pos, this.enemyViews.get(e.id)?.color ?? COLORS.brute, 1.2);
           }
           break;
         }
@@ -2007,9 +2005,9 @@ export class GameScene extends Phaser.Scene {
           const e = this.enemy(ev.enemyId);
           sfx.clank();
           if (e) {
-            this.sparks(e.pos, 4, 0xc9d6e8);
+            this.fx.sparks(e.pos, 4, 0xc9d6e8);
             this.floatText(e.pos, 'CLANK', '#c9d6e8', 18);
-            this.shieldGlow(e.pos, e.def.radius);
+            this.fx.shieldGlow(e.pos, e.def.radius);
           }
           break;
         }
@@ -2017,15 +2015,15 @@ export class GameScene extends Phaser.Scene {
           const e = this.enemy(ev.enemyId);
           sfx.shieldBreak();
           if (e) {
-            this.sparks(e.pos, 16, 0xc9d6e8);
-            this.ring(e.pos, 0xc9d6e8, 1.4);
+            this.fx.sparks(e.pos, 16, 0xc9d6e8);
+            this.fx.ring(e.pos, 0xc9d6e8, 1.4);
             this.floatText({ x: e.pos.x, y: e.pos.y - 0.5 }, 'SHIELD BROKEN!', '#ffffff', 22);
           }
           break;
         }
         case 'shieldRegrow': {
           const e = this.enemy(ev.enemyId);
-          if (e) this.ring(e.pos, 0xc9d6e8, 0.9, 0.6);
+          if (e) this.fx.ring(e.pos, 0xc9d6e8, 0.9, 0.6);
           break;
         }
         case 'clang': {
@@ -2041,7 +2039,7 @@ export class GameScene extends Phaser.Scene {
           const ms = ticksToRealMs(ev.ticks);
           if (e) {
             if (!reducedMotion()) {
-              const glow = this.addWorld(this.add.image(e.pos.x * TILE, (e.pos.y - 0.4) * TILE, this.softGlow()).setDepth(8));
+              const glow = this.addWorld(this.add.image(e.pos.x * TILE, (e.pos.y - 0.4) * TILE, this.fx.softGlow()).setDepth(8));
               glow.setTint(0xff7a3c).setScale(0.6).setAlpha(0.9);
               this.tweens.add({ targets: glow, scale: 2.4, alpha: 0, duration: ms, ease: 'Cubic.Out', onComplete: () => glow.destroy() });
             }
@@ -2099,7 +2097,7 @@ export class GameScene extends Phaser.Scene {
           this.syncEnemyViews();
           for (const id of ev.summoned) {
             const s = this.enemy(id);
-            if (s) this.ring(s.pos, 0xffffff, 1);
+            if (s) this.fx.ring(s.pos, 0xffffff, 1);
           }
           break;
         }
@@ -2420,7 +2418,7 @@ export class GameScene extends Phaser.Scene {
         // The enemies arrive now, with a puff where each one stands.
         this.enemiesAt = this.time.now;
         sfx.appear();
-        for (const e of this.world.enemies) if (e.mode !== 'defeated') this.ring(e.pos, 0xffffff, 1.2, 0.6);
+        for (const e of this.world.enemies) if (e.mode !== 'defeated') this.fx.ring(e.pos, 0xffffff, 1.2, 0.6);
       }, this.hero);
     });
     this.cameras.main.ignore(prompt);
@@ -3269,7 +3267,7 @@ export class GameScene extends Phaser.Scene {
     const orb = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, 8 + rank * 2, color).setStrokeStyle(3, 0xffffff, 0.8).setDepth(12));
     this.tweens.add({ targets: orb, y: orb.y - TILE * 0.9, duration: 260, ease: 'Cubic.Out', yoyo: true, hold: 200 });
     this.tweens.add({ targets: orb, alpha: 0, scale: 1.6, delay: 760, duration: 220, onComplete: () => orb.destroy() });
-    if (rank >= 2) this.ring(at, color, 1.6);
+    if (rank >= 2) this.fx.ring(at, color, 1.6);
 
     const { width } = view(this);
     const y = 64 + this.toastY * 26;
@@ -3299,17 +3297,6 @@ export class GameScene extends Phaser.Scene {
         this.toastY = Math.max(0, this.toastY - 1);
       },
     });
-  }
-
-  /** Chest v2: while the chest shakes, the room dims a little and a gold ring closes in on it. */
-  private chestCharge(at: Vec2, ms: number): void {
-    const { width, height } = view(this);
-    const dim = this.add.rectangle(0, 0, width, height, 0x0a0810, 0).setOrigin(0).setDepth(5);
-    this.cameras.main.ignore(dim);
-    this.tweens.add({ targets: dim, alpha: 0.28, duration: ms * 0.8, yoyo: true, hold: ms * 0.2, onComplete: () => dim.destroy() });
-    if (reducedMotion()) return;
-    const ring = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, TILE * 2.2).setStrokeStyle(4, COLORS.gold, 0.9).setFillStyle(COLORS.gold, 0.08).setDepth(11));
-    this.tweens.add({ targets: ring, scale: 0.25, alpha: 1, duration: ms, ease: 'Quad.In', onComplete: () => ring.destroy() });
   }
 
   /**
@@ -3387,7 +3374,7 @@ export class GameScene extends Phaser.Scene {
         this.tweens.add({ targets: piece, y: y + height * 0.35, alpha: 0, angle: piece.angle + 720, delay: 520, duration: 1400, ease: 'Quad.In' });
       }
     }
-    this.ring(at, color, 1.8);
+    this.fx.ring(at, color, 1.8);
     let closed = false;
     const close = () => {
       if (closed) return;
@@ -3406,7 +3393,7 @@ export class GameScene extends Phaser.Scene {
   private showDecoration(id: string, at: Vec2, surprise = false): void {
     const name = decorationDef(CONTENT.dojo, id).name;
     sfx.loot(2);
-    this.ring(at, COLORS.gold, 1.4);
+    this.fx.ring(at, COLORS.gold, 1.4);
     this.floatText(at, surprise ? 'A surprise!' : 'For your dojo!', '#ffd166', 16, 1.2);
     const { width } = view(this);
     const y = 64 + this.toastY * 26;
@@ -3515,103 +3502,17 @@ export class GameScene extends Phaser.Scene {
     return { tile: TILE, depth: FX_DEPTH, add: (g) => this.addWorld(g) };
   }
 
+  /** The fight's small visual effects (fx/fightFx.ts), made the first time one plays. */
+  private fightFx: FightFx | null = null;
+  private get fx(): FightFx {
+    return (this.fightFx ??= new FightFx(this, TILE, (o) => this.addWorld(o)));
+  }
+
   private addWorld<T extends Phaser.GameObjects.GameObject>(obj: T): T {
     this.uiCamera.ignore(obj);
     return obj;
   }
 
-  /**
-   * A beaten creature is "set free": a soft golden flash, its dissolve into light (drawn
-   * glowing), and a few sparkles drifting up. Short and light, so the fight stays readable.
-   */
-  private setFree(at: Vec2, boss: boolean): void {
-    const x = at.x * TILE;
-    const y = at.y * TILE;
-    const size = boss ? 1.6 : 1;
-    // No golden flash with reduced motion (K12).
-    if (!reducedMotion()) {
-      // A warm golden flash (normal colours, so it shows on light stone as well as dark floors).
-      const glow = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8));
-      glow.setTint(0xffb627).setScale(0.4).setAlpha(1);
-      this.tweens.add({ targets: glow, scale: 2.2 * size, alpha: 0, duration: 650, ease: 'Cubic.Out', onComplete: () => glow.destroy() });
-      const core = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8).setScale(0.3));
-      this.tweens.add({ targets: core, scale: 1.1 * size, alpha: 0, duration: 380, ease: 'Cubic.Out', onComplete: () => core.destroy() });
-    }
-    this.ring({ x: at.x, y: at.y - 0.3 }, 0xffd166, 1.3 * size, 0.9);
-    // Little golden stars drift up and fade (none with reduced motion).
-    const count = reducedMotion() ? 0 : boss ? 16 : 9;
-    for (let i = 0; i < count; i++) {
-      const sx = x + (Math.random() - 0.5) * TILE * 0.9 * size;
-      const r = 5 + Math.random() * 4;
-      const star = this.addWorld(this.add.star(sx, y - TILE * (0.2 + Math.random() * 0.5), 4, r * 0.4, r, i % 3 === 0 ? 0xffffff : 0xffe48a));
-      star.setStrokeStyle(1.5, 0xc98a1a, 0.9).setDepth(8).setScale(0.4);
-      this.tweens.add({ targets: star, scale: 1, duration: 140, delay: i * 25, ease: 'Back.Out' });
-      this.tweens.add({
-        targets: star,
-        y: star.y - TILE * (0.8 + Math.random() * 0.9) * size,
-        x: sx + (Math.random() - 0.5) * TILE * 0.4,
-        angle: (Math.random() - 0.5) * 180,
-        alpha: 0,
-        delay: i * 25,
-        duration: 700 + Math.random() * 350,
-        ease: 'Sine.Out',
-        onComplete: () => star.destroy(),
-      });
-    }
-  }
-
-  /** A soft round glow (white in the middle, fading out), made once and reused. */
-  private softGlow(): string {
-    const key = 'fx-soft-glow';
-    if (!this.textures.exists(key)) {
-      const tex = this.textures.createCanvas(key, 64, 64)!;
-      const ctx = tex.getContext();
-      const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-      g.addColorStop(0, 'rgba(255,255,255,1)');
-      g.addColorStop(0.45, 'rgba(255,255,255,0.8)');
-      g.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, 64, 64);
-      tex.refresh();
-    }
-    return key;
-  }
-
-  private sparks(at: Vec2, count: number, color: number): void {
-    for (let i = 0; i < count; i++) {
-      const a = Math.random() * Math.PI * 2;
-      const dist = TILE * (0.5 + Math.random() * 0.7);
-      const s = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, 2 + Math.random() * 3, color).setDepth(10));
-      this.tweens.add({
-        targets: s,
-        x: s.x + Math.cos(a) * dist,
-        y: s.y + Math.sin(a) * dist,
-        alpha: 0,
-        scale: 0.3,
-        duration: 220 + Math.random() * 160,
-        ease: 'Cubic.Out',
-        onComplete: () => s.destroy(),
-      });
-    }
-  }
-
-  /** A few fading after-images along the dash. */
-  private dashTrail(from: Vec2): void {
-    const p = this.world.players[this.me];
-    const r = MOVEMENT.playerRadius * TILE;
-    for (let i = 0; i < 4; i++) {
-      const t = i / 4;
-      const x = from.x + p.dashDir.x * COMBAT.dash.distanceTiles * t;
-      const y = from.y + p.dashDir.y * COMBAT.dash.distanceTiles * t;
-      const ghost = this.addWorld(this.add.circle(x * TILE, y * TILE, r, 0x9ad1ff, 0.35).setDepth(3));
-      this.tweens.add({ targets: ghost, alpha: 0, scale: 0.6, delay: i * 40, duration: 260, onComplete: () => ghost.destroy() });
-    }
-  }
-
-/**
-   * B-MASHER-a: a shield bounce gives Focus; a soft gold ring for 0.4 s hints "use your Strike!".
-   * Reduced motion: a steady gold tint for the same 0.4 s, with no pulse.
-   */
   /** B-MASHER-2: once per run, a proud moment when Mash guard steps back (3 Perfect Counters in a room). */
   private senseiStepsBack(playerId: PlayerId): void {
     if (!takeMashGuardMoment(this.run ?? NO_RUN_KEY, playerId)) return;
@@ -3743,38 +3644,6 @@ export class GameScene extends Phaser.Scene {
       const r = (o as Phaser.GameObjects.Container).getBounds();
       return { x0: r.left - 8, x1: r.right + 8, y0: r.top - 8, y1: r.bottom + 8 };
     });
-  }
-
-  private shieldGlow(at: Vec2, radiusTiles: number): void {
-    const r = (radiusTiles + 0.15) * TILE;
-    if (reducedMotion()) {
-      const tint = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, r, SHIELD_GLOW_COLOR, 0.3).setStrokeStyle(4, SHIELD_GLOW_COLOR, 0.8).setDepth(9));
-      this.time.delayedCall(SHIELD_GLOW_MS, () => tint.destroy());
-      return;
-    }
-    const c = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, r).setStrokeStyle(5, SHIELD_GLOW_COLOR, 0.85).setDepth(9));
-    this.tweens.add({ targets: c, scale: { from: 0.9, to: 1.12 }, duration: SHIELD_GLOW_MS / 2, yoyo: true, ease: 'Sine.InOut' });
-    this.tweens.add({ targets: c, alpha: { from: 0.95, to: 0 }, duration: SHIELD_GLOW_MS, ease: 'Cubic.In', onComplete: () => c.destroy() });
-  }
-
-    private ring(at: Vec2, color: number, radiusTiles: number, alpha = 0.9): void {
-    const c = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, radiusTiles * TILE).setStrokeStyle(5, color, alpha).setDepth(9));
-    c.setScale(0.3);
-    this.tweens.add({ targets: c, scale: 1, alpha: 0, duration: 300, ease: 'Cubic.Out', onComplete: () => c.destroy() });
-  }
-
-  /** The elite Focus reward: pops in above the player, holds long enough to read, then floats away. */
-  private focusPop(at: Vec2, text: string): void {
-    const t = this.addWorld(
-      this.add
-        .text(at.x * TILE, (at.y - 1.3) * TILE, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '24px', color: '#cfeaff', stroke: '#14121c', strokeThickness: 6 })
-        .setOrigin(0.5)
-        .setResolution(crisp())
-        .setDepth(12)
-        .setScale(0.5),
-    );
-    this.tweens.add({ targets: t, scale: 1, duration: 180, ease: 'Back.Out' });
-    this.tweens.add({ targets: t, y: t.y - 0.6 * TILE, alpha: 0, delay: 1100, duration: 500, ease: 'Cubic.In', onComplete: () => t.destroy() });
   }
 
   private floatText(at: Vec2, text: string, color: string, size: number, rise = 0.8): void {
