@@ -106,6 +106,14 @@ Order to be agreed with Jay after CW-3. Candidates:
 - Game feel and menus, screen by screen, from the CW-3 notes.
 - Art attempts (Jay asked Claude to try), starting small.
 
+## 4a. Tool Belt (Nov 24)
+
+| ID | What | Status |
+|---|---|---|
+| TB-1 | Stage 1: tools #1–15, KATA button (3 kata moves), pockets, damage shift | Built on `claude/tool-belt`; waits on Jay's preview and OK |
+| TB-2 | Stage 2: tools #16–40, kicks 4–7, second kick button, 6 more kata moves | Waits on TB-1 OK; content draft for Jay first |
+| TB-3 | Blender art: kata moves, Jumping Spins and Butterfly Kick, kicks 4–7 | Waits on Jay |
+
 ## 5. After the beta, toward the April launch
 
 From `drafts/planning/R-OVERHAUL-LAUNCH.md`: L11 belts 4–10 in the Tower (floor sets are built but switched off), L12 the DojoForge connection and server saves (needs Nic; asks collected in `drafts/planning/NIC-ASKS.md`), L9 Sensei's Trials, L17 Street Smarts (Jay approves each script), L19 voice on cards, L2b Stars, kata powers through Nahanchi, L15 gear looks, L18 technique videos, L3 chapters.

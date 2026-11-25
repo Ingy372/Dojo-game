@@ -198,6 +198,9 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
     const t = pick(rng, alive);
     return { ...approach(p, t), action: nextFloat(rng) < 0.5 ? 'counter' : 'strike' };
   }
+  // Tool Belt: the KATA button, once ready, when enemies are close (a kid or masher presses it for one; a smart player waits for two).
+  const kataNear = p.kataMove ? alive.filter((e) => distance(p.pos, e.pos) - e.def.radius - 0.42 <= p.kataMove!.radius).length : 0;
+  if ((style === 'masher' || style === 'kid') && p.kataMove && p.kataCooldown === 0 && kataNear >= 1) return { ...approach(p, nearest(p.pos, alive)!), action: 'kata' };
   if (style === 'masher' || style === 'kid') {
     const t = nearest(p.pos, alive)!;
     const near = distance(p.pos, t.pos) - t.def.radius - 0.42 <= COMBAT.strike.reach;
@@ -262,6 +265,9 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
       escape = awayFrom(p.pos, [alive.find((x) => x.id === first.enemyId)!.attackCenter!], room);
     }
   }
+
+  // Tool Belt: KATA when two or more enemies are close and nothing more urgent is planned.
+  if (!action && p.kataMove && p.kataCooldown === 0 && p.guardTicks === 0 && kataNear >= 2) action = 'kata';
 
   // 2. Strike when it helps.
   // R-CHALLENGE P5: between the two hits of a double hit, keep Counter ready instead of Striking.

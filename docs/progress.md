@@ -1452,3 +1452,19 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - No automatic blocking (Guided enemies 0.75 -> 0.7 to keep the white-belt target), kata Watch first and Hint, the town mini map and the door signs with pictures. Details in decisions.md. 1,696 tests pass; type checks and both builds pass; checked in the browser at 844 x 390 (Watch to "Your turn!", a hinted run paying 3 coins, the map and all three signs).
 - **Next:** Jay plays the preview: a fight in Steady (no auto-blocks), kata Watch and Hint, and the town map and signs; OK (or changes) for the picture icons and the kata words; then copy to `main` with his OK. Still open: re-measure the coin table with BALANCE=1.
 
+
+## Tool Belt, stage 1 (2026-11-24, branch `claude/tool-belt`)
+
+**Done**
+- Jay's damage shift: auto attack 0.6x Power (was 1x), Great Counter 3.5x (was 2x). Guided counter window 14 ticks (was 10) to keep the white-belt Guided target.
+- Design and plan: `docs/superpowers/specs/2026-11-24-tool-belt-design.md`, `docs/superpowers/plans/2026-11-24-tool-belt-stage-1.md`. Jay approved the stage 1 words (`drafts/content/tool-belt-stage-1.md`).
+- Tools for self-defense #1–15 (`content/abilities/tools.json`): each fires from a player action, waits its cooldown, and shows "#n Name!". Pockets: 3 + 1 per kata, at most 10. Sensei's Pick fills them; old saves turn their Seals into tools once.
+- KATA button with Kiai! (Basic Form 1), Four Corners (Basic Form 2), Iron Wall (Keon) (`content/abilities/kata-signatures.json`).
+- Tool Belt section on the Fighting Style screen, New tool card, Sensei's two lessons, no Seal words left for players.
+- All tests, type checks and both builds pass. Checked in the browser: KATA button and Iron Wall, tool callouts after a Great Counter, the Tool Belt screen.
+
+**Next**
+- Jay plays the preview: OK (or changes) for the feel, the numbers, and the words Claude wrote (listed in decisions).
+- Stage 2 (green to brown): tools #16–40 with the Injured status, kicks 4–7 and the second kick button, kata moves for David and Goliath, Pinon 1–3, Nahanchi, Possi. Content draft first.
+- New Blender art for the kata moves and kicks (stand-in motions for now).
+- Cleanup later: remove `kata-powers.json` and the Seal evolution words once old saves no longer need them.
