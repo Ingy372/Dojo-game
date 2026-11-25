@@ -63,6 +63,21 @@ const FLOOR_KEEPER_FORM2 = { atHealth: 0.5, pack: 'enemy-floor-keeper-f2' as Pac
 export const ENEMY_ART_PACKS: PackName[] = [...new Set([...Object.values(ENEMY_PACKS).map((p) => p.pack), ...HEARTH_COOK_RIGS.map((r) => r.pack), FLOOR_KEEPER_FORM2.pack])];
 
 /**
+ * CW-4: the own-art packs these enemy types need, every phase rig included (the Hearth Cook's three, the Floor
+ * Keeper's second form). Enemies drawn from the White belt pack (enemies-t1) need nothing extra here.
+ */
+export function enemyArtPacks(enemyIds: readonly string[]): PackName[] {
+  const packs = new Set<PackName>();
+  for (const id of enemyIds) {
+    const own = ENEMY_PACKS[id];
+    if (own) packs.add(own.pack);
+    if (id === 'hearth-cook') for (const r of HEARTH_COOK_RIGS) packs.add(r.pack);
+    if (id === 'floor-keeper') packs.add(FLOOR_KEEPER_FORM2.pack);
+  }
+  return [...packs];
+}
+
+/**
  * Shades v2 (Jay, Nov 18: "draw them sharper and bigger"). The White belt monsters (pack enemies-t1) are rendered at
  * 160 px per tile and packed at 96, twice the pixels of every other pack, so they are drawn at half size
  * (SHARP_PACK) and then 25% bigger than their hit circle (BIGGER). Drawing only: the fight rules are unchanged.

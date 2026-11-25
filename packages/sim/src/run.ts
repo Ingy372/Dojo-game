@@ -579,6 +579,25 @@ export function floorRooms(content: Content, tier: number): Room[] {
 }
 
 /**
+ * CW-4: every enemy type a floor at this belt tier can bring (the tutorial floor's own rooms when `tutorial`),
+ * with the helpers a boss calls in and the pieces a split enemy breaks into, so a fight loads only that art.
+ * Extra rooms (a ?room= test link's room) add their enemies too. Sorted, no repeats.
+ */
+export function floorEnemyIds(content: Content, tier: number, tutorial = false, extraRooms: readonly Room[] = []): string[] {
+  const rooms = tutorial ? content.rooms.filter((r) => r.tutorial) : floorRooms(content, tier);
+  const found = new Set<string>();
+  const add = (id: string): void => {
+    if (found.has(id)) return;
+    found.add(id);
+    const def = content.enemies[id];
+    if (def?.summon) add(def.summon.enemy);
+    if (def?.split) add(def.split.into);
+  };
+  for (const room of [...rooms, ...extraRooms]) for (const s of room.enemySpawns) add(s.enemy);
+  return [...found].sort();
+}
+
+/**
  * R-B1-RAMP-2: the room a ?room= test link means at this belt tier. If the tier has its own copy of
  * the asked-for original (white belt: `brute-and-swarm` -> `w-brute-and-swarm`), the copy, so the link
  * shows the room that belt really gets. Any other id (a copy asked for by name, an unknown id) is kept.

@@ -84,6 +84,7 @@ import {
   STONES,
   TUTORIAL_FLOOR,
   isHeld,
+  floorEnemyIds,
 } from '@dojo/sim';
 import { FAITH } from '../ui/faith';
 import bruteData from '../../../../content/enemies/brute.json';
@@ -115,7 +116,7 @@ import { type PackName, addStatic, characterArt, characterTop, frameOf, loadArt,
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
-import { DUMMY_ART, ENEMY_ART_PACKS, TUTORIAL_PACK, artScale, attackAnim, auraId, enemyArt, rigBoost, testAura, towerPack } from '../art/tiers';
+import { DUMMY_ART, ENEMY_ART_PACKS, TUTORIAL_PACK, enemyArtPacks, artScale, attackAnim, auraId, enemyArt, rigBoost, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { streakAura } from '../ui/classChest';
 import { loadLook, playerPacks } from '../game/look';
@@ -538,9 +539,20 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || testFlags().has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), ...companionPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK, ...(this.run?.tutorial ? [TUTORIAL_PACK] : [])]);
+    loadArt(this, [...playerPacks(), ...companionPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...this.enemyPacks(), LID_ICON_PACK, ...(this.run?.tutorial ? [TUTORIAL_PACK] : [])]);
 
     loadGearIcons(this);
+  }
+
+  /**
+   * CW-4: in a run, only the own-art packs this belt's floors can bring (plus the current room's, for ?room= test
+   * links), so a White belt fight no longer loads the Orange belt kitchen and its Guardian (about 13 big pages).
+   * The practice room can show any enemy, so it keeps loading them all.
+   */
+  private enemyPacks(): PackName[] {
+    if (!this.run) return ENEMY_ART_PACKS;
+    const room = CONTENT.rooms.find((r) => r.id === this.run!.roomId);
+    return enemyArtPacks(floorEnemyIds(CONTENT, this.run.tier, this.run.tutorial, room ? [room] : []));
   }
 
   /** K25: character art plays at the game tempo (read by LayeredSprite). */
