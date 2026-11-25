@@ -123,6 +123,6 @@ From `drafts/planning/R-OVERHAUL-LAUNCH.md`: L11 belts 4–10 in the Tower (floo
 | ID | What | Status |
 |---|---|---|
 | YG-1 | Thread and cloth attacks, the Loom Keeper, the 8 Sunrise Garden rooms, balance | Built Nov 25; waits on Jay's phone test |
-| YG-2 | Blender model and animations (replaces the grey-lilac stand-in) | Waits on Jay's OK of the art |
+| YG-2 | Blender model and animations (replaces the grey-lilac stand-in) | Built Nov 25 and in the game on the branch; waits on Jay's OK (`incoming-art/claude-guardians/loom-keeper/review-sheet.png`) |
 | YG-3 | Monster Journal trophy for the Loom Keeper | With YG-2 (needs a picture) |
 | YG-4 | Miss Ada (draft name) and her shop reopening in town; the blanket at the Yellow Gate | With the story chapters (SC-3 and later) |
