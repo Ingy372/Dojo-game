@@ -16,11 +16,11 @@ const BOTS: Record<string, { style: Style; skill: Skill }> = {
 const ORDER = ['kid', 'newer', 'careful', 'masher'];
 // LP-P1 table, belts 1-10 (kid / newer / careful / masher). Challenge before belt 4 is locked, so not checked.
 const TABLE: Record<Difficulty, number[][]> = {
-  // Jay, Nov 24 (no automatic blocking): belt 1 Standard re-measured, kid 85 -> 67 and masher 72 -> 61 (they win
-  // fewer runs). The other cells (run only with BALANCE=1) were measured with the old Mash guard; re-measure them.
-  standard: [[67, 101, 101, 61], [85, 101, 101, 74], [88, 101, 101, 86], [81, 101, 101, 72], [84, 101, 101, 70], [84, 101, 101, 71], [84, 101, 101, 71], [83, 101, 101, 72], [86, 101, 101, 73], [83, 101, 101, 72]],
-  guided: [[99, 101, 101, 91], [99, 101, 101, 95], [99, 101, 101, 99], [98, 101, 101, 92], [99, 101, 101, 92], [99, 101, 101, 91], [97, 101, 101, 92], [98, 101, 101, 92], [97, 101, 101, 93], [97, 101, 101, 94]],
-  challenge: [[], [], [], [75, 101, 101, 69], [78, 101, 101, 72], [77, 101, 101, 72], [75, 101, 101, 70], [76, 101, 101, 72], [76, 101, 101, 72], [75, 101, 101, 72]],
+  // GP-6 (Nov 25): the whole table re-measured with BALANCE=1 after Jay's Nov 24 changes (no automatic blocking,
+  // the damage shift, the Tool Belt). Kid and masher now lose most runs, so they sit near the 60-coin floor.
+  standard: [[63, 101, 101, 60], [62, 101, 101, 60], [61, 101, 101, 60], [62, 101, 101, 60], [63, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60]],
+  guided: [[94, 101, 101, 62], [88, 101, 101, 62], [85, 101, 101, 65], [90, 101, 101, 61], [89, 101, 101, 61], [89, 101, 101, 61], [85, 101, 101, 61], [85, 101, 101, 61], [85, 101, 101, 61], [88, 101, 101, 62]],
+  challenge: [[], [], [], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60]],
 };
 
 // Newer and careful win (nearly) every run, so they pin the formula (60 + 7 fight rooms x 3 + boss 10 + win 10).
@@ -58,6 +58,8 @@ describe('LP-B4 coin rates match LP-P1 (#494)', () => {
   });
   it.skipIf(!(import.meta.env as Record<string, string | undefined>).BALANCE)('every live cell of the table', () => {
     const all = cells(true).map((c) => ({ ...c, got: meanCoins(c.diff, c.bot, c.tier) }));
+    // GP-6: print the measured table, one row per difficulty and belt (kid / newer / careful / masher), for re-tuning.
+    for (const d of Object.keys(TABLE)) for (let t = 1; t <= 10; t++) { const row = all.filter((c) => c.diff === d && c.tier === t); if (row.length) console.log(`COINS ${d} ${t}: ${row.map((c) => c.got.toFixed(1)).join(' / ')}`); }
     expect(all.filter((c) => !near(c.bot, c.got, c.want))).toEqual([]);
     const got = all.map((c) => c.got);
     expect(Math.min(...got)).toBeGreaterThanOrEqual(60);

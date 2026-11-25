@@ -1504,3 +1504,9 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - **On the live link (Nov 25, Jay: "add it to the live game"):** merged into `main` with GitHub's checks green. Going live is also his OK for the Bible picture; he can still change it.
 - **Lord's Prayer (Nov 25):** added on the branch as the eighth prayer (King James wording). 1,770 tests, type checks and both builds pass; checked in the browser at 667 x 375 (the eight buttons, the full prayer on one screen). **Next:** Jay confirms the wording, then it goes on `main`.
 - **Lord's Prayer on the live link (Nov 25):** Jay chose the "trespasses" wording; merged into `main` with the checks green. The prayer menu now has eight prayers.
+
+## Nov 25: coin table re-measured (GP-6, branch `claude/coin-table`)
+
+- Ran the whole coin table (`BALANCE=1`) after Jay's Nov 24 changes (no automatic blocking, the damage shift, the Tool Belt) and wrote the new numbers into `packages/sim/test/balance/coin-rates.test.ts`. The test now also prints the table, which makes the next re-measure easy.
+- Players who win (the "newer" and "careful" bots) still earn about 101 coins a run everywhere. The rules still hold: every cell is at least 60, and the highest is at most 2x the lowest (about 1.7x).
+- **Finding for Jay:** the "masher" bot (taps attack nonstop, never counters) now loses almost every climb, **even on Guided** (about 61 coins, which is nearly just the 60 for playing). On Nov 24 it earned 91–99 on Guided. The "kid" bot (a new player who sometimes counters) still does fine on Guided (85–94) but loses most Standard climbs (about 62). No numbers were changed: whether Guided should forgive a little kid who only mashes is Jay's call. One option, if he wants it, is to bring back a small automatic block on Guided only.
