@@ -2254,3 +2254,8 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
 - **Live (Nov 25):** Jay asked for it on the live game after the preview was up, so the Bible picture went live with it.
 - **The Lord's Prayer (Nov 25, Jay: "add the Lord's Prayer too"):** added as the eighth prayer, in the King James wording of Matthew 6:9-13, word for word (the faith pack's reference translation). **Claude's call on the wording; it is on the preview only and waits for Jay to confirm the wording before it goes live.**
 - **Lord's Prayer wording (Jay, Nov 25: "Trespasses wording"):** the game shows the traditional wording ("who art in heaven", "on earth", "forgive us our trespasses, as we forgive those who trespass against us", "for ever and ever"). This replaces the King James wording Claude first used. Jay asked for it on the live game.
+
+## Nov 25: the Yellow Guardian is the Loom Keeper (Jay)
+
+- Jay picked the Loom Keeper from Claude's three ideas (`docs/yellow-guardian-ideas.md`): darkness over the tailor's shop. Freeing it reopens her shop, which is where the blanket the hero gives Eli at the Yellow Gate comes from.
+- Claude's full version for Jay's OK: `docs/yellow-guardian-loom-keeper.md`. The Yellow floors keep the Sunrise Garden art (the tailor's dye garden), the boss room is a weaving loft, three moves (Spool Drop, Thread Line, Big Cloth), and the lines. Nothing is built until Jay OKs it.

@@ -1504,3 +1504,8 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - **On the live link (Nov 25, Jay: "add it to the live game"):** merged into `main` with GitHub's checks green. Going live is also his OK for the Bible picture; he can still change it.
 - **Lord's Prayer (Nov 25):** added on the branch as the eighth prayer (King James wording). 1,770 tests, type checks and both builds pass; checked in the browser at 667 x 375 (the eight buttons, the full prayer on one screen). **Next:** Jay confirms the wording, then it goes on `main`.
 - **Lord's Prayer on the live link (Nov 25):** Jay chose the "trespasses" wording; merged into `main` with the checks green. The prayer menu now has eight prayers.
+
+## Nov 25: Yellow Guardian picked (branch `claude/yellow-guardian`)
+
+- Jay picked the Loom Keeper. Wrote its full version for his OK: `docs/yellow-guardian-loom-keeper.md` (look, fight, numbers, every line, build order). The tailor's name ("Miss Ada" draft) and faith tie-ins are his call.
+- **Next:** on Jay's OK, build the two new attacks, the boss with a code stand-in, the Yellow floors' 7 rooms, then balance; the Blender model after that.
