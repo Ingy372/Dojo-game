@@ -1,8 +1,10 @@
 // The Loom Keeper (Yellow Guardian, Nov 25): its thread and cloth attacks always warn, and stepping out always works.
 import { describe, expect, it } from 'vitest';
-import { COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, attackCovers, createWorld, currentAttack, loadEnemy, loadRoom, stepWorld, telegraphTicks, type Difficulty, type PlayerInput, type WorldState } from '../src';
+import { COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, attackCovers, createWorld, currentAttack, floorRooms, loadEnemy, loadRoom, stepWorld, telegraphTicks, type Difficulty, type PlayerInput, type WorldState } from '../src';
 import loomData from '../../../content/enemies/loom-keeper.json';
 import { testContent } from './load-content';
+import { playRun, SKILLS } from './balance/bot';
+import { ARTISTS } from './r-bal-12-artists';
 
 const R = MOVEMENT.playerRadius;
 const loom = loadEnemy(loomData);
@@ -121,4 +123,44 @@ describe('Big Cloth', () => {
     expect(DIFFICULTY.guided.counterWindowTicks).toBeGreaterThan(0);
     expect(COMBAT.maxAttackersAtOnce).toBeGreaterThan(0);
   });
+});
+
+describe('Sunrise Garden (Yellow, tier 2)', () => {
+  const content = testContent();
+  const YELLOW = content.rooms.filter((r) => r.floorSet === 'sunrise-garden').map((r) => r.id);
+  const t = ARTISTS.typical[1];
+  const YELLOW_TYPICAL = { maxHealth: t.health, power: t.power, guard: t.guard };
+
+  it('has its own 8 rooms; the Weaving Loft is the boss room, with the Loom Keeper and two small waves of swarmers', () => {
+    expect(YELLOW.length).toBe(8);
+    const loft = content.rooms.find((r) => r.id === 'y-weaving-loft')!;
+    expect(loft.kind).toBe('boss');
+    expect([...new Set(loft.enemySpawns.map((s) => s.enemy))].sort()).toEqual(['loom-keeper', 'swarmer']);
+    expect(loom.summon).toBeNull(); // it calls no helpers itself
+    expect(content.rooms.filter((r) => r.enemySpawns.some((s) => s.enemy === 'loom-keeper')).map((r) => r.id)).toEqual(['y-weaving-loft']);
+  });
+
+  it('only a Yellow belt climbs it; White belts keep their rooms and the Floor Keeper', () => {
+    for (const tier of [1, 3, 4]) expect(floorRooms(content, tier).some((r) => r.floorSet === 'sunrise-garden'), `tier ${tier}`).toBe(false);
+    expect(floorRooms(content, 2).every((r) => r.floorSet === 'sunrise-garden')).toBe(true);
+  });
+
+  for (const difficulty of ['guided', 'standard'] as const) {
+    it(`a typical Yellow belt reaches and beats the Loom Keeper (${difficulty})`, () => {
+      const N = 30;
+      let reached = 0;
+      let beat = 0;
+      for (let seed = 1; seed <= N; seed++) {
+        const r = playRun(content, seed, 'smart', SKILLS.typical, difficulty, YELLOW_TYPICAL, undefined, { tier: 2 });
+        for (const room of r.rooms) expect(YELLOW).toContain(room.roomId);
+        const boss = r.rooms.find((x) => x.roomId === 'y-weaving-loft');
+        if (boss) {
+          reached++;
+          if (!boss.died) beat++;
+        }
+      }
+      expect(reached).toBe(N);
+      expect(beat / N).toBeGreaterThanOrEqual(0.8);
+    }, 120000);
+  }
 });

@@ -69,7 +69,14 @@ export const ENEMY_ART_PACKS: PackName[] = [...new Set([...Object.values(ENEMY_P
  */
 const SHARP_PACK = 0.5;
 const BIGGER = 1.25;
-export const ART_BOOST: Record<string, number> = { swarmer: SHARP_PACK * BIGGER, shield: SHARP_PACK * BIGGER, brute: SHARP_PACK * BIGGER, 'floor-keeper': SHARP_PACK * BIGGER };
+export const ART_BOOST: Record<string, number> = { swarmer: SHARP_PACK * BIGGER, shield: SHARP_PACK * BIGGER, brute: SHARP_PACK * BIGGER, 'floor-keeper': SHARP_PACK * BIGGER, 'loom-keeper': SHARP_PACK * BIGGER };
+
+/**
+ * Loom Keeper (Nov 25): a STAND-IN until its Blender model is OK'd. It borrows the Floor Keeper's two forms, recoloured
+ * grey-lilac; its coat "tears" (the second form, with the usual transformation flash) at a third of its health.
+ */
+const LOOM_KEEPER_TEARS = 1 / 3;
+export const STAND_IN_TINT: Record<string, number> = { 'loom-keeper': 0xb8b0e0 };
 
 /** Rigs packed at a different pixel size than their enemy's usual art: drawn this much bigger to match (Nov 22). */
 const RIG_BOOST: Record<string, number> = { 'floor-keeper-f2': 0.6 / 0.45 };
@@ -85,12 +92,13 @@ export function artScale(def: { id: string; scale: number }): number {
 /** The art (pack, id) for an enemy at this share of health; phase bosses change rig as they lose health. */
 export function enemyArt(enemyId: string, healthShare: number): { pack: PackName; id: string } | undefined {
   if (enemyId === 'hearth-cook') return HEARTH_COOK_RIGS.find((r) => healthShare >= r.atHealth) ?? HEARTH_COOK_RIGS[2];
+  if (enemyId === 'loom-keeper') return healthShare > LOOM_KEEPER_TEARS ? { pack: 'enemies-t1', id: 'floor-keeper' } : { pack: FLOOR_KEEPER_FORM2.pack, id: FLOOR_KEEPER_FORM2.id };
   if (enemyId === 'floor-keeper' && healthShare < FLOOR_KEEPER_FORM2.atHealth) return { pack: FLOOR_KEEPER_FORM2.pack, id: FLOOR_KEEPER_FORM2.id };
   return ENEMY_PACKS[enemyId];
 }
 
 /** Attack names whose animation has a shorter name in the art (B-T3 Hearth Cook). */
-const ATTACK_ANIMS: Record<string, string> = { 'ladle bonk': 'bonk', 'hot pot rush': 'rush', 'rolling pin lane': 'pin' };
+const ATTACK_ANIMS: Record<string, string> = { 'ladle bonk': 'bonk', 'hot pot rush': 'rush', 'rolling pin lane': 'pin', 'spool drop': 'slam', 'thread line': 'sweep', 'crossing threads': 'sweep', 'big cloth': 'sweep' };
 
 /** The animation name for an attack (the Floor Keeper's "slam" is already "slam"). */
 export function attackAnim(attackName: string): string {

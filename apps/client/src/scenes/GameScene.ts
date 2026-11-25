@@ -57,6 +57,8 @@ import {
   type RunEvent,
   type RunState,
   type Difficulty,
+  type AttackArea,
+  attackCovers,
   type EnemyState,
   type PlayerId,
   type PlayerInput,
@@ -115,7 +117,7 @@ import { type PackName, addStatic, characterArt, characterTop, frameOf, loadArt,
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
-import { DUMMY_ART, ENEMY_ART_PACKS, TUTORIAL_PACK, artScale, attackAnim, auraId, enemyArt, rigBoost, testAura, towerPack } from '../art/tiers';
+import { DUMMY_ART, ENEMY_ART_PACKS, STAND_IN_TINT, TUTORIAL_PACK, artScale, attackAnim, auraId, enemyArt, rigBoost, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { streakAura } from '../ui/classChest';
 import { loadLook, playerPacks } from '../game/look';
@@ -985,11 +987,14 @@ export class GameScene extends Phaser.Scene {
       const glow = this.world.twist?.dim ? 1.6 : 1; // Lantern Dark: warnings glow extra bright
       // R-CHALLENGE P4: a pattern's lane or landing hop, from the first frame of the wind-up.
       const shape = patternShape(currentAttack(e));
-      if (shape) drawPatternTell(this.danger, shape, { x: e.pos.x * TILE, y: e.pos.y * TILE }, { x: cx, y: cy }, area, COLORS.danger, elapsed / e.windupTotal, !reducedMotion());
-      if (glow > 1) this.danger.lineStyle(10, 0xffd166, 0.35).strokeCircle(cx, cy, area + 4);
-      this.danger.fillStyle(COLORS.danger, 0.16 * glow).fillCircle(cx, cy, area);
-      this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
-      this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
+      if (e.attackArea) this.drawAreaTell(e.attackArea, area, progress, inWindow, glow, elapsed / e.windupTotal);
+      else {
+        if (shape) drawPatternTell(this.danger, shape, { x: e.pos.x * TILE, y: e.pos.y * TILE }, { x: cx, y: cy }, area, COLORS.danger, elapsed / e.windupTotal, !reducedMotion());
+        if (glow > 1) this.danger.lineStyle(10, 0xffd166, 0.35).strokeCircle(cx, cy, area + 4);
+        this.danger.fillStyle(COLORS.danger, 0.16 * glow).fillCircle(cx, cy, area);
+        this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
+        this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
+      }
       if (inWindow) this.counterWindowOpen = true;
       // T5 (fix C): the enemy's own body warms up as it winds up, and turns gold in the Counter window.
       tint = inWindow ? 0xffe08a : progress > 0.35 ? 0xffb0a0 : tint;
@@ -1065,6 +1070,8 @@ export class GameScene extends Phaser.Scene {
    */
   private patternTellStart(e: EnemyState): void {
     const a = currentAttack(e);
+    // Loom Keeper: a thread or cloth whooshes like a lane.
+    if (a.area) sfx.whoosh();
     const shape = patternShape(a);
     if (!shape) return;
     if (shape === 'lane') sfx.whoosh();
@@ -1118,6 +1125,34 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** The first of these animations the creature has (e.g. the boss's "windup_slam", else "windup"). */
+  /**
+   * Loom Keeper (Nov 25): the warning for a thread (the striped lane, wall to wall, with the thread pulling tight)
+   * or the big cloth (a dark sheet over the player's side, its edge glowing, gold in the last moment). `r` is the
+   * thread's half thickness in px. Drawn in the same warning layer as every red circle.
+   */
+  private drawAreaTell(a: AttackArea, r: number, progress: number, inWindow: boolean, glow: number, t: number): void {
+    const g = this.danger;
+    const x0 = TILE;
+    const x1 = (this.room.width - 1) * TILE;
+    const y0 = TILE;
+    const y1 = (this.room.height - 1) * TILE;
+    if (a.kind === 'line') {
+      const at = a.at * TILE;
+      const from = a.axis === 'x' ? { x: x0, y: at } : { x: at, y: y0 };
+      const to = a.axis === 'x' ? { x: x1, y: at } : { x: at, y: y1 };
+      if (glow > 1) g.lineStyle(r * 2 + 10, 0xffd166, 0.25).lineBetween(from.x, from.y, to.x, to.y);
+      drawPatternTell(g, 'lane', from, to, r, COLORS.danger, t, !reducedMotion());
+      g.lineStyle(inWindow ? 5 : 2, inWindow ? 0xff8a80 : 0xffffff, 0.35 + 0.6 * progress).lineBetween(from.x, from.y, to.x, to.y);
+      return;
+    }
+    const edge = a.edge * TILE;
+    const left = a.side > 0 ? edge : x0;
+    const right = a.side > 0 ? x1 : edge;
+    g.fillStyle(0x2a2440, 0.15 + 0.3 * progress).fillRect(left, y0, right - left, y1 - y0);
+    g.fillStyle(COLORS.danger, 0.12 * glow).fillRect(left, y0, right - left, y1 - y0);
+    g.lineStyle(inWindow ? 9 : 5 * glow, inWindow ? 0xffd166 : COLORS.danger, 0.95).lineBetween(edge, y0, edge, y1);
+  }
+
   private enemyAnim(s: LayeredSprite, wanted: string, fallback: string): string {
     if (s.has(wanted)) return wanted;
     if (s.has(fallback)) return fallback;
@@ -1338,6 +1373,9 @@ export class GameScene extends Phaser.Scene {
     sprite.container.setScale(scale).setData('baseScale', scale);
     sprite.container.addAt(addShadow(this, (r * 2.2) / scale), 0);
     sprite.setLayer('telegraph', false).setLayerTint('telegraph', TELEGRAPH_TINT).setLayer('lid', false);
+    // Loom Keeper: the stand-in body is recoloured (every layer but the warning glow).
+    const standIn = STAND_IN_TINT[e.def.id];
+    if (standIn) for (const l of art.layers) if (l.name !== 'telegraph') sprite.setLayerTint(l.name, standIn);
     const top = characterTop(this, art) * scale;
     const hpBack = this.add.rectangle(0, -top - 8, r * 2, 8, 0x000000, 0.6);
     const hpFill = this.add.rectangle(-r + 2, -top - 8, r * 2 - 4, 4, COLORS.healthLow).setOrigin(0, 0.5);
@@ -1720,7 +1758,7 @@ export class GameScene extends Phaser.Scene {
           const now = this.time.now;
           if ([...this.warnings].some(([id, w]) => id !== ev.enemyId && w.until > now)) this.lesson('twoAttacksAtOnce');
           const me = this.world.players[this.me];
-          const inside = !!(e?.attackCenter && me && Math.hypot(me.pos.x - e.attackCenter.x, me.pos.y - e.attackCenter.y) <= currentAttack(e).areaRadius);
+          const inside = !!(e && me && attackCovers(e, me.pos));
           this.warnings.set(ev.enemyId, { until: now + ticksToRealMs(ev.ticks), inside });
           break;
         }
@@ -1732,7 +1770,7 @@ export class GameScene extends Phaser.Scene {
             if (this.warnings.get(ev.enemyId)?.inside && this.world.players[this.me]?.health > 0) this.lesson('firstStepOut');
           }
           this.warnings.delete(ev.enemyId);
-          if (e?.attackCenter) this.ring(e.attackCenter, 0xffffff, currentAttack(e).areaRadius, 0.6);
+          if (e?.attackCenter && !e.attackArea) this.ring(e.attackCenter, 0xffffff, currentAttack(e).areaRadius, 0.6);
           break;
         }
         case 'counterPressed':

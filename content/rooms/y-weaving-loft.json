@@ -28,7 +28,31 @@
       "column": 10,
       "row": 3,
       "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 5,
+      "wave": 2
     }
   ],
-  "artProps": "Wooden beams, a big loom on the top wall, bolts of grey cloth, spools on the walls. The Loom Keeper fights alone."
+  "artProps": "Wooden beams, a big loom on the top wall, bolts of grey cloth, spools on the walls. A few loose Shadows (swarmers) come in two small waves, like the other Guardian rooms; the Loom Keeper itself calls no helpers."
 }

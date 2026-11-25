@@ -19,6 +19,7 @@ import {
   TICKS_PER_SECOND,
   GUIDE_DONE,
   activeDoorSlots,
+  attackCovers,
   chooseInsight,
   counterWindowTicks,
   createRng,
@@ -221,8 +222,14 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
   }
   for (const [k, pl] of plans) if (pl.impact < now) plans.delete(k);
 
-  const covering = (e: EnemyState) =>
-    e.mode === 'windup' && e.attackCenter && distance(p.pos, e.attackCenter) <= currentAttack(e).areaRadius + 0.3;
+  const covering = (e: EnemyState) => e.mode === 'windup' && attackCovers(e, p.pos, 0.3);
+  /** Loom Keeper: which way is out of a thread (straight off it, toward the room's middle) or a cloth (toward the bright side). */
+  const outOf = (e: EnemyState): Vec2 => {
+    const a = e.attackArea!;
+    if (a.kind === 'cloth') return { x: -a.side, y: 0 };
+    if (a.axis === 'x') return { x: 0, y: p.pos.y < room.height / 2 ? 1 : -1 };
+    return { x: p.pos.x < room.width / 2 ? 1 : -1, y: 0 };
+  };
   const active = [...plans.values()]
     .filter((pl) => pl.noticeAt <= now)
     .filter((pl) => {
@@ -248,6 +255,10 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
     const stepOut = landing && toEdge / (MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND) + skill.reactTicks < first.impact - now;
     if (stepOut && now >= first.noticeAt) {
       escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
+    } else if (dashOnly && firstEnemy.attackArea && now >= first.noticeAt) {
+      // Loom Keeper: step (or dash) off the thread, or out from under the cloth.
+      escape = outOf(firstEnemy);
+      if (p.dashCooldown === 0) action = 'dash';
     } else if (dashOnly && now >= first.noticeAt && p.dashCooldown === 0) {
       // B-T3: can't be Countered or blocked (rolling pin), so dash out.
       escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
