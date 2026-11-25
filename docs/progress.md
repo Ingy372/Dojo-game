@@ -1500,3 +1500,7 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - This folder was shared with the tutorial session, and one commit landed on its branch by accident. The work moved to its own folder (`../Dojo-game-street`), and the tutorial session was told.
 - **On the live link (Nov 24, Jay: "add it to the live game").**
 - **Next:** Jay plays the five lessons on his phone. He can change any words or art, and answer the three check questions in decisions.md.
+
+## Nov 25: tutorial branch caught up with main
+
+Street Smarts lessons 2-5 were built on this branch, then moved to `main` and fixed there, so the two copies clashed. Merged `main` into `claude/tutorial-overhaul`, keeping `main`'s newer copy of every clashing lesson file (10 files). The tutorial chapters are untouched. All tests, type checks and both builds pass, and the branch now merges into `main` with no clashes. **For the tutorial session:** the main project folder still has unsaved edits to 7 Street Smarts files; they are an older copy of what is now on the branch, and git will refuse to update that folder until they are thrown away (`git checkout -- <files>`, then `git pull`).
