@@ -6,13 +6,16 @@ import insideJson from '../../../content/dojo/action-zone/inside-room.json';
 describe('the prayer menu (Jay, Nov 25)', () => {
   const book = loadPrayerBook(bookJson);
 
-  it('has 5 to 7 short prayers, each ending with Amen', () => {
-    expect(book.prayers.length).toBeGreaterThanOrEqual(5);
-    expect(book.prayers.length).toBeLessThanOrEqual(7);
-    for (const p of book.prayers) {
-      expect(p.text.endsWith('Amen.'), p.id).toBe(true);
-      expect(p.text.length, p.id).toBeLessThanOrEqual(130);
-    }
+  it('has 5 to 7 short prayers and the Lord\'s Prayer, each ending with Amen', () => {
+    const short = book.prayers.filter((p) => p.id !== 'lords-prayer');
+    expect(short.length).toBeGreaterThanOrEqual(5);
+    expect(short.length).toBeLessThanOrEqual(7);
+    for (const p of book.prayers) expect(p.text.endsWith('Amen.'), p.id).toBe(true);
+    for (const p of short) expect(p.text.length, p.id).toBeLessThanOrEqual(130);
+    // The Lord's Prayer is Matthew 6:9-13 in the King James Version, word for word (never reworded).
+    const lords = book.prayers.find((p) => p.id === 'lords-prayer')!;
+    expect(lords.text.startsWith('Our Father which art in heaven, Hallowed be thy name.')).toBe(true);
+    expect(lords.text).toContain('forgive us our debts, as we forgive our debtors');
   });
 
   it('says what prayer is and what it is not, above the prayers', () => {
