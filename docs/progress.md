@@ -1475,3 +1475,22 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - New Blender art for the kata moves and kicks (stand-in motions for now).
 - Cleanup later: remove `kata-powers.json` and the Seal evolution words once old saves no longer need them.
 - **Copied to `main` with Jay's OK (Nov 24):** the live link now has the Tool Belt, the KATA button and the damage shift.
+
+## Street Smarts lessons 2-5 (2026-11-24, branch `claude/street-lessons`)
+- Four new lessons, each a cut scene in its own Blender place, with Jay's approved scripts:
+  - Candy at the park;
+  - A ride from the bus stop;
+  - Picked on at recess;
+  - A new friend online.
+- New people (crossing guard, teacher, three kids), a car that drives in and away, new pop-ups (a "NO!" bubble, chat messages, a ball, candy), and a two-column lesson board in the Street Smarts House.
+- 1,765 tests pass; type checks and both builds pass.
+- Checked in the browser at 844 x 390:
+  - all four places;
+  - wrong answers and retries;
+  - every tap moment;
+  - the end screen;
+  - the "Who's home with you?" question, and its skip on the playground.
+- Not checked in the browser: the new lesson board (the preview pane ran too slowly to walk to it). Jay looks at it on his phone.
+- This folder was shared with the tutorial session, and one commit landed on its branch by accident. The work moved to its own folder (`../Dojo-game-street`), and the tutorial session was told.
+- **On the live link (Nov 24, Jay: "add it to the live game").**
+- **Next:** Jay plays the five lessons on his phone. He can change any words or art, and answer the three check questions in decisions.md.

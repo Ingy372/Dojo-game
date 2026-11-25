@@ -2220,3 +2220,22 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
   - **Seals are gone for players:** the Fighting Style screen's Seal cards are now Tool Belt pockets (cards say "Tool"; one more locked pocket says "Learn a kata!"). The New tool card follows a self-defense sign-off and is smaller than the sign-off card. Sign-off lists say "New tool for your Tool Belt" and "Kata move + a Tool Belt pocket". The Book names each technique's tool. Seal stages and evolution cards no longer show (the rules stay for old saves).
   - **Words Claude wrote that Jay hasn't seen yet:** the three Fighting Style help lines ("Tap a slot, then pick a tool." / "Every move you learn in class is a new tool." / "Pockets full? Pick a tool to swap."), "Learn a kata!", and the two sign-off list labels above.
   - The practice bots now press KATA (a kid or masher when one enemy is close; a smart player for two or more).
+
+## Street Smarts lessons 2-5 (2026-11-24, branch `claude/street-lessons`)
+- **Jay picked the four topics and approved the scripts** (Nov 24: "Yes, these four"; "Yes, build them"). Design: `docs/superpowers/specs/2026-11-24-street-smarts-lessons-2-5-design.md`.
+  - 2, park (6-9): candy from a grown-up you don't know.
+  - 3, bus stop (10-13): a car offers a ride.
+  - 4, playground (6-9): a kid picks on you at recess.
+  - 5, home (10-13): someone online asks where you go to school.
+- **Jay asked Claude to do all the Blender work and put the lessons on the live link without waiting for him.** So the new art (four places, a crossing guard, a teacher, three kids, a car) went live without his separate OK. It stays open to his changes.
+- **Claude's calls:**
+  - Six short connecting lines (listed in the design).
+  - The park stranger is played by the store's shopper art.
+  - The driver never leaves the car.
+  - The ball changes hands as one pop-up.
+  - Lines may be up to 14 words for ages 10-13. The store and the 6-9 lessons stay at 12.
+  - The Mom/Dad question asks about each place, and the playground (with no grown-up) skips it.
+- **Unanswered check questions,** kept as written until Jay says otherwise:
+  - the line "Don't tell your parents. It's our secret." (online lesson);
+  - "Push them" as a wrong answer;
+  - Sensei's end lines.

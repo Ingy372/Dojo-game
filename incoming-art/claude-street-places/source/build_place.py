@@ -391,7 +391,7 @@ def home():
     return dict(
         size=[16, 10], start=["player-tablet", "kitchen-grownup", "tablet"],
         cast={"grownup": {"Mom": "people-mom", "Dad": "people-dad"}},
-        marks={"player-tablet": [4.1, 4.75], "tablet": [4.1, 3.65, 0.55], "couch": [3.7, 2.7], "kitchen-grownup": [12.2, 2.5],
+        marks={"player-tablet": [4.1, 4.75], "tablet": [4.1, 3.65, 0.55], "couch": [1.75, 2.55], "kitchen-grownup": [12.2, 2.5],
                "player-kitchen": [10.3, 3.3], "grownup-table": [5.3, 4.6], "player-table": [3.9, 4.75], "door-in": [8.5, 8.8]})
 
 

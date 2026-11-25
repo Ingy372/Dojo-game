@@ -106,6 +106,8 @@ export class StreetSmartsScene extends Phaser.Scene {
   private panelH = 0;
   private senseiBox: Phaser.GameObjects.Container | null = null;
   private lastSpeaker = '';
+  /** The ball pop-up on screen (the playground), so a new one replaces it. */
+  private ball: Phaser.GameObjects.Container | null = null;
 
   /** Bumped whenever a line's flow should stop (next line, leaving, restarting). */
   private token = 0;
@@ -541,6 +543,11 @@ export class StreetSmartsScene extends Phaser.Scene {
       if (shout && !reducedMotion() && !this.hurry) this.cameras.main.shake(120, 0.002);
       sfx.tap();
     } else if (kind === 'ball' || kind === 'candy') {
+      // There is only one ball: when it changes hands, the old one goes.
+      if (kind === 'ball') {
+        if (this.ball?.active) this.ball.destroy();
+        this.ball = g;
+      }
       g.add(kind === 'ball' ? this.ballIcon(0, -18) : this.candyIcon(0, -18));
       sfx.tap();
     } else if (kind === 'sound') {
@@ -557,7 +564,7 @@ export class StreetSmartsScene extends Phaser.Scene {
     g.setScale(0.2);
     this.tweens.add({ targets: g, scale: 1, duration: 220, ease: 'Back.easeOut' });
     const long = kind === 'question' || kind === 'shout' || kind === 'message';
-    this.time.delayedCall(long ? 3600 : 3000, () => this.tweens.add({ targets: g, alpha: 0, duration: 300, onComplete: () => g.destroy() }));
+    this.time.delayedCall(long ? 3600 : 3000, () => g.active && this.tweens.add({ targets: g, alpha: 0, duration: 300, onComplete: () => g.destroy() }));
     return this.wait(kind === 'toy' || kind === 'shout' || kind === 'message' ? 1600 : 1000);
   }
 
