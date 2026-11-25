@@ -124,6 +124,8 @@ export class InsideScene extends WalkScene {
   private kataReady = false;
   /** A front kick's step forward still to hand over to the hero's position when the next move starts (tiles). */
   private kataPendingStep: Vec2 | null = null;
+  /** The move a special turn lands in (its held end pose is redrawn as this move once the hero faces a new way). */
+  private kataAfterTurn: { anim: string; lead?: 'L' | 'R' } | null = null;
   /** Beats tapped while the special turn was still playing; they play in order once it finishes, a moment apart. */
   private kataQueued: Array<() => void> = [];
   private kataQueuedAt = 0;
@@ -548,6 +550,7 @@ export class InsideScene extends WalkScene {
     me.facing = { ...KATA_VEC.F };
     this.kataReady = false;
     this.kataPendingStep = null;
+    this.kataAfterTurn = null;
     this.kataQueued = [];
     this.hero.setMirrored(false);
     this.kataTarget = { ...k.center };
@@ -575,6 +578,7 @@ export class InsideScene extends WalkScene {
         this.hero.face(start.x, start.y);
         this.hero.setMirrored(false);
         this.heroDo(name);
+        this.kataAfterTurn = { anim: move.anim, lead: beat.lead };
         const s = at(turn.startOffset);
         this.kataStepBy({ x: -s.x, y: -s.y });
         this.kataPendingStep = at(turn.endOffset);
@@ -610,7 +614,17 @@ export class InsideScene extends WalkScene {
         // hero first (the kiai pose flicked right, then the turn started facing away); and an arrow tapped while a
         // turn is still playing waits (it switched the picture to the end direction mid-spin).
         if (this.kataTurning() || this.kataQueued.length || (beat.anim && this.hero.has(beat.anim) && this.hero.art.animations[beat.anim]?.turn)) return;
+        // Jay, Nov 25: after a special turn the hero holds its last picture, which is drawn from the direction faced
+        // before the turn; facing a new way turned that picture too (it faced down at moves 10 and 18). Hold the
+        // landed move's own end pose instead, so the arrow turns the hero from the way he really faces.
+        const after = this.kataAfterTurn;
+        this.kataAfterTurn = null;
+        if (after && this.heroAction && this.hero.art.animations[this.heroAction]?.turn && this.hero.has(after.anim)) {
+          this.hero.setMirrored(after.lead === 'R');
+          this.heroDo(after.anim, Math.max(0, (this.hero.art.animations[after.anim]?.frames ?? 1) - 1));
+        }
         me.facing = { ...KATA_VEC[d] };
+        this.hero.face(me.facing.x, me.facing.y);
         // Jay, Nov 25: some turns pass through a pose first (Basic Form 1 moves 5 and 13: a Cat Stance facing the new
         // way, then the Low Block steps out into the front stance).
         if (beat.pivot && this.hero.has(beat.pivot)) {

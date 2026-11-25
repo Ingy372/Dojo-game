@@ -1516,4 +1516,4 @@ Street Smarts lessons 2-5 were built on this branch, then moved to `main` and fi
 - Basic Form 1 now counts its 20 moves as 20 steps ("Step 5 of 20"), one move per step (Jay).
 - Moves 5 (right to up) and 13 (left to down): tapping the arrow turns the hero into a Cat Stance facing the new way; the Low Block then steps out into the front stance (new `pivot` field on a kata beat, using the existing `stance_cat` art).
 - Tests, type checks pass. Not seen in the browser (the preview pane stayed black); Jay checks on his phone.
-- **Waiting on Jay:** the exact moves where the hero briefly faces the wrong way before turning (two directions glitch).
+- Fixed: after the special turn (moves 9 and 17), tapping the next arrow showed the hero facing down for a moment. The held end of the turn was drawn from the old direction; it now holds the Low Block's own end pose and turns from there.
