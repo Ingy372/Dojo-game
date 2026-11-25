@@ -1,0 +1,194 @@
+{
+ "pixelsPerTile": 80,
+ "camera": "orthographic, 35 deg down, looking north",
+ "sprites": {
+  "street-busstop-room": {
+   "size": [
+    1344,
+    952
+   ],
+   "layers": [
+    "floor",
+    "walls",
+    "props",
+    "foreground"
+   ],
+   "files": {
+    "floor": "street-busstop-room_floor.png",
+    "walls": "street-busstop-room_walls.png",
+    "props": "street-busstop-room_props.png",
+    "foreground": "street-busstop-room_foreground.png"
+   },
+   "anchorPx": [
+    32.0,
+    128.0
+   ],
+   "anchorNote": "the frame pixel of grid tile (0,0)'s top-left corner",
+   "place": "room",
+   "note": "The Street Smarts busstop (Nov 24). Draw floor, walls, props; then the y-sorted pieces and people by sortRow; then foreground above everyone."
+  },
+  "shelter": {
+   "size": [
+    296,
+    257
+   ],
+   "layers": [
+    "shelter"
+   ],
+   "files": {
+    "shelter": "shelter_shelter.png"
+   },
+   "anchorPx": [
+    148.0,
+    253.0
+   ],
+   "note": "the bus shelter (glass sides, a roof and a seat); 'behind the shelter' is the tap spot north of it.",
+   "anchorTile": [
+    10.8,
+    3.4
+   ],
+   "footprintRect": [
+    9.0,
+    12.6,
+    2.2,
+    3.4
+   ],
+   "place": "prop",
+   "sortRow": 3.4
+  },
+  "busSign": {
+   "size": [
+    64,
+    161
+   ],
+   "layers": [
+    "busSign"
+   ],
+   "files": {
+    "busSign": "busSign_busSign.png"
+   },
+   "anchorPx": [
+    32.0,
+    158.0
+   ],
+   "note": "the bus stop sign by the curb.",
+   "anchorTile": [
+    8.2,
+    5.8
+   ],
+   "footprintRect": [
+    8.1,
+    8.3,
+    5.7,
+    5.8
+   ],
+   "place": "prop",
+   "sortRow": 5.8
+  },
+  "trees": {
+   "size": [
+    246,
+    241
+   ],
+   "layers": [
+    "trees"
+   ],
+   "files": {
+    "trees": "trees_trees.png"
+   },
+   "anchorPx": [
+    118.0,
+    213.0
+   ],
+   "note": "trees at the east end ('by the trees').",
+   "anchorTile": [
+    14.8,
+    3.3
+   ],
+   "footprintRect": [
+    13.8,
+    15.8,
+    2.6,
+    3.3
+   ],
+   "place": "prop",
+   "sortRow": 3.3
+  },
+  "bench": {
+   "size": [
+    168,
+    107
+   ],
+   "layers": [
+    "bench"
+   ],
+   "files": {
+    "bench": "bench_bench.png"
+   },
+   "anchorPx": [
+    84.0,
+    107.0
+   ],
+   "note": "a bench where the kids wait.",
+   "anchorTile": [
+    5.0,
+    2.6
+   ],
+   "footprintRect": [
+    4.0,
+    6.0,
+    2.1,
+    2.6
+   ],
+   "place": "prop",
+   "sortRow": 2.6
+  },
+  "hydrant": {
+   "size": [
+    30,
+    63
+   ],
+   "layers": [
+    "hydrant"
+   ],
+   "files": {
+    "hydrant": "hydrant_hydrant.png"
+   },
+   "anchorPx": [
+    15.0,
+    52.0
+   ],
+   "note": "a fire hydrant.",
+   "anchorTile": [
+    13.0,
+    5.8
+   ],
+   "footprintRect": [
+    12.85,
+    13.15,
+    5.65,
+    5.8
+   ],
+   "place": "prop",
+   "sortRow": 5.8
+  },
+  "car": {
+   "size": [
+    233,
+    159
+   ],
+   "layers": [
+    "car"
+   ],
+   "files": {
+    "car": "car_car.png"
+   },
+   "anchorPx": [
+    117.0,
+    130.0
+   ],
+   "note": "the car that pulls up (a cast actor: its own sprite, moved by the script).",
+   "place": "actor"
+  }
+ }
+}

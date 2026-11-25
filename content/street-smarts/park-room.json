@@ -1,0 +1,73 @@
+{
+ "notes": "The park for a Street Smarts lesson (Nov 24). Written by incoming-art/claude-street-places/source/make_game_place.py from build_place.py. marks: named spots in tiles [x, y] (or [x, y, height] for a spot up off the floor) that the scenario's stage cues use. cast: the art pack for each person (\"static:<id>\" is a prop from the room pack, like the car); the grown-up is Mom or Dad by the player's pick. start: the marks the camera shows first.",
+ "id": "park",
+ "pack": "street-park",
+ "roomSprite": "street-park-room",
+ "pixelsPerTile": 80,
+ "size": [
+  16,
+  10
+ ],
+ "start": [
+  "enter-player",
+  "slide-player",
+  "bench-grownup"
+ ],
+ "cast": {
+  "grownup": {
+   "Mom": "people-mom",
+   "Dad": "people-dad"
+  },
+  "stranger": "people-shopper"
+ },
+ "marks": {
+  "enter-player": [
+   15.6,
+   7.3
+  ],
+  "enter-grownup": [
+   16.2,
+   7.5
+  ],
+  "bench-grownup": [
+   12.3,
+   6.55
+  ],
+  "slide-player": [
+   3.2,
+   4.85
+  ],
+  "stranger-start": [
+   16.4,
+   8.6
+  ],
+  "stranger-mid": [
+   8.4,
+   7.4
+  ],
+  "stranger-talk": [
+   4.6,
+   5.3
+  ],
+  "stranger-away": [
+   16.6,
+   8.4
+  ],
+  "trees": [
+   1.8,
+   8.6
+  ],
+  "slide": [
+   2.5,
+   4.2
+  ],
+  "player-bench": [
+   11.2,
+   6.75
+  ],
+  "path-bend": [
+   9.0,
+   6.4
+  ]
+ }
+}

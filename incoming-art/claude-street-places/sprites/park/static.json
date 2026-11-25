@@ -1,0 +1,205 @@
+{
+ "pixelsPerTile": 80,
+ "camera": "orthographic, 35 deg down, looking north",
+ "sprites": {
+  "street-park-room": {
+   "size": [
+    1344,
+    952
+   ],
+   "layers": [
+    "floor",
+    "walls",
+    "props",
+    "foreground"
+   ],
+   "files": {
+    "floor": "street-park-room_floor.png",
+    "walls": "street-park-room_walls.png",
+    "props": "street-park-room_props.png",
+    "foreground": "street-park-room_foreground.png"
+   },
+   "anchorPx": [
+    32.0,
+    128.0
+   ],
+   "anchorNote": "the frame pixel of grid tile (0,0)'s top-left corner",
+   "place": "room",
+   "note": "The Street Smarts park (Nov 24). Draw floor, walls, props; then the y-sorted pieces and people by sortRow; then foreground above everyone."
+  },
+  "slide": {
+   "size": [
+    141,
+    312
+   ],
+   "layers": [
+    "slide"
+   ],
+   "files": {
+    "slide": "slide_slide.png"
+   },
+   "anchorPx": [
+    73.0,
+    318.0
+   ],
+   "note": "the slide (the player plays here; 'back to the slide' tap spot).",
+   "anchorTile": [
+    2.6,
+    4.6
+   ],
+   "footprintRect": [
+    1.7,
+    3.5,
+    2.4,
+    4.6
+   ],
+   "place": "prop",
+   "sortRow": 4.6
+  },
+  "swings": {
+   "size": [
+    274,
+    192
+   ],
+   "layers": [
+    "swings"
+   ],
+   "files": {
+    "swings": "swings_swings.png"
+   },
+   "anchorPx": [
+    137.0,
+    155.0
+   ],
+   "note": "the swings.",
+   "anchorTile": [
+    7.0,
+    3.6
+   ],
+   "footprintRect": [
+    5.3,
+    8.7,
+    3.3,
+    3.7
+   ],
+   "place": "prop",
+   "sortRow": 3.7
+  },
+  "bench": {
+   "size": [
+    184,
+    107
+   ],
+   "layers": [
+    "bench"
+   ],
+   "files": {
+    "bench": "bench_bench.png"
+   },
+   "anchorPx": [
+    92.0,
+    107.0
+   ],
+   "note": "the bench by the path (the grown-up waits here).",
+   "anchorTile": [
+    12.2,
+    6.2
+   ],
+   "footprintRect": [
+    11.1,
+    13.3,
+    5.7,
+    6.2
+   ],
+   "place": "prop",
+   "sortRow": 6.2
+  },
+  "trees": {
+   "size": [
+    344,
+    277
+   ],
+   "layers": [
+    "trees"
+   ],
+   "files": {
+    "trees": "trees_trees.png"
+   },
+   "anchorPx": [
+    152.0,
+    246.0
+   ],
+   "note": "a clump of trees and bushes at the front corner ('over by the trees').",
+   "anchorTile": [
+    1.6,
+    8.4
+   ],
+   "footprintRect": [
+    0.2,
+    3.2,
+    7.3,
+    8.4
+   ],
+   "place": "prop",
+   "sortRow": 8.4
+  },
+  "lamp": {
+   "size": [
+    38,
+    179
+   ],
+   "layers": [
+    "lamp"
+   ],
+   "files": {
+    "lamp": "lamp_lamp.png"
+   },
+   "anchorPx": [
+    19.0,
+    174.0
+   ],
+   "note": "a park lamp.",
+   "anchorTile": [
+    14.0,
+    6.5
+   ],
+   "footprintRect": [
+    13.85,
+    14.15,
+    6.35,
+    6.5
+   ],
+   "place": "prop",
+   "sortRow": 6.5
+  },
+  "bin": {
+   "size": [
+    52,
+    95
+   ],
+   "layers": [
+    "bin"
+   ],
+   "files": {
+    "bin": "bin_bin.png"
+   },
+   "anchorPx": [
+    26.0,
+    84.0
+   ],
+   "note": "a trash can.",
+   "anchorTile": [
+    9.9,
+    6.0
+   ],
+   "footprintRect": [
+    9.6,
+    10.2,
+    5.7,
+    6.0
+   ],
+   "place": "prop",
+   "sortRow": 6.0
+  }
+ }
+}

@@ -1,0 +1,163 @@
+{
+  "notes": "Street Smarts lesson 5, 'A new friend online'. Script approved by Jay on Nov 24 (docs/superpowers/specs/2026-11-24-street-smarts-lessons-2-5-design.md); played as a cut scene in the Blender living room (room: content/street-smarts/home-room.json). GameStar22 is only messages on the tablet, never shown. A retry branch never moves anyone.",
+  "id": "home-online",
+  "location": "home",
+  "room": "home",
+  "ageBand": "10-13",
+  "topic": "A new friend online",
+  "priorities": ["awareness", "get-help"],
+  "characters": [
+    { "id": "sensei", "role": "Sensei", "name": null, "title": "Sensei", "note": "His portrait rises at the corner with a chime." },
+    { "id": "grownup", "role": "Player's grown-up", "name": null, "title": null, "note": "Mom or Dad (the player's pick), cooking in the kitchen. Calm and glad to be told." },
+    { "id": "gamer", "role": "Someone online", "name": "GameStar22", "title": null, "note": "Only messages on the tablet. Never shown." }
+  ],
+  "scenes": [
+    {
+      "id": "intro",
+      "kind": "story",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "{player} plays an online game after homework.",
+          "stage": [
+            { "do": "place", "who": "player", "to": "player-tablet", "dir": "N" },
+            { "do": "place", "who": "grownup", "to": "kitchen-grownup", "dir": "N", "with": true },
+            { "do": "camera", "fit": ["player-tablet", "kitchen-grownup", "couch"], "with": true }
+          ]
+        },
+        { "speaker": "narrator", "text": "{grownup} is cooking in the kitchen." },
+        {
+          "speaker": "gamer",
+          "text": "You're really good! How old are you?",
+          "stage": [
+            { "do": "camera", "fit": ["player-tablet", "tablet", "couch"] },
+            { "do": "emote", "to": "tablet", "emote": "message" }
+          ]
+        },
+        {
+          "speaker": "gamer",
+          "text": "What school do you go to?",
+          "stage": [{ "do": "emote", "to": "tablet", "emote": "message" }]
+        },
+        { "speaker": "sensei", "text": "Stop and think. Who is really typing?", "expression": "thinking" }
+      ]
+    },
+    {
+      "id": "share",
+      "kind": "awareness",
+      "lines": [
+        {
+          "id": "choice-share",
+          "speaker": "narrator",
+          "text": "What do you do?",
+          "choices": [
+            { "text": "Don't answer. Private things stay private.", "stars": 1, "next": "share-good" },
+            { "text": "Tell them my school.", "stars": 0, "next": "school-retry" },
+            { "text": "Ask where they live first.", "stars": 0, "next": "ask-retry" }
+          ]
+        }
+      ],
+      "branches": {
+        "share-good": [
+          { "speaker": "sensei", "text": "Right. Your name, school and home stay private.", "expression": "proud" }
+        ],
+        "school-retry": [
+          { "speaker": "sensei", "text": "You can't see who's typing. Would you tell a stranger at the park?", "expression": "thinking", "retry": "choice-share" }
+        ],
+        "ask-retry": [
+          { "speaker": "sensei", "text": "Trading secrets still shares yours.", "expression": "thinking", "retry": "choice-share" }
+        ]
+      }
+    },
+    {
+      "id": "stop",
+      "kind": "avoidance",
+      "lines": [
+        {
+          "speaker": "gamer",
+          "text": "Let's meet up! Don't tell your parents. It's our secret.",
+          "stage": [{ "do": "emote", "to": "tablet", "emote": "message" }]
+        },
+        {
+          "id": "choice-stop",
+          "speaker": "narrator",
+          "text": "What now?",
+          "choices": [
+            { "text": "Stop chatting and close the game.", "stars": 1, "next": "stop-good" },
+            { "text": "Keep it a secret.", "stars": 0, "next": "secret-retry" }
+          ]
+        }
+      ],
+      "branches": {
+        "stop-good": [
+          { "speaker": "narrator", "text": "{player} closes the game.", "stage": [{ "do": "face", "who": "player", "dir": "S" }] }
+        ],
+        "secret-retry": [
+          { "speaker": "sensei", "text": "A grown-up asking you to keep secrets from {grownup} is a warning sign.", "expression": "thinking", "retry": "choice-stop" }
+        ]
+      }
+    },
+    {
+      "id": "tell",
+      "kind": "get-help",
+      "lines": [
+        {
+          "id": "choice-tell",
+          "speaker": "narrator",
+          "text": "Who do you tell? Tap them.",
+          "tap": true,
+          "stage": [{ "do": "camera", "fit": ["player-tablet", "kitchen-grownup", "couch", "tablet"] }],
+          "choices": [
+            { "text": "{grownup}", "target": "grownup", "stars": 1, "next": "tell-good" },
+            { "text": "Ask GameStar22 why", "target": "tablet", "stars": 0, "next": "why-retry" },
+            { "text": "Nobody", "target": "couch", "stars": 0, "next": "nobody-retry" }
+          ]
+        }
+      ],
+      "branches": {
+        "tell-good": [
+          {
+            "speaker": "grownup",
+            "text": "Thank you for telling me.",
+            "expression": "happy",
+            "say": "after",
+            "stage": [
+              { "do": "walk", "who": "player", "to": "player-kitchen", "speed": "hurry" },
+              { "do": "face", "who": "player", "dir": "NE" },
+              { "do": "face", "who": "grownup", "dir": "SW", "with": true }
+            ]
+          },
+          {
+            "speaker": "grownup",
+            "text": "Let's block and report them together.",
+            "expression": "happy",
+            "stage": [
+              { "do": "walk", "who": "grownup", "to": "grownup-table" },
+              { "do": "walk", "who": "player", "to": "player-table", "with": true },
+              { "do": "face", "who": "grownup", "dir": "N" },
+              { "do": "face", "who": "player", "dir": "N", "with": true },
+              { "do": "emote", "who": "player", "emote": "hearts" },
+              { "do": "emote", "who": "grownup", "emote": "hearts", "with": true }
+            ]
+          }
+        ],
+        "why-retry": [
+          { "speaker": "sensei", "text": "You don't owe them an answer. Who can help?", "expression": "thinking", "retry": "choice-tell" }
+        ],
+        "nobody-retry": [
+          { "speaker": "sensei", "text": "Secrets like that are exactly what to tell.", "expression": "thinking", "retry": "choice-tell" }
+        ]
+      }
+    },
+    {
+      "id": "sensei-reflect",
+      "kind": "reflection",
+      "lines": [
+        { "speaker": "sensei", "text": "Real friends never ask you to keep secrets from {grownup}.", "expression": "proud" },
+        { "speaker": "sensei", "text": "You did great!", "expression": "happy", "animation": "bow" }
+      ]
+    }
+  ],
+  "stars": { "max": 3, "rule": "Best choices on the first try at share, stop and tell earn 1 star each.", "note": "Street Smarts power is 0." },
+  "starChoices": ["choice-share", "choice-stop", "choice-tell"]
+}

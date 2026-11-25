@@ -32,6 +32,13 @@ CIV = dict(
     cashier=dict(body="b", face="05", hair="11", skin="#f0c8a8", hairc="#c8823a", shirt="#f6d55c", pants="#2e3440", shoes="#202020", iris="#4a6a8a", grin=0.07, vest="#2f74c8"),
     shopper=dict(body="a", face="03", hair="09", skin="#e0b090", hairc="#6a4a30", shirt="#8a7a9a", pants="#7a6a52", shoes="#4a3a2a", iris="#4a3020"),
     stranger=dict(body="b", face="06", hair="16", skin="#c08060", hairc="#2a2020", shirt="#e8a040", pants="#3d5a8a", shoes="#e8e8e8", iris="#3a2418"),
+    # Nov 24, the next four lessons: a crossing guard (bright safety vest), a teacher (a school badge, no vest), and
+    # kids at the hero's own size (kid=True keeps the hero's proportions).
+    guard=dict(body="a", face="04", hair="09", skin="#c58a62", hairc="#3a2a20", shirt="#f2f2f2", pants="#2e3440", shoes="#202020", iris="#3a2418", grin=0.08, vest="#f08a24"),
+    teacher=dict(body="b", face="02", hair="15", skin="#f2cdb6", hairc="#7a4a2a", shirt="#5a8fd0", pants="#4a4a55", shoes="#3a2a2a", iris="#4a6a8a", grin=0.09, tag=True),
+    kid=dict(body="a", face="03", hair="07", skin="#e9b48f", hairc="#4a3020", shirt="#c8503a", pants="#3d5a8a", shoes="#f4f4f4", iris="#4a3020", kid=True),
+    friend1=dict(body="b", face="06", hair="05", skin="#8d5a3c", hairc="#1e1a18", shirt="#5cb85c", pants="#4a4a55", shoes="#e8574a", iris="#3a2418", grin=0.08, kid=True),
+    friend2=dict(body="a", face="01", hair="14", skin="#f0c8a8", hairc="#c8823a", shirt="#8e6cc8", pants="#7a6a52", shoes="#2a2a2a", iris="#4a6a8a", grin=0.08, kid=True),
 )
 for k, v in CIV.items():
     v.update(civ=True, gi=v["shirt"], lapel=v["shirt"], belt=v["shirt"])
@@ -448,6 +455,7 @@ if P.get("vest"):
                 vert.co += vert.normal * push
             if not name.endswith("_outline"):
                 v.data.materials.clear(); v.data.materials.append(vest_body)
+if P.get("vest") or P.get("tag"):
     tor = bpy.data.objects["gi_torso"]
     pts = [tor.matrix_world @ vv.co for vv in tor.data.vertices]
     ymin = min(p.y for p in pts); zlo = min(p.z for p in pts); zhi = max(p.z for p in pts)
@@ -472,8 +480,9 @@ for c in [c for c in bpy.data.collections if c.name.startswith("L_") and c.name 
     bpy.data.collections.remove(c)
 
 # ---- grown-up proportions: taller body, the head scaled back so it stays about the hero's size
-root.scale = (1.22, 1.22, 1.22)
-rig.pose.bones["head"].scale = (0.84, 0.84, 0.84)
+if not P.get("kid"):
+    root.scale = (1.22, 1.22, 1.22)
+    rig.pose.bones["head"].scale = (0.84, 0.84, 0.84)
 
 # ---- actions: npc_idle (relaxed, breathing) and npc_wave, from the bow's upright frame
 bow = bpy.data.actions["bow"]
