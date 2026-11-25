@@ -1,0 +1,147 @@
+{
+ "pixelsPerTile": 80,
+ "camera": "orthographic, 35 deg down, looking north",
+ "sprites": {
+  "street-playground-room": {
+   "size": [
+    1344,
+    952
+   ],
+   "layers": [
+    "floor",
+    "walls",
+    "props",
+    "foreground"
+   ],
+   "files": {
+    "floor": "street-playground-room_floor.png",
+    "walls": "street-playground-room_walls.png",
+    "props": "street-playground-room_props.png",
+    "foreground": "street-playground-room_foreground.png"
+   },
+   "anchorPx": [
+    32.0,
+    128.0
+   ],
+   "anchorNote": "the frame pixel of grid tile (0,0)'s top-left corner",
+   "place": "room",
+   "note": "The Street Smarts playground (Nov 24). Draw floor, walls, props; then the y-sorted pieces and people by sortRow; then foreground above everyone."
+  },
+  "slide": {
+   "size": [
+    140,
+    312
+   ],
+   "layers": [
+    "slide"
+   ],
+   "files": {
+    "slide": "slide_slide.png"
+   },
+   "anchorPx": [
+    72.0,
+    318.0
+   ],
+   "note": "the school slide (friends wait by it; 'hide behind the slide' is north of it).",
+   "anchorTile": [
+    12.6,
+    4.6
+   ],
+   "footprintRect": [
+    11.7,
+    13.6,
+    2.4,
+    4.6
+   ],
+   "place": "prop",
+   "sortRow": 4.6
+  },
+  "hoop": {
+   "size": [
+    104,
+    218
+   ],
+   "layers": [
+    "hoop"
+   ],
+   "files": {
+    "hoop": "hoop_hoop.png"
+   },
+   "anchorPx": [
+    52.0,
+    217.0
+   ],
+   "note": "a basketball hoop against the wall.",
+   "anchorTile": [
+    4.6,
+    1.6
+   ],
+   "footprintRect": [
+    4.4,
+    4.8,
+    1.4,
+    1.6
+   ],
+   "place": "prop",
+   "sortRow": 1.6
+  },
+  "bench": {
+   "size": [
+    168,
+    107
+   ],
+   "layers": [
+    "bench"
+   ],
+   "files": {
+    "bench": "bench_bench.png"
+   },
+   "anchorPx": [
+    84.0,
+    107.0
+   ],
+   "note": "a bench by the school door.",
+   "anchorTile": [
+    9.6,
+    2.5
+   ],
+   "footprintRect": [
+    8.6,
+    10.6,
+    2.0,
+    2.5
+   ],
+   "place": "prop",
+   "sortRow": 2.5
+  },
+  "tree": {
+   "size": [
+    180,
+    223
+   ],
+   "layers": [
+    "tree"
+   ],
+   "files": {
+    "tree": "tree_tree.png"
+   },
+   "anchorPx": [
+    90.0,
+    222.0
+   ],
+   "note": "a shady tree.",
+   "anchorTile": [
+    15.0,
+    7.6
+   ],
+   "footprintRect": [
+    14.4,
+    15.6,
+    7.0,
+    7.6
+   ],
+   "place": "prop",
+   "sortRow": 7.6
+  }
+ }
+}

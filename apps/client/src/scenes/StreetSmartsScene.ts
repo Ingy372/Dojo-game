@@ -8,8 +8,16 @@ import Phaser from 'phaser';
 import { advance, choose, currentLine, fillLine, loadScenario, recordScenario, scenarioCoins, scenarioStars, startScenario, type Profile, type Scenario, type ScenarioLine, type ScenarioState, type StageCue } from '@dojo/sim';
 import storeData from '../../../../content/street-smarts/store-separated.json';
 import storeRoom from '../../../../content/street-smarts/store-room.json';
+import parkData from '../../../../content/street-smarts/park-candy.json';
+import parkRoom from '../../../../content/street-smarts/park-room.json';
+import busstopData from '../../../../content/street-smarts/busstop-ride.json';
+import busstopRoom from '../../../../content/street-smarts/busstop-room.json';
+import playgroundData from '../../../../content/street-smarts/playground-teasing.json';
+import playgroundRoom from '../../../../content/street-smarts/playground-room.json';
+import homeData from '../../../../content/street-smarts/home-online.json';
+import homeRoom from '../../../../content/street-smarts/home-room.json';
 import uiData from '../../../../content/street-smarts/ui.json';
-import { addStatic, characterArt, characterTop, loadArt, staticSprites } from '../art/art';
+import { addStatic, characterArt, characterTop, loadArt, staticArt, staticSprites } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { hush, speak } from '../audio/voice';
@@ -23,10 +31,17 @@ import { FONT, crisp, view, hiDpi } from '../ui/theme';
 import { GREEN } from '../ui/tokens';
 import { TILE } from './WalkScene';
 
-/** Every Street Smarts scenario (the Street Smarts House lists them). */
-export const SCENARIOS: Record<string, Scenario> = { [storeData.id]: loadScenario(storeData) };
-const ROOMS: Record<string, RoomFile> = { [storeRoom.id]: storeRoom as RoomFile };
-const UI = uiData as typeof uiData & { speakers: Record<string, string> };
+/** Every Street Smarts scenario, in lesson order (the Street Smarts House lists them). Nov 24: lessons 2-5. */
+export const SCENARIOS: Record<string, Scenario> = Object.fromEntries(
+  [storeData, parkData, busstopData, playgroundData, homeData].map((d) => {
+    const sc = loadScenario(d);
+    return [sc.id, sc];
+  }),
+);
+const ROOMS: Record<string, RoomFile> = Object.fromEntries([storeRoom, parkRoom, busstopRoom, playgroundRoom, homeRoom].map((r) => [r.id, r as RoomFile]));
+const UI = uiData as typeof uiData & { speakers: Record<string, string>; pickGrownupAt: Record<string, string> };
+/** A cast entry "static:<id>" is a prop from the room's own pack (the car), moved like a person. */
+const STATIC = 'static:';
 const SPEAK_KEY = 'dojo-ascent-street-speak';
 /** A new button (or a new line, for the tap-to-skip) ignores a press this soon after it appears (B6). */
 const TAP_GUARD_MS = 350;
@@ -39,7 +54,10 @@ const COS35 = Math.cos((35 * Math.PI) / 180);
 /** Sensei's portrait: the head instructor's staff character (swap here if Sensei gets his own art). */
 const SENSEI_PACK = 'staff-jay';
 /** One phone voice, pitched to sound like different people. */
-const PITCH: Record<string, number> = { sensei: 0.75, narrator: 1.0, player: 1.35, grownup: 1.1, worker: 1.15, cashier: 1.2, shopper: 0.95, stranger: 1.0 };
+const PITCH: Record<string, number> = {
+  sensei: 0.75, narrator: 1.0, player: 1.35, grownup: 1.1, worker: 1.15, cashier: 1.2, shopper: 0.95, stranger: 1.0,
+  driver: 0.9, guard: 1.05, kid: 1.45, teacher: 1.15, gamer: 1.25,
+};
 const TOP_H = 44;
 const PANEL = 0x221d2e;
 
@@ -49,6 +67,9 @@ interface RoomFile {
   roomSprite: string;
   marks: Record<string, number[]>;
   cast: Record<string, string | Record<string, string>>;
+  size?: number[];
+  /** The marks the camera shows first. */
+  start?: string[];
 }
 
 interface Actor {
@@ -85,6 +106,8 @@ export class StreetSmartsScene extends Phaser.Scene {
   private panelH = 0;
   private senseiBox: Phaser.GameObjects.Container | null = null;
   private lastSpeaker = '';
+  /** The ball pop-up on screen (the playground), so a new one replaces it. */
+  private ball: Phaser.GameObjects.Container | null = null;
 
   /** Bumped whenever a line's flow should stop (next line, leaving, restarting). */
   private token = 0;
@@ -112,7 +135,7 @@ export class StreetSmartsScene extends Phaser.Scene {
 
   preload(): void {
     const cast = Object.values(this.room.cast).flatMap((v) => (typeof v === 'string' ? [v] : Object.values(v)));
-    loadArt(this, [...playerPacks(), this.room.pack, ...cast, SENSEI_PACK]);
+    loadArt(this, [...playerPacks(), this.room.pack, ...cast.filter((c) => !c.startsWith(STATIC)), SENSEI_PACK]);
   }
 
   create(): void {
@@ -123,7 +146,8 @@ export class StreetSmartsScene extends Phaser.Scene {
     this.st = startScenario();
     this.coinsEarned = 0;
     this.canSkip = this.profile.streetSmarts.best[this.sc.id] !== undefined;
-    this.picking = this.profile.streetSmarts.grownup === null;
+    // Only a lesson with Mom or Dad in it asks who the player is with (the playground has no grown-up).
+    this.picking = this.profile.streetSmarts.grownup === null && needsGrownup(this.sc);
     this.actors.clear();
     this.fit = [];
     this.senseiBox = null;
@@ -144,7 +168,7 @@ export class StreetSmartsScene extends Phaser.Scene {
     });
     this.drawTop();
     if (this.picking) {
-      void this.moveCamera(['enter-player', 'toy-player', 'hide-spot'], 0);
+      void this.moveCamera(this.room.start ?? [], 0);
       this.renderPick();
     }
     else this.startStory();
@@ -178,6 +202,15 @@ export class StreetSmartsScene extends Phaser.Scene {
 
   private makeActor(id: string): void {
     let sprite: LayeredSprite | null = null;
+    const prop = this.room.cast[id];
+    if (typeof prop === 'string' && prop.startsWith(STATIC)) {
+      const pid = prop.slice(STATIC.length);
+      const images = addStatic(this, this.room.pack, pid, 0, 0);
+      const box = this.add.container(0, 0, images).setVisible(false);
+      this.standLayer.add(box);
+      this.actors.set(id, { id, box, sprite: null, hero: false, x: 0, y: 0, top: staticArt(this, this.room.pack, pid)?.anchor[1] ?? TILE });
+      return;
+    }
     if (id === 'player') {
       const t = currentTraining();
       sprite = makePlayerSprite(this, t.belt, t.stripesThisBelt, loadLook());
@@ -232,11 +265,19 @@ export class StreetSmartsScene extends Phaser.Scene {
     const pad = TILE * 1.2;
     const x0 = Math.min(...pts.map((p) => p.x)) - pad;
     const x1 = Math.max(...pts.map((p) => p.x)) + pad;
-    const y0 = Math.min(...pts.map((p) => p.y)) - TILE * 2.6; // room for heads above the feet
+    const y0 = Math.min(...pts.map((p) => p.y)) - TILE * 3.3; // room for heads (and a speech bubble) above the feet
     const y1 = Math.max(...pts.map((p) => p.y)) + TILE * 0.6;
     const vp = this.viewport();
     const s = Phaser.Math.Clamp(Math.min(vp.w / (x1 - x0), vp.h / (y1 - y0)), 0.45, 1.35);
-    return { s, x: vp.x + vp.w / 2 - ((x0 + x1) / 2) * s, y: vp.y + vp.h / 2 - ((y0 + y1) / 2) * s };
+    let x = vp.x + vp.w / 2 - ((x0 + x1) / 2) * s;
+    let y = vp.y + vp.h / 2 - ((y0 + y1) / 2) * s;
+    // Keep the camera inside the rendered place (its art runs from -0.4 to size + 0.4 tiles across, -1.6 to size + 0.3 down).
+    const [cols, rows] = this.room.size ?? [16, 10];
+    const bx0 = -0.4 * TILE, bx1 = (cols + 0.4) * TILE, by0 = -1.6 * TILE, by1 = (rows + 0.3) * TILE;
+    // A place smaller than the screen is centred instead.
+    x = (bx1 - bx0) * s >= vp.w ? Phaser.Math.Clamp(x, vp.x + vp.w - bx1 * s, vp.x - bx0 * s) : vp.x + (vp.w - (bx0 + bx1) * s) / 2;
+    y = (by1 - by0) * s >= vp.h ? Phaser.Math.Clamp(y, vp.y + vp.h - by1 * s, vp.y - by0 * s) : vp.y + (vp.h - (by0 + by1) * s) / 2;
+    return { s, x, y };
   }
 
   private moveCamera(marks: string[], ms: number): Promise<void> {
@@ -260,7 +301,7 @@ export class StreetSmartsScene extends Phaser.Scene {
   // ------------------------------------------------------------------ running a line
 
   private startStory(): void {
-    void this.moveCamera(['enter-player', 'toy-player'], 0);
+    void this.moveCamera(this.room.start ?? [], 0);
     void this.playLine();
   }
 
@@ -486,6 +527,29 @@ export class StreetSmartsScene extends Phaser.Scene {
         if (!reducedMotion()) this.tweens.add({ targets: h, y: h.y - 30, duration: 1400, delay: i * 160, ease: 'Sine.easeOut' });
       }
       sfx.shrine();
+    } else if (kind === 'shout' || kind === 'message') {
+      // A speech bubble with the cue's own words ("NO!"), or a chat bubble over the tablet.
+      const shout = kind === 'shout';
+      const t = this.add
+        .text(0, -26, shout ? c.text ?? '' : '• • •', { fontFamily: FONT, fontStyle: 'bold', fontSize: shout ? '20px' : '22px', color: shout ? '#c8302a' : '#ffffff', align: 'center', wordWrap: { width: 220 } })
+        .setOrigin(0.5)
+        .setResolution(crisp());
+      const w = Math.max(44, t.width + 24);
+      const h = t.height + 16;
+      const bubble = this.add.graphics();
+      bubble.fillStyle(shout ? 0xffffff : 0x3a78c0, 1).fillRoundedRect(-w / 2, -26 - h / 2, w, h, 14).fillTriangle(-6, -27 + h / 2, 6, -27 + h / 2, 0, -18 + h / 2 + 8);
+      bubble.lineStyle(2.5, shout ? 0xc8302a : 0x2a2533, 1).strokeRoundedRect(-w / 2, -26 - h / 2, w, h, 14);
+      g.add([bubble, t]);
+      if (shout && !reducedMotion() && !this.hurry) this.cameras.main.shake(120, 0.002);
+      sfx.tap();
+    } else if (kind === 'ball' || kind === 'candy') {
+      // There is only one ball: when it changes hands, the old one goes.
+      if (kind === 'ball') {
+        if (this.ball?.active) this.ball.destroy();
+        this.ball = g;
+      }
+      g.add(kind === 'ball' ? this.ballIcon(0, -18) : this.candyIcon(0, -18));
+      sfx.tap();
     } else if (kind === 'sound') {
       for (let i = 0; i < 3; i++) {
         const arc = this.add.graphics();
@@ -499,8 +563,28 @@ export class StreetSmartsScene extends Phaser.Scene {
     }
     g.setScale(0.2);
     this.tweens.add({ targets: g, scale: 1, duration: 220, ease: 'Back.easeOut' });
-    this.time.delayedCall(kind === 'question' ? 3600 : 3000, () => this.tweens.add({ targets: g, alpha: 0, duration: 300, onComplete: () => g.destroy() }));
-    return this.wait(kind === 'toy' ? 1600 : 1000);
+    const long = kind === 'question' || kind === 'shout' || kind === 'message';
+    this.time.delayedCall(long ? 3600 : 3000, () => g.active && this.tweens.add({ targets: g, alpha: 0, duration: 300, onComplete: () => g.destroy() }));
+    return this.wait(kind === 'toy' || kind === 'shout' || kind === 'message' ? 1600 : 1000);
+  }
+
+  /** A bouncy red ball with a white stripe (drawn in code). */
+  private ballIcon(x: number, y: number): Phaser.GameObjects.Graphics {
+    const t = this.add.graphics({ x, y });
+    t.fillStyle(0xe8574a, 1).fillCircle(0, 0, 13);
+    t.lineStyle(3, 0xffffff, 1).beginPath().arc(0, 0, 13, Phaser.Math.DegToRad(200), Phaser.Math.DegToRad(340)).strokePath();
+    t.lineStyle(2, 0x2a2533, 1).strokeCircle(0, 0, 13);
+    return t;
+  }
+
+  /** A wrapped sweet (drawn in code). */
+  private candyIcon(x: number, y: number): Phaser.GameObjects.Graphics {
+    const t = this.add.graphics({ x, y });
+    t.fillStyle(0xef7fb0, 1).fillTriangle(-22, -9, -22, 9, -9, 0).fillTriangle(22, -9, 22, 9, 9, 0);
+    t.fillStyle(0xf6d55c, 1).fillEllipse(0, 0, 24, 18);
+    t.lineStyle(2, 0x2a2533, 1).strokeEllipse(0, 0, 24, 18).strokeTriangle(-22, -9, -22, 9, -9, 0).strokeTriangle(22, -9, 22, 9, 9, 0);
+    t.lineStyle(2, 0xe8574a, 1).lineBetween(-5, -7, 3, 7);
+    return t;
   }
 
   /** A little toy robot (drawn in code). */
@@ -726,7 +810,8 @@ export class StreetSmartsScene extends Phaser.Scene {
     const layer = this.panelLayer;
     layer.removeAll(true);
     layer.add(this.add.rectangle(0, 0, width, height, 0x1c1826, 0.9).setOrigin(0));
-    this.text(layer, width / 2, height * 0.3, UI.pickGrownup, 22, '#ffffff', true, width - 24).setOrigin(0.5).setAlign('center');
+    const ask = UI.pickGrownupAt[this.sc.location] ?? UI.pickGrownup;
+    this.text(layer, width / 2, height * 0.3, ask, 22, '#ffffff', true, width - 24).setOrigin(0.5).setAlign('center');
     const w = Math.min(180, (width - 48) / 2);
     UI.grownups.forEach((gname, i) => {
       this.button(layer, width / 2 + (i === 0 ? -w - 8 : 8), height * 0.45, w, 64, gname, GREEN, 22, () => {
@@ -736,7 +821,7 @@ export class StreetSmartsScene extends Phaser.Scene {
         this.scene.restart({ id: this.sc.id, back: this.back });
       });
     });
-    this.sayText(UI.pickGrownup);
+    this.sayText(ask);
   }
 
   private renderEnd(): void {
@@ -811,6 +896,13 @@ export class StreetSmartsScene extends Phaser.Scene {
         onTap();
       });
   }
+}
+
+/** True when the lesson has Mom or Dad in it (in its words, or on stage). */
+function needsGrownup(sc: Scenario): boolean {
+  const has = (t: string) => t.includes('{grownup}');
+  const lines = sc.scenes.flatMap((s) => [...s.lines, ...Object.values(s.branches).flat()]);
+  return lines.some((l) => l.speaker === 'grownup' || has(l.text) || (l.choices ?? []).some((c) => has(c.text)) || (l.stage ?? []).some((c) => c.who === 'grownup'));
 }
 
 /** Read-aloud is on by default for ages 6-9 (core rule 15); the player's own choice sticks. */

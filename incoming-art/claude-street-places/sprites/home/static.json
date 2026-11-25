@@ -1,0 +1,147 @@
+{
+ "pixelsPerTile": 80,
+ "camera": "orthographic, 35 deg down, looking north",
+ "sprites": {
+  "street-home-room": {
+   "size": [
+    1344,
+    952
+   ],
+   "layers": [
+    "floor",
+    "walls",
+    "props",
+    "foreground"
+   ],
+   "files": {
+    "floor": "street-home-room_floor.png",
+    "walls": "street-home-room_walls.png",
+    "props": "street-home-room_props.png",
+    "foreground": "street-home-room_foreground.png"
+   },
+   "anchorPx": [
+    32.0,
+    128.0
+   ],
+   "anchorNote": "the frame pixel of grid tile (0,0)'s top-left corner",
+   "place": "room",
+   "note": "The Street Smarts home (Nov 24). Draw floor, walls, props; then the y-sorted pieces and people by sortRow; then foreground above everyone."
+  },
+  "table": {
+   "size": [
+    232,
+    93
+   ],
+   "layers": [
+    "table"
+   ],
+   "files": {
+    "table": "table_table.png"
+   },
+   "anchorPx": [
+    116.0,
+    93.0
+   ],
+   "note": "the coffee table with the tablet on it.",
+   "anchorTile": [
+    4.0,
+    4.0
+   ],
+   "footprintRect": [
+    2.6,
+    5.4,
+    3.3,
+    4.0
+   ],
+   "place": "prop",
+   "sortRow": 4.0
+  },
+  "island": {
+   "size": [
+    238,
+    138
+   ],
+   "layers": [
+    "island"
+   ],
+   "files": {
+    "island": "island_island.png"
+   },
+   "anchorPx": [
+    119.0,
+    134.0
+   ],
+   "note": "the kitchen island.",
+   "anchorTile": [
+    12.2,
+    5.0
+   ],
+   "footprintRect": [
+    10.8,
+    13.6,
+    4.2,
+    5.0
+   ],
+   "place": "prop",
+   "sortRow": 5.0
+  },
+  "lamp": {
+   "size": [
+    56,
+    165
+   ],
+   "layers": [
+    "lamp"
+   ],
+   "files": {
+    "lamp": "lamp_lamp.png"
+   },
+   "anchorPx": [
+    28.0,
+    174.0
+   ],
+   "note": "a floor lamp.",
+   "anchorTile": [
+    7.2,
+    2.0
+   ],
+   "footprintRect": [
+    6.9,
+    7.5,
+    1.6,
+    2.0
+   ],
+   "place": "prop",
+   "sortRow": 2.0
+  },
+  "plant": {
+   "size": [
+    72,
+    119
+   ],
+   "layers": [
+    "plant"
+   ],
+   "files": {
+    "plant": "plant_plant.png"
+   },
+   "anchorPx": [
+    36.0,
+    113.0
+   ],
+   "note": "a big house plant.",
+   "anchorTile": [
+    9.3,
+    8.6
+   ],
+   "footprintRect": [
+    8.9,
+    9.7,
+    8.2,
+    8.6
+   ],
+   "place": "prop",
+   "sortRow": 8.6
+  }
+ }
+}

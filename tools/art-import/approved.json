@@ -2893,6 +2893,96 @@
           "json": "incoming-art/claude-store/people/stranger/people-stranger.json"
         }
       ]
+    },
+    "street-park": {
+      "note": "Street Smarts lessons 2-5 (Claude, Nov 24; Jay: 'you will do all the blender work'): the park (slide, swings, bench, trees). Room layers and y-sorted pieces.",
+      "sources": [
+        {
+          "id": "street-park",
+          "type": "static",
+          "json": "incoming-art/claude-street-places/sprites/park/static.json"
+        }
+      ]
+    },
+    "street-busstop": {
+      "note": "Street Smarts lessons 2-5 (Claude, Nov 24; Jay: 'you will do all the blender work'): the bus stop (school, shelter, crosswalk, and the car as its own sprite). Room layers and y-sorted pieces.",
+      "sources": [
+        {
+          "id": "street-busstop",
+          "type": "static",
+          "json": "incoming-art/claude-street-places/sprites/busstop/static.json"
+        }
+      ]
+    },
+    "street-playground": {
+      "note": "Street Smarts lessons 2-5 (Claude, Nov 24; Jay: 'you will do all the blender work'): the school playground (slide, hoop, bench). Room layers and y-sorted pieces.",
+      "sources": [
+        {
+          "id": "street-playground",
+          "type": "static",
+          "json": "incoming-art/claude-street-places/sprites/playground/static.json"
+        }
+      ]
+    },
+    "street-home": {
+      "note": "Street Smarts lessons 2-5 (Claude, Nov 24; Jay: 'you will do all the blender work'): the living room and kitchen (couch, coffee table with the tablet, kitchen island). Room layers and y-sorted pieces.",
+      "sources": [
+        {
+          "id": "street-home",
+          "type": "static",
+          "json": "incoming-art/claude-street-places/sprites/home/static.json"
+        }
+      ]
+    },
+    "people-guard": {
+      "note": "Street Smarts person (Claude, Nov 24, lessons 2-5): guard, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/guard/people-guard.json"
+        }
+      ]
+    },
+    "people-teacher": {
+      "note": "Street Smarts person (Claude, Nov 24, lessons 2-5): teacher, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/teacher/people-teacher.json"
+        }
+      ]
+    },
+    "people-kid": {
+      "note": "Street Smarts person (Claude, Nov 24, lessons 2-5): kid, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/kid/people-kid.json"
+        }
+      ]
+    },
+    "people-friend1": {
+      "note": "Street Smarts person (Claude, Nov 24, lessons 2-5): friend1, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/friend1/people-friend1.json"
+        }
+      ]
+    },
+    "people-friend2": {
+      "note": "Street Smarts person (Claude, Nov 24, lessons 2-5): friend2, everyday clothes on the hero v2 model; npc_idle, npc_wave and npc_walk, 8 directions, one flattened layer.",
+      "sources": [
+        {
+          "id": "people",
+          "type": "character",
+          "json": "incoming-art/claude-store/people/friend2/people-friend2.json"
+        }
+      ]
     }
   }
 }

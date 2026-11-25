@@ -60,6 +60,7 @@ room = {
     "roomSprite": "street-store-room",
     "pixelsPerTile": PPT,
     "size": [16, 10],
+    "start": ["enter-player", "toy-player", "hide-spot"],
     "cast": {"worker": "people-worker", "cashier": "people-cashier", "stranger": "people-stranger", "shopper": "people-shopper",
              "grownup": {"Mom": "people-mom", "Dad": "people-dad"}},
     "marks": {

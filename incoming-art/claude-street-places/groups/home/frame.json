@@ -1,0 +1,18 @@
+{
+ "ppt": 80,
+ "cols": 16.8,
+ "rowTop": -1.6,
+ "rowBottom": 10.3,
+ "originX": 32.0,
+ "originY": 128.0,
+ "groups": [
+  "floor",
+  "foreground",
+  "island",
+  "lamp",
+  "plant",
+  "props",
+  "table",
+  "walls"
+ ]
+}

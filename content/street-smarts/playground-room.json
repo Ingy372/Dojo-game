@@ -1,0 +1,76 @@
+{
+ "notes": "The playground for a Street Smarts lesson (Nov 24). Written by incoming-art/claude-street-places/source/make_game_place.py from build_place.py. marks: named spots in tiles [x, y] (or [x, y, height] for a spot up off the floor) that the scenario's stage cues use. cast: the art pack for each person (\"static:<id>\" is a prop from the room pack, like the car); the grown-up is Mom or Dad by the player's pick. start: the marks the camera shows first.",
+ "id": "playground",
+ "pack": "street-playground",
+ "roomSprite": "street-playground-room",
+ "pixelsPerTile": 80,
+ "size": [
+  16,
+  10
+ ],
+ "start": [
+  "player-ball",
+  "kid-talk",
+  "friends"
+ ],
+ "cast": {
+  "kid": "people-kid",
+  "friend1": "people-friend1",
+  "friend2": "people-friend2",
+  "teacher": "people-teacher"
+ },
+ "marks": {
+  "player-ball": [
+   5.2,
+   5.6
+  ],
+  "kid-start": [
+   -1.0,
+   8.2
+  ],
+  "kid-talk": [
+   3.8,
+   6.2
+  ],
+  "friend1": [
+   10.6,
+   5.1
+  ],
+  "friend2": [
+   11.4,
+   5.7
+  ],
+  "friends": [
+   10.9,
+   5.4
+  ],
+  "player-friends": [
+   9.7,
+   5.6
+  ],
+  "teacher": [
+   7.6,
+   2.6
+  ],
+  "slide-hide": [
+   12.6,
+   2.1
+  ],
+  "player-teacher": [
+   8.4,
+   3.3
+  ],
+  "teacher-kid": [
+   4.6,
+   5.6
+  ],
+  "player-kid": [
+   5.8,
+   6.1
+  ],
+  "kid-away": [
+   -1.2,
+   8.6
+  ]
+ }
+}
