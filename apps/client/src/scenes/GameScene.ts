@@ -115,7 +115,7 @@ import { type PackName, addStatic, characterArt, characterTop, frameOf, loadArt,
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
-import { DUMMY_ART, ENEMY_ART_PACKS, TUTORIAL_PACK, artScale, attackAnim, auraId, enemyArt, rigBoost, testAura, towerPack } from '../art/tiers';
+import { DUMMY_ART, ENEMY_ART_PACKS, TUTORIAL_PACK, enemyArtPacksFor, artScale, attackAnim, auraId, enemyArt, rigBoost, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { streakAura } from '../ui/classChest';
 import { loadLook, playerPacks } from '../game/look';
@@ -538,9 +538,15 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || testFlags().has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), ...companionPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK, ...(this.run?.tutorial ? [TUTORIAL_PACK] : [])]);
+    loadArt(this, [...playerPacks(), ...companionPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...this.enemyPacks(), LID_ICON_PACK, ...(this.run?.tutorial ? [TUTORIAL_PACK] : [])]);
 
     loadGearIcons(this);
+  }
+
+  /** CW-4: the monster art this room can show. Practice and ?force= test links keep loading every monster. */
+  private enemyPacks(): PackName[] {
+    if (!this.run || testForced()) return ENEMY_ART_PACKS;
+    return enemyArtPacksFor(currentRoom(CONTENT, this.run).enemySpawns.map((s) => s.enemy), Object.values(CONTENT.enemies));
   }
 
   /** K25: character art plays at the game tempo (read by LayeredSprite). */
