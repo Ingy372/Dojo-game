@@ -238,25 +238,53 @@ else:                   # THE LOOM KEEPER
         for k in range(len(pts) - 1):
             M_(f"{name}{k}", tube(pts[k], pts[k + 1], r, r * 0.9, segs=6), mat, outline=False, glow=glow)
 
-    if A.form == 2:      # TORN: the coat rips into ragged strips, the stitches split into light
-        z0, r0, z1, r1 = H * 0.2, R * 0.98, H * 0.66, R * 0.62
+    if A.form == 2:      # TORN (Jay, Nov 25: "not enough of a shift"): a short, ripped coat, big glowing holes, lots of gold
+        z0, r0, z1, r1 = H * 0.32, R * 0.92, H * 0.66, R * 0.62
         M_("coat", tube((0, R * 0.1, z0), (0, R * 0.04, z1), r0, r1, segs=24), MAT["cape"], glow=True)
-        for k in range(9):   # ragged strips hanging from the torn hem
-            a = math.radians(-160 + k * 40)
-            p0 = Vector((math.sin(a) * r0 * 0.95, R * 0.1 - math.cos(a) * r0 * 0.95, z0 + H * 0.02))
-            ln = H * (0.14 + 0.05 * (k % 3))
-            M_(f"strip{k}", tube(p0, p0 + Vector((math.sin(a) * R * 0.18, R * 0.12, -ln)), R * 0.13, R * 0.03, segs=6), MAT["cape"], glow=True)
-        for k, (x, z) in enumerate(((R * 0.35, H * 0.42), (-R * 0.42, H * 0.3), (R * 0.1, H * 0.55))):   # tears with light inside
-            yy = R * 0.07 - coat_r(z, z0, r0, z1, r1) * 0.97
-            M_(f"tear{k}", ellipsoid((x, yy, z), (R * 0.12, R * 0.04, H * 0.06), rot=(0, 25 * (k - 1), 0)), GOLDF, outline=False)
-        for x in (1, -1):    # the stitches split into lines of light
-            thread_line(f"lightseam{x}", [(x * R * 0.16, R * 0.07 - coat_r(z, z0, r0, z1, r1) * 0.99, z) for z in (H * 0.24, H * 0.38, H * 0.52, H * 0.64)], R * 0.035, GOLDF)
-        for ring, tilt in enumerate((12, -18)):   # loose gold threads circling it
-            for k in range(22):
-                a = 2 * math.pi * k / 22
-                p = Vector((math.cos(a) * R * 1.35, math.sin(a) * R * 1.35, 0))
-                p.rotate(Euler((math.radians(tilt), 0, math.radians(30 * ring)), "XYZ"))
-                M_(f"orbit{ring}_{k}", ellipsoid((p.x, p.y, H * (0.45 + 0.12 * ring) + p.z), (0.022, 0.022, 0.022), segs=6, rings=4), MAT["gem"], outline=False)
+        for k in range(14):   # a long fringe of ragged strips where the hem tore away
+            a = math.radians(-180 + k * (360 / 14))
+            p0 = Vector((math.sin(a) * r0 * 0.96, R * 0.1 - math.cos(a) * r0 * 0.96, z0 + H * 0.03))
+            ln = H * (0.18 + 0.07 * (k % 3))
+            out = Vector((math.sin(a), -math.cos(a), 0)) * R * 0.16
+            mid = p0 + out + Vector((0, 0, -ln * 0.55)) + Vector((R * 0.06 * (1 if k % 2 else -1), 0, 0))
+            M_(f"strip{k}a", tube(p0, mid, R * 0.2, R * 0.12, segs=6), MAT["cape"], glow=True)
+            M_(f"strip{k}b", tube(mid, mid + out * 0.6 + Vector((0, 0, -ln * 0.45)), R * 0.12, R * 0.03, segs=6), MAT["cape"], glow=True)
+        # big holes with dark torn edges and light shining through: front, sides, back and the hood
+        holes = [(-35, 0.45, 1.0), (30, 0.55, 0.9), (5, 0.38, 1.1), (95, 0.48, 0.9), (-100, 0.42, 1.0), (170, 0.5, 1.0), (-150, 0.4, 0.85)]
+        for k, (ang, zf, sc) in enumerate(holes):
+            a = math.radians(ang)
+            z = H * zf
+            rr = coat_r(z, z0, r0, z1, r1)
+            n = Vector((math.sin(a), -math.cos(a), 0))
+            c = Vector((0, R * 0.08, z)) + n * rr * 0.99
+            yaw = -ang
+            # tipped back to lie on the sloping coat, so the whole hole shows
+            M_(f"holerim{k}", ellipsoid(c + n * 0.01, (R * 0.25 * sc, R * 0.09, H * 0.13 * sc), rot=(-16, 20 * (k % 3 - 1), yaw)), MAT["ink"], outline=False)
+            M_(f"hole{k}", ellipsoid(c + n * 0.04, (R * 0.17 * sc, R * 0.08, H * 0.085 * sc), rot=(-16, 20 * (k % 3 - 1), yaw)), GOLDF, outline=False)
+        for x in (1, -1):    # a tear in the hood
+            M_(f"hoodrim{x}", ellipsoid((x * R * 0.42, R * 0.12, H * 0.93), (R * 0.05, R * 0.14, H * 0.07)), MAT["ink"], outline=False)
+            M_(f"hoodhole{x}", ellipsoid((x * R * 0.445, R * 0.12, H * 0.93), (R * 0.04, R * 0.1, H * 0.05)), GOLDF, outline=False)
+        for x in (1, -1):    # the stitches split wide into thick lines of light, with cracks running off them
+            seam = [(x * R * 0.16, R * 0.07 - coat_r(z, z0, r0, z1, r1) * 1.0, z) for z in (H * 0.33, H * 0.44, H * 0.55, H * 0.65)]
+            thread_line(f"lightseam{x}", seam, R * 0.055, GOLDF)
+            for k, z in enumerate((H * 0.4, H * 0.56)):
+                y = R * 0.07 - coat_r(z, z0, r0, z1, r1)
+                thread_line(f"crack{x}{k}", [(x * R * 0.16, y, z), (x * R * 0.38, y + R * 0.08, z + H * 0.03), (x * R * 0.52, y + R * 0.2, z - H * 0.02)], R * 0.03, GOLDF)
+        for ring, (tilt, rad, h, n) in enumerate(((10, 1.45, 0.42, 30), (-16, 1.6, 0.62, 30), (22, 1.3, 0.85, 26))):   # three rings of gold sparkles
+            for k in range(n):
+                a = 2 * math.pi * k / n
+                p = Vector((math.cos(a) * R * rad, math.sin(a) * R * rad, 0))
+                p.rotate(Euler((math.radians(tilt), 0, math.radians(40 * ring)), "XYZ"))
+                s_ = 0.05 if k % 3 == 0 else 0.032
+                M_(f"orbit{ring}_{k}", ellipsoid((p.x, p.y, H * h + p.z), (s_ * 0.7, s_ * 0.7, s_), segs=4, rings=2), GOLDF, outline=False)
+        for k in range(10):   # big star sparkles floating around it
+            a = 2 * math.pi * k / 10 + 0.3
+            rad = R * (1.15 + 0.45 * (k % 2))
+            z = H * (0.25 + 0.075 * k)
+            M_(f"star{k}", ellipsoid((math.cos(a) * rad, math.sin(a) * rad, z), (0.05, 0.05, 0.085), segs=4, rings=2), MAT["gem"], glow=True)
+        for k in range(28):   # a glowing gold ring on the floor around it
+            a = 2 * math.pi * k / 28
+            M_(f"ring{k}", ellipsoid((math.cos(a) * R * 1.45, R * 0.08 + math.sin(a) * R * 1.45, 0.012), (0.05, 0.05, 0.01), rot=(0, 0, math.degrees(a) + 90), segs=8, rings=3), GOLDF, outline=False)
         eye_mat = GOLDF
     else:                # COAT
         z0, r0, z1, r1 = H * 0.02, R * 1.08, H * 0.66, R * 0.62
@@ -330,6 +358,10 @@ for s_, x in (("L", 1), ("R", -1)):
             M_("spoolthread", tube((cx - half * 0.8, -0.03, hz), (cx + half * 0.8, -0.03, hz), 0.14, 0.14, segs=20), wrap, f"arm.{s_}", glow=A.form == 2)
             for e_, sx in (("a", -1), ("b", 1)):
                 M_(f"spoolrim{e_}", tube((cx + sx * half * 0.8, -0.03, hz), (cx + sx * half, -0.03, hz), 0.22, 0.22, segs=20), rim, f"arm.{s_}", glow=True)
+        if A.form == 2:  # torn strips hanging from both sleeves
+            for k, dx in enumerate((-0.03, 0.03)):
+                p0 = Vector((x * R * ax * 1.02 + dx, 0.0, SH_Z - 0.12 * am))
+                M_(f"sleevetatter{s_}{k}", tube(p0, p0 + Vector((x * 0.02, 0.03, -0.16 - 0.05 * k)), 0.03, 0.008, segs=6), MAT["cape"], f"arm.{s_}")
         else:            # a cloth hand with a loop of thread
             M_(f"fist{s_}", ellipsoid((x * R * ax * 1.02, -0.02, hz), (0.034 * am, 0.034 * am, 0.032 * am)), MAT["body"], f"arm.{s_}")
             M_("handthread", tube((x * R * ax * 1.02, -0.05, hz - 0.02), (x * R * ax * 1.12, -0.07, hz - 0.12), 0.012, 0.012, segs=6), GOLDF if A.form == 2 else MAT["thread"], f"arm.{s_}", outline=False)
