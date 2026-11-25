@@ -44,6 +44,8 @@ export const ENEMY_PACKS: Record<string, { pack: PackName; id: string }> = {
   doughling: { pack: 'enemy-doughling', id: 'doughling' },
   'rolling-pin': { pack: 'enemy-rolling-pin', id: 'rolling-pin' },
   'hearth-cook': { pack: 'enemy-hearth-cook-p1', id: 'hearth-cook-p1' },
+  // Nov 25: the Yellow Guardian (its torn form is LOOM_KEEPER_TORN).
+  'loom-keeper': { pack: 'enemy-loom-keeper', id: 'loom-keeper' },
 };
 
 /** B-T3: the Hearth Cook has one rig per phase; this many health left (share) or more uses that rig. */
@@ -59,8 +61,11 @@ const HEARTH_COOK_RIGS: Array<{ atHealth: number; pack: PackName; id: string }> 
  */
 const FLOOR_KEEPER_FORM2 = { atHealth: 0.5, pack: 'enemy-floor-keeper-f2' as PackName, id: 'floor-keeper-f2' };
 
+/** The Loom Keeper's coat tears at a third of its health (Blender art, Nov 25, waiting on Jay's OK). */
+const LOOM_KEEPER_TORN = { atHealth: 1 / 3, pack: 'enemy-loom-keeper-f2' as PackName, id: 'loom-keeper-f2' };
+
 /** Every pack ENEMY_PACKS or a phase rig can use, for loading. */
-export const ENEMY_ART_PACKS: PackName[] = [...new Set([...Object.values(ENEMY_PACKS).map((p) => p.pack), ...HEARTH_COOK_RIGS.map((r) => r.pack), FLOOR_KEEPER_FORM2.pack])];
+export const ENEMY_ART_PACKS: PackName[] = [...new Set([...Object.values(ENEMY_PACKS).map((p) => p.pack), ...HEARTH_COOK_RIGS.map((r) => r.pack), FLOOR_KEEPER_FORM2.pack, LOOM_KEEPER_TORN.pack])];
 
 /**
  * Shades v2 (Jay, Nov 18: "draw them sharper and bigger"). The White belt monsters (pack enemies-t1) are rendered at
@@ -71,15 +76,11 @@ const SHARP_PACK = 0.5;
 const BIGGER = 1.25;
 export const ART_BOOST: Record<string, number> = { swarmer: SHARP_PACK * BIGGER, shield: SHARP_PACK * BIGGER, brute: SHARP_PACK * BIGGER, 'floor-keeper': SHARP_PACK * BIGGER, 'loom-keeper': SHARP_PACK * BIGGER };
 
-/**
- * Loom Keeper (Nov 25): a STAND-IN until its Blender model is OK'd. It borrows the Floor Keeper's two forms, recoloured
- * grey-lilac; its coat "tears" (the second form, with the usual transformation flash) at a third of its health.
- */
-const LOOM_KEEPER_TEARS = 1 / 3;
-export const STAND_IN_TINT: Record<string, number> = { 'loom-keeper': 0xb8b0e0 };
+/** A monster drawn as a recoloured stand-in until its own art is OK'd (none now: the Loom Keeper has its Blender art). */
+export const STAND_IN_TINT: Record<string, number> = {};
 
 /** Rigs packed at a different pixel size than their enemy's usual art: drawn this much bigger to match (Nov 22). */
-const RIG_BOOST: Record<string, number> = { 'floor-keeper-f2': 0.6 / 0.45 };
+const RIG_BOOST: Record<string, number> = { 'floor-keeper-f2': 0.6 / 0.45, 'loom-keeper': 0.6 / 0.45, 'loom-keeper-f2': 0.6 / 0.45 };
 export function rigBoost(rigId: string | undefined): number {
   return (rigId && RIG_BOOST[rigId]) || 1;
 }
@@ -92,7 +93,7 @@ export function artScale(def: { id: string; scale: number }): number {
 /** The art (pack, id) for an enemy at this share of health; phase bosses change rig as they lose health. */
 export function enemyArt(enemyId: string, healthShare: number): { pack: PackName; id: string } | undefined {
   if (enemyId === 'hearth-cook') return HEARTH_COOK_RIGS.find((r) => healthShare >= r.atHealth) ?? HEARTH_COOK_RIGS[2];
-  if (enemyId === 'loom-keeper') return healthShare > LOOM_KEEPER_TEARS ? { pack: 'enemies-t1', id: 'floor-keeper' } : { pack: FLOOR_KEEPER_FORM2.pack, id: FLOOR_KEEPER_FORM2.id };
+  if (enemyId === 'loom-keeper' && healthShare <= LOOM_KEEPER_TORN.atHealth) return { pack: LOOM_KEEPER_TORN.pack, id: LOOM_KEEPER_TORN.id };
   if (enemyId === 'floor-keeper' && healthShare < FLOOR_KEEPER_FORM2.atHealth) return { pack: FLOOR_KEEPER_FORM2.pack, id: FLOOR_KEEPER_FORM2.id };
   return ENEMY_PACKS[enemyId];
 }

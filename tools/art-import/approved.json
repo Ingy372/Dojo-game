@@ -1532,6 +1532,28 @@
       ],
       "scale": 0.45
     },
+    "enemy-loom-keeper": {
+      "note": "The Loom Keeper, Yellow Guardian (Claude, Nov 25, waiting on Jay's OK): the coat form, shown above a third of its health. Same rig and settings as the Floor Keeper's second form (160 px per tile, packed at 0.45; RIG_BOOST draws it at the same size).",
+      "sources": [
+        {
+          "id": "loom-keeper",
+          "type": "character",
+          "json": "incoming-art/claude-guardians/loom-keeper/sprites/loom-keeper.json"
+        }
+      ],
+      "scale": 0.45
+    },
+    "enemy-loom-keeper-f2": {
+      "note": "The Loom Keeper's torn form (Claude, Nov 25, waiting on Jay's OK), shown from a third of its health.",
+      "sources": [
+        {
+          "id": "loom-keeper-f2",
+          "type": "character",
+          "json": "incoming-art/claude-guardians/loom-keeper-f2/sprites/loom-keeper-f2.json"
+        }
+      ],
+      "scale": 0.45
+    },
     "player-a-outfit-crimson-dragon": {
       "note": "Shop skin outfit-crimson-dragon for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
       "sources": [
