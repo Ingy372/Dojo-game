@@ -8,7 +8,9 @@ import { characterArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { sfx } from '../audio/Sfx';
 import { reducedMotion } from '../game/motion';
-import { FONT, crisp, view } from './theme';
+import { FONT, crisp } from './theme';
+import { cutsceneFrame } from './cutscene';
+import STORY from '../../../../content/tutorial/chapters.json';
 import WORDS from '../../../../content/tutorial/intro-cutscene.json';
 
 /** What the town lends the cutscene. */
@@ -38,18 +40,15 @@ export function playIntro(h: IntroHost): void {
   const s = h.scene;
   const T = h.tile;
   const still = reducedMotion();
-  const timers: Phaser.Time.TimerEvent[] = [];
-  const at = (ms: number, fn: () => void) => timers.push(s.time.delayedCall(still ? ms * 0.8 : ms, fn));
   let over = false;
-
-  // ---- screen layer: letterbox bars, the caption, Skip
-  const ui = s.add.container(0, 0).setDepth(90);
-  const bars = s.add.graphics();
-  const caption = s.add
-    .text(0, 0, '', { fontFamily: FONT, fontStyle: 'bold', fontSize: '22px', color: '#ffffff', align: 'center', stroke: '#120e22', strokeThickness: 5 })
-    .setOrigin(0.5)
-    .setResolution(crisp())
-    .setAlpha(0);
+  const f = cutsceneFrame(s, () => {
+    if (cm && fx) (fx as unknown as { clear(): void }).clear?.();
+    h.done();
+  }, { skipLabel: WORDS.skip });
+  const at = f.at;
+  const timers = { push: (t: Phaser.Time.TimerEvent) => f.keep(t) };
+  const say = f.say;
+  const hush = f.hush;
   const title = s.add
     .text(0, 0, WORDS.lines.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '46px', color: '#ffd166', stroke: '#120e22', strokeThickness: 7 })
     .setOrigin(0.5)
@@ -60,32 +59,14 @@ export function playIntro(h: IntroHost): void {
     .setOrigin(0.5)
     .setResolution(crisp())
     .setAlpha(0);
-  const skip = s.add
-    .text(0, 0, WORDS.skip, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff', backgroundColor: 'rgba(20,18,28,0.65)', padding: { x: 12, y: 8 } })
-    .setOrigin(1, 0)
-    .setResolution(crisp())
-    .setInteractive({ useHandCursor: true });
   const fade = s.add.rectangle(0, 0, 10, 10, 0x2a3350, 0).setOrigin(0);
-  ui.add([fade, bars, caption, title, subtitle, skip]);
-  const layout = () => {
-    const { width, height } = view(s);
-    const bh = Math.round(height * 0.1);
-    bars.clear().fillStyle(0x08060f, 1).fillRect(0, 0, width, bh).fillRect(0, height - bh, width, bh);
-    caption.setPosition(width / 2, height - bh - 30).setWordWrapWidth(width * 0.85);
+  f.ui.addAt(fade, 0);
+  f.ui.add([title, subtitle]);
+  f.onLayout((width, height) => {
     title.setPosition(width / 2, height * 0.38);
     subtitle.setPosition(width / 2, height * 0.38 + 44);
-    skip.setPosition(width - 10, 8);
     fade.setSize(width, height);
-  };
-  layout();
-  s.scale.on(Phaser.Scale.Events.RESIZE, layout);
-
-  const say = (line: string) => {
-    s.tweens.killTweensOf(caption);
-    caption.setText(line).setAlpha(0);
-    s.tweens.add({ targets: caption, alpha: 1, duration: 450 });
-  };
-  const hush = () => s.tweens.add({ targets: caption, alpha: 0, duration: 350 });
+  });
 
   // ---- world pieces: the Tower's light, petals, Shades
   const glowKey = 'intro-glow';
@@ -215,41 +196,77 @@ export function playIntro(h: IntroHost): void {
     const o = { k: 0 };
     s.tweens.add({ targets: o, k: 1, duration: still ? 10 : 2200, onUpdate: () => bleak(o.k) });
   });
+  // Story Chapters (Nov 24): one piece of the light falls toward the hero's dojo (the hook).
+  at(12300, () => {
+    say(STORY.intro.piece);
+    const sp = s.add.circle(LIGHT.x * T, LIGHT.y * T, T * 0.18, 0xffd166, 1).setDepth(1e6).setBlendMode(Phaser.BlendModes.ADD);
+    h.world.add(sp);
+    s.tweens.add({ targets: sp, x: DOJO_DOOR.x * T, duration: still ? 10 : 1600, ease: 'Sine.Out' });
+    s.tweens.add({ targets: sp, y: DOJO_DOOR.y * T, duration: still ? 10 : 1600, ease: 'Quad.In', onComplete: () => sp.destroy() });
+  });
   // the hero steps out of the dojo and looks up at the Tower
-  at(14000, () => {
+  at(14200, () => {
     h.placeHero(DOJO_DOOR, { x: 0, y: 1 });
     h.heroVisible(true);
     look({ x: DOJO_DOOR.x + 1.5, y: DOJO_DOOR.y - 1.2 }, 7);
   });
-  at(14600, () => say(WORDS.lines.brave));
-  at(16400, () => h.placeHero(h.heroPos(), { x: 1, y: -1 }));
-  at(17800, () => {
+  at(14800, () => say(WORDS.lines.brave));
+  // the piece glows above the hero's hands and stays with them
+  let shard: Phaser.GameObjects.Container | null = null;
+  at(16400, () => {
+    shard = lightShard(s, T);
+    const p = h.heroPos();
+    shard.setPosition(p.x * T, (p.y - 1.15) * T).setAlpha(0);
+    h.world.add(shard);
+    s.tweens.add({ targets: shard, alpha: 1, duration: 500 });
+    sfx.tap();
+    say(STORY.intro.chosen);
+  });
+  at(18000, () => h.placeHero(h.heroPos(), { x: 1, y: -1 }));
+  at(19000, () => {
     hush();
     h.walkHero([{ x: 26, y: 10.7 }, { x: 30.2, y: 10.5 }, { x: 30.3, y: 7.6 }]);
   });
-  at(18000, () => {
-    timers.push(s.time.addEvent({ delay: 60, loop: true, callback: () => !over && look({ x: h.heroPos().x, y: h.heroPos().y - 2.2 }, 10) }));
+  at(19200, () => {
+    timers.push(
+      s.time.addEvent({
+        delay: 60,
+        loop: true,
+        callback: () => {
+          if (over) return;
+          const p = h.heroPos();
+          shard?.setPosition(p.x * T, (p.y - 1.15) * T);
+          look({ x: p.x, y: p.y - 2.2 }, 10);
+        },
+      }),
+    );
   });
-  at(21600, () => {
+  at(22600, () => {
     s.tweens.add({ targets: title, alpha: 1, duration: 700 });
     s.tweens.add({ targets: subtitle, alpha: 1, duration: 700, delay: 500 });
   });
-  at(25000, () => finish());
+  at(26000, () => finish());
 
   function finish(): void {
     if (over) return;
     over = true;
-    for (const t of timers) t.remove();
     petalTimer.remove();
-    s.scale.off(Phaser.Scale.Events.RESIZE, layout);
-    cam.fadeOut(still ? 0 : 500, 8, 6, 15);
-    cam.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-      if (cm && fx) (fx as unknown as { clear(): void }).clear?.();
-      h.done();
-    });
+    f.finish();
   }
-  skip.on('pointerup', () => {
-    sfx.tap();
-    finish();
-  });
+}
+
+/** The light piece (Story Chapters): a small glowing gold shard with a soft halo that bobs. */
+export function lightShard(s: Phaser.Scene, T: number): Phaser.GameObjects.Container {
+  const c = s.add.container(0, 0).setDepth(1e6);
+  const halo = s.add.circle(0, 0, T * 0.32, 0xfff1b8, 0.35).setBlendMode(Phaser.BlendModes.ADD);
+  const g = s.add.graphics();
+  const r = T * 0.16;
+  g.fillStyle(0xffd166, 1).fillTriangle(0, -r * 1.6, r, 0, -r, 0).fillTriangle(0, r * 1.2, r, 0, -r, 0);
+  g.fillStyle(0xfff6d0, 1).fillTriangle(0, -r * 1.2, r * 0.4, -r * 0.1, -r * 0.3, -r * 0.1);
+  c.add([halo, g]);
+  if (!reducedMotion()) {
+    s.tweens.add({ targets: halo, scale: 1.3, alpha: 0.18, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+    s.tweens.add({ targets: g, y: -4, duration: 650, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+  }
+  return c;
 }
