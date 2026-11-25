@@ -2259,3 +2259,12 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
 
 - Jay picked the Loom Keeper from Claude's three ideas (`docs/yellow-guardian-ideas.md`): darkness over the tailor's shop. Freeing it reopens her shop, which is where the blanket the hero gives Eli at the Yellow Gate comes from.
 - Claude's full version for Jay's OK: `docs/yellow-guardian-loom-keeper.md`. The Yellow floors keep the Sunrise Garden art (the tailor's dye garden), the boss room is a weaving loft, three moves (Spool Drop, Thread Line, Big Cloth), and the lines. Nothing is built until Jay OKs it.
+
+## Nov 25: the Loom Keeper is built (Jay: "Yes, build it")
+
+- **Two new kinds of attack** (`"area"` on an enemy attack): `"line"`, a thread wall to wall through where the player stands (`lineAxis`: across, down or both, taking turns), and `"cloth"`, a cloth over the player's side of the room (split down the middle) reaching `areaRadius` past the player. Both are dash-only and placed when the wind-up starts. They keep their size when a Guardian is drawn 1.5x bigger.
+- **Claude's calls while building:** the cloth reaches 1.8 tiles past the player (not half the room) so one Dash always clears it, the existing GUARD-SCALE-01 rule. Health is 490, not 520: 520 broke the 80-hit boss limit for a strong Yellow belt. Two small Swarmer waves in the Weaving Loft, as in the other Guardian rooms. The boss calls no helpers itself.
+- **Yellow floors:** the `sunrise-garden` set is on: 8 rooms (Dye Beds, Cotton Rows, Trellis Walk, Spinning Shed, Sunrise Race as the 90-second challenge, Seed Shed, Garden Well, The Weaving Loft) with swarmers, shields, Boppers and a Brute in later rooms. The room names are Claude's drafts. Yellow belts no longer meet the Floor Keeper again.
+- **Stand-in look until the Blender model:** the Floor Keeper's two forms recoloured grey-lilac; the second form ("the coat tears") at a third of its health.
+- **New boss lines field:** `senseiAtDoor` (said when the Guardian's room starts) and `senseiAfterWin` (after the faith line, if any). Only the Loom Keeper has them.
+- **Not built yet:** the Monster Journal entry (needs a trophy picture), the tailor in town and her shop reopening (with the story chapters), and the Blender model.

@@ -1,6 +1,6 @@
 # The Loom Keeper: the Yellow Guardian (for Jay's OK)
 
-Jay picked the Loom Keeper on Nov 25 (the three ideas are in `docs/yellow-guardian-ideas.md`). This is the full version: how it looks, how the fight works, and every line. **Nothing is built yet.** Change anything, then Claude builds it.
+Jay picked the Loom Keeper on Nov 25 (the three ideas are in `docs/yellow-guardian-ideas.md`) and OK'd this version the same day. **Built Nov 25** (steps 1–4 below; the Blender model is still to come). Changes made while building are marked **[Built]**.
 
 ## Where it lives
 
@@ -28,9 +28,9 @@ A step above the Floor Keeper (three moves instead of two) and a step below the 
 
 1. **Spool Drop:** it lifts the spool high and a red circle appears under the hero, then the spool slams down. COUNTER it. Same timing as the Floor Keeper's slam, so Yellow belts start on something they know.
 2. **Thread Line (new kind of attack):** a dark thread stretches wall to wall across the room through where the hero stands, drawn as the purple-and-white stripes with "!!" and a twang. DASH off the line before it snaps. In part 3 the threads come both across and up-and-down, one at a time. It can't be countered, the same rule as the Hearth Cook's rolling pin.
-3. **Big Cloth (new kind of attack):** a dark cloth slowly slides over the half of the room the hero is in. Its edge glows for a full 1.5 seconds before it lands (longer on Guided). Walk or DASH into the bright half. The warning is always drawn on top, so the cloth never hides another warning, and it never comes at the same time as a red circle.
+3. **Big Cloth (new kind of attack):** a dark cloth slowly slides over the half of the room the hero is in. Its edge glows for a full 1.5 seconds before it lands (longer on Guided). Walk or DASH into the bright half. **[Built]** The cloth covers the hero's side and stops 1.8 tiles past the hero, so one Dash or a short walk always gets out (the game's rule for every Guardian attack). The warning is always drawn on top, so the cloth never hides another warning, and it never comes at the same time as a red circle.
 
-**Starting numbers** (the balance test sets the final ones): health 520 (Floor Keeper 495, Hearth Cook 549), Power 17, Guard 30, good clear time 25 seconds.
+**Starting numbers** (the balance test sets the final ones): health 520 (Floor Keeper 495, Hearth Cook 549), Power 17, Guard 30, good clear time 25 seconds. **[Built]** Health is 490: at 520 a strong Yellow belt needed 84 hits, over the 80-hit limit for bosses. Two small waves of Swarmers come into the loft, as in the other Guardian rooms, so the fight lasts about as long as theirs (about 12 seconds for a typical player). The Loom Keeper itself still calls no helpers.
 
 ## Every line (all 8 words or fewer)
 

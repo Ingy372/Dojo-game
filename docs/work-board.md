@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-11-24 by Claude Code.
+Last updated: 2026-11-25 by Claude Code.
 
 **What this file is:** the one list of open work. Each item has an ID, an owner and what it waits on. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
 
@@ -117,3 +117,12 @@ Order to be agreed with Jay after CW-3. Candidates:
 ## 5. After the beta, toward the April launch
 
 From `drafts/planning/R-OVERHAUL-LAUNCH.md`: L11 belts 4–10 in the Tower (floor sets are built but switched off), L12 the DojoForge connection and server saves (needs Nic; asks collected in `drafts/planning/NIC-ASKS.md`), L9 Sensei's Trials, L17 Street Smarts (Jay approves each script), L19 voice on cards, L2b Stars, kata powers through Nahanchi, L15 gear looks, L18 technique videos, L3 chapters.
+
+## 4c. Yellow Guardian: the Loom Keeper (Jay, Nov 25; branch `claude/yellow-guardian`)
+
+| ID | What | Status |
+|---|---|---|
+| YG-1 | Thread and cloth attacks, the Loom Keeper, the 8 Sunrise Garden rooms, balance | Built Nov 25; waits on Jay's phone test |
+| YG-2 | Blender model and animations (replaces the grey-lilac stand-in) | Waits on Jay's OK of the art |
+| YG-3 | Monster Journal trophy for the Loom Keeper | With YG-2 (needs a picture) |
+| YG-4 | Miss Ada (draft name) and her shop reopening in town; the blanket at the Yellow Gate | With the story chapters (SC-3 and later) |
