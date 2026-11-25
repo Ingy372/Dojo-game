@@ -32,7 +32,19 @@ export interface EnemyAttackDef {
   tell?: string;
   /** R-CHALLENGE P4: what Sensei says the first time this save meets this attack. */
   senseiLine?: string;
+  /**
+   * Loom Keeper (Yellow Guardian, Nov 25): a danger area that isn't a circle. Always dash-only (can't be Countered).
+   * - 'line': a thread wall to wall through where the player stands; areaRadius is half its thickness.
+   * - 'cloth': a cloth over the player's side of the room (split down the middle), reaching areaRadius past the player
+   *   toward the other side, so a short walk or one Dash always gets out.
+   */
+  area?: AttackAreaKind;
+  /** For area 'line': 'across' (a left-to-right thread), 'down' (top to bottom), or 'both' (taking turns). */
+  lineAxis?: 'across' | 'down' | 'both';
 }
+
+/** Loom Keeper: the kinds of non-circle danger area. */
+export type AttackAreaKind = 'line' | 'cloth';
 
 /** R-CHALLENGE P4: how a pattern attack's danger area is drawn at the start of its wind-up. */
 export type PatternShape = 'lane' | 'landing' | 'circle';
@@ -123,6 +135,9 @@ export interface EnemyDef {
   name: string;
   /** Short plain name for small spaces like Journal cards; falls back to name. */
   shortName: string;
+  /** Loom Keeper (Nov 25): what Sensei says at the Guardian's room door, and after it is set free (kid lines). */
+  senseiAtDoor?: string;
+  senseiAfterWin?: string;
   maxHealth: number;
   power: number;
   guard: number;
@@ -209,6 +224,17 @@ function loadAttack(data: unknown, id: string, where: string): EnemyAttackDef {
   if (a.counterable === false || a.dashOnly === true) attack.counterable = false;
   if (a.noOverlapWithRedCircle !== undefined && typeof a.noOverlapWithRedCircle !== 'boolean') throw new EnemyError(id, `"${where}.noOverlapWithRedCircle" must be true or false`);
   if (a.noOverlapWithRedCircle === true) attack.noOverlapWithRedCircle = true;
+  if (a.area !== undefined) {
+    if (a.area !== 'line' && a.area !== 'cloth') throw new EnemyError(id, `"${where}.area" must be "line" or "cloth"`);
+    attack.area = a.area;
+    // A thread or a cloth can't be Countered: the answer is to get out of it.
+    attack.counterable = false;
+  }
+  if (a.lineAxis !== undefined) {
+    if (attack.area !== 'line') throw new EnemyError(id, `"${where}.lineAxis" only goes with "area": "line"`);
+    if (a.lineAxis !== 'across' && a.lineAxis !== 'down' && a.lineAxis !== 'both') throw new EnemyError(id, `"${where}.lineAxis" must be "across", "down" or "both"`);
+    attack.lineAxis = a.lineAxis;
+  }
   for (const k of ['tell', 'senseiLine'] as const) {
     if (a[k] === undefined) continue;
     if (typeof a[k] !== 'string' || (a[k] as string).trim() === '') throw new EnemyError(id, `"${where}.${k}" must be some text`);
@@ -338,11 +364,18 @@ export function loadEnemy(data: unknown): EnemyDef {
   }
 
   const color = typeof raw.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(raw.color) ? raw.color : '#7d3f2f';
+  const sensei: Pick<EnemyDef, 'senseiAtDoor' | 'senseiAfterWin'> = {};
+  for (const k of ['senseiAtDoor', 'senseiAfterWin'] as const) {
+    if (raw[k] === undefined) continue;
+    if (typeof raw[k] !== 'string' || (raw[k] as string).trim() === '') throw new EnemyError(id, `"${k}" must be some text`);
+    sensei[k] = raw[k] as string;
+  }
 
   return {
     id,
     name: raw.name,
     shortName: typeof raw.shortName === 'string' ? raw.shortName : raw.name,
+    ...sensei,
     maxHealth: positiveNumber(raw, 'maxHealth', id),
     power: positiveNumber(raw, 'power', id),
     guard,

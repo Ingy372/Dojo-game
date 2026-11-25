@@ -153,6 +153,10 @@ export interface EnemyState {
   windupTotal: number;
   /** Center of the danger area while winding up; null otherwise. */
   attackCenter: Vec2 | null;
+  /** Loom Keeper: the thread or cloth of an `area` attack while winding up (null or missing for a circle). */
+  attackArea?: AttackArea | null;
+  /** Loom Keeper: how many 'both' threads it has thrown, so across and down take turns. */
+  linesThrown?: number;
   path: Vec2[] | null;
   /** Ticks until the route to the player is planned again. */
   repathIn: number;
@@ -1171,6 +1175,7 @@ function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: Attac
     e.mode = 'defeated';
     e.modeTicks = COMBAT.enemyRespawnTicks;
     e.attackCenter = null;
+    e.attackArea = null;
     e.path = null;
   }
   world.events.push({ kind: 'playerAttack', playerId: p.id, enemyId: e.id, move, damage: dmg, defeated });
@@ -1361,7 +1366,7 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
             e.attackIndex = nextAttackIndex(e);
             return;
           }
-          startWindup(world, e);
+          startWindup(world, e, room);
         }
       }
       return;
@@ -1378,6 +1383,7 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
         e.modeTicks = done.recoverTicks;
         resolveAttack(world, room, e);
         e.attackCenter = null;
+        e.attackArea = null;
         if (done.followUp && e.mode === 'recover') {
           // R-CHALLENGE P2: first hit of a two-part attack: wait the gap, then wind up the second.
           e.followUpStage = 1;
@@ -1399,7 +1405,7 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
 }
 
 /** Start the telegraph. The danger area is fixed now, so the player can step out of it. */
-function startWindup(world: WorldState, e: EnemyState): void {
+function startWindup(world: WorldState, e: EnemyState, room: Room): void {
   const a = currentAttack(e);
   let ticks = telegraphTicks(a, world.difficulty);
   if (e.elite && world.elites) ticks = eliteWindup(ticks, e.elite, world.difficulty, world.elites, DIFFICULTY[world.difficulty].counterWindowTicks);
@@ -1407,6 +1413,22 @@ function startWindup(world: WorldState, e: EnemyState): void {
   e.modeTicks = ticks;
   e.windupTotal = ticks;
   e.attackCenter = { x: e.pos.x + e.facing.x * a.reach, y: e.pos.y + e.facing.y * a.reach };
+  e.attackArea = null;
+  if (a.area) {
+    // Loom Keeper: the thread or cloth is placed on the player now and stays put while it warns.
+    const target = nearestPlayer(world, e);
+    const at = target ? { ...target.pos } : { ...e.pos };
+    e.attackCenter = at;
+    if (a.area === 'line') {
+      const n = e.linesThrown ?? 0;
+      if (a.lineAxis === 'both') e.linesThrown = n + 1;
+      const axis = a.lineAxis === 'down' || (a.lineAxis === 'both' && n % 2 === 1) ? 'y' : 'x';
+      e.attackArea = { kind: 'line', axis, at: axis === 'x' ? at.y : at.x };
+    } else {
+      const side = at.x >= room.width / 2 ? 1 : -1;
+      e.attackArea = { kind: 'cloth', side, edge: at.x - side * a.areaRadius };
+    }
+  }
   e.path = null;
   e.chaseTicks = 0;
   world.events.push({ kind: 'telegraph', enemyId: e.id, ticks });
@@ -1446,7 +1468,7 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
     if (canAttack && a.counterable !== false && flaggedLaneOn(world, e, target.pos)) canAttack = false;
   }
   if (dist <= a.startRange && canAttack) {
-    startWindup(world, e);
+    startWindup(world, e, room);
     return;
   }
   // C430: a stationary enemy (true speed 0) never walks, circles or paths; it only winds up when you are in range.
@@ -1506,7 +1528,7 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
     const p = world.players[id];
     if (!isActive(p)) continue;
     // Caught if the player's center is inside the area, or within half a body of its edge.
-    if (distance(p.pos, center) > a.areaRadius + R * 0.5) continue;
+    if (!attackCovers(e, p.pos, R * 0.5)) continue;
 
     const guarding = p.guardTicks > 0;
     // Strong Discipline: while it lasts, every Counter is a Great Counter.
@@ -1805,6 +1827,7 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.modeTicks = COMBAT.enemySpawnWaitTicks;
   e.windupTotal = 0;
   e.attackCenter = null;
+  e.attackArea = null;
   e.path = null;
   e.repathIn = 0;
   e.attackIndex = e.def.pattern ? e.def.pattern[0] : 0;
@@ -1905,7 +1928,7 @@ function normalAttackIndex(e: EnemyState): number | null {
 
 /** R-CHALLENGE P3: another enemy's red (counterable) circle, winding up now, covers this spot. */
 function redCircleOn(world: WorldState, e: EnemyState, at: Vec2): boolean {
-  return world.enemies.some((o) => o !== e && o.mode === 'windup' && o.attackCenter !== null && currentAttack(o).counterable !== false && distance(at, o.attackCenter) <= currentAttack(o).areaRadius + R * 0.5);
+  return world.enemies.some((o) => o !== e && o.mode === 'windup' && o.attackCenter !== null && currentAttack(o).counterable !== false && attackCovers(o, at, R * 0.5));
 }
 
 /**
@@ -1917,8 +1940,25 @@ export function flaggedLaneOn(world: WorldState, e: EnemyState, at: Vec2): boole
     if (o === e || o.mode !== 'windup' || o.attackCenter === null) return false;
     const a = currentAttack(o);
     if (!a.noOverlapWithRedCircle || a.counterable !== false) return false;
+    if (o.attackArea) return attackCovers(o, at, R * 0.5);
     return segmentDistance(at, o.pos, o.attackCenter) <= a.areaRadius + R * 0.5;
   });
+}
+
+/** Loom Keeper: a thread wall to wall (along x at row `at`, or along y at column `at`), or a cloth from `edge` to the wall on `side`. */
+export type AttackArea = { kind: 'line'; axis: 'x' | 'y'; at: number } | { kind: 'cloth'; side: 1 | -1; edge: number };
+
+/**
+ * Whether this spot is in the enemy's danger area while it winds up, counting `margin` past the edge
+ * (the hit check uses half a body). A circle, or a Loom Keeper thread or cloth.
+ */
+export function attackCovers(e: EnemyState, at: Vec2, margin = 0): boolean {
+  if (!e.attackCenter) return false;
+  const a = currentAttack(e);
+  const area = e.attackArea;
+  if (area?.kind === 'line') return Math.abs((area.axis === 'x' ? at.y : at.x) - area.at) <= a.areaRadius + margin;
+  if (area?.kind === 'cloth') return area.side * (at.x - area.edge) >= -margin;
+  return distance(at, e.attackCenter) <= a.areaRadius + margin;
 }
 
 /** Distance from a point to the segment a-b. */

@@ -1590,7 +1590,9 @@ export class GameScene extends Phaser.Scene {
             this.setFree(e.pos, !!e.def.boss);
             // LP-B2: a freed Guardian's faith line, from the school's pack (none for Guardians it has no line for).
             const faith = e.def.boss ? guardianLine(FAITH, e.def.id) : null;
-            if (faith) this.senseiSay(faith, 1800);
+            // Loom Keeper: Sensei's own line after the win, after the faith line if there is one.
+            const after = [...(faith ?? []), ...(e.def.boss && e.def.senseiAfterWin ? [e.def.senseiAfterWin] : [])];
+            if (after.length) this.senseiSay(after, 1800);
           }
           break;
         }
@@ -2490,6 +2492,9 @@ export class GameScene extends Phaser.Scene {
       // B-T3: the room's own Guardian (the Hearth Cook on the Orange floor).
       const boss = this.room.enemySpawns.map((sp) => CONTENT.enemies[sp.enemy]).find((d) => d?.boss);
       lines.push(`${boss?.name ?? 'The Floor Keeper'} awaits.`);
+      // Loom Keeper: Sensei's line at the door, once the room's name has shown.
+      const door = boss?.senseiAtDoor;
+      if (door) this.time.delayedCall(1600, () => this.senseiSay([door], 2200));
     }
     const bannerBottom = this.showTwist();
     this.message.setText(lines.join('\n')).setFontSize(this.room.challenge ? 22 : 26).setVisible(true).setAlpha(1);

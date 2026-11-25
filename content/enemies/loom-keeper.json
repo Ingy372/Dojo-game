@@ -1,0 +1,111 @@
+{
+  "id": "loom-keeper",
+  "name": "The Loom Keeper",
+  "shortName": "Loom Keeper",
+  "notes": "Yellow Guardian (Jay picked it and OK'd docs/yellow-guardian-loom-keeper.md, Nov 25). Darkness over the tailor's loom (Story of the Light v2: a Guardian is never a person). Three parts: Spool Drop (COUNTER), Thread Line (a dash-only thread wall to wall through the player, 'area': 'line'), Big Cloth (a dash-only cloth over the player's side of the room, 'area': 'cloth', reaching areaRadius past the player, so one Dash always clears it, the GUARD-SCALE-01 rule). Only one move at a time and no helpers, a step below the Hearth Cook. Starting numbers between the Floor Keeper (495) and the Hearth Cook (549); the balance test tunes them. Drawn as a code stand-in until the Blender model is OK'd; the coat tears at a third of its health.",
+  "color": "#8f8aa8",
+  "boss": true,
+  "guardian": true,
+  "tier": "yellow",
+  "band": "F5",
+  "maxHealth": 490,
+  "power": 17,
+  "guard": 30,
+  "radius": 0.85,
+  "moveSpeedTilesPerSecond": 1.5,
+  "sightRange": 20,
+  "attacks": [
+    {
+      "name": "spool drop",
+      "strength": 1.0,
+      "startRange": 1.9,
+      "reach": 1.1,
+      "areaRadius": 1.3,
+      "telegraphTicks": 20,
+      "recoverTicks": 22,
+      "tell": "It lifts the spool high; a red circle under the hero."
+    },
+    {
+      "name": "thread line",
+      "strength": 1.0,
+      "startRange": 7.0,
+      "reach": 0,
+      "areaRadius": 0.6,
+      "telegraphTicks": 26,
+      "recoverTicks": 28,
+      "area": "line",
+      "lineAxis": "across",
+      "noOverlapWithRedCircle": true,
+      "tell": "A striped thread wall to wall through the hero, '!!' and a twang."
+    },
+    {
+      "name": "crossing threads",
+      "strength": 1.0,
+      "startRange": 7.0,
+      "reach": 0,
+      "areaRadius": 0.6,
+      "telegraphTicks": 26,
+      "recoverTicks": 26,
+      "area": "line",
+      "lineAxis": "both",
+      "noOverlapWithRedCircle": true,
+      "tell": "Threads across, then up and down, one at a time."
+    },
+    {
+      "name": "big cloth",
+      "strength": 1.2,
+      "startRange": 9.0,
+      "reach": 0,
+      "areaRadius": 1.8,
+      "telegraphTicks": 30,
+      "recoverTicks": 34,
+      "area": "cloth",
+      "noOverlapWithRedCircle": true,
+      "tell": "A dark cloth over the hero's side of the room; its edge glows for 1.5 seconds."
+    }
+  ],
+  "signature": "Big Cloth",
+  "phases": [
+    {
+      "id": "spool",
+      "atHealthFraction": 1.0,
+      "attacks": ["spool drop"],
+      "tell": "It lifts the spool; red circle.",
+      "counterplay": "COUNTER the spool.",
+      "senseiLine": "The spool goes up first. Ready."
+    },
+    {
+      "id": "threads",
+      "atHealthFraction": 0.66,
+      "attacks": ["spool drop", "thread line"],
+      "tell": "A striped thread across the room.",
+      "counterplay": "DASH off the thread.",
+      "senseiLine": "Threads pull tight. DASH across!"
+    },
+    {
+      "id": "cloth",
+      "atHealthFraction": 0.33,
+      "attacks": ["crossing threads", "big cloth", "spool drop"],
+      "tell": "The coat tears; the cloth's edge glows.",
+      "counterplay": "Stay in the bright half.",
+      "senseiLine": "Watch the glowing edge. Stay bright."
+    }
+  ],
+  "parSeconds": 25,
+  "senseiAtDoor": "Someone used to sew warm things here.",
+  "senseiAfterWin": "Warm things are made to be shared.",
+  "lines": {
+    "intro": "Someone used to sew warm things here.",
+    "freed": "Take a blanket. Someone out there's cold.",
+    "freedBy": "Miss Ada, the tailor, in town (draft name)",
+    "senseiAfter": "Warm things are made to be shared."
+  },
+  "description": "The Loom Keeper drops its spool, pulls threads across the room, then slides a big dark cloth over your side.",
+  "bestiary": {
+    "tip": "Spool, then threads, then the big cloth.",
+    "lore": {
+      "yellow": "Darkness settled on the tailor's loom and took her shape. It weaves grey cloth that warms no one."
+    }
+  },
+  "faithOverlayKey": "loom-keeper"
+}
