@@ -46,3 +46,16 @@ export function smokePuff(s: Phaser.Scene, parent: Phaser.GameObjects.Container 
     s.tweens.add({ targets: p, x: x + Math.cos(a) * T * 0.9, y: y - T * 0.5 + Math.sin(a) * T * 0.6, alpha: 0, scale: 1.8, duration: 700, ease: 'Cubic.Out', onComplete: () => p.destroy() });
   }
 }
+
+/** A little Shade (code drawing, for cut scenes outside the Tower): a dark round blob with two purple eyes. */
+export function addLittleShade(s: Phaser.Scene, T: number): Phaser.GameObjects.Container {
+  const c = s.add.container(0, 0);
+  const g = s.add.graphics();
+  const r = T * 0.28;
+  g.fillStyle(0x000000, 0.25).fillEllipse(0, 0, r * 2.2, r * 0.6);
+  g.fillStyle(0x2f2645, 1).fillCircle(0, -r * 1.1, r);
+  g.fillTriangle(-r, -r * 1.1, r, -r * 1.1, 0, -r * 0.05);
+  g.fillStyle(0xc9b6ff, 1).fillCircle(-r * 0.35, -r * 1.2, r * 0.17).fillCircle(r * 0.35, -r * 1.2, r * 0.17);
+  c.add(g);
+  return c;
+}

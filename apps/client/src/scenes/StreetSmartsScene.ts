@@ -67,6 +67,7 @@ interface RoomFile {
   roomSprite: string;
   marks: Record<string, number[]>;
   cast: Record<string, string | Record<string, string>>;
+  size?: number[];
   /** The marks the camera shows first. */
   start?: string[];
 }
@@ -266,7 +267,15 @@ export class StreetSmartsScene extends Phaser.Scene {
     const y1 = Math.max(...pts.map((p) => p.y)) + TILE * 0.6;
     const vp = this.viewport();
     const s = Phaser.Math.Clamp(Math.min(vp.w / (x1 - x0), vp.h / (y1 - y0)), 0.45, 1.35);
-    return { s, x: vp.x + vp.w / 2 - ((x0 + x1) / 2) * s, y: vp.y + vp.h / 2 - ((y0 + y1) / 2) * s };
+    let x = vp.x + vp.w / 2 - ((x0 + x1) / 2) * s;
+    let y = vp.y + vp.h / 2 - ((y0 + y1) / 2) * s;
+    // Keep the camera inside the rendered place (its art runs from -0.4 to size + 0.4 tiles across, -1.6 to size + 0.3 down).
+    const [cols, rows] = this.room.size ?? [16, 10];
+    const bx0 = -0.4 * TILE, bx1 = (cols + 0.4) * TILE, by0 = -1.6 * TILE, by1 = (rows + 0.3) * TILE;
+    // A place smaller than the screen is centred instead.
+    x = (bx1 - bx0) * s >= vp.w ? Phaser.Math.Clamp(x, vp.x + vp.w - bx1 * s, vp.x - bx0 * s) : vp.x + (vp.w - (bx0 + bx1) * s) / 2;
+    y = (by1 - by0) * s >= vp.h ? Phaser.Math.Clamp(y, vp.y + vp.h - by1 * s, vp.y - by0 * s) : vp.y + (vp.h - (by0 + by1) * s) / 2;
+    return { s, x, y };
   }
 
   private moveCamera(marks: string[], ms: number): Promise<void> {
