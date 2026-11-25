@@ -1,6 +1,6 @@
 # Dojo Ascent: The Story of the Light (version 2, patched draft)
 
-Nov 25, 2026 · Draft for Jay. Nothing here is in the game, and nothing goes in until Jay OKs it.
+Nov 25, 2026 · **Approved by Jay, Nov 25.** Not built into the game yet; it goes in one piece at a time, as listed at the end of version 1.
 
 This is the Nov 25 story with its holes patched and its thin spots filled. The heart, the Gospel order, the chapters and the ending are unchanged. Everything added or changed is marked **[New]** or **[Changed]**, and the reasons are in "What was patched and why" at the bottom.
 
@@ -310,7 +310,17 @@ Thirty torn pages, three per belt, found while climbing and kept in the Book. Ea
 
 ## Questions for Jay
 
-The seven questions from version 1 still stand (Eli's name, extra verses, naming Jesus, Sensei taking the hit, who Sensei is, the Yellow Guardian, anything missing).
+**Status (Jay, Nov 25): the whole story is approved.** Every question below is answered.
+
+**Version 1 questions, answered by Jay, Nov 25:**
+
+- [x] **Eli's name:** keep "Eli".
+- [x] **Verses not on the wall:** none for now. Only the ten wall verses, exactly as written.
+- [x] **Naming Jesus:** yes, in the few big moments only (such as Blue belt, "Jesus did it for me first").
+- [x] **Sensei taking the hit at Blue belt:** keep it. Sensei is up again in the same scene.
+- [x] **Who Sensei is:** a made-up character who talks the way Jay talks.
+- [x] **Yellow belt Guardian:** Claude suggests three ideas when that belt is built.
+- [x] **Anything missing:** nothing.
 
 **Answered by Jay, Nov 25:**
 
@@ -325,6 +335,4 @@ The seven questions from version 1 still stand (Eli's name, extra verses, naming
   1. Why Sensei hasn't brought Eli home: "I can clear a floor. I can't make him come home."
   2. Green belt, on earned belts vs. the free gift: "A belt is earned. It tells the truth about your training. But nobody trains their way into being loved. That part was always a gift."
   3. Brown/Black belt, on the wind verse: "You can't see what changed inside Eli. But everybody can see him carrying the baker's flour."
-**Still open:**
-
-- [ ] **The 30 notebook pages:** approve, change or cut each.
+- [x] **The 30 notebook pages:** approved as written (Jay, Nov 25).

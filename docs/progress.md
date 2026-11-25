@@ -1509,4 +1509,4 @@ Street Smarts lessons 2-5 were built on this branch, then moved to `main` and fi
 
 - Reviewed Jay's story for holes and thin spots; wrote `docs/story-of-the-light-v2.md` with every change marked and a table of 16 patches.
 - Jay answered six questions (see decisions.md). Added Mara's forgiveness in the town square, Eli's folding-chair joke, and the 30 notebook pages.
-- **Next:** Sensei's three lines are approved. Jay approves the notebook pages and the version 1 questions. Then the game's story words are updated to match (Shade becomes Shadow, the masked figure becomes Eli).
+- **Story approved in full (Nov 25).** **Next:** the game's story words are updated to match (Shade becomes Shadow, the masked figure becomes Eli).
