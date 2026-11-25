@@ -1517,3 +1517,11 @@ Street Smarts lessons 2-5 were built on this branch, then moved to `main` and fi
 - Moves 5 (right to up) and 13 (left to down): tapping the arrow turns the hero into a Cat Stance facing the new way; the Low Block then steps out into the front stance (new `pivot` field on a kata beat, using the existing `stance_cat` art).
 - Tests, type checks pass. Not seen in the browser (the preview pane stayed black); Jay checks on his phone.
 - Fixed: after the special turn (moves 9 and 17), tapping the next arrow showed the hero facing down for a moment. The held end of the turn was drawn from the old direction; it now holds the Low Block's own end pose and turns from there.
+
+## Nov 25 (afternoon, Jay away): Story v2 words and Yellow Guardian ideas (branch `claude/tutorial-overhaul`)
+
+- **Story v2 words in the game:** the opening cut scene, the Chapter 1 ending (Eli instead of the Masked Shade) and Chapter 2's opening now use Jay's approved lines (details in decisions.md). All 1,775 tests, the type checks and the build pass. Not seen in the browser (the app window was minimized, so the preview couldn't draw).
+- **Yellow Guardian:** Yellow has no floors or boss of its own (Yellow belts meet the Floor Keeper again). Three ideas for Jay in `docs/yellow-guardian-ideas.md`: the Sun Gardener (the old draft, cheapest), the Loom Keeper (Claude's pick: it leads into the blanket scene), the Lamplighter (fight beside Sensei's light; the most work). Nothing built.
+- **Other branches today:** `claude/download-size` (CW-4) and `claude/coin-table` (GP-6). Each has its own progress note.
+- **Not done:** the beta-readiness playthrough. It needs the preview to draw, which needs the app window open. Placeholders still in launch content: the stance sign-off ids (wait on Nic's real ids), Jumping Spins and Butterfly Flow numbers, the Class Chest card, the shop's look names, the Seal evolution card, the home tour words and the Guardian room zoom.
+- **Next:** Jay plays the preview (SC-1 plus today's words), picks a Yellow Guardian, and decides about the button-masher on Guided (see the coin-table note).

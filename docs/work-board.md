@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-11-24 by Claude Code.
+Last updated: 2026-11-25 by Claude Code.
 
 **What this file is:** the one list of open work. Each item has an ID, an owner and what it waits on. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
 
@@ -17,6 +17,7 @@ Last updated: 2026-11-24 by Claude Code.
 | B-TESTERS | Pick 5–10 families; each parent's Apple or Google email and their OK. | Beta invites |
 | J13 | The after-work curriculum list (self-defense #36–40, kick combos 8–12, kata character lines, Lock group names, founding story). Not blocking. | Kata powers, Seals #36–40, quests |
 | J-ART | Look at Claude's art attempts as they come. | New art in the game |
+| J-YELLOW | Pick one of the three Yellow Guardian ideas: `docs/yellow-guardian-ideas.md` (Claude suggests the Loom Keeper). | The Yellow floors and boss |
 
 ## 2. Claude Code: first week (Nov 17–23)
 
@@ -25,7 +26,7 @@ Last updated: 2026-11-24 by Claude Code.
 | CW-1 | Line endings, the type-check error, automatic checks on GitHub, Class Chest gear limit. | Done (branch `claude/first-week-fixes`) |
 | CW-2 | CLAUDE.md, this board, decisions and progress updated for the hand-over. | Done |
 | CW-3 | Full hands-on playthrough on small and large phone sizes (new student, White, Yellow, Orange profiles); list every bug and rough spot. | Done Nov 22: `docs/reviews/playtest-2026-11-22.md` (8 fixes on branch `claude/playthrough-fixes`, 7 polish items for Jay) |
-| CW-4 | Measure the download and what loads at start; load art per belt if it isn't already. | Next |
+| CW-4 | Measure the download and what loads at start; load art per belt if it isn't already. | Done Nov 25 on `claude/download-size`: each room loads only its own monsters; report `docs/reviews/download-size-2026-11-25.md` (phone app ~235 MB, Jay picks how to shrink it) |
 
 ## 2a. Jay's overnight list (Nov 17-18)
 
@@ -86,7 +87,7 @@ Jay has a few more visuals to list here.
 | GP-3 | No automatic blocking (Mash guard off; Guided enemies 0.7) | Built Nov 24; waits on Jay's phone test |
 | GP-4 | Town mini map and door signs with pictures (no Home button, Jay) | Built Nov 24; icons wait on Jay's OK |
 | GP-5 | Kata Watch first (voice) and Hint (pays 3 coins) | Built Nov 24; words wait on Jay's OK |
-| GP-6 | Re-measure the coin table with BALANCE=1 (fights changed) | Next |
+| GP-6 | Re-measure the coin table with BALANCE=1 (fights changed) | Done Nov 25 on `claude/coin-table`. Finding for Jay: a button-masher now loses almost every climb, even on Guided |
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 
@@ -125,4 +126,5 @@ From `drafts/planning/R-OVERHAUL-LAUNCH.md`: L11 belts 4–10 in the Tower (floo
 | SC-1 | Stage 1: chapter engine, the hook in the opening, Chapter 1 ending, Chapter 2 | Built on `claude/tutorial-overhaul`; waits on Jay's preview and OK of the words |
 | SC-2 | Stage 2: Chapter 3 (Tool Belt, KATA) and Chapter 4 (town, Action Zone, pro shop, kata practice) | Waits on SC-1 OK |
 | SC-3 | Stage 3: Chapters 5 and 6, "What's ahead" in the Book, Story replay shelf | Waits on SC-2 |
-| SC-4 | Masked Shade Blender model (replaces the code stand-in) | Waits on Jay |
+| SC-4 | Eli's Blender model (hooded boy, Story v2; replaces the Masked Shade code stand-in) | Waits on Jay |
+| SC-5 | Story v2 words in the opening, Chapter 1 ending and Chapter 2 | Done Nov 25 on this branch; the new Chapter 2 ending (lamp, class photo, first notebook page) needs art and the notebook, built with SC-3 |

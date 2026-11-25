@@ -2259,3 +2259,10 @@ Jay: explain every system through the tutorial so nothing is hidden, with a stor
 - **Whole story approved (Jay, Nov 25):** the 30 notebook pages as written, and the version 1 questions: keep "Eli"; only the ten wall verses; name Jesus only in a few big moments; keep Sensei taking the hit at Blue; Sensei is a made-up character; Claude suggests Yellow Guardian ideas when that belt is built; nothing missing.
 
 - **Nov 25 (Jay): Basic Form 1 has 20 steps,** one per move. Moves 5 and 13 pass through a Cat Stance before the Low Block steps out into the front stance.
+
+## Nov 25: Story v2 words in the game (Claude, from Jay's approved story)
+
+- The opening, the Chapter 1 ending and the start of Chapter 2 now use the approved lines word for word: "God gave this town a light." / "Last winter, it broke." / Sensei: "The light found you. It wasn't luck." / Eli: "I have to fix this myself." / Sensei: "That was Eli. He was my student." / "We're going to bring him home." / Sensei: "When the light is missing, a room gets dark fast."
+- Kid lines stay 8 words or fewer, so Sensei's 10-word Chapter 2 line shows as two bubbles ("When the light is missing," / "a room gets dark fast.").
+- Lines the story doesn't give were left as they were: "Shadows slipped into the Tower.", "One small piece fell to a student.", "But one student wasn't afraid." (Jay may want this one changed: in v2 the hero did nothing special to deserve the light), "The Keeper dropped a piece of light!", "Who's that?". The replay story cards use the same three opening lines.
+- Pictures are unchanged: Eli is still drawn as the Masked Shade code stand-in (SC-4), and in Chapter 2 the little Shadows still bounce and leave by the door.
