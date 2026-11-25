@@ -17,8 +17,10 @@ P = lambda c, r, z=0.0: (OX + c * PPT, OY + r * PPT - z * PPT * COS)
 LAYERS = ["floor", "walls", "props", "foreground"]
 # id -> (anchor tile, footprint [x0, x1, r0, r1], sortRow, note)
 SPR = {
-    "island-a": ((3.5, 4.5), (1.0, 6.0, 3.8, 4.5), 4.5, "shelf island, west."),
-    "island-b": ((10.3, 4.5), (8.4, 12.2, 3.8, 4.5), 4.5, "shelf island, east."),
+    "island-a": ((3.6, 3.8), (1.0, 6.2, 3.2, 3.8), 3.8, "aisle shelves, back row west (aisle sign 1)."),
+    "island-b": ((10.3, 3.8), (8.2, 12.4, 3.2, 3.8), 3.8, "aisle shelves, back row east (aisle sign 2)."),
+    "island-c": ((2.2, 5.3), (1.0, 3.4, 4.7, 5.3), 5.3, "aisle shelves, front row, lower (aisle sign 3)."),
+    "island-d": ((5.1, 5.3), (4.0, 6.2, 4.7, 5.3), 5.3, "aisle shelves, front row, lower (aisle sign 4)."),
     "display": ((5.0, 6.65), (4.25, 6.32, 5.95, 6.65), 6.65, "the little display the worker stocks, with a box of stock."),
     "counter": ((11.2, 6.75), (9.55, 12.85, 5.95, 6.75), 6.75, "the checkout counter with the register."),
     "boxes": ((1.3, 8.3), (0.4, 2.2, 7.4, 8.3), 8.3, "a stack of boxes (the hiding spot)."),
@@ -62,10 +64,10 @@ room = {
              "grownup": {"Mom": "people-mom", "Dad": "people-dad"}},
     "marks": {
         "enter-player": [13.6, 8.1], "enter-grownup": [14.5, 8.1],
-        "east-aisle": [13.2, 2.7], "east-aisle-grownup": [13.9, 2.5],
-        "toy-player": [2.8, 2.35], "toy-grownup": [4.4, 2.45], "grownup-away": [13.4, 2.6],
-        "middle-aisle-back": [7.2, 2.7], "middle-aisle-front": [7.2, 5.6], "front-player": [8.2, 7.0],
-        "worker": [6.75, 6.4], "cashier": [11.0, 5.55], "stranger": [3.2, 5.3], "hide-spot": [1.3, 7.9],
+        "east-aisle": [13.2, 2.4], "east-aisle-grownup": [13.9, 2.3],
+        "toy-player": [2.8, 2.35], "toy-grownup": [4.4, 2.3], "grownup-away": [13.4, 2.4],
+        "middle-aisle-back": [7.2, 2.4], "middle-aisle-front": [7.2, 5.7], "front-player": [8.2, 7.0],
+        "worker": [6.75, 6.4], "cashier": [11.0, 5.55], "stranger": [3.7, 4.3], "hide-spot": [1.3, 7.9],
         "meet-worker": [7.25, 7.0], "door-in": [14.0, 8.0], "door-out": [14.0, 9.9],
         "shopper-talk": [9.45, 7.3], "hug-grownup": [8.95, 7.05], "speaker": [8.5, 1.0, 2.15],
     },

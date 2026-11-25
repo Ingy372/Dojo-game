@@ -29,8 +29,8 @@
   },
   "island-a": {
    "size": [
-    408,
-    154
+    424,
+    162
    ],
    "layers": [
     "island-a"
@@ -39,27 +39,27 @@
     "island-a": "island-a_island-a.png"
    },
    "anchorPx": [
-    204.0,
-    149.0
+    212.0,
+    157.0
    ],
    "anchorTile": [
-    3.5,
-    4.5
+    3.6,
+    3.8
    ],
    "footprintRect": [
     1.0,
-    6.0,
-    3.8,
-    4.5
+    6.2,
+    3.2,
+    3.8
    ],
    "place": "prop",
-   "sortRow": 4.5,
-   "note": "shelf island, west."
+   "sortRow": 3.8,
+   "note": "aisle shelves, back row west (aisle sign 1)."
   },
   "island-b": {
    "size": [
-    312,
-    154
+    344,
+    162
    ],
    "layers": [
     "island-b"
@@ -68,22 +68,80 @@
     "island-b": "island-b_island-b.png"
    },
    "anchorPx": [
-    156.0,
-    149.0
+    172.0,
+    157.0
    ],
    "anchorTile": [
     10.3,
-    4.5
+    3.8
    ],
    "footprintRect": [
-    8.4,
-    12.2,
-    3.8,
-    4.5
+    8.2,
+    12.4,
+    3.2,
+    3.8
    ],
    "place": "prop",
-   "sortRow": 4.5,
-   "note": "shelf island, east."
+   "sortRow": 3.8,
+   "note": "aisle shelves, back row east (aisle sign 2)."
+  },
+  "island-c": {
+   "size": [
+    200,
+    143
+   ],
+   "layers": [
+    "island-c"
+   ],
+   "files": {
+    "island-c": "island-c_island-c.png"
+   },
+   "anchorPx": [
+    100.0,
+    138.0
+   ],
+   "anchorTile": [
+    2.2,
+    5.3
+   ],
+   "footprintRect": [
+    1.0,
+    3.4,
+    4.7,
+    5.3
+   ],
+   "place": "prop",
+   "sortRow": 5.3,
+   "note": "aisle shelves, front row, lower (aisle sign 3)."
+  },
+  "island-d": {
+   "size": [
+    184,
+    142
+   ],
+   "layers": [
+    "island-d"
+   ],
+   "files": {
+    "island-d": "island-d_island-d.png"
+   },
+   "anchorPx": [
+    92.0,
+    138.0
+   ],
+   "anchorTile": [
+    5.1,
+    5.3
+   ],
+   "footprintRect": [
+    4.0,
+    6.2,
+    4.7,
+    5.3
+   ],
+   "place": "prop",
+   "sortRow": 5.3,
+   "note": "aisle shelves, front row, lower (aisle sign 4)."
   },
   "display": {
    "size": [

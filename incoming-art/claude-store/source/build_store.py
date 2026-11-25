@@ -186,10 +186,19 @@ for x in (DOOR0, DOOR1):
     B(x - 0.1, x + 0.1, FRONT_R - 0.2, FRONT_R + 0.2, 0.0, 0.9, "#8a96a3", name="doorPost")
 
 # ---------------------------------------------------------------- y-sorted pieces (each its own sprite)
-GRP[0] = "island-a"
-shelf_unit(1.0, 6.0, 3.8, 4.5, 1.35, 3, k0=1, both=True)
-GRP[0] = "island-b"
-shelf_unit(8.4, 12.2, 3.8, 4.5, 1.35, 3, k0=4, both=True)
+# Four shelf units in two rows (Jay, Nov 24: "add 3-4 aisles to make it a bit more realistic"), split by the
+# middle walkway (cols 6.2-8.2). The back row is taller; the front row (west only, the checkout is east) is lower
+# and split in two, so people in the aisle stay in view.
+# Each has a hanging aisle number.
+ISLANDS = (("island-a", 1.0, 6.2, 3.2, 3.8, 1.0, 3, "1"), ("island-b", 8.2, 12.4, 3.2, 3.8, 1.0, 3, "2"),
+           ("island-c", 1.0, 3.4, 4.7, 5.3, 0.72, 2, "3"), ("island-d", 4.0, 6.2, 4.7, 5.3, 0.72, 2, "4"))
+for k, (gid, x0, x1, r0, r1, h, lv, num) in enumerate(ISLANDS):
+    GRP[0] = gid
+    shelf_unit(x0, x1, r0, r1, h, lv, k0=1 + k * 2, both=True)
+    cx = (x0 + x1) / 2; rm = (r0 + r1) / 2
+    Tb(cx, rm, h, h + 0.55, 0.025, 0.025, "#8a96a3", name="signPole")
+    B(cx - 0.32, cx + 0.32, rm - 0.03, rm + 0.03, h + 0.5, h + 0.92, "#2f74c8", name="aisleSign")
+    text("aisleNum" + num, num, cx, rm + 0.045, h + 0.71, 0.3, 0.3, "#ffffff")
 
 GRP[0] = "display"
 B(4.3, 5.7, 6.0, 6.6, 0.0, 0.9, "#f2a93b", name="display")
