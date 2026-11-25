@@ -2253,3 +2253,4 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
   - Reading a prayer gives nothing in the game and nothing is saved or counted. It is never a lock, a quiz or a reward.
 - **Live (Nov 25):** Jay asked for it on the live game after the preview was up, so the Bible picture went live with it.
 - **The Lord's Prayer (Nov 25, Jay: "add the Lord's Prayer too"):** added as the eighth prayer, in the King James wording of Matthew 6:9-13, word for word (the faith pack's reference translation). **Claude's call on the wording; it is on the preview only and waits for Jay to confirm the wording before it goes live.**
+- **Lord's Prayer wording (Jay, Nov 25: "Trespasses wording"):** the game shows the traditional wording ("who art in heaven", "on earth", "forgive us our trespasses, as we forgive those who trespass against us", "for ever and ever"). This replaces the King James wording Claude first used. Jay asked for it on the live game.

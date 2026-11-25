@@ -12,10 +12,11 @@ describe('the prayer menu (Jay, Nov 25)', () => {
     expect(short.length).toBeLessThanOrEqual(7);
     for (const p of book.prayers) expect(p.text.endsWith('Amen.'), p.id).toBe(true);
     for (const p of short) expect(p.text.length, p.id).toBeLessThanOrEqual(130);
-    // The Lord's Prayer is Matthew 6:9-13 in the King James Version, word for word (never reworded).
+    // The Lord's Prayer is the traditional "trespasses" wording Jay chose (Nov 25), never reworded.
     const lords = book.prayers.find((p) => p.id === 'lords-prayer')!;
-    expect(lords.text.startsWith('Our Father which art in heaven, Hallowed be thy name.')).toBe(true);
-    expect(lords.text).toContain('forgive us our debts, as we forgive our debtors');
+    expect(lords.text.startsWith('Our Father, who art in heaven, hallowed be thy name;')).toBe(true);
+    expect(lords.text).toContain('forgive us our trespasses, as we forgive those who trespass against us');
+    expect(lords.text.endsWith('for ever and ever. Amen.')).toBe(true);
   });
 
   it('says what prayer is and what it is not, above the prayers', () => {
