@@ -33,6 +33,7 @@
     { "id": "scared", "title": "When I'm scared", "text": "God, I feel scared. Please stay close to me. Help me be brave and remember I am not alone. Amen." },
     { "id": "sorry", "title": "I'm sorry", "text": "God, I'm sorry for what I did wrong. Please forgive me. Help me make it right and do better. Amen." },
     { "id": "someone-else", "title": "For someone else", "text": "God, please be with my friend. Help them and let them know they are loved. Amen." },
-    { "id": "bedtime", "title": "Bedtime", "text": "God, thank you for this day. Watch over me and my family tonight. Give us good rest. Amen." }
+    { "id": "bedtime", "title": "Bedtime", "text": "God, thank you for this day. Watch over me and my family tonight. Give us good rest. Amen." },
+    { "id": "lords-prayer", "title": "The Lord's Prayer", "source": "The traditional wording said aloud in church (trespasses). Jay chose this wording on Nov 25, 2026. Never reworded.", "text": "Our Father, who art in heaven, hallowed be thy name; thy kingdom come; thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil. For thine is the kingdom, and the power, and the glory, for ever and ever. Amen." }
   ]
 }
