@@ -43,7 +43,9 @@ export function playChapterOneEnd(h: ChapterOneEndHost): void {
   );
   h.addScreen(f.ui);
 
-  const spot = { x: h.hero.x, y: h.hero.y - T * 2.6 };
+  // The middle of what the player sees (the hero may stand near a wall), a little above centre.
+  const view = s.cameras.main.worldView;
+  const spot = { x: view.centerX, y: view.centerY - T * 0.6 };
   const shard = world(lightShard(s, T));
   shard.setPosition(spot.x, spot.y).setAlpha(0).setScale(0.2);
 
