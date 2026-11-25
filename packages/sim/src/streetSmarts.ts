@@ -14,7 +14,8 @@ export interface ScenarioChoice {
 /** The cut-scene moves a stage cue can make (Nov 24: Street Smarts plays like a cut scene). */
 export const STAGE_ACTIONS = ['place', 'walk', 'face', 'emote', 'anim', 'hide', 'show', 'camera', 'pause'] as const;
 export type StageAction = (typeof STAGE_ACTIONS)[number];
-export const STAGE_EMOTES = ['question', 'toy', 'hearts', 'sound'] as const;
+/** 'shout' shows the cue's own words in a big bubble ("NO!"); 'message' is a chat bubble over a phone or tablet. */
+export const STAGE_EMOTES = ['question', 'toy', 'hearts', 'sound', 'shout', 'message', 'ball', 'candy'] as const;
 export const STAGE_DIRS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'] as const;
 
 /**
@@ -33,6 +34,8 @@ export interface StageCue {
   secs?: number;
   speed?: 'walk' | 'hurry';
   with?: boolean;
+  /** The words in a 'shout' bubble. */
+  text?: string;
 }
 
 export interface ScenarioLine {
@@ -101,6 +104,7 @@ export function loadScenario(data: unknown): Scenario {
     if (c.do === 'emote') {
       if (!(STAGE_EMOTES as readonly string[]).includes(String(c.emote))) throw bad(`unknown emote "${c.emote}"`);
       if (c.who === undefined && typeof c.to !== 'string') throw bad('emote needs "who" or "to"');
+      if (c.emote === 'shout' && (typeof c.text !== 'string' || c.text.trim() === '')) throw bad('a shout needs "text"');
     }
     if (c.do === 'anim' && typeof c.anim !== 'string') throw bad('anim needs "anim"');
     if (c.do === 'camera' && (!Array.isArray(c.fit) || c.fit.length === 0)) throw bad('camera needs "fit"');
