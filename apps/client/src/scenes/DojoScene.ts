@@ -829,8 +829,9 @@ export class DojoScene extends Phaser.Scene {
       return this.storyWait(STORY.ch2.decorate);
     }
     if (step === 'ch2-look') {
+      // The Look button stays on screen (play mode) so its gold ring shows; Next or Look both move on.
       this.storyRing = 'Look';
-      this.mode = 'arriving';
+      this.mode = 'play';
       this.renderUi();
       this.storyBits.push(
         senseiBubble(this, STORY.ch2.look, () => {
@@ -936,6 +937,11 @@ export class DojoScene extends Phaser.Scene {
   private changeLook(): void {
     if (this.leaving || this.mode !== 'play') return;
     this.leaving = true;
+    // Chapter 2's Look step: trying Look counts, so coming back goes on to the Training Station.
+    if (this.profile.story.step === 'ch2-look') {
+      this.profile.story.step = 'ch2-board';
+      writeSave(this.profile);
+    }
     this.cameras.main.fadeOut(250, 10, 8, 16);
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Create', { first: false }));
   }

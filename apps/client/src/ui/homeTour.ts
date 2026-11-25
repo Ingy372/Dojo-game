@@ -45,7 +45,8 @@ export function senseiBubble(scene: Phaser.Scene, line: string, onNext?: () => v
   // Grok playtest Nov 23 (B5): the box grew with each line, so the Next button jumped and taps missed it.
   // Room for at least three lines keeps the button in one place for the usual short lines.
   const probe = scene.add.text(0, 0, ['A', 'A', 'A'].join('\n'), style);
-  const textH = Math.max(text.height, probe.height);
+  // A line with no button (a "walk there" stop) keeps only its own height, so it covers less of the room.
+  const textH = onNext ? Math.max(text.height, probe.height) : text.height;
   probe.destroy();
   const pad = 14;
   const btnH = onNext ? MIN_TAP + 8 : 0;
