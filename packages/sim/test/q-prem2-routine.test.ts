@@ -1,5 +1,7 @@
 // Q-PREMIUM-2 routine fixes: small source/pure checks that hold each fix in place.
 import { describe, expect, it } from 'vitest';
+import type { RequirementStatus } from '../src';
+import { shortName } from '../../../apps/client/src/ui/homeLayout';
 import { MOVEMENT, circleHitsWall, createWorld, loadInsideRoom, stepWorld, type Vec2 } from '../src';
 import insideJson from '../../../content/dojo/action-zone/inside-room.json';
 import pathWords from '../../../content/settings/path.json';
@@ -61,8 +63,11 @@ describe('Q-PREMIUM-2 L3 Board wording', () => {
     expect(s).toMatch(/PW\.classes/);
   });
   it('long lesson names shorten Self-Defense to Defense', () => {
-    expect(s).toMatch(/'Self-Defense '/);
-    expect(s).toMatch(/'Defense '/);
+    // Behaviour, not source text (Nov 24 night): the rule moved to ui/homeLayout.ts.
+    const lock = (name: string) => shortName({ name } as RequirementStatus);
+    expect(lock('Self-Defense 6')).toBe('Defense 6');
+    expect(lock('Kick Combo 2')).toBe('Kick 2');
+    expect(lock('Basic Form 1')).toBe('Basic Form 1');
   });
 });
 

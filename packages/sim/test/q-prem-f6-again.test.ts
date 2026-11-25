@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { AGAIN_CLEAR, lastRunLayout, pinnedAgain } from '../../../apps/client/src/ui/lastRun';
 import { MIN_TAP, S1, S2 } from '../../../apps/client/src/ui/tokens';
 
-const src = Object.values(import.meta.glob(['../../../apps/client/src/scenes/HomeScene.ts'], { query: '?raw', import: 'default', eager: true }))[0] as string;
+// HomeScene plus the drawing helpers moved out of it (ui/homeDraw.ts, Nov 24 night).
+const src = Object.values(import.meta.glob(['../../../apps/client/src/scenes/HomeScene.ts', '../../../apps/client/src/ui/homeDraw.ts'], { query: '?raw', import: 'default', eager: true })).join('\n') as string;
 
 // HomeScene (Q-PREM-F6, Q-PREM-F8): pad = 8 under LEFT_FULL_H tall (else 16), panel top = pad + 46, panelH = height - top - pad,
 // the scroll window is panelH - 20, Last run contents get at least PANEL_FULL_H (277), and the scroll
