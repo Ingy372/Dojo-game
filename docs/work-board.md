@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-11-24 by Claude Code.
+Last updated: 2026-11-24 (night) by Claude Code.
 
 **What this file is:** the one list of open work. Each item has an ID, an owner and what it waits on. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
 
@@ -25,7 +25,7 @@ Last updated: 2026-11-24 by Claude Code.
 | CW-1 | Line endings, the type-check error, automatic checks on GitHub, Class Chest gear limit. | Done (branch `claude/first-week-fixes`) |
 | CW-2 | CLAUDE.md, this board, decisions and progress updated for the hand-over. | Done |
 | CW-3 | Full hands-on playthrough on small and large phone sizes (new student, White, Yellow, Orange profiles); list every bug and rough spot. | Done Nov 22: `docs/reviews/playtest-2026-11-22.md` (8 fixes on branch `claude/playthrough-fixes`, 7 polish items for Jay) |
-| CW-4 | Measure the download and what loads at start; load art per belt if it isn't already. | Next |
+| CW-4 | Measure the download and what loads at start; load art per belt if it isn't already. | Done Nov 24 night: fights load only their belt's monsters (`docs/reviews/overnight-2026-11-24.md`); branch `claude/overnight-polish` |
 
 ## 2a. Jay's overnight list (Nov 17-18)
 
@@ -86,7 +86,7 @@ Jay has a few more visuals to list here.
 | GP-3 | No automatic blocking (Mash guard off; Guided enemies 0.7) | Built Nov 24; waits on Jay's phone test |
 | GP-4 | Town mini map and door signs with pictures (no Home button, Jay) | Built Nov 24; icons wait on Jay's OK |
 | GP-5 | Kata Watch first (voice) and Hint (pays 3 coins) | Built Nov 24; words wait on Jay's OK |
-| GP-6 | Re-measure the coin table with BALANCE=1 (fights changed) | Next |
+| GP-6 | Re-measure the coin table with BALANCE=1 (fights changed) | Done Nov 24 night; coins fine, but beginners on Standard and mashers lose almost every run: Jay's call (overnight report) |
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 
@@ -102,7 +102,7 @@ Jay has a few more visuals to list here.
 
 Order to be agreed with Jay after CW-3. Candidates:
 - Replace the marked placeholder words, rings and icons.
-- Split `GameScene.ts` and `HomeScene.ts` into smaller pieces; turn source-wording checks into behaviour tests.
+- Split `GameScene.ts` and `HomeScene.ts` into smaller pieces; turn source-wording checks into behaviour tests. (Started Nov 24 night: effects, chest reveal, Home helpers. The rest waits until `claude/tutorial-overhaul` lands.)
 - Game feel and menus, screen by screen, from the CW-3 notes.
 - Art attempts (Jay asked Claude to try), starting small.
 

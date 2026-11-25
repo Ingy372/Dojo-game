@@ -1494,3 +1494,12 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - This folder was shared with the tutorial session, and one commit landed on its branch by accident. The work moved to its own folder (`../Dojo-game-street`), and the tutorial session was told.
 - **On the live link (Nov 24, Jay: "add it to the live game").**
 - **Next:** Jay plays the five lessons on his phone. He can change any words or art, and answer the three check questions in decisions.md.
+
+## Overnight polish (2026-11-24 night, branch `claude/overnight-polish`)
+- Jay asked for the four jobs that need no decisions from him. Full report: `docs/reviews/overnight-2026-11-24.md`.
+- **CW-4:** a Tower fight loads only the monsters its belt's floors can bring (`floorEnemyIds` in the sim, `enemyArtPacks` in the client). A White belt fight no longer loads the Orange kitchen and the Hearth Cook (about 20 MB, around 200 MB of graphics memory). The whole game is about 235 MB, almost all pictures.
+- **GP-6:** coin table re-measured; game coins unchanged. Found: young beginners on Standard and button-mashers on any setting lose almost every run since automatic blocking went off. Jay's call.
+- **Split:** the fight effects (`fx/fightFx.ts`), the chest reveal (`ui/chestReveal.ts`) and the Home helpers (`ui/homeDraw.ts`, `ui/homeLayout.ts` with behaviour tests) moved out of the two big scenes. The rest waits for the tutorial branch.
+- **Belts 4-10:** the L11 room checker is fixed (all 56 rooms pass); about 16,000 simulated room plays with every set on found no crashes or stuck rooms. The blocker is the seven bosses' art.
+- 1,773 tests pass; type checks and both builds pass; checked in the browser (White and Orange fights, effects, chest reveal, Training Board, Book and kata steps).
+- **Next:** Jay reads the report; decides on the Standard difficulty gap for beginners; OK to copy this branch to `main`. Noticed: Keon's "power arrives later" line is out of date; the tutorial branch clashes with `main` on the Street Smarts files.

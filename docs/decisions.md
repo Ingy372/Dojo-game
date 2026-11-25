@@ -2239,3 +2239,10 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
   - the line "Don't tell your parents. It's our secret." (online lesson);
   - "Push them" as a wrong answer;
   - Sensei's end lines.
+
+## Overnight polish (2026-11-24 night, Claude Code)
+- **Fights load only their belt's monsters (CW-4).** `floorEnemyIds(content, tier, tutorial, extraRooms)` lists every enemy a floor can bring, plus boss helpers and split pieces; the fight loads only those monsters' own picture packs. The practice room still loads everything. The White belt pack (`enemies-t1`) always loads, because Orange floors use the Brute too.
+- **Picture compression stays lossless.** Lossy quality 90 would save only about 20% of the download, which isn't worth softer art.
+- **The coin table test records the new measurements (GP-6).** It records what runs pay; no coin numbers in the game changed.
+- **The big-file split stops at self-contained pieces for now.** About 36 tests check the code's wording, and the tutorial branch edits the middle of GameScene, so the combat-event block waits until that branch lands. New helpers go in files with behaviour tests.
+- **The L11 room checker stands in only for missing Guardians and checks with every set on.**
