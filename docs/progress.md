@@ -1468,3 +1468,4 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - Stage 2 (green to brown): tools #16–40 with the Injured status, kicks 4–7 and the second kick button, kata moves for David and Goliath, Pinon 1–3, Nahanchi, Possi. Content draft first.
 - New Blender art for the kata moves and kicks (stand-in motions for now).
 - Cleanup later: remove `kata-powers.json` and the Seal evolution words once old saves no longer need them.
+- **Copied to `main` with Jay's OK (Nov 24):** the live link now has the Tool Belt, the KATA button and the damage shift.
