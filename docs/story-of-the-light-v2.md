@@ -1,6 +1,6 @@
 # Dojo Ascent: The Story of the Light (version 2, patched draft)
 
-Nov 25, 2026 · **Approved by Jay, Nov 25.** Not built into the game yet; it goes in one piece at a time, as listed at the end of version 1.
+Nov 25, 2026 · **Approved by Jay, Nov 25.** Not built into the game yet; it goes in one piece at a time.
 
 This is the Nov 25 story with its holes patched and its thin spots filled. The heart, the Gospel order, the chapters and the ending are unchanged. Everything added or changed is marked **[New]** or **[Changed]**, and the reasons are in "What was patched and why" at the bottom.
 
