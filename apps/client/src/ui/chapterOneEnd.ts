@@ -1,5 +1,5 @@
 // Chapter 1's ending (Story Chapters, Nov 24): after the tutorial Keeper falls, a piece of the light pops out,
-// the Masked Shade drops in, takes it ("You're not ready.") and vanishes in smoke. About 11 seconds, Skip any time.
+// Eli (still the Masked Shade code stand-in) drops in, takes it ("I have to fix this myself.") and vanishes in smoke. About 11 seconds, Skip any time.
 // Played in the Keep with the room still on screen. Words in content/tutorial/chapters.json (ch1End).
 import Phaser from 'phaser';
 import { sfx } from '../audio/Sfx';

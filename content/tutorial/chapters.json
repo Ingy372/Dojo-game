@@ -1,5 +1,5 @@
 {
-  "_note": "Story Chapters (Jay, Nov 24): docs/superpowers/specs/2026-11-24-tutorial-overhaul-design.md. DRAFT words by Claude, placeholders until Jay OKs them. Every line 8 words or fewer. {player} = first name.",
+  "_note": "Story Chapters (Jay, Nov 24): docs/superpowers/specs/2026-11-24-tutorial-overhaul-design.md. DRAFT words by Claude, placeholders until Jay OKs them; the intro, ch1End and ch2 mess lines now use the approved Story of the Light v2 (docs/story-of-the-light-v2.md, Nov 25). Every line 8 words or fewer. {player} = first name.",
   "placeholder": true,
   "chapters": [
     { "n": 1, "title": "The Broken Light" },
@@ -17,14 +17,14 @@
   },
   "intro": {
     "piece": "One small piece fell to a student.",
-    "chosen": "The light chose you."
+    "chosen": "The light found you. It wasn't luck."
   },
   "ch1End": {
     "shard": "The Keeper dropped a piece of light!",
     "who": "Who's that?",
-    "taunt": "You're not ready.",
-    "gone": "The Masked Shade. He wants the light.",
-    "senseiAfter": "Then we get ready. Together."
+    "taunt": "I have to fix this myself.",
+    "gone": "That was Eli. He was my student.",
+    "senseiAfter": "We're going to bring him home."
   },
   "ch1Home": {
     "welcome": "Welcome home, {player}! This dojo is yours.",
@@ -33,8 +33,8 @@
     "after": "Then come home. I'll show you more."
   },
   "ch2": {
-    "mess1": "While you climbed, someone came visiting...",
-    "mess2": "Shades! They made a big mess.",
+    "mess1": "When the light is missing,",
+    "mess2": "a room gets dark fast.",
     "sweep": "Walk over the dust to sweep it up.",
     "swept": "Dust is only for looks. It never hurts.",
     "decorate": "Tap Decorate. Put your trophy somewhere.",
