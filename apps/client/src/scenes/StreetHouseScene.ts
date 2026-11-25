@@ -11,7 +11,7 @@ import { button } from '../ui/button';
 import { addExitCue } from '../ui/exitCue';
 import { fill } from '../ui/pathScreen';
 import { speechBubble, type Bubble } from '../ui/speechBubble';
-import { FONT, MIN_TAP, S2, S3, TYPE, crisp, view } from '../ui/theme';
+import { FONT, S2, S3, TYPE, crisp, view } from '../ui/theme';
 import { WalkUpButton } from '../ui/walkUpButton';
 import { SCENARIOS } from './StreetSmartsScene';
 import { TILE, WalkScene, type Facing } from './WalkScene';
@@ -217,21 +217,27 @@ export class StreetHouseScene extends WalkScene {
   private openLessons(): void {
     sfx.tap();
     const list = Object.values(SCENARIOS);
+    // Nov 24: five lessons. Two columns on a landscape phone so the board fits a 375-high screen; the whole
+    // card is the Play button.
+    const { width } = view(this);
+    const cols = width >= 600 ? 2 : 1;
     const row = 70;
-    const c = this.card(WORDS.lessonsTitle, 440, 96 + list.length * (row + 6));
+    const gap = 8;
+    const rows = Math.ceil(list.length / cols);
+    const c = this.card(WORDS.lessonsTitle, cols === 2 ? 760 : 440, 84 + rows * (row + gap));
     c.layer.add(this.label(c.x + c.w / 2, c.y + 44, WORDS.lessonsLine, TYPE.body, '#cfd8ff'));
+    const cellW = (c.w - 2 * S3 - (cols - 1) * gap) / cols;
     list.forEach((sc, i) => {
-      const y = c.y + 72 + i * (row + 6);
-      const g = this.add.graphics();
-      g.fillStyle(0x2a2650, 1).fillRoundedRect(c.x + S3, y, c.w - 2 * S3, row, 10);
-      c.layer.add(g);
-      const title = sc.topic.charAt(0).toUpperCase() + sc.topic.slice(1);
-      c.layer.add(this.label(c.x + S3 + 12, y + 5, title, TYPE.body, '#ffffff', true, c.w - 2 * S3 - 130, 0));
-      c.layer.add(this.label(c.x + S3 + 12, y + row - 22, this.starsLine(sc.id, sc.maxStars), TYPE.label, '#ffd166', false, undefined, 0));
-      button(this, { x: c.x + c.w - S3 - 100, y: y + (row - MIN_TAP) / 2, w: 92, h: MIN_TAP, label: WORDS.play, color: 0x2a8a5a, size: TYPE.title, onTap: () => {
+      const x = c.x + S3 + (i % cols) * (cellW + gap);
+      const y = c.y + 70 + Math.floor(i / cols) * (row + gap);
+      button(this, { x, y, w: cellW, h: row, label: '', color: 0x2a2650, size: TYPE.title, onTap: () => {
         sfx.tap();
         this.leave('StreetSmarts', { id: sc.id, back: 'StreetHouse' });
       } }, c.layer);
+      const title = sc.topic.charAt(0).toUpperCase() + sc.topic.slice(1);
+      c.layer.add(this.label(x + 12, y + 5, title, TYPE.body, '#ffffff', true, cellW - 70, 0));
+      c.layer.add(this.label(x + 12, y + row - 22, this.starsLine(sc.id, sc.maxStars), TYPE.label, '#ffd166', false, undefined, 0));
+      c.layer.add(this.label(x + cellW - 14, y + row / 2 - 12, `${WORDS.play} ▶`, TYPE.body, '#7fe0a8', true, undefined, 1));
     });
   }
 

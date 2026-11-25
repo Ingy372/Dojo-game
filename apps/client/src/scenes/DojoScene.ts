@@ -57,6 +57,7 @@ import { Companions, companionPacks } from '../game/companion';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
 import { TOUR, senseiBubble, tourGlow, tourLine } from '../ui/homeTour';
+import STORY from '../../../../content/tutorial/chapters.json';
 import { DIFFICULTY_TEXT, ensureDifficulty } from '../game/difficulty';
 import { PLAY_TIME_TEXT, touchPlayClock } from '../game/playTime';
 import { bankRun, savedRun } from '../game/runSave';
@@ -65,7 +66,7 @@ import MOTION_TEXT from '../../../../content/settings/motion.json';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { baseFeed, currentTraining } from '../game/student';
 import BELT_TEXT from '../../../../content/settings/belt-entry.json';
-import { applyBeltEntry, entryRank, feedEntry, fixBeltEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
+import { applyBeltEntry, finishChapter, entryRank, feedEntry, fixBeltEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
 import { button as roundButton } from '../ui/button';
 import { GREEN, MIN_TAP, RADIUS } from '../ui/tokens';
 import { addDevDays, devDayOffset, localDay, noteLessonSeen, takeLesson } from '../game/lessons';
@@ -685,6 +686,7 @@ export class DojoScene extends Phaser.Scene {
     if (tour === 'dojo' || tour === 'town') return;
     if (tour === 'board') {
       this.profile.homeTour = null;
+      finishChapter(this.profile.story, 1);
       return this.leaveTo('Home', { view: 'board', tourEnd: true });
     }
     this.leaveTo('Home', { view: 'board' });
@@ -708,23 +710,23 @@ export class DojoScene extends Phaser.Scene {
       return;
     }
     if (stop !== 'dojo') return;
+    // Story Chapters (Nov 24): Chapter 1 ends at home with the welcome and the station; the town walk moved to
+    // Chapter 4 (The Real Dojo). The board stop opens the Training Board and finishes Chapter 1.
     const name = this.training.displayName.split(' ')[0];
-    const lines = TOUR.dojo.map((l) => tourLine(l, { player: name }));
+    const lines = [tourLine(STORY.ch1Home.welcome, { player: name })];
     const say = (i: number): void => {
       this.mode = 'arriving';
       if (i < lines.length) {
         senseiBubble(this, lines[i], () => say(i + 1));
         return;
       }
-      const glow = station();
+      station();
       this.tourLook = { x: STATION.x, y: STATION.footY };
-      senseiBubble(this, TOUR.station, () => {
-        glow.destroy();
+      senseiBubble(this, STORY.ch1Home.station, () => {
         this.tourLook = null;
-        const door = CONTENT.dojo.room.doors[0];
-        this.tourGlowAt(door.x, door.y - 0.45);
-        this.tourDoorWait = true;
-        this.tourBits.push(senseiBubble(this, TOUR.toTown));
+        this.profile.homeTour = 'board';
+        writeSave(this.profile);
+        this.tourBits.push(senseiBubble(this, TOUR.toStation, undefined, TOUR.next, 'bottom'));
         this.controls.reset();
         this.quietUntil = this.time.now + ARRIVAL_QUIET_MS;
         this.mode = 'play';

@@ -51,6 +51,7 @@ import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith,
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { TOUR, senseiBubble } from '../ui/homeTour';
+import STORY from '../../../../content/tutorial/chapters.json';
 import { GLASS, boardBackdrop, glassPanel, heroPedestal, levelBadge } from '../ui/boardTheme';
 import { currentTraining, seedLoadout, selectProfile, shortDate } from '../game/student';
 import { hex } from '../ui/belt';
@@ -272,7 +273,8 @@ export class HomeScene extends Phaser.Scene {
       const wait = this.time.addEvent({ delay: 300, loop: true, callback: () => {
         if (this.celebrating) return;
         wait.remove();
-        senseiBubble(this, TOUR.boardOpen, () => {}, TOUR.ok);
+        // Story Chapters (Nov 24): Chapter 1's last lines; the next chapter waits for one climb of their own.
+        senseiBubble(this, STORY.ch1Home.climb, () => senseiBubble(this, STORY.ch1Home.after, () => {}, TOUR.ok), TOUR.next);
       } });
     }
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.render, this));
