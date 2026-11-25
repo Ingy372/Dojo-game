@@ -2220,3 +2220,15 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
   - **Seals are gone for players:** the Fighting Style screen's Seal cards are now Tool Belt pockets (cards say "Tool"; one more locked pocket says "Learn a kata!"). The New tool card follows a self-defense sign-off and is smaller than the sign-off card. Sign-off lists say "New tool for your Tool Belt" and "Kata move + a Tool Belt pocket". The Book names each technique's tool. Seal stages and evolution cards no longer show (the rules stay for old saves).
   - **Words Claude wrote that Jay hasn't seen yet:** the three Fighting Style help lines ("Tap a slot, then pick a tool." / "Every move you learn in class is a new tool." / "Pockets full? Pick a tool to swap."), "Learn a kata!", and the two sign-off list labels above.
   - The practice bots now press KATA (a kid or masher when one enemy is close; a smart player for two or more).
+
+## Story Chapters: the tutorial overhaul (2026-11-24, branch `claude/tutorial-overhaul`)
+Jay: explain every system through the tutorial so nothing is hidden, with a story, a strong hook and cut scenes, in digestible pieces. Design: `docs/superpowers/specs/2026-11-24-tutorial-overhaul-design.md`; plan: `docs/superpowers/plans/2026-11-24-story-chapters-stage-1.md`.
+- **Six chapters (Jay approved):** 1 The Broken Light, 2 Home, Sweet Dojo, 3 Tools of the Trade, 4 The Real Dojo, 5 The Path Up, 6 Friends in Town. About 5 minutes each, each ending on a hook.
+- **Play-paced (Jay picked A):** a chapter opens after one Tower climb of the player's own since the last chapter (tutorial floors and test links don't count). This **overrides the "one new system per session/day" rule for story chapters**; Welcome Week and the first-time lessons keep their own rules.
+- **The story hook:** one piece of the broken light falls to the hero ("The light chose you."); the **Masked Shade** (draft name) leads the Shades and wants it. Long mystery for later: he wears a faded white belt (a student who quit). He is a **code stand-in** until a Blender model is made for Jay's OK.
+- **Saved on the profile** as `story` (chapters done, climbs since the last one, the open chapter's step), so a chapter resumes after the app closes. Saves that already played start with Chapter 1 done.
+- **The Home Tour is replaced:** after the tutorial floor, Sensei welcomes the student home and sends them to the Training Station ("Climb once on your own."); the town walk moves to Chapter 4.
+- **Chapter card:** when a chapter is ready, the Home Dojo shows "Chapter n: Title" with Start and Later; Later keeps it waiting.
+- **Chapter 2's mess is scripted and looks-only:** dust up to 60% of the normal cap, cleaned like any dust (and earns Calm Mind like any clean). Nothing is removed or blocked.
+- Sensei lines with no button now keep only their own height (all walk-there stops), so they cover less of the room.
+- All chapter words are Claude's drafts in `content/tutorial/chapters.json` (`placeholder: true`), 8 words or fewer each, waiting on Jay's OK.

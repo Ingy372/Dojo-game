@@ -117,3 +117,12 @@ Order to be agreed with Jay after CW-3. Candidates:
 ## 5. After the beta, toward the April launch
 
 From `drafts/planning/R-OVERHAUL-LAUNCH.md`: L11 belts 4–10 in the Tower (floor sets are built but switched off), L12 the DojoForge connection and server saves (needs Nic; asks collected in `drafts/planning/NIC-ASKS.md`), L9 Sensei's Trials, L17 Street Smarts (Jay approves each script), L19 voice on cards, L2b Stars, kata powers through Nahanchi, L15 gear looks, L18 technique videos, L3 chapters.
+
+## 4b. Tutorial overhaul: Story Chapters (Jay, Nov 24)
+
+| ID | What | Status |
+|---|---|---|
+| SC-1 | Stage 1: chapter engine, the hook in the opening, Chapter 1 ending, Chapter 2 | Built on `claude/tutorial-overhaul`; waits on Jay's preview and OK of the words |
+| SC-2 | Stage 2: Chapter 3 (Tool Belt, KATA) and Chapter 4 (town, Action Zone, pro shop, kata practice) | Waits on SC-1 OK |
+| SC-3 | Stage 3: Chapters 5 and 6, "What's ahead" in the Book, Story replay shelf | Waits on SC-2 |
+| SC-4 | Masked Shade Blender model (replaces the code stand-in) | Waits on Jay |

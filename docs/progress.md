@@ -1475,3 +1475,10 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - New Blender art for the kata moves and kicks (stand-in motions for now).
 - Cleanup later: remove `kata-powers.json` and the Seal evolution words once old saves no longer need them.
 - **Copied to `main` with Jay's OK (Nov 24):** the live link now has the Tool Belt, the KATA button and the damage shift.
+
+## Story Chapters, stage 1 (2026-11-24, branch `claude/tutorial-overhaul`)
+- Jay asked for a full tutorial overhaul: every system explained, a story with a hook, cut scenes, digestible pacing. He approved six play-paced chapters (details in decisions.md).
+- **Built:** the chapter rules and saving (tested); the opening cut scene now has the hook (a light piece falls to the hero); Chapter 1's new ending (the Masked Shade takes the light piece in the Keep, Skip works); the home stop goes straight to the Training Station; the chapter card; **Chapter 2** (the Shades' mess cut scene, sweeping, decorating, Look, then Gear, Wear best and the Book on the Training Board).
+- 1,774 tests pass; type checks and both builds pass. Checked in the browser at 844 x 390: the chapter card, the whole of Chapter 2 including resuming after a reload, Chapter 1's ending cut scene and Skip. Not played end to end in the browser: a brand-new player's full tutorial floor into the new ending (the pane was hidden, which slows the game's clock).
+- Note: another session shared this folder for a while; commit 4eadffec (Street Smarts lessons 2-5) is that session's work and it will bring it to `main` itself.
+- **Next:** Jay plays the preview: OK (or changes) for the story, the Masked Shade stand-in and the chapter words. Then stage 2: Chapters 3 (Tool Belt) and 4 (the town and the Action Zone).
