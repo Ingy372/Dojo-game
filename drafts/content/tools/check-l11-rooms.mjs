@@ -41,10 +41,14 @@ for (const r of drafts) { try { loadRoom(r); } catch (e) { fail(`${r.id}: ${e.me
 const liveEnemies = dir('content/enemies');
 const liveIds = new Set(liveEnemies.map((e) => e.id));
 const keeper = liveEnemies.find((e) => e.id === 'floor-keeper');
-const stand = Object.values(GUARDIAN).map((id) => ({ ...structuredClone(keeper), id, name: id }));
+// Only Guardians that have no file yet get a stand-in (L11-B1 built all seven on Nov 17, so usually none).
+const stand = Object.values(GUARDIAN).filter((id) => !liveIds.has(id)).map((id) => ({ ...structuredClone(keeper), id, name: id }));
 const liveRooms = dir('content/rooms');
-const raw = (rooms, enemies) => ({
-  rooms, enemies,
+// L11-B2a: the floor-set switch; the "after" check turns every set on, as L11-B2 will when the rooms go live.
+const floorSetsFile = json('content/settings/floor-sets.json');
+const allOn = { ...floorSetsFile, sets: Object.fromEntries(Object.keys(floorSetsFile.sets).map((k) => [k, true])) };
+const raw = (rooms, enemies, floorSets = floorSetsFile) => ({
+  rooms, enemies, floorSets,
   insights: json('content/insights/insights.json'), gear: json('content/loot/gear.json'), drops: json('content/loot/drops.json'),
   abilities: json('content/abilities/abilities.json'), sealFamilies: json('content/abilities/seal-families.json'),
   strikes: json('content/abilities/strikes.json'), kataPowers: json('content/abilities/kata-powers.json'),
@@ -54,7 +58,7 @@ const raw = (rooms, enemies) => ({
 });
 const before = loadContent(raw(liveRooms, liveEnemies));
 let after;
-try { after = loadContent(raw([...liveRooms, ...drafts], [...liveEnemies, ...stand])); } catch (e) { fail('loadContent: ' + e.message); }
+try { after = loadContent(raw([...liveRooms, ...drafts], [...liveEnemies, ...stand], allOn)); } catch (e) { fail('loadContent: ' + e.message); }
 
 if (after) {
   for (const t of [1, 2, 3]) {
