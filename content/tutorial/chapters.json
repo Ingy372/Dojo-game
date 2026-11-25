@@ -1,0 +1,49 @@
+{
+  "_note": "Story Chapters (Jay, Nov 24): docs/superpowers/specs/2026-11-24-tutorial-overhaul-design.md. DRAFT words by Claude, placeholders until Jay OKs them. Every line 8 words or fewer. {player} = first name.",
+  "placeholder": true,
+  "chapters": [
+    { "n": 1, "title": "The Broken Light" },
+    { "n": 2, "title": "Home, Sweet Dojo" },
+    { "n": 3, "title": "Tools of the Trade" },
+    { "n": 4, "title": "The Real Dojo" },
+    { "n": 5, "title": "The Path Up" },
+    { "n": 6, "title": "Friends in Town" }
+  ],
+  "card": {
+    "chapter": "Chapter {n}",
+    "senseiWaits": "Sensei has something to show you.",
+    "start": "Start",
+    "later": "Later"
+  },
+  "intro": {
+    "piece": "One small piece fell to a student.",
+    "chosen": "The light chose you."
+  },
+  "ch1End": {
+    "shard": "The Keeper dropped a piece of light!",
+    "who": "Who's that?",
+    "taunt": "You're not ready.",
+    "gone": "The Masked Shade. He wants the light.",
+    "senseiAfter": "Then we get ready. Together."
+  },
+  "ch1Home": {
+    "welcome": "Welcome home, {player}! This dojo is yours.",
+    "station": "This station takes you to the Tower.",
+    "climb": "Climb once on your own.",
+    "after": "Then come home. I'll show you more."
+  },
+  "ch2": {
+    "mess1": "While you climbed, someone came visiting...",
+    "mess2": "Shades! They tipped everything over.",
+    "sweep": "Tap Sweep and clean each dusty spot.",
+    "swept": "Dust is only for looks. It never hurts.",
+    "decorate": "Tap Decorate. Put your trophy somewhere.",
+    "decorated": "Every piece here is earned. Never bought.",
+    "look": "Tap Look any time to change your style.",
+    "board": "Now walk to your Training Station.",
+    "gear": "Gear from chests goes in your Bag.",
+    "wearBest": "Wear best puts on your strongest gear.",
+    "book": "The Book keeps your moves, monsters and lessons.",
+    "done": "Great work. Climb again, then find me."
+  }
+}
