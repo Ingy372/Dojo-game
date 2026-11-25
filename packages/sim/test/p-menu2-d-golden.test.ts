@@ -19,6 +19,8 @@
 // Tool Belt Task 6 re-captured it on purpose: each setup gains its "kataMove" (Sensei picks the newest earned); the bot never presses KATA, so every run is the same.
 // Tool Belt Task 7 re-captured it on purpose: with Sensei's Pick on and empty pockets, the newest earned tools now come along, so tools fire and the fights change.
 // Tool Belt Task 8 re-captured it on purpose: the bot now presses KATA (two or more enemies close), so the fights change.
+// Nov 25 (Yellow Guardian) re-captured it on purpose: Yellow floors now use their own Sunrise Garden rooms and the Loom Keeper,
+// so only the yellow runs change; every setup and every other run is byte-identical.
 import { describe, expect, it } from 'vitest';
 import { captureGolden } from './golden-capture';
 import golden from '../../../fixtures/golden/p-menu2-d-default-run.json';

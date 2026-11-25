@@ -1,0 +1,94 @@
+{
+  "id": "y-sunrise-race",
+  "name": "Sunrise Race",
+  "kind": "challenge",
+  "minBeltTier": 2,
+  "floorSet": "sunrise-garden",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "challenge": {
+    "seconds": 90,
+    "text": "Clear the room in 90 seconds for a better chest!",
+    "inTimeText": "In time!",
+    "outOfTimeText": "Out of time",
+    "outOfTimeShort": "Out of time"
+  },
+  "earliestRoom": 4,
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#.........C........#",
+    "#..##..........##..#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..##..........##..#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 8,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "brute",
+      "column": 10,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "shield",
+      "column": 14,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 10,
+      "row": 5,
+      "wave": 3
+    }
+  ],
+  "artProps": "A sundial in the middle of a sunny lawn."
+}

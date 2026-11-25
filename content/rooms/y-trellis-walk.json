@@ -1,0 +1,87 @@
+{
+  "id": "y-trellis-walk",
+  "name": "Trellis Walk",
+  "kind": "battle",
+  "minBeltTier": 2,
+  "floorSet": "sunrise-garden",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "earliestRoom": 3,
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..#.............#.#",
+    "#..................#",
+    "#......##..##......#",
+    "#..................#",
+    "#..#.............#.#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 10,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "bopper",
+      "column": 5,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 8,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 10,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "bopper",
+      "column": 15,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 4,
+      "wave": 3
+    }
+  ],
+  "artProps": "Arches of flowering vines over a garden path."
+}

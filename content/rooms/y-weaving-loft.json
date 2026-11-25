@@ -1,0 +1,34 @@
+{
+  "id": "y-weaving-loft",
+  "name": "The Weaving Loft",
+  "kind": "boss",
+  "minBeltTier": 2,
+  "floorSet": "sunrise-garden",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "##########D#########",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........C........#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "loom-keeper",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    }
+  ],
+  "artProps": "Wooden beams, a big loom on the top wall, bolts of grey cloth, spools on the walls. The Loom Keeper fights alone."
+}

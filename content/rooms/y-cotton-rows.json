@@ -1,0 +1,87 @@
+{
+  "id": "y-cotton-rows",
+  "name": "Cotton Rows",
+  "kind": "battle",
+  "minBeltTier": 2,
+  "floorSet": "sunrise-garden",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "earliestRoom": 2,
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#...#....#....#....#",
+    "#..................#",
+    "#..................#",
+    "#...#....#....#....#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 3,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 7,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 17,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "bopper",
+      "column": 11,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "bopper",
+      "column": 5,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 13,
+      "row": 4,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 17,
+      "row": 4,
+      "wave": 3
+    }
+  ],
+  "artProps": "Cotton bushes in tidy rows; baskets of white cotton at the ends."
+}

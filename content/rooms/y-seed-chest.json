@@ -1,0 +1,20 @@
+{
+  "id": "y-seed-chest",
+  "name": "Seed Shed",
+  "kind": "treasure",
+  "minBeltTier": 2,
+  "floorSet": "sunrise-garden",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#..#.....#..#",
+    "#.....C.....#",
+    "#..#.....#..#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Shelves of seed packets and flower pots; the chest is a seed box."
+}

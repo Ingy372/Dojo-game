@@ -1,0 +1,85 @@
+{
+  "id": "y-dye-beds",
+  "name": "Dye Beds",
+  "kind": "battle",
+  "minBeltTier": 2,
+  "floorSet": "sunrise-garden",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..##..##..##..##..#",
+    "#..................#",
+    "#..................#",
+    "#..##..##..##..##..#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "bopper",
+      "column": 10,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 6,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 9,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "bopper",
+      "column": 4,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 15,
+      "row": 4,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 4,
+      "wave": 3
+    }
+  ],
+  "artProps": "Low flower beds in rows: yellow, blue and red flowers grown for dyeing gis."
+}
