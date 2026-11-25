@@ -25,6 +25,7 @@ import {
 import heavyBagJson from '../../../../content/dojo/action-zone/heavy-bag.json';
 import { INSIDE, INSIDE_PACK } from '../game/actionZone';
 import { CONTENT, KATAS, KATA_MOVES } from '../game/content';
+import { PRAYERS } from '../game/prayers';
 import { reducedMotion } from '../game/motion';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
@@ -35,6 +36,7 @@ import { sfx } from '../audio/Sfx';
 import { ActionButtons } from '../input/ActionButtons';
 import { closeX, openBoardReader } from '../ui/boardReader';
 import { KataMenu, KataPad } from '../ui/kataPractice';
+import { PrayerMenu } from '../ui/prayerMenu';
 import { playBow } from '../ui/bow';
 import { addExitCue } from '../ui/exitCue';
 import { StarWall } from '../ui/starWall';
@@ -71,6 +73,10 @@ export const EXIT_CUE_H = 0.8;
 
 /** How close (tiles, from the hero's feet to the thing's footprint) the hero must be for its button. */
 const NEAR = 1.3;
+/** The Bible on the red box (Jay, Nov 25): its picture is drawn at 160 px per tile, and heights show at cos(35 deg). */
+const BIBLE_TEX = 'prop-bible';
+const BIBLE_PPT = 160;
+const RISE = Math.cos((35 * Math.PI) / 180);
 /** Bag practice ends by itself once the hero walks this far from every bag. */
 const TRAIN_LEAVE = 3.5;
 const HEAVY_BAG = loadEnemy(heavyBagJson);
@@ -144,6 +150,7 @@ export class InsideScene extends WalkScene {
   preload(): void {
     super.preload();
     for (const s of INSIDE.spots) if (s.image) this.load.image(`board-${s.image}`, `boards/${s.image}.webp`);
+    if (INSIDE.prayerSpot) this.load.image(BIBLE_TEX, `props/${INSIDE.prayerSpot.image}.png`);
   }
 
   create(data?: unknown): void {
@@ -227,6 +234,7 @@ export class InsideScene extends WalkScene {
         this.standLayer.add(images);
       }
     }
+    this.drawBible();
     // The way out: a glow on the floor in front of the door with an arrow pointing at it, drawn
     // under the hero and the props.
     const [x0, x1] = INSIDE.exit;
@@ -235,6 +243,34 @@ export class InsideScene extends WalkScene {
     // bag tops; the front wall.
     const topLayer = this.add.container(0, 0, tops.flat());
     this.worldLayer.add([floorImg, wallsImg, propsImg, cue, this.standLayer, topLayer, frontWall].filter(Boolean));
+  }
+
+  /** The Bible lies in the middle of the red box's top, with a soft gold glow so it reads as something to walk up to. */
+  private drawBible(): void {
+    const b = INSIDE.prayerSpot;
+    if (!b || !this.textures.exists(BIBLE_TEX)) return;
+    const x = b.center.x * TILE;
+    const y = (b.center.y - b.height * RISE) * TILE;
+    const depth = b.footprint[3] * TILE + 1;
+    const glow = this.add.ellipse(x, y, TILE * 1.25, TILE * 1.25, 0xffe08a, 0.3).setDepth(depth);
+    const book = this.add.image(x, y, BIBLE_TEX).setScale(TILE / BIBLE_PPT).setDepth(depth + 1);
+    this.standLayer.add([glow, book]);
+    if (!reducedMotion()) this.tweens.add({ targets: glow, alpha: 0.08, scale: 1.2, duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+  }
+
+  /** A tap on the Bible walks the hero to the mat in front of it. */
+  private onBible(tile: Vec2): boolean {
+    const b = INSIDE.prayerSpot;
+    if (!b) return false;
+    return Math.abs(tile.x - b.center.x) <= 0.6 && Math.abs(tile.y - (b.center.y - b.height * RISE)) <= 0.75;
+  }
+
+  protected isTapTarget(tile: Vec2): boolean {
+    return this.mode === 'walk' && this.onBible(tile);
+  }
+
+  protected tapTile(tile: Vec2): Vec2 {
+    return this.mode === 'walk' && this.onBible(tile) ? { ...INSIDE.prayerSpot!.approach } : tile;
   }
 
   protected onDraw(heroRow: number): void {
@@ -344,6 +380,11 @@ export class InsideScene extends WalkScene {
     const k = INSIDE.kataSpot;
     if (k && Math.hypot(pos.x - k.center.x, pos.y - k.center.y) <= k.radius) {
       this.walkUp.show('Practice\nKata', () => this.kataMenu());
+      return;
+    }
+    const bible = INSIDE.prayerSpot;
+    if (bible && distToRect(pos, bible.footprint) < NEAR) {
+      this.walkUp.show(PRAYERS.button, () => this.pray());
       return;
     }
     let best: WalkUpSpot | null = null;
@@ -474,6 +515,21 @@ export class InsideScene extends WalkScene {
     this.world.players.p1.path = null;
     this.controls.reset();
     openBoardReader(this, `board-${spot.image}`, () => {
+      this.paused = false;
+      this.mode = 'walk';
+    });
+  }
+
+  // ---------- the Bible on the red box: the prayer menu (Jay, Nov 25) ----------
+
+  private pray(): void {
+    const me = this.world.players.p1;
+    this.mode = 'read';
+    this.paused = true;
+    me.path = null;
+    me.facing = { x: 0, y: 1 };
+    this.controls.reset();
+    new PrayerMenu(this, PRAYERS, () => {
       this.paused = false;
       this.mode = 'walk';
     });

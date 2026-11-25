@@ -43,6 +43,21 @@ export interface InsideRoom {
   matBow: MatBow | null;
   /** Nov 20 (Jay): the middle of the school logo on the floor, where "Practice Kata" is offered; null if the room has none. */
   kataSpot: KataSpot | null;
+  /** Nov 25 (Jay): the Bible on the red box, which opens the prayer menu; null if the room has none. */
+  prayerSpot: PrayerSpot | null;
+}
+
+/** A Bible lying on top of a prop: walking up to it (or tapping it) offers the prayer menu. */
+export interface PrayerSpot {
+  /** The middle of the book on the floor plan (tiles), and how high its base is off the floor (tiles). */
+  center: Vec2;
+  height: number;
+  /** The floor under the book (tiles: [x0, x1, y0, y1]); the button shows when the hero stands near it. */
+  footprint: Rect;
+  /** Where a tap on the book sends the hero (tiles). */
+  approach: Vec2;
+  /** The picture (a file under assets/props/, without the extension). */
+  image: string;
 }
 
 /** A circle on the floor (tiles): standing inside it offers kata practice. */
@@ -245,7 +260,19 @@ export function loadInsideRoom(data: unknown): InsideRoom {
     if (radius <= 0) fail('kataSpot.radius must be above 0');
     kataSpot = { center: { x: num(c[0], 'kataSpot.center[0]'), y: num(c[1], 'kataSpot.center[1]') }, radius };
   }
-  return { room, spawn, exit, spots, foregroundSprites, matBow, kataSpot };
+  let prayerSpot: PrayerSpot | null = null;
+  if (raw.prayerSpot !== undefined) {
+    const p = raw.prayerSpot as Record<string, unknown>;
+    const pair = (v: unknown, what: string): Vec2 => {
+      if (!Array.isArray(v) || v.length !== 2) fail(`${what} must be [x, y]`);
+      return { x: num(v[0], `${what}[0]`), y: num(v[1], `${what}[1]`) };
+    };
+    const approach = pair(p.approach, 'prayerSpot.approach');
+    open({ x: Math.floor(approach.x), y: Math.floor(approach.y) }, 'prayerSpot approach');
+    if (typeof p.image !== 'string' || !p.image) fail('prayerSpot.image must name a picture');
+    prayerSpot = { center: pair(p.center, 'prayerSpot.center'), height: num(p.height, 'prayerSpot.height'), footprint: rect(p.footprintRect, 'prayerSpot.footprintRect'), approach, image: p.image };
+  }
+  return { room, spawn, exit, spots, foregroundSprites, matBow, kataSpot, prayerSpot };
 }
 
 export type ZoneFacing = 'north' | 'south' | 'east' | 'west';

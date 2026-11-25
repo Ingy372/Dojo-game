@@ -1494,3 +1494,10 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - This folder was shared with the tutorial session, and one commit landed on its branch by accident. The work moved to its own folder (`../Dojo-game-street`), and the tutorial session was told.
 - **On the live link (Nov 24, Jay: "add it to the live game").**
 - **Next:** Jay plays the five lessons on his phone. He can change any words or art, and answer the three check questions in decisions.md.
+
+## Nov 25: the Bible and the prayer menu (branch `claude/prayer-bible`)
+
+- A Bible lies in the middle of the red box in the Action Zone. Standing by it on the mat (or tapping it) shows a Pray button.
+- The prayer menu: the note about what prayer is and is not on top, seven prayers to pick under it, each shown large with Back and Read to me. Jay approved the words (details in decisions.md).
+- 1,770 tests pass; type checks and both builds pass. Checked in the browser at 844 x 390 and 667 x 375: the Bible on the box, the Pray button, the menu, a prayer, Back, the X. A tap on the Bible started the hero walking to it; the walk was not watched to the end (the preview pane was hidden, which slows the game's clock).
+- **Next:** Jay tries it on his phone: OK (or changes) for the Bible picture and the menu; then copy to `main` with his OK.
