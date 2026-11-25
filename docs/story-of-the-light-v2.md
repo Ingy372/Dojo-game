@@ -208,7 +208,7 @@ Each part plays at three points: arrival (after the real promotion celebration),
 
 - **Arrival:** the Echo Mask's floors. It echoes every cruel thing ever said about Eli: "You'll never change." **[New]** Some of the echoes are in Mara's voice. She hears them too, and hates how they sound.
 - **[Changed] Middle:** in the group (Sensei, the hero, Eli), Eli shares what scares him most: "What if I break it again?" Later a townsperson asks the hero what Eli said. The hero keeps it in the group (Confidentiality, as the wall words it). **Safety line, so this never clashes with Street Smarts.** Sensei: "Keeping a friend's trust is good. But if a secret could hurt someone, you take it to a grown-up you trust. Eli told his in front of me."
-- **[Changed] Guardian and Gate:** Mara joins the Echo Mask fight uninvited. When it falls, the voices stop. Mara: "I waited all night for you." Eli: "I know. I'm sorry." She puts out her hand; he takes it. Seventh place lit.
+- **[Changed] Guardian and Gate:** Mara joins the Echo Mask fight uninvited. When it falls, the voices stop. Then, back in the town square (the same place she walked away last belt), in front of everyone, Mara: "I waited all night for you." Eli: "I know. I'm sorry." She puts out her hand; he takes it. The square cheers. Seventh place lit. *(Jay, Nov 25: her forgiveness happens in the town square.)*
 - **What kids learn:** God's Son came to save, not to condemn, so we don't keep reminding people of their worst day.
 
 ### Part 8: Brown belt, Starting Over (toward Brown/Black)
@@ -216,7 +216,7 @@ Each part plays at three points: arrival (after the real promotion celebration),
 *Verse:* John 3:3. *Covenant:* Accountability. *Life word:* E, Empathy.
 
 - **Arrival:** Eli walks into the Action Zone dojo, hangs his grey, frayed belt **[New]** on his old peg, and ties on a brand-new white belt. Born again. A six-year-old white belt looks up at him: "You're new too?" Eli: "Yeah. I'm new."
-- **Middle:** the hero and Eli are training partners and keep each other accountable. **[New]** The hero now outranks him, and he bows first.
+- **Middle:** the hero and Eli are training partners and keep each other accountable. **[New]** The hero now outranks him, and he bows first. When the hero bows back, Eli grins: "You bow too low. You look like a folding chair." (The first time he jokes. It comes back on his last notebook page.)
 - **[Changed] Guardian and Gate:** in the Root Keeper's library floors the hero finds the rest of Eli's notebook: a list, in his handwriting, of everything he ever did wrong. When the Root Keeper falls, the pages lift off, turn to light and are gone. The last notebook page in the Book is blank. Eighth place lit.
 - **What kids learn:** in Jesus, anyone can have a brand-new start.
 
@@ -225,7 +225,7 @@ Each part plays at three points: arrival (after the real promotion celebration),
 *Verse:* John 3:5–8. *Covenant:* none on the wall. *Life word:* S, Servanthood.
 
 - **Arrival:** the Storm floors. Sensei uses the verse to talk about the Holy Spirit: you can't see the wind, but you can see what it does.
-- **Middle:** Eli, a white belt again, serves without being asked: carrying supplies, helping younger students. **[New]** "What it does" is the point: nobody can see what changed in Eli, but everybody can see him carrying the baker's flour.
+- **Middle:** Eli, a white belt again, serves without being asked: carrying supplies, helping younger students. **[New]** Sensei, watching him: "You can't see what changed inside Eli. But everybody can see him carrying the baker's flour."
 - **[Changed] Guardian and Gate:** the last Gate, where the light broke, the one Eli never passed. Ninth place lit. Through the bars stands the second hooded figure, clear at last, holding a lantern staff. Mystery 3 answered. Eli: "That's who I was." He grips the bars; the old Eli would charge in alone. Then he lets go and sits down on the step. "I'll wait for you this time." (The real months until Black belt become part of the story: Eli is waiting at the Gate, with the hero, on purpose.)
 - **What kids learn:** a changed heart shows up as serving others.
 
@@ -243,6 +243,47 @@ Each part plays at three points: arrival (after the real promotion celebration),
 - **The last line, Sensei to the hero:** "The light found you on your first day. Now go carry it to someone else."
 
 **Black belt degrees (summit tiers).** Short epilogues after launch: new students arrive, and the hero and Eli become the ones who go looking for the lost.
+
+## Eli's notebook pages [New]
+
+Thirty torn pages, three per belt, found while climbing and kept in the Book. Each is one or two short sentences, in Eli's handwriting. Draft words for Jay to approve.
+
+**Rules for the pages.** They are found by playing, never on a timer, and missing one loses nothing. A page that mentions a story event only appears after that event. No page quotes or rewords a verse. No page gives away a mystery before its belt.
+
+**How they change.** White pages are old ones from before the light broke, proud and sure. From Yellow on they are new, written this winter, and slowly start talking *to* the hero. The old notebook ends on a blank page at Brown belt. At Brown/Black, Eli starts a new notebook.
+
+| # | Belt | Where it's found | The page |
+| --- | --- | --- | --- |
+| 1 | White | Behind the class photo (Chapter 2) | "Be the best." |
+| 2 | White | Middle floors | "Need no one. Help just slows you down." |
+| 3 | White | Near the Gate | "Tomorrow I carry it up. Everyone will see what I can do." |
+| 4 | Yellow | Early floors | "It's cold up here. The sparks stay warm for a little while." |
+| 5 | Yellow | After the hero falls and Eli pulls them up | "Saw you fall today. I fell there too, once. Nobody pulled me up." |
+| 6 | Yellow | After the food and blanket | "Thanks for the blanket. And the rice ball, back then. Too much salt." |
+| 7 | Orange | Early floors | "The baker used to save me the burnt rolls. I liked the burnt ones best." |
+| 8 | Orange | After the memory scene | "It cracked in my hands. I can still hear it." |
+| 9 | Orange | After "It was me" | "I said it out loud. The sky didn't fall. There's more, though. I can't write it yet." |
+| 10 | Green | Early floors | "Glued forty pieces today. Cracked by dinner. Tomorrow, more glue." |
+| 11 | Green | Middle floors | "Someone in a hood like mine stands on the high ledges. Too tall. Too still. When I look twice, it's gone." |
+| 12 | Green | After Sensei's visit | "Sensei says my peg is still on the wall. Who keeps a peg for someone who left?" |
+| 13 | Blue | Early floors | "Yes, I'm following you. Sorry. I know it's a little weird." |
+| 14 | Blue | After Sensei takes the hit | "Sensei got hurt because of me and said that's what love does. I don't get it yet. I want to." |
+| 15 | Blue | After he tells the rest | "I told them everything. I feel lighter. Also a little sick." |
+| 16 | Red | Early floors | "Practised saying sorry in a puddle. My face looks weird when I say it." |
+| 17 | Red | Middle floors | "What if they shout? What if they say nothing? Nothing is worse." |
+| 18 | Red | After the square | "The grey washed out. I forgot my cloak was blue. Mara walked away. I would have too." |
+| 19 | Red/Black | Early floors | "The Mask says I'll never change. Now it's using my voice. That one's the worst." |
+| 20 | Red/Black | After the group talk | "I told them the scary thing, and they kept it safe. So this is what trust feels like." |
+| 21 | Red/Black | After Mara's handshake | "Mara grips really hard. My hand still hurts. I'm glad." |
+| 22 | Brown | Early floors | "New white belt. It's stiff. A little kid asked if I was lost. I said I used to be." |
+| 23 | Brown | Middle floors | "You made me do fifty extra kicks because I made you do fifty. Fair." |
+| 24 | Brown | After the library | *(The page is blank.)* |
+| 25 | Brown/Black | Early floors | "New notebook. This time I'm writing down other people, not me." |
+| 26 | Brown/Black | Middle floors | "Carried the baker's flour. Fixed Miss Hannah's shelf. Nobody asked. Nobody had to." |
+| 27 | Brown/Black | At the last Gate | "Waiting at the Gate. It's not so bad when you know someone's coming." |
+| 28 | Black | Early floors | "That thing up there wears my old shape. I used to think that was the best me." |
+| 29 | Black | After the light rises | "The light found you on your first day. I think it found me too. It just had to look harder." |
+| 30 | Black | In the dojo, after the ending | "Taught a new white belt to bow today. They looked like a folding chair. I didn't say it." |
 
 ## What was patched and why
 
@@ -269,12 +310,21 @@ Each part plays at three points: arrival (after the real promotion celebration),
 
 ## Questions for Jay
 
-The seven questions from version 1 still stand (Eli's name, extra verses, naming Jesus, Sensei taking the hit, who Sensei is, the Yellow Guardian, anything missing). New ones from this version:
+The seven questions from version 1 still stand (Eli's name, extra verses, naming Jesus, Sensei taking the hit, who Sensei is, the Yellow Guardian, anything missing).
 
-- [ ] **Mara.** OK to add her? Is the name right? (In Ruth 1:20 "Mara" means bitter, which fits where she starts.)
-- [ ] **Eli was one step from black belt.** OK, or should he be lower-ranked?
-- [ ] **Forgiveness that takes time.** Mara walks away at Red and forgives at Red/Black. Is that the right picture, or should she forgive in the square?
-- [ ] **The safety line on secrets** (Part 7). Is the wording right for how Action Zone teaches it?
-- [ ] **Eli's notebook pages.** About 30 short lines to write and approve. Worth it for launch, or later?
-- [ ] **The Yellow belt scene shows the hero being proud** without the player choosing it. OK?
-- [ ] **Sensei's new lines** (belts vs. the gift; "I can clear a floor"; the wind and the flour). Approve, change, or cut each.
+**Answered by Jay, Nov 25:**
+
+- [x] **Mara:** yes, add her.
+- [x] **Eli was one step from black belt:** yes.
+- [x] **Mara's forgiveness:** it happens in the town square. (Claude's reading: she still walks away at Red and forgives at Red/Black, but back in the square, in front of everyone. Jay can change the timing.)
+- [x] **The safety line on secrets** (Part 7): yes, as written.
+- [x] **Eli's notebook pages:** write them. Drafted above; each line still needs Jay's OK.
+- [x] **The hero being proud at Yellow** without the player choosing it: yes.
+
+**Still open:**
+
+- [ ] **Sensei's three new lines.** Approve, change or cut each:
+  1. Why Sensei hasn't brought Eli home: "I can clear a floor. I can't make him come home."
+  2. Green belt, on earned belts vs. the free gift: "A belt is earned. It tells the truth about your training. But nobody trains their way into being loved. That part was always a gift."
+  3. Brown/Black belt, on the wind verse: "You can't see what changed inside Eli. But everybody can see him carrying the baker's flour."
+- [ ] **The 30 notebook pages:** approve, change or cut each.

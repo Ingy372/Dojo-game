@@ -2250,3 +2250,9 @@ Jay: explain every system through the tutorial so nothing is hidden, with a stor
   - the line "Don't tell your parents. It's our secret." (online lesson);
   - "Push them" as a wrong answer;
   - Sensei's end lines.
+
+## The Story of the Light, version 2 (2026-11-25, Jay)
+
+- **Draft:** `docs/story-of-the-light-v2.md` patches holes in Jay's Nov 25 story (how the light broke into pieces, the timeline, why Sensei can't bring Eli home, the confessions, Guardians never being people) and adds Mara, three mysteries and Eli's notebook pages.
+- **Jay's answers:** add Mara (Eli's old training partner); Eli was one step from black belt; Mara forgives Eli in the town square (Claude's reading: still at Red/Black, after walking away at Red); the Part 7 safety line on secrets is OK; write the notebook pages (30 drafted); the hero's scripted pride at Yellow is OK.
+- **Still open:** Sensei's three new lines, the 30 notebook pages, and the seven questions from version 1. Nothing in the game changes until Jay OKs the story.

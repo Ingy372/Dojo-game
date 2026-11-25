@@ -1504,3 +1504,9 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 ## Nov 25: tutorial branch caught up with main
 
 Street Smarts lessons 2-5 were built on this branch, then moved to `main` and fixed there, so the two copies clashed. Merged `main` into `claude/tutorial-overhaul`, keeping `main`'s newer copy of every clashing lesson file (10 files). The tutorial chapters are untouched. All tests, type checks and both builds pass, and the branch now merges into `main` with no clashes. **For the tutorial session:** the main project folder still has unsaved edits to 7 Street Smarts files; they are an older copy of what is now on the branch, and git will refuse to update that folder until they are thrown away (`git checkout -- <files>`, then `git pull`).
+
+## Nov 25: The Story of the Light, version 2 (draft)
+
+- Reviewed Jay's story for holes and thin spots; wrote `docs/story-of-the-light-v2.md` with every change marked and a table of 16 patches.
+- Jay answered six questions (see decisions.md). Added Mara's forgiveness in the town square, Eli's folding-chair joke, and the 30 notebook pages.
+- **Next:** Jay approves Sensei's three new lines, the notebook pages and the version 1 questions. Then the game's story words are updated to match (Shade becomes Shadow, the masked figure becomes Eli).
