@@ -704,6 +704,25 @@
   "radius": 0.9,
   "note": "Nov 20 (Jay): standing in the middle of the school logo on the red square offers Practice Kata. The logo is centred at (13.5, 5.2), 4.6 tiles wide (incoming-art/claude-az-inside/source/layout_main_floor.py)."
  },
+ "prayerSpot": {
+  "center": [
+   13.2,
+   9.275
+  ],
+  "height": 1.0,
+  "footprintRect": [
+   12.7,
+   13.7,
+   8.6,
+   9.95
+  ],
+  "approach": [
+   13.2,
+   7.5
+  ],
+  "image": "bible",
+  "note": "Nov 25 (Jay): a Bible in the very middle of the red gear-bag box top (the box is 9.6-16.8 x 8.6-9.95, 1.0 tile high). Walking up to it from the mat, or tapping it, offers Pray: the prayer menu (content/faith/action-zone-prayers.json). The parent seats block the lobby side, so the hero stands on the mat."
+ },
  "interactables": [
   {
    "id": "pro-counter",

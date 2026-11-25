@@ -1,0 +1,38 @@
+{
+  "notes": "The prayer menu opened at the Bible on the red box in the Action Zone (Jay, Nov 25, 2026). Jay approved every word here on Nov 25 (\"Yes, build it\"). Swappable per school (schoolId), like the faith pack. Nothing here is a lock, a quiz or a reward: reading a prayer gives nothing and is never counted.",
+  "schoolId": "action-zone",
+  "button": "Pray",
+  "title": "Prayer",
+  "readAloud": "Read to me",
+  "back": "Back",
+  "pick": "Pick a prayer to read",
+  "about": [
+    {
+      "heading": "What is prayer?",
+      "points": [
+        "Prayer is talking with God.",
+        "You can pray anywhere, any time, out loud or quietly in your heart.",
+        "You can use your own words. You can say thank you, I'm sorry, I'm scared, or please help.",
+        "Prayer is listening too. Be still for a moment."
+      ]
+    },
+    {
+      "heading": "Prayer is not",
+      "points": [
+        "A test. You can't get it wrong.",
+        "Magic words or a wish. God always listens, and answers in his own way and time.",
+        "Only for church or for grown-ups."
+      ]
+    }
+  ],
+  "closing": "Many people end with \"Amen.\" It means \"let it be so.\"",
+  "prayers": [
+    { "id": "first", "title": "My first prayer", "text": "God, I'm new at this. Thank you for listening to me. Help me get to know you. Amen." },
+    { "id": "thank-you", "title": "Thank you", "text": "God, thank you for today. Thank you for my family, my friends and my teachers. Thank you for loving me. Amen." },
+    { "id": "before-class", "title": "Before class", "text": "God, thank you for my dojo. Help me listen, try my best and be kind to everyone on the mat. Amen." },
+    { "id": "scared", "title": "When I'm scared", "text": "God, I feel scared. Please stay close to me. Help me be brave and remember I am not alone. Amen." },
+    { "id": "sorry", "title": "I'm sorry", "text": "God, I'm sorry for what I did wrong. Please forgive me. Help me make it right and do better. Amen." },
+    { "id": "someone-else", "title": "For someone else", "text": "God, please be with my friend. Help them and let them know they are loved. Amen." },
+    { "id": "bedtime", "title": "Bedtime", "text": "God, thank you for this day. Watch over me and my family tonight. Give us good rest. Amen." }
+  ]
+}

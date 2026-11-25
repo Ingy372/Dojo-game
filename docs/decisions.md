@@ -2239,3 +2239,16 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
   - the line "Don't tell your parents. It's our secret." (online lesson);
   - "Push them" as a wrong answer;
   - Sensei's end lines.
+
+## Nov 25: the Bible and the prayer menu (Jay)
+
+- **Jay asked for a Bible on the red box at the edge of the mat,** in the exact middle, that opens a prayer menu: a gentle note on top about what prayer is and is not, then 5-7 short prayers for kids or adults who have not prayed before.
+- **Jay approved the plan and every word (Nov 25: "Yes, build it"):** the note ("What is prayer?", "Prayer is not", the Amen line) and seven prayers (My first prayer, Thank you, Before class, When I'm scared, I'm sorry, For someone else, Bedtime). The words live in `content/faith/action-zone-prayers.json` and are not to be reworded without him.
+- **Not added:** the Lord's Prayer. Claude asked whether to add it and which wording Action Zone uses; Jay did not answer, so it is left out until he asks.
+- **Claude's calls** (Jay can change any of them):
+  - The hero reaches the Bible from the mat side, because the parent seats are right against the lobby side of the box. Tapping the Bible walks the hero there.
+  - A "Read to me" button says the note or a prayer aloud with the phone's own voice.
+  - A soft gold glow under the Bible so it reads as something to walk up to.
+  - The Bible picture was made in Blender with the dojo's toon look (`incoming-art/claude-az-inside/source/make_bible.py`). **New art: waits for Jay's OK.**
+  - Reading a prayer gives nothing in the game and nothing is saved or counted. It is never a lock, a quiz or a reward.
+- **Live (Nov 25):** Jay asked for it on the live game after the preview was up, so the Bible picture went live with it.
