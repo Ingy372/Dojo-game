@@ -1510,3 +1510,10 @@ Street Smarts lessons 2-5 were built on this branch, then moved to `main` and fi
 - Reviewed Jay's story for holes and thin spots; wrote `docs/story-of-the-light-v2.md` with every change marked and a table of 16 patches.
 - Jay answered six questions (see decisions.md). Added Mara's forgiveness in the town square, Eli's folding-chair joke, and the 30 notebook pages.
 - **Story approved in full (Nov 25).** **Next:** the game's story words are updated to match (Shade becomes Shadow, the masked figure becomes Eli).
+
+## Nov 25: Basic Form 1 polish (kata practice)
+
+- Basic Form 1 now counts its 20 moves as 20 steps ("Step 5 of 20"), one move per step (Jay).
+- Moves 5 (right to up) and 13 (left to down): tapping the arrow turns the hero into a Cat Stance facing the new way; the Low Block then steps out into the front stance (new `pivot` field on a kata beat, using the existing `stance_cat` art).
+- Tests, type checks pass. Not seen in the browser (the preview pane stayed black); Jay checks on his phone.
+- **Waiting on Jay:** the exact moves where the hero briefly faces the wrong way before turning (two directions glitch).

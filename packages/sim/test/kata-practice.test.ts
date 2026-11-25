@@ -51,7 +51,8 @@ describe('kata practice (Jay, Nov 20)', () => {
     for (const id of ['white-kata', 'yellow-kata']) {
       const beats = kataBeats(katas.get(id)!);
       const turns = beats.flatMap((b, i) => (b.anim === 'kata_special_turn' ? [i] : []));
-      expect(turns.map((i) => beats[i].step), id).toEqual([4, 7]);
+      // Nov 25 (Jay): Basic Form 1 counts each of its 20 moves as a step.
+      expect(turns.map((i) => beats[i].step), id).toEqual(id === 'white-kata' ? [9, 17] : [4, 7]);
       for (const i of turns) {
         // the beat before is the kiai punch, right foot forward; the turn lands in a left-foot-forward low block
         expect(beats[i - 1]).toMatchObject({ kiai: true, lead: 'R' });
@@ -60,6 +61,14 @@ describe('kata practice (Jay, Nov 20)', () => {
       expect(beats[turns[0]].dir).toBe('R');
       expect(beats[turns[1]].dir).toBe('L');
     }
+  });
+
+  it('Basic Form 1: 20 moves, one per step, with a Cat Stance on the turns into moves 5 and 13 (Jay, Nov 25)', () => {
+    const beats = kataBeats(bf1);
+    expect(bf1.steps).toHaveLength(20);
+    expect(beats.map((b) => b.step)).toEqual(Array.from({ length: 20 }, (_, i) => i + 1));
+    expect(beats.flatMap((b) => (b.pivot ? [`${b.step} ${b.dir} ${b.pivot}`] : []))).toEqual(['5 F stance_cat', '13 B stance_cat']);
+    expect(`${beats[3].dir}${beats[11].dir}`).toBe('RL');
   });
 
   it('Basic Form 1 is low blocks and punches only, with two kiai', () => {

@@ -611,6 +611,14 @@ export class InsideScene extends WalkScene {
         // turn is still playing waits (it switched the picture to the end direction mid-spin).
         if (this.kataTurning() || this.kataQueued.length || (beat.anim && this.hero.has(beat.anim) && this.hero.art.animations[beat.anim]?.turn)) return;
         me.facing = { ...KATA_VEC[d] };
+        // Jay, Nov 25: some turns pass through a pose first (Basic Form 1 moves 5 and 13: a Cat Stance facing the new
+        // way, then the Low Block steps out into the front stance).
+        if (beat.pivot && this.hero.has(beat.pivot)) {
+          this.kataSettleStep();
+          this.hero.face(me.facing.x, me.facing.y);
+          this.hero.setMirrored(beat.lead === 'R');
+          this.heroDo(beat.pivot);
+        }
       },
       beat: (beat, move, index) => beatFn(beat, move, index),
       done: (wrong, ms) => this.finishKata(kata, timeTrial, wrong, ms),

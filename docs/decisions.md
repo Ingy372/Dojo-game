@@ -2257,3 +2257,5 @@ Jay: explain every system through the tutorial so nothing is hidden, with a stor
 - **Jay's answers:** add Mara (Eli's old training partner); Eli was one step from black belt; Mara forgives Eli in the town square (Claude's reading: still at Red/Black, after walking away at Red); the Part 7 safety line on secrets is OK; write the notebook pages (30 drafted); the hero's scripted pride at Yellow is OK.
 - **Sensei's three new lines approved (Jay, Nov 25).**
 - **Whole story approved (Jay, Nov 25):** the 30 notebook pages as written, and the version 1 questions: keep "Eli"; only the ten wall verses; name Jesus only in a few big moments; keep Sensei taking the hit at Blue; Sensei is a made-up character; Claude suggests Yellow Guardian ideas when that belt is built; nothing missing.
+
+- **Nov 25 (Jay): Basic Form 1 has 20 steps,** one per move. Moves 5 and 13 pass through a Cat Stance before the Low Block steps out into the front stance.

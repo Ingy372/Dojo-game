@@ -3,7 +3,7 @@
   "name": "Basic Form 1",
   "requirement": "white-kata",
   "stance": null,
-  "from": "drafts/content/katas/basic-form-1.json, the school sheet. Nov 20 (Jay): kata practice shows the moves, so each step lists its beats: the direction the hero faces, then the technique (content/dojo/kata-moves.json). Turns, pivots, cat stances, chambers and catches happen by themselves. Waiting on Jay's check. Nov 21: each beat's `lead` is the foot forward after it (the art is drawn left foot forward; R is shown mirrored, and a right-foot-forward kick uses the left-leg art); `anim` picks a different animation (the stacked-hands kick where the sheet says \"catch\"). Nov 21 (Jay's video of Basic Form 1, and Jay: Basic Form 2 faces the same way): steps 3 and 6 go up and down the middle of the floor, not right: step 3 faces F (away from the camera) and step 6 faces B (toward it). Jay's arrows: ← → ↑ → ← ↓ ← → (steps 4 and 5 face right, then left). Nov 21 (Jay): after each kiai (steps 3 and 6) the hero does the special turn: the back leg reaches to the rear right and the hero spins a three-quarter turn to its left into the Low Block that opens steps 4 and 7 (`anim` kata_special_turn on those beats; the student still taps the arrow, then Low Block).",
+  "from": "drafts/content/katas/basic-form-1.json, the school sheet. Nov 20 (Jay): kata practice shows the moves, so each step lists its beats: the direction the hero faces, then the technique (content/dojo/kata-moves.json). Turns, pivots, cat stances, chambers and catches happen by themselves. Waiting on Jay's check. Nov 21: each beat's `lead` is the foot forward after it (the art is drawn left foot forward; R is shown mirrored, and a right-foot-forward kick uses the left-leg art); `anim` picks a different animation (the stacked-hands kick where the sheet says \"catch\"). Nov 21 (Jay's video of Basic Form 1, and Jay: Basic Form 2 faces the same way): steps 3 and 6 go up and down the middle of the floor, not right: step 3 faces F (away from the camera) and step 6 faces B (toward it). Jay's arrows: ← → ↑ → ← ↓ ← → (steps 4 and 5 face right, then left). Nov 21 (Jay): after each kiai (steps 3 and 6) the hero does the special turn: the back leg reaches to the rear right and the hero spins a three-quarter turn to its left into the Low Block that opens steps 4 and 7 (`anim` kata_special_turn on those beats; the student still taps the arrow, then Low Block). Nov 25 (Jay): Basic Form 1 has 20 moves, so each move is its own step (1-20). Moves 5 (right to up) and 13 (left to down) turn into a Cat Stance when the arrow is tapped (`pivot` stance_cat), then step out into the front stance with the Low Block.",
   "steps": [
     {
       "n": 1,
@@ -15,7 +15,15 @@
           "dir": "L",
           "move": "low-block",
           "lead": "L"
-        },
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "facing": [
+        "L"
+      ],
+      "beats": [
         {
           "dir": "L",
           "move": "punch",
@@ -24,7 +32,7 @@
       ]
     },
     {
-      "n": 2,
+      "n": 3,
       "facing": [
         "R"
       ],
@@ -32,40 +40,6 @@
         {
           "dir": "R",
           "move": "low-block",
-          "lead": "R"
-        },
-        {
-          "dir": "R",
-          "move": "punch",
-          "lead": "L"
-        }
-      ]
-    },
-    {
-      "n": 3,
-      "facing": [
-        "F"
-      ],
-      "beats": [
-        {
-          "dir": "F",
-          "move": "low-block",
-          "lead": "L"
-        },
-        {
-          "dir": "F",
-          "move": "punch",
-          "lead": "R"
-        },
-        {
-          "dir": "F",
-          "move": "punch",
-          "lead": "L"
-        },
-        {
-          "dir": "F",
-          "move": "punch",
-          "kiai": true,
           "lead": "R"
         }
       ]
@@ -78,10 +52,85 @@
       "beats": [
         {
           "dir": "R",
+          "move": "punch",
+          "lead": "L"
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "facing": [
+        "F"
+      ],
+      "beats": [
+        {
+          "dir": "F",
+          "move": "low-block",
+          "lead": "L",
+          "pivot": "stance_cat"
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "facing": [
+        "F"
+      ],
+      "beats": [
+        {
+          "dir": "F",
+          "move": "punch",
+          "lead": "R"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "facing": [
+        "F"
+      ],
+      "beats": [
+        {
+          "dir": "F",
+          "move": "punch",
+          "lead": "L"
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "facing": [
+        "F"
+      ],
+      "beats": [
+        {
+          "dir": "F",
+          "move": "punch",
+          "kiai": true,
+          "lead": "R"
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "facing": [
+        "R"
+      ],
+      "beats": [
+        {
+          "dir": "R",
           "move": "low-block",
           "lead": "L",
           "anim": "kata_special_turn"
-        },
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "facing": [
+        "R"
+      ],
+      "beats": [
         {
           "dir": "R",
           "move": "punch",
@@ -90,7 +139,7 @@
       ]
     },
     {
-      "n": 5,
+      "n": 11,
       "facing": [
         "L"
       ],
@@ -99,7 +148,15 @@
           "dir": "L",
           "move": "low-block",
           "lead": "R"
-        },
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "facing": [
+        "L"
+      ],
+      "beats": [
         {
           "dir": "L",
           "move": "punch",
@@ -108,7 +165,7 @@
       ]
     },
     {
-      "n": 6,
+      "n": 13,
       "facing": [
         "B"
       ],
@@ -116,18 +173,43 @@
         {
           "dir": "B",
           "move": "low-block",
-          "lead": "L"
-        },
+          "lead": "L",
+          "pivot": "stance_cat"
+        }
+      ]
+    },
+    {
+      "n": 14,
+      "facing": [
+        "B"
+      ],
+      "beats": [
         {
           "dir": "B",
           "move": "punch",
           "lead": "R"
-        },
+        }
+      ]
+    },
+    {
+      "n": 15,
+      "facing": [
+        "B"
+      ],
+      "beats": [
         {
           "dir": "B",
           "move": "punch",
           "lead": "L"
-        },
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "facing": [
+        "B"
+      ],
+      "beats": [
         {
           "dir": "B",
           "move": "punch",
@@ -137,7 +219,7 @@
       ]
     },
     {
-      "n": 7,
+      "n": 17,
       "facing": [
         "L"
       ],
@@ -147,7 +229,15 @@
           "move": "low-block",
           "lead": "L",
           "anim": "kata_special_turn"
-        },
+        }
+      ]
+    },
+    {
+      "n": 18,
+      "facing": [
+        "L"
+      ],
+      "beats": [
         {
           "dir": "L",
           "move": "punch",
@@ -156,7 +246,7 @@
       ]
     },
     {
-      "n": 8,
+      "n": 19,
       "facing": [
         "R"
       ],
@@ -165,7 +255,15 @@
           "dir": "R",
           "move": "low-block",
           "lead": "R"
-        },
+        }
+      ]
+    },
+    {
+      "n": 20,
+      "facing": [
+        "R"
+      ],
+      "beats": [
         {
           "dir": "R",
           "move": "punch",
