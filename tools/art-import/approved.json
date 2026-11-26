@@ -1554,6 +1554,16 @@
       ],
       "scale": 0.45
     },
+    "enemy-spool-peg": {
+      "note": "The Loom Keeper's Spool Pegs (Claude, Nov 25; Jay asked for the real art, waiting on his OK). House standard 80 px per tile, packed at the default 0.6.",
+      "sources": [
+        {
+          "id": "spool-peg",
+          "type": "character",
+          "json": "incoming-art/claude-guardians/spool-peg/sprites/spool-peg.json"
+        }
+      ]
+    },
     "player-a-outfit-crimson-dragon": {
       "note": "Shop skin outfit-crimson-dragon for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
       "sources": [

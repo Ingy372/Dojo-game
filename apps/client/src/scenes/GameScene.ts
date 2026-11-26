@@ -540,18 +540,9 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || testFlags().has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), ...companionPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK, ...(this.run?.tutorial || this.helpersUseDummyArt() ? [TUTORIAL_PACK] : [])]);
+    loadArt(this, [...playerPacks(), ...companionPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK, ...(this.run?.tutorial ? [TUTORIAL_PACK] : [])]);
 
     loadGearIcons(this);
-  }
-
-  /** Loom Keeper: its spool pegs borrow the tutorial's practice dummy art (stand-in), so that pack loads in its room. */
-  private helpersUseDummyArt(): boolean {
-    if (!this.run) return false;
-    return currentRoom(CONTENT, this.run).enemySpawns.some((sp) => {
-      const helper = CONTENT.enemies[sp.enemy]?.summon?.enemy;
-      return !!helper && !!DUMMY_ART[helper];
-    });
   }
 
   /** K25: character art plays at the game tempo (read by LayeredSprite). */

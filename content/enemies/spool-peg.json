@@ -1,7 +1,7 @@
 {
   "id": "spool-peg",
   "name": "Spool Peg",
-  "notes": "Loom Keeper's loom phase (Jay OK'd the redesign, Nov 25): three glowing spools on pegs, called in around the room at half health. Passive: they never move or attack. While any is up the Loom Keeper stays on its loom and can't be hurt (lidWhileHelpers); breaking the last one makes it tumble down dizzy (dizzyAfterHelpers). Code-drawn until Jay OKs Blender art.",
+  "notes": "Loom Keeper's loom phase (Jay OK'd the redesign, Nov 25): three glowing spools on pegs, called in around the room at half health. Passive: they never move or attack. While any is up the Loom Keeper stays on its loom and can't be hurt (lidWhileHelpers); breaking the last one makes it tumble down dizzy (dizzyAfterHelpers). Blender art (Nov 25): incoming-art/claude-guardians/spool-peg, waiting on Jay's OK.",
   "color": "#ffd36b",
   "passive": true,
   "maxHealth": 50,

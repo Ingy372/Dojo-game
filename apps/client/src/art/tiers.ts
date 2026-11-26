@@ -46,6 +46,7 @@ export const ENEMY_PACKS: Record<string, { pack: PackName; id: string }> = {
   'hearth-cook': { pack: 'enemy-hearth-cook-p1', id: 'hearth-cook-p1' },
   // Nov 25: the Yellow Guardian (its torn form is LOOM_KEEPER_TORN).
   'loom-keeper': { pack: 'enemy-loom-keeper', id: 'loom-keeper' },
+  'spool-peg': { pack: 'enemy-spool-peg', id: 'spool-peg' },
 };
 
 /** B-T3: the Hearth Cook has one rig per phase; this many health left (share) or more uses that rig. */
@@ -76,8 +77,8 @@ const SHARP_PACK = 0.5;
 const BIGGER = 1.25;
 export const ART_BOOST: Record<string, number> = { swarmer: SHARP_PACK * BIGGER, shield: SHARP_PACK * BIGGER, brute: SHARP_PACK * BIGGER, 'floor-keeper': SHARP_PACK * BIGGER, 'loom-keeper': SHARP_PACK * BIGGER };
 
-/** A monster drawn as a recoloured stand-in until its own art is OK'd (the Loom Keeper's spool pegs: the practice dummy in gold, for now). */
-export const STAND_IN_TINT: Record<string, number> = { 'spool-peg': 0xffd36b };
+/** A monster drawn as a recoloured stand-in until its own art is OK'd (none now: the Spool Pegs have their Blender art). */
+export const STAND_IN_TINT: Record<string, number> = {};
 
 /** Rigs packed at a different pixel size than their enemy's usual art: drawn this much bigger to match (Nov 22). */
 const RIG_BOOST: Record<string, number> = { 'floor-keeper-f2': 0.6 / 0.45, 'loom-keeper': 0.6 / 0.45, 'loom-keeper-f2': 0.6 / 0.45 };
@@ -110,4 +111,4 @@ export function attackAnim(attackName: string): string {
 export const TUTORIAL_PACK: PackName = 'tutorial-path';
 
 /** TUT-B3: the practice dummies are drawn from still sprites in the tutorial pack (sprite id prefix). */
-export const DUMMY_ART: Record<string, string> = { 'practice-dummy': 'dummy-small', 'big-practice-dummy': 'dummy-big', 'spool-peg': 'dummy-small' };
+export const DUMMY_ART: Record<string, string> = { 'practice-dummy': 'dummy-small', 'big-practice-dummy': 'dummy-big' };
