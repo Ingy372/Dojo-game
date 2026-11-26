@@ -984,8 +984,18 @@ export class HomeScene extends Phaser.Scene {
    * P-MENU2-SPACE: the least height the tab's contents need. Only real content counts: the empty
    * Last run, Gear and the Trophy Case fit any panel.
    */
+  /**
+   * Grok playtest Nov 25 (B2): the last climb, unless it was played at a lower belt than the
+   * student has now (a new belt starts a fresh scroll instead of showing an old climb).
+   */
+  private shownLastRun(): Profile['lastRun'] {
+    const last = this.profile.lastRun;
+    if (!last || last.summary.tutorial) return last;
+    return last.summary.tier < this.training.belt.tier ? null : last;
+  }
+
   private panelMinH(): number {
-    if (this.tab === 'run') return this.profile.lastRun ? PANEL_FULL_H : 0;
+    if (this.tab === 'run') return this.shownLastRun() ? PANEL_FULL_H : 0;
     if (this.tab === 'style') return PANEL_FULL_H;
     return 0;
   }
@@ -1145,13 +1155,14 @@ export class HomeScene extends Phaser.Scene {
     const g = this.add.graphics();
     g.fillStyle(GLASS.tileDark, 0.35).fillRoundedRect(x - 4, y + 2, w + 8, h - 4, RADIUS.panel);
     this.ui.add(g);
-    const last = this.profile.lastRun;
+    const last = this.shownLastRun();
     const cx0 = x + S2;
     const cy0 = y + 6 + S1;
     const cw = w - 2 * S2;
     const ch = h - 2 * (6 + S1);
     if (!last) {
-      this.text(cx0, cy0 + S2, LASTRUN_WORDS.none, TYPE.body, GLASS.ink, true, FONT, cw - 96 - S2);
+      const line = this.profile.lastRun ? LASTRUN_WORDS.newBelt.replace('{belt}', this.training.belt.name) : LASTRUN_WORDS.none;
+      this.text(cx0, cy0 + S2, line, TYPE.body, GLASS.ink, true, FONT, cw - 96 - S2);
       button(this, { x: cx0 + cw - 96, y: cy0, w: 96, h: MIN_TAP, label: LASTRUN_WORDS.bests, color: GLASS.tile, size: TYPE.body, onTap: () => this.openBests() }, this.ui);
       return;
     }
