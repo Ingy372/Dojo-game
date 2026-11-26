@@ -147,7 +147,7 @@ import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
-import { floorLine } from '../game/floorName';
+import { floorLine, floorSetFor } from '../game/floorName';
 import { doorForTap } from '../game/doorTap';
 import { virtueRefusedLine } from '../input/virtueState';
 import { wornShop } from '../game/shop';
@@ -180,9 +180,11 @@ const HUD_TOP_PX = 56;
 /** Grok playtest Nov 25 (idea 2): the room label's top on a run (two lines: "Floor 2 · Sunrise Garden", then "Room 1 of 8"; bottom ~43). */
 const ROOM_LABEL_TOP = 6;
 /** The Challenge timer's top, just under the two-line room label (was 36 with one line). */
-const TIMER_TOP = 44;
-/** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 44, 20 px bold, bottom ~70) and an 8 px gap. */
-const DOOR_LABEL_TOP_PX = 78;
+const TIMER_TOP = 48;
+/** The Challenge timer's bottom (20 px bold); the Tool Belt row starts below it in a Challenge room. */
+const TIMER_BOTTOM = 74;
+/** Screen y a door label may not rise above: the top bar plus the Challenge timer (bottom ~74) and an 8 px gap. */
+const DOOR_LABEL_TOP_PX = 82;
 /** B-T3-NUDGE: gap between Sensei's banner and the ROAR! word. */
 const ROAR_GAP_PX = 8;
 /** Screen y of the boss health bar; its name sits just under it. */
@@ -715,7 +717,7 @@ export class GameScene extends Phaser.Scene {
     );
     this.makeHud();
     cam.ignore([...this.controls.objects, ...this.buttons.objects]);
-    this.toolRow = p0.tools.length > 0 ? new ToolRow(this, CONTENT.abilities.tools, p0.tools.map((t) => t.setup.technique), HUD_TOP_PX) : null;
+    this.toolRow = p0.tools.length > 0 ? new ToolRow(this, CONTENT.abilities.tools, p0.tools.map((t) => t.setup.technique), this.room.challenge ? TIMER_BOTTOM : HUD_TOP_PX) : null;
     if (this.toolRow) cam.ignore(this.toolRow.objects);
     cam.fadeIn(350, 10, 8, 16);
     this.enemiesAt = 0;
@@ -2986,7 +2988,7 @@ export class GameScene extends Phaser.Scene {
     this.twistBadge = this.add.container(0, 0, [twistIcon(this, twist.icon, 34)]).setDepth(20);
     this.cameras.main.ignore(this.twistBadge);
     // Top right, under the room count and timer, so it never covers them on a small phone.
-    this.twistBadge.setPosition(width - 70, 90);
+    this.twistBadge.setPosition(width - 70, 94);
     this.drawTwistBells();
     return BANNER_Y + banner.height / 2;
   }
@@ -3116,8 +3118,7 @@ export class GameScene extends Phaser.Scene {
     const waves = this.world.waveCount > 1 && !prog.cleared && enemiesAlive ? `  ·  Wave ${this.world.wave} of ${this.world.waveCount}` : '';
     // Q-PREMIUM-2 L5: the tutorial floor shows no Room / Wave counter (Sensei's steps lead, not numbers).
     // Grok playtest Nov 25 (idea 2): the floor number and its name sit on the line above ("Floor 2 · Sunrise Garden").
-    this.roomLabel.setText(this.run.tutorial ? '' : `${floorLine(this.run.tier, this.room.floorSet)}
-Room ${this.run.depth + 1} of ${this.run.totalRooms}${waves}`);
+    this.roomLabel.setText(this.run.tutorial ? '' : `${floorLine(this.run.tier, floorSetFor(this.run.tier, this.room.floorSet, CONTENT))}\nRoom ${this.run.depth + 1} of ${this.run.totalRooms}${waves}`);
 
     // Challenge timer.
     const ch = this.room.challenge;

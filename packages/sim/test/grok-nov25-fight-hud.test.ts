@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import floorSets from '../../../content/settings/floor-sets.json';
 import { COMBAT } from '@dojo/sim';
-import { floorLine } from '../../../apps/client/src/game/floorName';
+import { floorLine, floorSetFor } from '../../../apps/client/src/game/floorName';
 import { doorForTap } from '../../../apps/client/src/game/doorTap';
 import { MOVEMENT, standableSpot } from '../src';
 import { testContent } from './load-content';
@@ -20,6 +20,14 @@ describe('idea 2: the floor on the Tower HUD', () => {
     expect(floorLine(1, null)).toBe('Floor 1');
     expect(floorLine(10, 'summit', {})).toBe('Floor 10');
     expect(floorLine(4, 'giants-steps', { 'giants-steps': '  ' })).toBe('Floor 4');
+  });
+
+  it('a shared room (a Challenge room) still shows the name of its belt floor', () => {
+    const c = testContent();
+    expect(floorSetFor(3, null, c)).toBe('ember-kitchens');
+    expect(floorSetFor(2, null, c)).toBe('sunrise-garden');
+    expect(floorSetFor(1, null, c)).toBe('white-dojo');
+    expect(floorSetFor(9, null, c)).toBeNull(); // no live set yet: the number only
   });
 
   it('names every floor set that is switched on', () => {

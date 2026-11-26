@@ -12,3 +12,16 @@ export function floorLine(tier: number, floorSet: string | null, names: Record<s
   const name = floorSet ? names[floorSet] : undefined;
   return typeof name === 'string' && name.trim() ? `Floor ${tier}  ·  ${name.trim()}` : `Floor ${tier}`;
 }
+
+/**
+ * The floor set a belt tier plays (its own live room set, as run.ts picks rooms), or the room's own set,
+ * so a shared room (a Challenge room, a ?room= test link) still shows its floor's name.
+ */
+export function floorSetFor(
+  tier: number,
+  roomSet: string | null,
+  content: { rooms: readonly { floorSet: string | null; minBeltTier: number }[]; floorSets: Record<string, boolean> },
+): string | null {
+  const own = content.rooms.find((r) => r.floorSet !== null && content.floorSets[r.floorSet] && r.minBeltTier === tier);
+  return own?.floorSet ?? roomSet;
+}
