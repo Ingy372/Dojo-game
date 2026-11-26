@@ -88,6 +88,14 @@ const setAway = (now: boolean): void => {
   if (ctx) void (away ? ctx.suspend() : ctx.resume());
 };
 document.addEventListener('visibilitychange', () => setAway(document.hidden));
+// Nov 26 (phone check): after a phone call an iPhone leaves the sound "interrupted", and a page may only
+// restart it from a touch. So the first touch after coming back wakes the music and effects again.
+const wakeSound = (): void => {
+  const ctx = sfx.context();
+  if (ctx && !away && ctx.state !== 'running') void ctx.resume().catch(() => {});
+};
+window.addEventListener('pointerdown', wakeSound, { capture: true });
+window.addEventListener('keydown', wakeSound, { capture: true });
 
 // B-WRAP: inside the phone app, also follow the app's own background/foreground events,
 // and lock the screen sideways.

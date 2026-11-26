@@ -138,7 +138,15 @@ const registered = new Set<PackName>();
 /** Call from a scene's preload(): queues the packs that aren't loaded yet. */
 export function loadArt(scene: Phaser.Scene, packs: PackName[]): void {
   for (const pack of packs) {
-    if (scene.cache.json.exists(jsonKey(pack))) continue;
+    if (scene.cache.json.exists(jsonKey(pack))) {
+      // Nov 26 (weak connection): a page that failed to load before is asked for again, so the art comes
+      // back on the next screen once the signal does, without reopening the game.
+      const data = scene.cache.json.get(jsonKey(pack)) as PackFile;
+      data.pages.forEach((file, i) => {
+        if (!scene.textures.exists(pageKey(pack, i))) scene.load.image(pageKey(pack, i), `art/${file}`);
+      });
+      continue;
+    }
     scene.load.json(jsonKey(pack), `art/${pack}.json`);
     scene.load.once(`filecomplete-json-${jsonKey(pack)}`, (_key: string, _type: string, data: PackFile) => {
       data.pages.forEach((file, i) => scene.load.image(pageKey(pack, i), `art/${file}`));
