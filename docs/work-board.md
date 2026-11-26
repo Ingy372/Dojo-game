@@ -122,7 +122,7 @@ From `drafts/planning/R-OVERHAUL-LAUNCH.md`: L11 belts 4–10 in the Tower (floo
 
 | ID | What | Status |
 |---|---|---|
-| YG-1 | Thread and cloth attacks, the Loom Keeper, the 8 Sunrise Garden rooms, balance | Built Nov 25, then redesigned the same day (Jay: not like the tutorial boss): distance fighter, Spool Toss, sticky threads, loom phase with Spool Pegs; waits on Jay's phone test and OK of the loom-phase line |
+| YG-1 | Thread and cloth attacks, the Loom Keeper, the 8 Sunrise Garden rooms, balance | Built Nov 25, then redesigned the same day (Jay: not like the tutorial boss): distance fighter, Spool Toss, sticky threads, loom phase with Spool Pegs; waits on Jay's phone test (loom-phase line OK'd) |
 | YG-2 | Blender model and animations (replaces the grey-lilac stand-in) | Built Nov 25 and in the game on the branch; waits on Jay's OK (`incoming-art/claude-guardians/loom-keeper/review-sheet.png`) |
 | YG-3 | Monster Journal trophy for the Loom Keeper | With YG-2 (needs a picture) |
 | YG-5 | Blender art for the Spool Pegs (gold practice dummy for now) | Waits on Jay |

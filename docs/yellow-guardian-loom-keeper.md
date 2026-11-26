@@ -81,6 +81,6 @@ Jay noticed the first build fought like the tutorial boss (the same body movemen
 6. **No Swarmers.** Just you and the Loom Keeper.
 7. **Its own Blender animations:** drifting on its threads (no steps), the throw, weaving with both arms up, the cloth fling, floating on the loom, and a slumped dizzy tumble.
 
-**New line (Claude's draft, for Jay's OK):** Sensei when the loom phase starts: "Break the three spools. Then it falls!"
+**New line (Jay OK'd it, Nov 25):** Sensei when the loom phase starts: "Break the three spools. Then it falls!"
 
 **Stand-in:** the Spool Pegs are the practice dummy drawn in gold until they get Blender art.

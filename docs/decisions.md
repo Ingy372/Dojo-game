@@ -2277,3 +2277,4 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
 - **Balance:** typical Yellow bots beat it 40 out of 40 times on Guided and Standard, taking little damage; the kid-style bot beats it every time it gets there. It is the longest boss fight so far (about 20 s for a typical player, against 12–14 s for the White and Orange bosses), because of the loom phase.
 - **Bots** now go for called helpers while a lidded boss can't be hurt (this also applies to the Hearth Cook; its tests still pass).
 - **Draft for Jay's OK:** the loom-phase Sensei line "Break the three spools. Then it falls!" The Spool Pegs are the gold practice dummy until they get Blender art.
+- **Jay OK'd the loom-phase line (Nov 25):** Sensei: "Break the three spools. Then it falls!"
