@@ -11,7 +11,7 @@ import { MIN_TAP, S1, S2, S3, TYPE } from './tokens';
 export const LASTRUN_WORDS = words;
 
 export interface StatTile {
-  key: 'rooms' | 'perfects' | 'combo' | 'time' | 'xp';
+  key: 'rooms' | 'perfects' | 'combo' | 'time' | 'xp' | 'coins';
   label: string;
   /** The number the tile counts up to. */
   value: number;
@@ -52,9 +52,12 @@ export function buildLastRun(last: NonNullable<Profile['lastRun']>, restedWords:
     { key: 'rooms', label: words.stats.rooms, value: s.roomsCleared, format: (v) => String(Math.round(v)) },
     { key: 'perfects', label: words.stats.perfects, value: s.perfects, format: (v) => String(Math.round(v)) },
     { key: 'combo', label: words.stats.combo, value: s.bestCombo, format: (v) => String(Math.round(v)) },
-    { key: 'time', label: words.stats.time, value: Math.floor(ticksToRealMs(s.ticks) / 1000 + 1e-9), format: clock },
   ];
+  // R3-1 (Nov 25): the coins a run paid show as a tile (a loss pays too), so a lost run never reads as a wall of
+  // zeros. Order matters: narrow scrolls keep the first 4 (XP is the fill bar), wide ones 5, the widest 6 (Time last).
+  if (last.coins) stats.push({ key: 'coins', label: words.stats.coins, value: last.coins, format: (v) => `+${Math.round(v)}` });
   if (last.xp) stats.push({ key: 'xp', label: words.stats.xp, value: last.xp.gained, format: (v) => `+${Math.round(v)}` });
+  stats.push({ key: 'time', label: words.stats.time, value: Math.floor(ticksToRealMs(s.ticks) / 1000 + 1e-9), format: clock });
   const items = s.items.slice().sort((a, b) => RARITY.indexOf(b.rarity) - RARITY.indexOf(a.rarity));
   const decos = [...(s.decorations ?? []), ...(last.earned ?? [])];
   return {
@@ -180,8 +183,8 @@ export function lastRunLayout(w: number, h: number, chipCount: number, statCount
   const chipH = compact ? 24 : 32;
   const chip = Math.min(chipH, chipStep - S2);
   const tilesY = chipsY + chipH + gap;
-  // 4 tiles under ~420 wide (the XP gain is the fill bar), 5 above.
-  const nTiles = Math.min(statCount, w < 420 ? 4 : 5);
+  // 4 tiles under ~420 wide (the XP gain is the fill bar), 5 above, 6 from 600 wide (R3-1: room for Coins).
+  const nTiles = Math.min(statCount, w < 420 ? 4 : w < 600 ? 5 : 6);
   // P-MENU2-SPACE: 52/64 (was 44/56) so the number and its label sit more than 8 pt apart.
   const baseTileH = compact ? 52 : 64;
   // Q-PREM-F8: if New for you (at least MIN_TAP) can't keep AGAIN_CLEAR above Again!, the tiles

@@ -103,7 +103,7 @@ export interface HomeSceneData {
 const SLOT_NAME: Record<GearSlot, string> = { hands: 'Hands', gi: 'Gi', charm: 'Charm' };
 const KIND_MARK: Record<string, string> = { rest: '+' };
 /** Nov 18 overhaul: each Last climb number in its own bright colour on the glass tiles. */
-const STAT_INK: Record<string, string> = { xp: '#9ad1ff', perfects: '#ffd166', combo: '#ff9fd0', time: '#b6f0c2', rooms: '#fff6e6' };
+const STAT_INK: Record<string, string> = { xp: '#9ad1ff', perfects: '#ffd166', combo: '#ff9fd0', time: '#b6f0c2', rooms: '#fff6e6', coins: '#ffb547' };
 
 /** The board's tabs (Last climb, Gear, Fighting Style), then the Book's (L10-B). */
 type Tab = 'run' | 'gear' | 'style' | BookTab;

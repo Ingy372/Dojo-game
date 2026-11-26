@@ -56,11 +56,12 @@ export interface XpGain {
   atCap: boolean;
 }
 
-/** Experience earned by a run: each room cleared, plus a bonus for the whole floor. */
+/** Experience earned by a run: each room cleared, plus a bonus for the whole floor, or a little for a lost run (R3-1). */
 export function runXp(summary: RunSummary): number {
   let xp = 0;
   for (const r of summary.results) xp += PROGRESSION.xpPerRoom[r.kind] ?? 0;
   if (summary.result === 'cleared') xp += PROGRESSION.xpFloorClear;
+  if (summary.result === 'lost' && !summary.test) xp += PROGRESSION.xpLoss;
   return xp;
 }
 
