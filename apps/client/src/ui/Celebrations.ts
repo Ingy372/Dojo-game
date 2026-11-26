@@ -3,8 +3,8 @@
 // the game, then a stripe, then a sign-off; Sensei's Seal and the Blessing are small.
 
 import Phaser from 'phaser';
-import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState, VerseScroll } from '@dojo/sim';
-import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsMixed, signOffsRow, signOffsTitle, stripeGain, promotionFaith } from '@dojo/sim';
+import type { BeltInfo, RealPay, RequirementStatus, RewardMoment, TrainingState, VerseScroll } from '@dojo/sim';
+import { EARN, gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsMixed, signOffsRow, signOffsTitle, stripeGain, promotionFaith } from '@dojo/sim';
 import GAINS from '../../../../content/settings/training-gains.json';
 import BLESS from '../../../../content/settings/blessing.json';
 import STYLE from '../../../../content/abilities/fighting-style.json';
@@ -36,12 +36,30 @@ type Step =
   | { kind: 'verse'; scroll: VerseScroll }
   /** LP-B2: the Creed Scroll, once, after the first class check-in. */
   | { kind: 'creed' }
+  /** Grok playtest Nov 25 (B4): the coins real training paid, inside the ceremony so they can't be missed. */
+  | { kind: 'coins'; card: CoinCard }
   | { kind: 'summary'; to: BeltInfo; levelCap: number; preview: RequirementStatus[]; extras: Extra[]; faith: string[] };
 
 /** Other real moments that arrive together with a promotion: shown on its last screen instead of one screen each. */
 type Extra = Exclude<RewardMoment, { kind: 'promotion' } | { kind: 'welcome' }>;
 
 const GOLD = 0xffd166;
+
+export interface CoinCard {
+  title: string;
+  lines: string[];
+}
+
+/** Nov 23 (economy): the "Hard work pays off!" card for coins real training paid, or null when it paid none. */
+export function realPayCard(pay: RealPay): CoinCard | null {
+  if (pay.coins <= 0) return null;
+  const rows: string[] = [];
+  if (pay.promotions) rows.push(`New belt: +${(pay.promotions * EARN.promotion).toLocaleString()}`);
+  if (pay.stripes) rows.push(`${pay.stripes === 1 ? 'A new stripe' : `${pay.stripes} new stripes`}: +${(pay.stripes * EARN.stripe).toLocaleString()}`);
+  if (pay.tests) rows.push(`Approved to test: +${(pay.tests * EARN.testApproved).toLocaleString()}`);
+  if (pay.signOffs) rows.push(`${pay.signOffs === 1 ? 'A sign-off' : `${pay.signOffs} sign-offs`}: +${(pay.signOffs * EARN.signOff).toLocaleString()}`);
+  return { title: 'Hard work pays off!', lines: [`Your training in class earned ${pay.coins.toLocaleString()} coins!`, rows.join('\n')] };
+}
 
 export class Celebrations {
   private readonly steps: Step[] = [];
@@ -60,6 +78,7 @@ export class Celebrations {
     keeperTitle?: string,
     picks?: { lesson: string[]; lines: string[] },
     creed = false,
+    coins: CoinCard | null = null,
   ) {
     if (keeperTitle) this.steps.push({ kind: 'keeper', title: keeperTitle });
     if (sensei.length) this.steps.push({ kind: 'sensei', lines: sensei });
@@ -80,6 +99,7 @@ export class Celebrations {
         this.steps.push({ kind: 'summary', to: m.to, levelCap: m.levelCap, preview: m.preview, extras, faith: lit });
       } else if (m.kind === 'welcome' || !promotion) this.steps.push({ kind: 'moment', moment: m });
     }
+    if (coins) this.steps.push({ kind: 'coins', card: coins });
     if (picks?.lines.length) this.steps.push({ kind: 'picks', ...picks });
     if (creed) this.steps.push({ kind: 'creed' });
     const { width, height } = view(scene);
@@ -132,6 +152,9 @@ export class Celebrations {
         break;
       case 'picks':
         this.picks(step.lesson, step.lines);
+        break;
+      case 'coins':
+        this.coins(step.card);
         break;
     }
     this.readyAt = this.scene.time.now + wait;
@@ -461,6 +484,19 @@ export class Celebrations {
     this.card(cx, height * 0.45, w, 70 + lines.length * 34);
     this.text(cx, height * 0.45 - 12 - lines.length * 17, 'Sensei', 22, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
     lines.forEach((l, i) => this.text(cx, height * 0.45 + 18 - (lines.length - 1) * 17 + i * 34, l, 17, '#f2e9d8', false, FONT, w - 40).setOrigin(0.5).setAlign('center'));
+  }
+
+  /** Grok playtest Nov 25 (B4): the coins real training paid, with a gold shower (smaller than the promotion itself). */
+  private coins(c: CoinCard): void {
+    const { width, height } = this.size();
+    const cx = width / 2;
+    const w = Math.min(520, width - 40);
+    sfx.chest();
+    this.card(cx, height * 0.45, w, 190);
+    this.text(cx, height * 0.45 - 66, c.title, 24, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
+    this.text(cx, height * 0.45 - 28, c.lines[0], 18, '#ffffff', true, FONT, w - 40).setOrigin(0.5).setAlign('center');
+    if (c.lines[1]) this.text(cx, height * 0.45 + 6, c.lines[1], 16, '#f2e9d8', false, FONT, w - 40).setOrigin(0.5, 0).setAlign('center');
+    this.burst(cx, height * 0.45 - 66, [GOLD, 0xfff1b8], 24);
   }
 
   /** OV-B1: "Sensei's Pick", the lesson lines the first time, then one line per new move. */

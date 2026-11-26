@@ -17,6 +17,7 @@ import {
   pathView,
   pathIntroDue,
   creedDue,
+  payRealCoins,
   rewardMoments,
   creditBlessing,
   snapshot,
@@ -68,7 +69,7 @@ import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skin
 import { MENU2_PACK, artRarity } from '../art/menu2Frames';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
-import { Celebrations } from '../ui/Celebrations';
+import { Celebrations, realPayCard } from '../ui/Celebrations';
 import { drawBanner, drawFaithPage } from '../ui/faith';
 import { BOOK_TABS, BOOK_WORDS, boardTab, bookCubbies, tabCubbies, type BookTab } from '../ui/book';
 import { drawMonsterJournal } from '../ui/MonsterJournal';
@@ -347,13 +348,17 @@ export class HomeScene extends Phaser.Scene {
     }
     // LP-B2: Sensei shows the Creed Scroll once, after the first class check-in.
     const creed = creedDue(this.profile.creedSeen, this.training);
+    // Grok playtest Nov 25 (B4): coins for real training are paid here too, inside the ceremony (they used to wait
+    // for the next visit to the dojo, which looked like a reload). Saved at once, so nothing is paid twice.
+    const coins = realPayCard(payRealCoins(this.profile, this.training));
+    writeSave(this.profile);
     this.render();
     const remember = () => {
       this.profile.seen = snapshot(this.training);
       if (creed) this.profile.creedSeen = true;
       writeSave(this.profile);
     };
-    if (moments.length === 0 && sensei.length === 0 && picks.lines.length === 0 && !creed) {
+    if (moments.length === 0 && sensei.length === 0 && picks.lines.length === 0 && !creed && !coins) {
       remember();
       this.maybePathIntro();
       return;
@@ -373,6 +378,7 @@ export class HomeScene extends Phaser.Scene {
       undefined,
       picks,
       creed,
+      coins,
     );
   }
 
