@@ -30,6 +30,18 @@ const doorKind = (door: TownDoor): PlaceKind => (door === WALK.homeDoor ? 'home'
 /** The mini map's first row (the rows above are the hills) and where the Tower path ends, in room tiles. */
 const MAP_TOP_ROW = 4;
 const MAP_TOWER: Vec2 = { x: 30.3, y: 5.2 };
+/**
+ * Nov 26 (Grok playtest, section 7): the mini map's legend, and Sensei's call when a promotion waits at home.
+ * The Tower's gate in town stays closed: the Tower is entered from My Dojo's Training Board, so its row says so
+ * and a tap on it walks home. Placeholder words, waiting on Jay's OK.
+ */
+const MAP_WORDS: Record<PlaceKind, string> = {
+  home: 'My Dojo · Training',
+  dojo: 'Action Zone',
+  street: 'Street Smarts',
+  tower: 'Tower · via My Dojo',
+};
+const SENSEI_CALL = 'Sensei is waiting at your dojo!';
 
 /** The town's stage: the student's real belt tier. Test link `?townstage=N` shows another stage (never in beta builds). */
 export function currentTownStage(): number {
@@ -118,8 +130,11 @@ export class TownScene extends WalkScene {
   private shop: ShopScreen | null = null;
   /** Nov 23 (Jay): phrases and parties in town. */
   private social: TownSocial | null = null;
-  /** Jay, Nov 24: the mini map, top left. It shows the way; it never moves the player. */
+  /** Jay, Nov 24: the mini map, top left. Nov 26: tapping a place on it walks the hero there on foot. */
   private miniMap: TownMiniMap | null = null;
+  /** Nov 26: Sensei's call ("waiting at your dojo") when a promotion ceremony is waiting; tapping it walks home. */
+  private callSign: Phaser.GameObjects.Container | null = null;
+  private callRect: Phaser.Geom.Rectangle | null = null;
   /** Nov 23: the opening cutscene is playing (the camera and the hero belong to it). */
   private intro: { run: RunState } | null = null;
   private introRows = 7;
@@ -253,20 +268,95 @@ export class TownScene extends WalkScene {
     return this.rowsNow;
   }
 
-  /** The mini map in the top-left corner, sized to the screen (Jay, Nov 24). */
+  /**
+   * The mini map in the top-left corner, sized to the screen (Jay, Nov 24), with its legend. Nov 26: a tap on a
+   * place (its picture or its legend row) walks the hero there on foot.
+   */
   private makeMiniMap(): void {
-    const places: MapPlace[] = [...DOORS.map((d) => ({ kind: doorKind(d), at: { x: d.cue[0], y: d.cue[1] } })), { kind: 'tower', at: MAP_TOWER }];
+    const places: MapPlace[] = [
+      ...DOORS.map((d) => ({ kind: doorKind(d), at: { x: d.cue[0], y: d.cue[1] }, label: MAP_WORDS[doorKind(d)] })),
+      { kind: 'tower' as const, at: MAP_TOWER, label: MAP_WORDS.tower },
+    ];
     this.miniMap = new TownMiniMap(this, this.roomAt, places, MAP_TOP_ROW);
+    const calling = this.promotionWaiting();
     const place = () => {
       const { width } = view(this);
       this.miniMap?.layout(S2 + 4, S2 + 4, Math.max(110, Math.min(170, width * 0.17)));
+      if (calling) this.drawCallSign();
     };
     place();
+    if (calling) {
+      this.miniMap.call('home');
+      // The same gold ring and arrow Sensei's tour uses, on My Dojo's door.
+      const d = WALK.homeDoor;
+      this.worldLayer.add(tourGlow(this, d.cue[0] * TILE, (d.cue[1] + 0.2) * TILE, TILE * 0.7, { shortArrow: true }));
+    }
+    // A tap (not a drag) that starts and ends on the same place picks it.
+    let downOn: PlaceKind | 'call' | null = null;
+    const pick = (x: number, y: number): PlaceKind | 'call' | null => (this.callRect?.contains(x, y) ? 'call' : (this.miniMap?.placeAt(x, y) ?? null));
+    const down = (p: Phaser.Input.Pointer) => (downOn = pick(p.x / DPR, p.y / DPR));
+    const up = (p: Phaser.Input.Pointer) => {
+      const from = downOn;
+      downOn = null;
+      if (!from || pick(p.x / DPR, p.y / DPR) !== from) return;
+      this.walkToPlace(from === 'call' ? 'home' : from);
+    };
+    this.input.on('pointerdown', down);
+    this.input.on('pointerup', up);
     this.scale.on(Phaser.Scale.Events.RESIZE, place);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.scale.off(Phaser.Scale.Events.RESIZE, place);
+      this.input.off('pointerdown', down);
+      this.input.off('pointerup', up);
       this.miniMap = null;
+      this.callSign = null;
+      this.callRect = null;
     });
+  }
+
+  /**
+   * True when a real promotion is waiting to be celebrated at home: the belt is higher than the last one the
+   * game showed this student. (Not during Sensei's town tour, which already points home.)
+   */
+  private promotionWaiting(): boolean {
+    const save = loadSave();
+    if (save.homeTour === 'town') return false;
+    const t = currentTraining();
+    return !!save.seen && save.seen.studentId === t.studentId && t.tier > save.seen.tier;
+  }
+
+  /** Sensei's call, top middle under the safe edge: My Dojo's picture and the words. A tap walks home. */
+  private drawCallSign(): void {
+    this.callSign?.destroy();
+    const { width } = view(this);
+    const sign = placeSign(this, 'home', SENSEI_CALL, width / 2, 0, TYPE.body).setDepth(46);
+    const b = sign.getBounds();
+    // Below the top edge, and never under the map or the Shop button on a narrow screen.
+    const left = (this.miniMap ? S2 + 4 + Math.max(110, Math.min(170, width * 0.17)) + 12 : S2) + b.width / 2;
+    const right = width - S2 - SHOP_W - 12 - b.width / 2;
+    sign.setPosition(Phaser.Math.Clamp(width / 2, left, Math.max(left, right)), S2 + b.height + 4);
+    const fits = right >= left;
+    // On a very small screen there's no room beside the buttons: it sits under the Shop button instead.
+    if (!fits) sign.setPosition(width - S2 - b.width / 2, S2 + MIN_TAP + 8 + b.height);
+    if (!reducedMotion()) this.tweens.add({ targets: sign, y: sign.y - 3, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    this.callSign = sign;
+    const r = sign.getBounds();
+    // A comfortable tap area around the sign (MIN_TAP tall at least).
+    const padY = Math.max(0, (MIN_TAP - r.height) / 2);
+    this.callRect = new Phaser.Geom.Rectangle(r.x - 6, r.y - padY - 3, r.width + 12, r.height + padY * 2 + 6);
+  }
+
+  /** Walks the hero to a place's door (the Tower is reached from My Dojo, so it walks home). */
+  private walkToPlace(kind: PlaceKind): void {
+    if (this.paused || this.leaving || this.shop) return;
+    const door = kind === 'dojo' ? WALK.dojoDoor : kind === 'street' && WALK.streetDoor ? WALK.streetDoor : WALK.homeDoor;
+    const [x0, x1, , y1] = door.enterRect;
+    const me = this.world.players.p1;
+    const path = findPath(this.roomAt, me.pos, { x: (x0 + x1) / 2, y: y1 - 0.3 }, MOVEMENT.playerRadius);
+    if (!path) return;
+    this.controls.reset();
+    me.path = path;
+    this.miniMap?.flash(kind === 'tower' ? 'home' : kind);
   }
 
   /** The Shop button, top right (redrawn when the screen changes size). */
@@ -307,7 +397,7 @@ export class TownScene extends WalkScene {
 
   protected overUi(x: number, y: number): boolean {
     if (this.shop || (this.shopRect && this.shopRect.contains(x, y))) return true;
-    if (this.miniMap?.contains(x, y)) return true;
+    if (this.miniMap?.contains(x, y) || this.callRect?.contains(x, y)) return true;
     // Nov 23: the Say / Party buttons and their cards, and a tap on a classmate (opens their card, doesn't walk)
     return !!this.social && (this.social.hits(x, y) || this.social.playerAt(x, y) !== null);
   }
