@@ -96,5 +96,11 @@ if (Capacitor.isNativePlatform()) {
   void ScreenOrientation.lock({ orientation: 'landscape' }).catch(() => {});
 }
 
+// B-WEB: in the browser game (not the phone apps, not while developing), keep a copy of the files already
+// loaded so the game still opens and plays on a weak or dropped connection (assets/sw.js).
+if (!import.meta.env.DEV && !Capacitor.isNativePlatform() && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => void navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+
 // Developer builds only (never in the published game): lets automated checks reach the game.
 if (import.meta.env.DEV) (window as unknown as { game: Phaser.Game }).game = game;

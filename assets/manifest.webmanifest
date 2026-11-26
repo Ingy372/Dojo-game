@@ -1,9 +1,19 @@
 {
+  "id": "./",
   "name": "Dojo Ascent",
   "short_name": "Dojo Ascent",
+  "description": "Climb the Tower and train in the dojo.",
+  "start_url": "./",
+  "scope": "./",
   "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
   "orientation": "landscape",
   "background_color": "#14121c",
   "theme_color": "#14121c",
-  "start_url": "."
+  "categories": ["games", "education", "kids"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
 }

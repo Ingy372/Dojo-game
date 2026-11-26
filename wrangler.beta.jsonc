@@ -1,0 +1,12 @@
+// B-WEB (Nov 26): hosting settings for a separate beta web link, ready but NOT set up on Cloudflare.
+// It serves the beta build (`npm run build:beta`: no test screens or test links) at its own address,
+// apart from the live link and the branch previews. Jay OKs publishing; the steps are in docs/beta-web-link.md.
+{
+  "name": "dojo-ascent-beta",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./apps/client/dist"
+  },
+  // No preview links for the beta: only the one address parents use.
+  "preview_urls": false
+}
