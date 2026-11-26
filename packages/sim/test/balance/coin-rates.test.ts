@@ -21,9 +21,10 @@ const ORDER = ['kid', 'newer', 'careful', 'masher'];
 const TABLE: Record<Difficulty, number[][]> = {
   // GP-6 (Nov 25): the whole table re-measured with BALANCE=1 after Jay's Nov 24 changes (no automatic blocking,
   // the damage shift, the Tool Belt). Kid and masher now lose most runs, so they sit near the 60-coin floor.
-  standard: [[63, 101, 101, 60], [62, 101, 101, 60], [61, 101, 101, 60], [62, 101, 101, 60], [63, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60]],
-  // Guided re-measured again after the Mash guard came back on Guided only (Jay, Nov 25) at enemy Power 0.75.
-  guided: [[100, 101, 101, 83], [99, 101, 101, 84], [96, 101, 101, 89], [98, 101, 101, 83], [96, 101, 101, 82], [96, 101, 101, 83], [97, 101, 101, 82], [98, 101, 101, 84], [99, 101, 101, 85], [99, 101, 101, 84]],
+  standard: [[63, 101, 101, 60], [64, 101, 101, 60], [61, 101, 101, 60], [62, 101, 101, 60], [63, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60], [62, 101, 101, 60]],
+  // Guided re-measured again after the Mash guard came back on Guided only (Jay, Nov 25) at enemy Power 0.75. Belt 2 re-measured
+  // once more on the new Sunrise Garden floors and the Loom Keeper (merged to main, Nov 25).
+  guided: [[100, 101, 101, 83], [100, 101, 101, 94], [96, 101, 101, 89], [98, 101, 101, 83], [96, 101, 101, 82], [96, 101, 101, 83], [97, 101, 101, 82], [98, 101, 101, 84], [99, 101, 101, 85], [99, 101, 101, 84]],
   challenge: [[], [], [], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60], [61, 101, 101, 60]],
 };
 

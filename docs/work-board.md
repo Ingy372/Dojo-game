@@ -128,3 +128,13 @@ From `drafts/planning/R-OVERHAUL-LAUNCH.md`: L11 belts 4–10 in the Tower (floo
 | SC-3 | Stage 3: Chapters 5 and 6, "What's ahead" in the Book, Story replay shelf | Waits on SC-2 |
 | SC-4 | Eli's Blender model (hooded boy, Story v2; replaces the Masked Shade code stand-in) | Waits on Jay |
 | SC-5 | Story v2 words in the opening, Chapter 1 ending and Chapter 2 | Done Nov 25 on this branch; the new Chapter 2 ending (lamp, class photo, first notebook page) needs art and the notebook, built with SC-3 |
+
+## 4c. Yellow Guardian: the Loom Keeper (Jay, Nov 25; branch `claude/yellow-guardian`)
+
+| ID | What | Status |
+|---|---|---|
+| YG-1 | Thread and cloth attacks, the Loom Keeper, the 8 Sunrise Garden rooms, balance | Built Nov 25, then redesigned the same day (Jay: not like the tutorial boss): distance fighter, Spool Toss, sticky threads, loom phase with Spool Pegs; waits on Jay's phone test (loom-phase line OK'd) |
+| YG-2 | Blender model and animations (replaces the grey-lilac stand-in) | Built Nov 25 and in the game on the branch; waits on Jay's OK (`incoming-art/claude-guardians/loom-keeper/review-sheet.png`) |
+| YG-3 | Monster Journal trophy for the Loom Keeper | With YG-2 (needs a picture) |
+| YG-5 | Blender art for the Spool Pegs | Done: Jay OK'd it Nov 25 |
+| YG-4 | Miss Ada (draft name) and her shop reopening in town; the blanket at the Yellow Gate | With the story chapters (SC-3 and later) |

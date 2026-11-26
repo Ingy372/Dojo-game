@@ -30,6 +30,8 @@ const LIVE: Record<string, { band: Band; fromBelt: number; toBelt?: number }> = 
   'ladle-lobber': { band: MID, fromBelt: 3 },
   'rolling-pin': { band: MID, fromBelt: 3 },
   'hearth-cook': { band: BOSS, fromBelt: 3 },
+  // Nov 25: the Yellow Guardian, only met at Yellow belt (its own floor set).
+  'loom-keeper': { band: BOSS, fromBelt: 2, toBelt: 2 },
   // L11-B1: one Guardian per belt 4-10, only ever met at its own belt (L11-SPEC section 3).
   'stone-giant': { band: BOSS, fromBelt: 4, toBelt: 4 },
   'river-watcher': { band: BOSS, fromBelt: 5, toBelt: 5 },

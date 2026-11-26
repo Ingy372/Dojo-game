@@ -32,7 +32,24 @@ export interface EnemyAttackDef {
   tell?: string;
   /** R-CHALLENGE P4: what Sensei says the first time this save meets this attack. */
   senseiLine?: string;
+  /**
+   * Loom Keeper (Yellow Guardian, Nov 25): a danger area that isn't a circle. Always dash-only (can't be Countered).
+   * - 'line': a thread wall to wall through where the player stands; areaRadius is half its thickness.
+   * - 'cloth': a cloth over the player's side of the room (split down the middle), reaching areaRadius past the player
+   *   toward the other side, so a short walk or one Dash always gets out.
+   */
+  area?: AttackAreaKind;
+  /** For area 'line': 'across' (a left-to-right thread), 'down' (top to bottom), or 'both' (taking turns). */
+  lineAxis?: 'across' | 'down' | 'both';
+  /** Loom Keeper: a 'line' that, once it snaps, lies on the floor for `ticks` and slows walking (never Dashing) to `slow`. Never hurts. */
+  sticky?: { ticks: number; slow: number };
 }
+
+/**
+ * Loom Keeper: the kinds of non-circle danger area. 'spot' is a red circle thrown onto where the player stands
+ * (the Spool Toss): it can be Countered like any circle.
+ */
+export type AttackAreaKind = 'line' | 'cloth' | 'spot';
 
 /** R-CHALLENGE P4: how a pattern attack's danger area is drawn at the start of its wind-up. */
 export type PatternShape = 'lane' | 'landing' | 'circle';
@@ -55,6 +72,8 @@ export interface EnemyFollowUpDef {
   strength: number;
   /** Ticks between the first hit and the start of the second wind-up (at least the attack's recover). */
   gapTicks: number;
+  /** Loom Keeper: a Great Counter on the second hit staggers the enemy this long (it comes back and knocks it dizzy). */
+  dizzyTicks?: number;
 }
 
 /** R-CHALLENGE P2: the optional Challenge block. Used only on Challenge, from `fromBelt` and `fromRoom` up. */
@@ -104,6 +123,8 @@ export interface EnemySummonDef {
   count: number;
   /** Called once, when health first falls to this share of max health (0 to 1). */
   atHealthFraction: number;
+  /** Loom Keeper: 'room' spreads them around the room (the spool pegs) instead of around the boss. */
+  around?: 'room';
 }
 
 /** Enemies that carry a weapon (Bouncy Bopper's padded staff). Disarmed, they push instead. */
@@ -123,6 +144,18 @@ export interface EnemyDef {
   name: string;
   /** Short plain name for small spaces like Journal cards; falls back to name. */
   shortName: string;
+  /** Loom Keeper (Nov 25): what Sensei says at the Guardian's room door, and after it is set free (kid lines). */
+  senseiAtDoor?: string;
+  senseiAfterWin?: string;
+  /**
+   * Loom Keeper: it fights from a distance. After each attack it glides away for `glideTicks` while the player is
+   * closer than `tiles`, then attacks again; it never walks up to the player.
+   */
+  keepAway?: { tiles: number; glideTicks: number };
+  /** Loom Keeper: while its called helpers are up it stays where it is (up on its loom). */
+  stillWhileHelpers?: boolean;
+  /** Loom Keeper: when its last called helper is beaten it tumbles down dizzy for this many ticks. */
+  dizzyAfterHelpers?: number;
   maxHealth: number;
   power: number;
   guard: number;
@@ -209,6 +242,27 @@ function loadAttack(data: unknown, id: string, where: string): EnemyAttackDef {
   if (a.counterable === false || a.dashOnly === true) attack.counterable = false;
   if (a.noOverlapWithRedCircle !== undefined && typeof a.noOverlapWithRedCircle !== 'boolean') throw new EnemyError(id, `"${where}.noOverlapWithRedCircle" must be true or false`);
   if (a.noOverlapWithRedCircle === true) attack.noOverlapWithRedCircle = true;
+  if (a.area !== undefined) {
+    if (a.area !== 'line' && a.area !== 'cloth' && a.area !== 'spot') throw new EnemyError(id, `"${where}.area" must be "line", "cloth" or "spot"`);
+    attack.area = a.area;
+    // A thread or a cloth can't be Countered: the answer is to get out of it. A thrown spot can be.
+    if (a.area !== 'spot') attack.counterable = false;
+  }
+  if (a.sticky !== undefined) {
+    if (attack.area !== 'line') throw new EnemyError(id, `"${where}.sticky" only goes with "area": "line"`);
+    const st = a.sticky as Record<string, unknown>;
+    const ticks = wholeTicks(st, 'ticks', id, `${where}.sticky.`);
+    const slow = positiveNumber(st, 'slow', id, `${where}.sticky.`);
+    if (slow >= 1) throw new EnemyError(id, `"${where}.sticky.slow" must be under 1 (a share of walking speed)`);
+    attack.sticky = { ticks, slow };
+  }
+  // Loom Keeper: a normal attack can have a second hit too (the spool coming back). Challenge attacks read theirs below.
+  if (a.followUp !== undefined && where.startsWith('attacks')) attack.followUp = loadFollowUp(a.followUp, attack, id, where);
+  if (a.lineAxis !== undefined) {
+    if (attack.area !== 'line') throw new EnemyError(id, `"${where}.lineAxis" only goes with "area": "line"`);
+    if (a.lineAxis !== 'across' && a.lineAxis !== 'down' && a.lineAxis !== 'both') throw new EnemyError(id, `"${where}.lineAxis" must be "across", "down" or "both"`);
+    attack.lineAxis = a.lineAxis;
+  }
   for (const k of ['tell', 'senseiLine'] as const) {
     if (a[k] === undefined) continue;
     if (typeof a[k] !== 'string' || (a[k] as string).trim() === '') throw new EnemyError(id, `"${where}.${k}" must be some text`);
@@ -219,6 +273,19 @@ function loadAttack(data: unknown, id: string, where: string): EnemyAttackDef {
     throw new EnemyError(id, `"${where}.telegraphTicks" must be at least ${MIN_WINDUP_TICKS} (half a second of warning)`);
   }
   return attack;
+}
+
+/** R-CHALLENGE P2: a two-part attack's second hit (Loom Keeper: also on normal attacks, with an optional dizzyTicks). */
+function loadFollowUp(data: unknown, attack: EnemyAttackDef, id: string, where: string): EnemyFollowUpDef {
+  if (typeof data !== 'object' || data === null) throw new EnemyError(id, `"${where}.followUp" must be an object`);
+  const f = data as Record<string, unknown>;
+  const strength = positiveNumber(f, 'strength', id, `${where}.followUp.`);
+  if (strength > 1) throw new EnemyError(id, `"${where}.followUp.strength" must be 1 or less`);
+  const gapTicks = wholeTicks(f, 'gapTicks', id, `${where}.followUp.`);
+  if (gapTicks < attack.recoverTicks) throw new EnemyError(id, `"${where}.followUp.gapTicks" must be at least its recoverTicks`);
+  const out: EnemyFollowUpDef = { strength, gapTicks };
+  if (f.dizzyTicks !== undefined) out.dizzyTicks = wholeTicks(f, 'dizzyTicks', id, `${where}.followUp.`);
+  return out;
 }
 
 /** Checks an enemy data file and turns it into an EnemyDef, or throws a clear EnemyError. */
@@ -281,7 +348,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     const at = positiveNumber(s, 'atHealthFraction', id, 'summon.');
     if (!Number.isInteger(count)) throw new EnemyError(id, '"summon.count" must be a whole number');
     if (at >= 1) throw new EnemyError(id, '"summon.atHealthFraction" must be below 1');
-    summon = { enemy: s.enemy, count, atHealthFraction: at };
+    summon = { enemy: s.enemy, count, atHealthFraction: at, ...(s.around === 'room' ? { around: 'room' as const } : {}) };
   }
 
   let winded: EnemyWindedDef | null = null;
@@ -338,11 +405,24 @@ export function loadEnemy(data: unknown): EnemyDef {
   }
 
   const color = typeof raw.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(raw.color) ? raw.color : '#7d3f2f';
+  const sensei: Pick<EnemyDef, 'senseiAtDoor' | 'senseiAfterWin' | 'keepAway' | 'stillWhileHelpers' | 'dizzyAfterHelpers'> = {};
+  if (raw.keepAway !== undefined) {
+    const k = raw.keepAway as Record<string, unknown>;
+    sensei.keepAway = { tiles: positiveNumber(k, 'tiles', id, 'keepAway.'), glideTicks: wholeTicks(k, 'glideTicks', id, 'keepAway.') };
+  }
+  if (raw.stillWhileHelpers === true) sensei.stillWhileHelpers = true;
+  if (raw.dizzyAfterHelpers !== undefined) sensei.dizzyAfterHelpers = wholeTicks(raw, 'dizzyAfterHelpers', id);
+  for (const k of ['senseiAtDoor', 'senseiAfterWin'] as const) {
+    if (raw[k] === undefined) continue;
+    if (typeof raw[k] !== 'string' || (raw[k] as string).trim() === '') throw new EnemyError(id, `"${k}" must be some text`);
+    sensei[k] = raw[k] as string;
+  }
 
   return {
     id,
     name: raw.name,
     shortName: typeof raw.shortName === 'string' ? raw.shortName : raw.name,
+    ...sensei,
     maxHealth: positiveNumber(raw, 'maxHealth', id),
     power: positiveNumber(raw, 'power', id),
     guard,
@@ -421,15 +501,7 @@ function loadChallenge(data: unknown, base: EnemyAttackDef[], id: string): Enemy
     if (challengeWindup(attack) < MIN_PATTERN_WINDUP_TICKS) {
       throw new EnemyError(id, `"${where}.telegraphTicks" gives a Challenge wind-up under ${MIN_PATTERN_WINDUP_TICKS} ticks (0.7 s)`);
     }
-    if (o.followUp !== undefined) {
-      if (typeof o.followUp !== 'object' || o.followUp === null) throw new EnemyError(id, `"${where}.followUp" must be an object`);
-      const f = o.followUp as Record<string, unknown>;
-      const strength = positiveNumber(f, 'strength', id, `${where}.followUp.`);
-      if (strength > 1) throw new EnemyError(id, `"${where}.followUp.strength" must be 1 or less`);
-      const gapTicks = wholeTicks(f, 'gapTicks', id, `${where}.followUp.`);
-      if (gapTicks < attack.recoverTicks) throw new EnemyError(id, `"${where}.followUp.gapTicks" must be at least its recoverTicks`);
-      attack.followUp = { strength, gapTicks };
-    }
+    if (o.followUp !== undefined) attack.followUp = loadFollowUp(o.followUp, attack, id, where);
     if (o.landing !== undefined && typeof o.landing !== 'boolean') throw new EnemyError(id, `"${where}.landing" must be true or false`);
     if (o.landing === true) attack.landing = true;
     attack.challenge = true;

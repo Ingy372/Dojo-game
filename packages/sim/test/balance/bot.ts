@@ -19,6 +19,8 @@ import {
   TICKS_PER_SECOND,
   GUIDE_DONE,
   activeDoorSlots,
+  lidUp,
+  attackCovers,
   chooseInsight,
   counterWindowTicks,
   createRng,
@@ -164,7 +166,7 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
     const evs = updateRun(content, run, world);
     for (const ev of evs) if (ev.kind === 'graded') stats.grade = ev.result.grade;
     if (evs.some((e) => e.kind === 'nextRoom' || e.kind === 'runOver')) break;
-    landers = new Set(world.enemies.filter((e) => currentAttack(e).landing === true).map((e) => e.id));
+    landers = new Set(world.enemies.filter((e) => e.def.attacks.length > 0 && currentAttack(e).landing === true).map((e) => e.id));
   }
   stats.ticks = world.progress.ticks;
   stats.damage = world.progress.damageTaken;
@@ -177,6 +179,9 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
   const p = world.players.p1;
   const now = world.tick;
   const alive = world.enemies.filter((e) => e.mode !== 'defeated');
+  // Loom Keeper (and the Hearth Cook's lid): while called helpers are up, a lidded boss can't be hurt, so go for the helpers.
+  const lidded = lidUp(world);
+  const goals = lidded ? alive.filter((e) => !e.def.lidWhileHelpers) : alive;
   const prog = world.progress;
 
   // Room done: open the chest, use the shrine, pick a door.
@@ -200,9 +205,9 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
   }
   // Tool Belt: the KATA button, once ready, when enemies are close (a kid or masher presses it for one; a smart player waits for two).
   const kataNear = p.kataMove ? alive.filter((e) => distance(p.pos, e.pos) - e.def.radius - 0.42 <= p.kataMove!.radius).length : 0;
-  if ((style === 'masher' || style === 'kid') && p.kataMove && p.kataCooldown === 0 && kataNear >= 1) return { ...approach(p, nearest(p.pos, alive)!), action: 'kata' };
+  if ((style === 'masher' || style === 'kid') && p.kataMove && p.kataCooldown === 0 && kataNear >= 1) return { ...approach(p, nearest(p.pos, goals.length ? goals : alive)!), action: 'kata' };
   if (style === 'masher' || style === 'kid') {
-    const t = nearest(p.pos, alive)!;
+    const t = nearest(p.pos, goals.length ? goals : alive)!;
     const near = distance(p.pos, t.pos) - t.def.radius - 0.42 <= COMBAT.strike.reach;
     const move = approach(p, t);
     return near && p.focus >= COMBAT.strike.focusCost ? { ...move, action: 'strike' } : move;
@@ -221,8 +226,14 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
   }
   for (const [k, pl] of plans) if (pl.impact < now) plans.delete(k);
 
-  const covering = (e: EnemyState) =>
-    e.mode === 'windup' && e.attackCenter && distance(p.pos, e.attackCenter) <= currentAttack(e).areaRadius + 0.3;
+  const covering = (e: EnemyState) => e.mode === 'windup' && attackCovers(e, p.pos, 0.3);
+  /** Loom Keeper: which way is out of a thread (straight off it, toward the room's middle) or a cloth (toward the bright side). */
+  const outOf = (e: EnemyState): Vec2 => {
+    const a = e.attackArea!;
+    if (a.kind === 'cloth') return { x: -a.side, y: 0 };
+    if (a.axis === 'x') return { x: 0, y: p.pos.y < room.height / 2 ? 1 : -1 };
+    return { x: p.pos.x < room.width / 2 ? 1 : -1, y: 0 };
+  };
   const active = [...plans.values()]
     .filter((pl) => pl.noticeAt <= now)
     .filter((pl) => {
@@ -248,6 +259,10 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
     const stepOut = landing && toEdge / (MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND) + skill.reactTicks < first.impact - now;
     if (stepOut && now >= first.noticeAt) {
       escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
+    } else if (dashOnly && firstEnemy.attackArea && now >= first.noticeAt) {
+      // Loom Keeper: step (or dash) off the thread, or out from under the cloth.
+      escape = outOf(firstEnemy);
+      if (p.dashCooldown === 0) action = 'dash';
     } else if (dashOnly && now >= first.noticeAt && p.dashCooldown === 0) {
       // B-T3: can't be Countered or blocked (rolling pin), so dash out.
       escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
@@ -273,7 +288,7 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
   // R-CHALLENGE P5: between the two hits of a double hit, keep Counter ready instead of Striking.
   const secondComing = PATTERN_ANSWERS.holdStrikeForSecondHit && skill !== SKILLS.novice && alive.some((e) => e.followUpStage === 1);
   if (!action && !secondComing && p.focus >= COMBAT.strike.focusCost && p.guardTicks === 0) {
-    const t = nearest(p.pos, alive);
+    const t = nearest(p.pos, goals.length ? goals : alive);
     if (t && distance(p.pos, t.pos) - t.def.radius - 0.42 <= COMBAT.strike.reach && (style === 'stand' || t.shieldUp || t.mode === 'winded' || t.mode === 'stagger' || p.focus >= 60)) {
       action = 'strike';
     }
@@ -284,7 +299,7 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
   if (escape) {
     move = { kind: 'stick', x: escape.x, y: escape.y };
   } else if (p.guardTicks === 0) {
-    move = style === 'stand' ? approach(p, nearest(p.pos, alive)!) : smartMove(p, alive, room);
+    move = style === 'stand' ? approach(p, nearest(p.pos, goals.length ? goals : alive)!) : smartMove(p, goals.length ? goals : alive, room);
   }
   return action ? { ...move, action } : move;
 }

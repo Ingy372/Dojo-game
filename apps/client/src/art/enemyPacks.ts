@@ -12,6 +12,9 @@ export const ENEMY_PACKS: Record<string, { pack: PackName; id: string }> = {
   doughling: { pack: 'enemy-doughling', id: 'doughling' },
   'rolling-pin': { pack: 'enemy-rolling-pin', id: 'rolling-pin' },
   'hearth-cook': { pack: 'enemy-hearth-cook-p1', id: 'hearth-cook-p1' },
+  // Nov 25: the Yellow Guardian (its torn form is LOOM_KEEPER_TORN) and its Spool Pegs.
+  'loom-keeper': { pack: 'enemy-loom-keeper', id: 'loom-keeper' },
+  'spool-peg': { pack: 'enemy-spool-peg', id: 'spool-peg' },
 };
 
 /** B-T3: the Hearth Cook has one rig per phase; this many health left (share) or more uses that rig. */
@@ -27,8 +30,11 @@ const HEARTH_COOK_RIGS: Array<{ atHealth: number; pack: PackName; id: string }> 
  */
 const FLOOR_KEEPER_FORM2 = { atHealth: 0.5, pack: 'enemy-floor-keeper-f2' as PackName, id: 'floor-keeper-f2' };
 
+/** The Loom Keeper's coat tears at a third of its health (Blender art, Nov 25). */
+const LOOM_KEEPER_TORN = { atHealth: 1 / 3, pack: 'enemy-loom-keeper-f2' as PackName, id: 'loom-keeper-f2' };
+
 /** Every pack ENEMY_PACKS or a phase rig can use, for loading. */
-export const ENEMY_ART_PACKS: PackName[] = [...new Set([...Object.values(ENEMY_PACKS).map((p) => p.pack), ...HEARTH_COOK_RIGS.map((r) => r.pack), FLOOR_KEEPER_FORM2.pack])];
+export const ENEMY_ART_PACKS: PackName[] = [...new Set([...Object.values(ENEMY_PACKS).map((p) => p.pack), ...HEARTH_COOK_RIGS.map((r) => r.pack), FLOOR_KEEPER_FORM2.pack, LOOM_KEEPER_TORN.pack])];
 
 /** What `enemyArtPacksFor` needs to know about an enemy type: who it calls in and what it splits into. */
 interface EnemyLinks {
@@ -61,6 +67,7 @@ export function enemyArtPacksFor(enemyIds: Iterable<string>, defs: readonly Enem
     if (own) packs.add(own.pack);
     if (id === 'hearth-cook') HEARTH_COOK_RIGS.forEach((r) => packs.add(r.pack));
     if (id === 'floor-keeper') packs.add(FLOOR_KEEPER_FORM2.pack);
+    if (id === 'loom-keeper') packs.add(LOOM_KEEPER_TORN.pack);
   }
   return [...packs];
 }
@@ -68,6 +75,7 @@ export function enemyArtPacksFor(enemyIds: Iterable<string>, defs: readonly Enem
 /** The art (pack, id) for an enemy at this share of health; phase bosses change rig as they lose health. */
 export function enemyArt(enemyId: string, healthShare: number): { pack: PackName; id: string } | undefined {
   if (enemyId === 'hearth-cook') return HEARTH_COOK_RIGS.find((r) => healthShare >= r.atHealth) ?? HEARTH_COOK_RIGS[2];
+  if (enemyId === 'loom-keeper' && healthShare <= LOOM_KEEPER_TORN.atHealth) return { pack: LOOM_KEEPER_TORN.pack, id: LOOM_KEEPER_TORN.id };
   if (enemyId === 'floor-keeper' && healthShare < FLOOR_KEEPER_FORM2.atHealth) return { pack: FLOOR_KEEPER_FORM2.pack, id: FLOOR_KEEPER_FORM2.id };
   return ENEMY_PACKS[enemyId];
 }

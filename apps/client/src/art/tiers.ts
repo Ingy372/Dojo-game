@@ -44,10 +44,13 @@ export function auraId(kind: AuraKind, enemyId: string): string {
  */
 const SHARP_PACK = 0.5;
 const BIGGER = 1.25;
-export const ART_BOOST: Record<string, number> = { swarmer: SHARP_PACK * BIGGER, shield: SHARP_PACK * BIGGER, brute: SHARP_PACK * BIGGER, 'floor-keeper': SHARP_PACK * BIGGER };
+export const ART_BOOST: Record<string, number> = { swarmer: SHARP_PACK * BIGGER, shield: SHARP_PACK * BIGGER, brute: SHARP_PACK * BIGGER, 'floor-keeper': SHARP_PACK * BIGGER, 'loom-keeper': SHARP_PACK * BIGGER };
+
+/** A monster drawn as a recoloured stand-in until its own art is OK'd (none now: the Spool Pegs have their Blender art). */
+export const STAND_IN_TINT: Record<string, number> = {};
 
 /** Rigs packed at a different pixel size than their enemy's usual art: drawn this much bigger to match (Nov 22). */
-const RIG_BOOST: Record<string, number> = { 'floor-keeper-f2': 0.6 / 0.45 };
+const RIG_BOOST: Record<string, number> = { 'floor-keeper-f2': 0.6 / 0.45, 'loom-keeper': 0.6 / 0.45, 'loom-keeper-f2': 0.6 / 0.45 };
 export function rigBoost(rigId: string | undefined): number {
   return (rigId && RIG_BOOST[rigId]) || 1;
 }
@@ -59,7 +62,7 @@ export function artScale(def: { id: string; scale: number }): number {
 
 
 /** Attack names whose animation has a shorter name in the art (B-T3 Hearth Cook). */
-const ATTACK_ANIMS: Record<string, string> = { 'ladle bonk': 'bonk', 'hot pot rush': 'rush', 'rolling pin lane': 'pin' };
+const ATTACK_ANIMS: Record<string, string> = { 'ladle bonk': 'bonk', 'hot pot rush': 'rush', 'rolling pin lane': 'pin', 'spool toss': 'toss', 'thread line': 'weave', 'crossing threads': 'weave', 'big cloth': 'cloth' };
 
 /** The animation name for an attack (the Floor Keeper's "slam" is already "slam"). */
 export function attackAnim(attackName: string): string {

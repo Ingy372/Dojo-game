@@ -1,0 +1,148 @@
+{
+  "id": "loom-keeper",
+  "name": "The Loom Keeper",
+  "shortName": "Loom Keeper",
+  "notes": "Yellow Guardian, redesigned Nov 25 (Jay: it must not feel like the tutorial boss). Darkness over the tailor's loom (Story of the Light v2: a Guardian is never a person). It fights from a distance: after each attack it glides away (keepAway). Spool Toss: a red circle thrown onto the player, then the spool comes back for a second hit; a Great Counter on the return knocks it dizzy. Threads (dash-only lines wall to wall) snap and lie on the floor for a while, slowing walking but never hurting. At half health it rises to its loom: three Spool Pegs appear around the room and it can't be hurt until they are broken, then it tumbles down dizzy. From a third: the Big Cloth and crossing threads. No Swarmers. Numbers are tuned by the balance tests.",
+  "color": "#8f8aa8",
+  "boss": true,
+  "guardian": true,
+  "tier": "yellow",
+  "band": "F5",
+  "maxHealth": 490,
+  "power": 17,
+  "guard": 30,
+  "radius": 0.85,
+  "moveSpeedTilesPerSecond": 1.5,
+  "sightRange": 20,
+  "attacks": [
+    {
+      "name": "spool toss",
+      "strength": 0.9,
+      "startRange": 6.5,
+      "reach": 0,
+      "areaRadius": 1.1,
+      "telegraphTicks": 22,
+      "recoverTicks": 18,
+      "area": "spot",
+      "followUp": {
+        "strength": 0.7,
+        "gapTicks": 18,
+        "dizzyTicks": 50
+      },
+      "tell": "It throws the spool; a red circle under the hero. The spool comes back: a second red circle. Counter either; Countering the return knocks it dizzy."
+    },
+    {
+      "name": "thread line",
+      "strength": 1.0,
+      "startRange": 9.0,
+      "reach": 0,
+      "areaRadius": 0.6,
+      "telegraphTicks": 26,
+      "recoverTicks": 24,
+      "area": "line",
+      "lineAxis": "across",
+      "sticky": {
+        "ticks": 80,
+        "slow": 0.5
+      },
+      "noOverlapWithRedCircle": true,
+      "tell": "A striped thread wall to wall through the hero, '!!' and a twang. It snaps and lies on the floor for 4 s: walking over it is slow."
+    },
+    {
+      "name": "crossing threads",
+      "strength": 1.0,
+      "startRange": 20.0,
+      "reach": 0,
+      "areaRadius": 0.6,
+      "telegraphTicks": 26,
+      "recoverTicks": 22,
+      "area": "line",
+      "lineAxis": "both",
+      "sticky": {
+        "ticks": 80,
+        "slow": 0.5
+      },
+      "noOverlapWithRedCircle": true,
+      "tell": "Threads across, then up and down, one at a time; each lies on the floor for 4 s."
+    },
+    {
+      "name": "big cloth",
+      "strength": 1.2,
+      "startRange": 12.0,
+      "reach": 0,
+      "areaRadius": 1.8,
+      "telegraphTicks": 30,
+      "recoverTicks": 34,
+      "area": "cloth",
+      "noOverlapWithRedCircle": true,
+      "tell": "A dark cloth over the hero's side of the room; its edge glows for 1.5 seconds."
+    }
+  ],
+  "signature": "The Loom",
+  "phases": [
+    {
+      "id": "toss",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "spool toss",
+        "thread line"
+      ],
+      "tell": "It throws its spool and pulls threads across the room.",
+      "counterplay": "COUNTER the spool; DASH off threads.",
+      "senseiLine": "The spool goes up first. Ready."
+    },
+    {
+      "id": "loom",
+      "atHealthFraction": 0.5,
+      "attacks": [
+        "crossing threads"
+      ],
+      "tell": "Up on its loom; three glowing spools appear.",
+      "counterplay": "Break the spools while dodging threads.",
+      "senseiLine": "Break the three spools. Then it falls!",
+      "senseiLineApproved": "Jay, Nov 25"
+    },
+    {
+      "id": "torn",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "big cloth",
+        "crossing threads",
+        "spool toss"
+      ],
+      "tell": "The coat tears; the cloth's edge glows.",
+      "counterplay": "Stay in the bright half.",
+      "senseiLine": "Watch the glowing edge. Stay bright."
+    }
+  ],
+  "parSeconds": 25,
+  "senseiAtDoor": "Someone used to sew warm things here.",
+  "senseiAfterWin": "Warm things are made to be shared.",
+  "lines": {
+    "intro": "Someone used to sew warm things here.",
+    "freed": "Take a blanket. Someone out there's cold.",
+    "freedBy": "Miss Ada, the tailor, in town (draft name)",
+    "senseiAfter": "Warm things are made to be shared."
+  },
+  "description": "The Loom Keeper throws its spool like a yo-yo, pulls sticky threads across the room, climbs onto its loom behind three glowing spools, then slides a big dark cloth over your side.",
+  "bestiary": {
+    "tip": "Counter the spool when it comes back!",
+    "lore": {
+      "yellow": "Darkness settled on the tailor's loom and took her shape. It weaves grey cloth that warms no one."
+    }
+  },
+  "faithOverlayKey": "loom-keeper",
+  "keepAway": {
+    "tiles": 4.0,
+    "glideTicks": 24
+  },
+  "summon": {
+    "enemy": "spool-peg",
+    "count": 3,
+    "atHealthFraction": 0.5,
+    "around": "room"
+  },
+  "lidWhileHelpers": true,
+  "stillWhileHelpers": true,
+  "dizzyAfterHelpers": 70
+}

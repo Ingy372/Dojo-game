@@ -32,7 +32,7 @@ describe('GUARD-SCALE-01: the factors are content data', () => {
 
   it('every real Guardian is scaled by the data, and nothing else is', () => {
     expect(guardians().map((d) => d.id).sort()).toEqual(
-      ['echo-mask', 'ember-knight', 'floor-keeper', 'hearth-cook', 'lost-lightbearer', 'river-watcher', 'root-keeper', 'stone-giant', 'storm-herald'],
+      ['echo-mask', 'ember-knight', 'floor-keeper', 'hearth-cook', 'loom-keeper', 'lost-lightbearer', 'river-watcher', 'root-keeper', 'stone-giant', 'storm-herald'],
     );
     const big: Record<string, number> = guardianScaleRaw.bigGuardians;
     for (const d of Object.values(content.enemies)) {
@@ -110,7 +110,8 @@ describe('GUARD-SCALE-01: hitbox and attack reach match the bigger body', () => 
       const pairs: [EnemyAttackDef, EnemyAttackDef][] = allAttacks(base).map((a, i) => [a, allAttacks(d)[i]]);
       expect(pairs.length, d.id).toBeGreaterThan(0);
       for (const [a, b] of pairs) {
-        expect(b.areaRadius, `${d.id}/${a.name}`).toBeCloseTo(a.areaRadius * circle, 10);
+        // Loom Keeper: a thread or cloth sits on the player, so it keeps its size.
+        expect(b.areaRadius, `${d.id}/${a.name}`).toBeCloseTo(a.area ? a.areaRadius : a.areaRadius * circle, 10);
         expect(b.startRange, `${d.id}/${a.name} start`).toBeCloseTo(a.startRange + grow, 10);
         expect(b.reach, `${d.id}/${a.name}`).toBeCloseTo(a.reach > 0 ? a.reach + grow : 0, 10);
         // Everything else about the attack is untouched: timing, strength, flags.
@@ -154,6 +155,10 @@ function escapeDistance(from: { x: number; y: number }, view: { x0: number; y0: 
 /** How far the player is from the nearest point of the danger shape: a disc, or a lane (a thick line from the Guardian). */
 function dangerFn(center: { x: number; y: number }, facing: { x: number; y: number }, a: EnemyAttackDef): (p: { x: number; y: number }) => number {
   const c = { x: center.x + facing.x * a.reach, y: center.y + facing.y * a.reach };
+  // Loom Keeper: a thread through the player (at 0, 0; across and up-and-down are the same distance), or a cloth from
+  // areaRadius past the player to the far wall.
+  if (a.area === 'line') return (p) => Math.abs(p.y) - a.areaRadius;
+  if (a.area === 'cloth') return (p) => -a.areaRadius - p.x;
   if (a.counterable === false) {
     return (p) => {
       const dx = c.x - center.x, dy = c.y - center.y;

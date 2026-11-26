@@ -60,7 +60,7 @@ describe('R-CHALLENGE P3: loader', () => {
     expect(cook.attacks.filter((a) => a.noOverlapWithRedCircle).map((a) => a.counterable)).toEqual([false]);
     expect('noOverlapWithRedCircle' in loadEnemy(bruteData).attacks[0]).toBe(false);
     const flagged = Object.values(testContent().enemies).flatMap((d) => d.attacks.filter((a) => a.noOverlapWithRedCircle).map((a) => ({ d, a })));
-    expect(flagged.length).toBe(9);
+    expect(flagged.length).toBe(12); // + the Loom Keeper's two threads and its cloth (Nov 25)
     for (const { d, a } of flagged) expect(d.id === 'rolling-pin' || (d.boss && a.counterable === false), d.id).toBe(true);
   });
 });

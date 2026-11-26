@@ -77,7 +77,8 @@ export function guardianScaleFor(c: GuardianScaleContent, id: string, boss: bool
 }
 
 function scaleAttack(a: EnemyAttackDef, circle: number, grow: number): EnemyAttackDef {
-  return { ...a, startRange: a.startRange + grow, reach: a.reach > 0 ? a.reach + grow : 0, areaRadius: a.areaRadius * circle };
+  // Loom Keeper: a thread or cloth is placed on the player, not on the body, so its size doesn't grow with the body.
+  return { ...a, startRange: a.startRange + grow, reach: a.reach > 0 ? a.reach + grow : 0, areaRadius: a.area ? a.areaRadius : a.areaRadius * circle };
 }
 
 /**

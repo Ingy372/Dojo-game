@@ -29,8 +29,8 @@ function withDrafts(on: string[] = []): Content {
 }
 
 describe('L11-B2a: the floor-set switch', () => {
-  it('ships with only White Dojo and Ember Kitchens on', () => {
-    expect(Object.entries(floorSetsRaw.sets).filter(([, v]) => v).map(([k]) => k)).toEqual(['white-dojo', 'ember-kitchens']);
+  it('ships with only White Dojo, Sunrise Garden (Yellow, Nov 25) and Ember Kitchens on', () => {
+    expect(Object.entries(floorSetsRaw.sets).filter(([, v]) => v).map(([k]) => k)).toEqual(['white-dojo', 'sunrise-garden', 'ember-kitchens']);
     expect(Object.values(SETS).every(([s]) => floorSetsRaw.sets[s as keyof typeof floorSetsRaw.sets] === false)).toBe(true);
   });
 
