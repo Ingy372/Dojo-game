@@ -24,33 +24,81 @@
   "enemies": [
     {
       "enemy": "shield",
-      "column": 11,
+      "column": 6,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 17,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 12,
       "row": 3,
       "wave": 1
     },
     {
       "enemy": "bopper",
       "column": 6,
-      "row": 2,
-      "wave": 1
+      "row": 3,
+      "wave": 2
     },
     {
       "enemy": "bopper",
-      "column": 16,
+      "column": 17,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
       "row": 2,
       "wave": 2
     },
     {
-      "enemy": "swarmer",
-      "column": 4,
-      "row": 3,
-      "wave": 2
+      "enemy": "ladle-lobber",
+      "column": 12,
+      "row": 2,
+      "wave": 3
     },
     {
       "enemy": "swarmer",
-      "column": 18,
+      "column": 6,
       "row": 3,
-      "wave": 2
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 17,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "brute",
+      "column": 12,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 6,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 17,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
+      "row": 6,
+      "wave": 4
     }
   ],
   "artProps": "Layout copied from staff-and-shield. Theme and props from the giants-steps draft room \"shield-shelf\". One long stone shelf across the room with a wide gap in the middle, like a cupboard for giants; round shield-shaped stones lean on the wall.",

@@ -24,7 +24,7 @@
   "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
   "enemies": [
     {
-      "enemy": "stone-giant",
+      "enemy": "floor-keeper",
       "column": 10,
       "row": 3,
       "wave": 1
@@ -58,5 +58,6 @@
   "signs": [
     "Tall steps? Take them one at a time.",
     "Even a giant likes a kind word."
-  ]
+  ],
+  "placeholder": "STAND-IN BOSS: the Floor Keeper fights here until Jay picks the Green Guardian (docs/green-guardian-ideas.md) and its art is made. The Stone Giant has data but no art yet."
 }

@@ -11,7 +11,8 @@ import floorSetsRaw from '../../../content/settings/floor-sets.json';
 const draftFiles = import.meta.glob('../../../drafts/content/rooms/L11/*.json', { eager: true, import: 'default' });
 const draftRooms = Object.keys(draftFiles).sort().map((k) => draftFiles[k]);
 const SETS: Record<number, [string, string]> = {
-  4: ['giants-steps', 'stone-giant'],
+  // Green floors (Nov 26): live in content/rooms but switched off; the Floor Keeper stands in until Jay picks the Green Guardian.
+  4: ['giants-steps', 'floor-keeper'],
   5: ['quiet-river', 'river-watcher'],
   6: ['forge-of-courage', 'ember-knight'],
   7: ['hall-of-echoes', 'echo-mask'],

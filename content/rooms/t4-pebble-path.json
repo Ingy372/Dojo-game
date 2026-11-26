@@ -1,18 +1,19 @@
 {
-  "id": "t4-switchback-road",
-  "name": "Switchback Road",
+  "id": "t4-pebble-path",
+  "name": "Pebble Path",
   "kind": "battle",
   "minBeltTier": 4,
   "floorSet": "giants-steps",
+  "earliestRoom": 1,
   "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
   "tiles": [
     "####D#####D#####D###",
     "#..................#",
     "#..................#",
+    "#..#....#....#...#.#",
     "#..................#",
     "#..................#",
-    "#....##......##....#",
-    "#..................#",
+    "#..#....#....#...#.#",
     "#..................#",
     "#..................#",
     "#.........P........#",
@@ -20,89 +21,83 @@
     "####################"
   ],
   "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
-  "mix": "L11 swap: every Brute -> Shield.",
+  "mix": "L11 swap: every Swarmers -> Spark Sprites.",
   "enemies": [
     {
-      "enemy": "spark-sprite",
-      "column": 4,
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "bopper",
+      "column": 11,
       "row": 2,
       "wave": 1
     },
     {
       "enemy": "spark-sprite",
-      "column": 9,
+      "column": 6,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 15,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 11,
       "row": 2,
-      "wave": 1
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "bopper",
+      "column": 11,
+      "row": 5,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 6,
+      "row": 2,
+      "wave": 4
     },
     {
       "enemy": "spark-sprite",
       "column": 15,
       "row": 2,
-      "wave": 1
-    },
-    {
-      "enemy": "dough-blob",
-      "column": 6,
-      "row": 3,
-      "wave": 2
-    },
-    {
-      "enemy": "dough-blob",
-      "column": 13,
-      "row": 3,
-      "wave": 2
-    },
-    {
-      "enemy": "spark-sprite",
-      "column": 10,
-      "row": 4,
-      "wave": 2
+      "wave": 4
     },
     {
       "enemy": "shield",
-      "column": 4,
+      "column": 11,
       "row": 2,
-      "wave": 3
-    },
-    {
-      "enemy": "spark-sprite",
-      "column": 9,
-      "row": 2,
-      "wave": 3
-    },
-    {
-      "enemy": "spark-sprite",
-      "column": 15,
-      "row": 2,
-      "wave": 3
-    },
-    {
-      "enemy": "spark-sprite",
-      "column": 4,
-      "row": 2,
-      "wave": 4
-    },
-    {
-      "enemy": "spark-sprite",
-      "column": 9,
-      "row": 2,
-      "wave": 4
-    },
-    {
-      "enemy": "rolling-pin",
-      "column": 15,
-      "row": 2,
-      "wave": 4
-    },
-    {
-      "enemy": "ladle-lobber",
-      "column": 9,
-      "row": 3,
       "wave": 4
     }
   ],
-  "artProps": "Layout copied from oven-row. Theme and props from the giants-steps draft room \"switchback-road\". A zigzag mountain road; two long ridges switch sides, and the wheel marks run straight down between them.",
+  "artProps": "Layout copied from pillar-court. Theme and props from the giants-steps draft room \"pebble-path\". Flat stepping stones along a worn path; the stair-shaped blocks in the corners are the old steps.",
   "signs": [
-    "Zig, then zag, then go."
+    "One step at a time."
   ]
 }

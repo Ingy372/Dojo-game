@@ -1,18 +1,26 @@
 {
-  "id": "t4-pebble-path",
-  "name": "Pebble Path",
-  "kind": "battle",
+  "id": "t4-giants-gate",
+  "name": "The Giant's Gate",
+  "kind": "challenge",
   "minBeltTier": 4,
   "floorSet": "giants-steps",
+  "earliestRoom": 4,
   "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "challenge": {
+    "seconds": 100,
+    "text": "Finish in 100 seconds for a better chest!",
+    "inTimeText": "In time!",
+    "outOfTimeText": "Steep hill! You still earned a chest.",
+    "outOfTimeShort": "Time's up!"
+  },
   "tiles": [
     "####D#####D#####D###",
     "#..................#",
+    "#.........C........#",
     "#..................#",
-    "#..#....#....#...#.#",
     "#..................#",
     "#..................#",
-    "#..#....#....#...#.#",
+    "#..................#",
     "#..................#",
     "#..................#",
     "#.........P........#",
@@ -24,79 +32,79 @@
   "enemies": [
     {
       "enemy": "shield",
-      "column": 4,
-      "row": 3,
+      "column": 10,
+      "row": 4,
       "wave": 1
     },
     {
-      "enemy": "shield",
-      "column": 7,
-      "row": 3,
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 4,
       "wave": 1
     },
     {
-      "enemy": "spark-sprite",
-      "column": 11,
-      "row": 3,
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 4,
       "wave": 1
     },
     {
-      "enemy": "spark-sprite",
-      "column": 15,
-      "row": 3,
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 6,
       "wave": 1
     },
     {
-      "enemy": "spark-sprite",
-      "column": 7,
-      "row": 3,
+      "enemy": "rolling-pin",
+      "column": 5,
+      "row": 4,
       "wave": 2
     },
     {
       "enemy": "spark-sprite",
-      "column": 11,
-      "row": 3,
+      "column": 16,
+      "row": 4,
       "wave": 2
     },
     {
       "enemy": "spark-sprite",
-      "column": 15,
-      "row": 3,
+      "column": 10,
+      "row": 6,
       "wave": 2
     },
     {
-      "enemy": "spark-sprite",
-      "column": 18,
-      "row": 3,
+      "enemy": "bopper",
+      "column": 12,
+      "row": 4,
       "wave": 2
     },
     {
       "enemy": "brute",
-      "column": 4,
-      "row": 3,
+      "column": 10,
+      "row": 4,
       "wave": 3
     },
     {
       "enemy": "shield",
-      "column": 11,
-      "row": 3,
+      "column": 5,
+      "row": 6,
       "wave": 3
     },
     {
       "enemy": "spark-sprite",
-      "column": 15,
-      "row": 3,
+      "column": 16,
+      "row": 6,
       "wave": 3
     },
     {
       "enemy": "spark-sprite",
-      "column": 18,
-      "row": 3,
+      "column": 7,
+      "row": 4,
       "wave": 3
     }
   ],
-  "artProps": "Layout copied from pillar-court. Theme and props from the giants-steps draft room \"pebble-path\". Flat stepping stones along a worn path; the stair-shaped blocks in the corners are the old steps.",
+  "artProps": "Layout copied from shield-wall. Theme and props from the giants-steps draft room \"giants-gate\". A tall stone arch over the door, with two stair-shaped corner blocks; small cairns at the edges.",
   "signs": [
-    "One step at a time."
+    "Many small steps climb a tall hill."
   ]
 }

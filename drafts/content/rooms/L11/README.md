@@ -1,6 +1,6 @@
 # L11-C1: room files for tiers 4-10
 
-56 rooms, 8 per tier, one file each, in the exact `content/rooms/` format. Ids are `t4-` to `t10-`; `minBeltTier` is the tier and `floorSet` is the place.
+56 rooms, 8 per tier, one file each (**Nov 26: the 8 `t4-` Green rooms moved to `content/rooms/`, switched off, re-waved with art-ready monsters and a Floor Keeper stand-in boss; 48 remain here**), in the exact `content/rooms/` format. Ids are `t4-` to `t10-`; `minBeltTier` is the tier and `floorSet` is the place.
 
 **Why they are here and not in `content/rooms/` yet:** `floorRooms` switches a tier to its own set as soon as one of its rooms is live, and each Guardian room names its Guardian (`stone-giant` ... `lost-lightbearer`), which L11-B1 still has to build. So for L11-B2, move a tier's 8 files into `content/rooms/` once that tier's Guardian file and art land.
 

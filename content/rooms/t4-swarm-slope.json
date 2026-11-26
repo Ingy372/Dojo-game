@@ -4,6 +4,7 @@
   "kind": "battle",
   "minBeltTier": 4,
   "floorSet": "giants-steps",
+  "earliestRoom": 1,
   "mix": "Yellow belt and up. Bouncy Boppers + swarmers: watch for the staff going up, then step aside or Counter. L11 swap: every Swarmers -> Doughlings.",
   "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
   "tiles": [
@@ -22,40 +23,76 @@
   "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
   "enemies": [
     {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 2,
+      "wave": 1
+    },
+    {
       "enemy": "bopper",
       "column": 10,
       "row": 3,
-      "wave": 1
+      "wave": 2
     },
     {
       "enemy": "doughling",
-      "column": 4,
-      "row": 3,
-      "wave": 1
-    },
-    {
-      "enemy": "doughling",
-      "column": 16,
-      "row": 3,
-      "wave": 1
-    },
-    {
-      "enemy": "bopper",
       "column": 5,
       "row": 4,
       "wave": 2
     },
     {
       "enemy": "doughling",
-      "column": 14,
+      "column": 15,
       "row": 4,
       "wave": 2
     },
     {
-      "enemy": "doughling",
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
       "column": 10,
       "row": 2,
-      "wave": 2
+      "wave": 3
+    },
+    {
+      "enemy": "bopper",
+      "column": 6,
+      "row": 3,
+      "wave": 4
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 3,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 10,
+      "row": 2,
+      "wave": 4
     }
   ],
   "artProps": "Layout copied from bopper-yard. Theme and props from the giants-steps draft room \"swarm-slope\". A loose gravel hillside; the diagonal stone blocks are old steps that slid into a V.",
