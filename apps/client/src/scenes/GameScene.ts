@@ -148,6 +148,7 @@ import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
 import { floorLine } from '../game/floorName';
+import { doorForTap } from '../game/doorTap';
 import { virtueRefusedLine } from '../input/virtueState';
 import { wornShop } from '../game/shop';
 import { Companions, companionPacks } from '../game/companion';
@@ -704,6 +705,13 @@ export class GameScene extends Phaser.Scene {
       cam,
       (x, y) => ({ x: x / TILE, y: y / TILE }),
       (x, y) => this.menuOpen || this.buttons.contains(x, y) || this.onHomeButton(x, y) || this.onDoorArrow(x, y),
+      // B7: a door under the stick area is still a tap, not the stick.
+      (x, y) => {
+        const w = cam.getWorldPoint(x * DPR, y * DPR);
+        return this.openDoorForTap({ x: w.x / TILE, y: w.y / TILE }) !== null;
+      },
+      // B7 (Grok playtest Nov 25): once the doors are open, a tap on or near one walks all the way to it.
+      (t) => this.openDoorForTap(t),
     );
     this.makeHud();
     cam.ignore([...this.controls.objects, ...this.buttons.objects]);
@@ -2207,6 +2215,17 @@ export class GameScene extends Phaser.Scene {
   }
 
   // ---------------------------------------------------------------- the run
+
+  /** B7: the open door a tap (room tiles) picks, or null (doors shut, or the tap is not near one). */
+  private openDoorForTap(t: { x: number; y: number }): Vec2 | null {
+    if (!this.run || !this.world.progress.doorsOpen) return null;
+    const doors = this.doorViews.map((d) => {
+      const b = d.label.text ? d.label.getBounds() : null;
+      return { ...d.at, label: b ? { left: b.left / TILE, top: b.top / TILE, right: b.right / TILE, bottom: b.bottom / TILE } : undefined };
+    });
+    const door = doorForTap(t, doors);
+    return door ? { x: door.x, y: door.y } : null;
+  }
 
   /** B2: a point on (or close to) the door arrow. */
   private onDoorArrow(x: number, y: number): boolean {
