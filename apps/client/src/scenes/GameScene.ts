@@ -147,6 +147,9 @@ import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
+import { floorLine, floorSetFor } from '../game/floorName';
+import { doorForTap } from '../game/doorTap';
+import { virtueRefusedLine } from '../input/virtueState';
 import { wornShop } from '../game/shop';
 import { Companions, companionPacks } from '../game/companion';
 import { FX_DEPTH } from '../fx/plan';
@@ -174,8 +177,14 @@ const CUE_SCALE_GUIDED = 0.75;
 const BOW_AT_DOOR_LINE = 'Bow at the door to show respect.';
 /** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
 const HUD_TOP_PX = 56;
-/** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 36, 20 px bold, bottom ~64) and an 8 px gap. */
-const DOOR_LABEL_TOP_PX = 72;
+/** Grok playtest Nov 25 (idea 2): the room label's top on a run (two lines: "Floor 2 · Sunrise Garden", then "Room 1 of 8"; bottom ~43). */
+const ROOM_LABEL_TOP = 6;
+/** The Challenge timer's top, just under the two-line room label (was 36 with one line). */
+const TIMER_TOP = 48;
+/** The Challenge timer's bottom (20 px bold); the Tool Belt row starts below it in a Challenge room. */
+const TIMER_BOTTOM = 74;
+/** Screen y a door label may not rise above: the top bar plus the Challenge timer (bottom ~74) and an 8 px gap. */
+const DOOR_LABEL_TOP_PX = 82;
 /** B-T3-NUDGE: gap between Sensei's banner and the ROAR! word. */
 const ROAR_GAP_PX = 8;
 /** Screen y of the boss health bar; its name sits just under it. */
@@ -344,6 +353,8 @@ export class GameScene extends Phaser.Scene {
   private trail: TrailEmitter | null = null;
   /** Aura around the character while a Virtue lasts. */
   private virtueAura!: Phaser.GameObjects.Arc;
+  /** B6: when the "Fill Focus" line last showed (scene ms), so a mashed E doesn't stack it. */
+  private virtueLineAt = -Infinity;
   /** True while a menu (like the Insight choice) is open: the fight is paused. */
   private menuOpen = false;
   /** The hero is down (the run is over): no boss tag or bar, no fight buttons or stick (Q-PREM-F4). */
@@ -696,10 +707,17 @@ export class GameScene extends Phaser.Scene {
       cam,
       (x, y) => ({ x: x / TILE, y: y / TILE }),
       (x, y) => this.menuOpen || this.buttons.contains(x, y) || this.onHomeButton(x, y) || this.onDoorArrow(x, y),
+      // B7: a door under the stick area is still a tap, not the stick.
+      (x, y) => {
+        const w = cam.getWorldPoint(x * DPR, y * DPR);
+        return this.openDoorForTap({ x: w.x / TILE, y: w.y / TILE }) !== null;
+      },
+      // B7 (Grok playtest Nov 25): once the doors are open, a tap on or near one walks all the way to it.
+      (t) => this.openDoorForTap(t),
     );
     this.makeHud();
     cam.ignore([...this.controls.objects, ...this.buttons.objects]);
-    this.toolRow = p0.tools.length > 0 ? new ToolRow(this, CONTENT.abilities.tools, p0.tools.map((t) => t.setup.technique), HUD_TOP_PX) : null;
+    this.toolRow = p0.tools.length > 0 ? new ToolRow(this, CONTENT.abilities.tools, p0.tools.map((t) => t.setup.technique), this.room.challenge ? TIMER_BOTTOM : HUD_TOP_PX) : null;
     if (this.toolRow) cam.ignore(this.toolRow.objects);
     cam.fadeIn(350, 10, 8, 16);
     this.enemiesAt = 0;
@@ -1500,7 +1518,9 @@ export class GameScene extends Phaser.Scene {
     this.doorArrow = this.add.graphics();
     this.screenFlash = this.add.rectangle(0, 0, 10, 10, 0xffffff).setOrigin(0).setAlpha(0);
     const small = { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 };
-    this.roomLabel = this.add.text(0, 14, '', small).setOrigin(1, 0).setResolution(crisp());
+    this.roomLabel = this.add.text(0, 14, '', { ...small, align: 'right' }).setOrigin(1, 0).setResolution(crisp());
+    // Grok playtest Nov 25 (idea 2): on a run it is two lines (floor, then room), so it starts higher and packs a little tighter.
+    if (this.run) this.roomLabel.setY(ROOM_LABEL_TOP).setLineSpacing(-3);
     if (!this.run) {
       // The practice room has a way back home.
       this.roomLabel
@@ -1526,7 +1546,7 @@ export class GameScene extends Phaser.Scene {
       this.cameras.main.ignore(this.practiceLabel);
     }
     this.timerText = this.add
-      .text(0, 36, '', { ...small, fontStyle: 'bold', fontSize: '20px' })
+      .text(0, TIMER_TOP, '', { ...small, fontStyle: 'bold', fontSize: '20px' })
       .setOrigin(1, 0)
       .setResolution(crisp())
       .setVisible(false);
@@ -1884,8 +1904,13 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.denied();
           this.buttons.refuse('virtue');
-          // L7: VIRTUE only shows at full Focus, so "Fill your Focus first" is gone.
-          if (p.virtueTicks > 0) this.floatText(p.pos, 'Already active', '#f2e9d8', 18);
+          // B6 (Grok playtest Nov 25): VIRTUE always shows now, so a press (or E) before Focus is full says what to do.
+          // A held or mashed E shows the line at most once a second.
+          const line = virtueRefusedLine(p);
+          if (line && this.time.now - this.virtueLineAt > 1000) {
+            this.virtueLineAt = this.time.now;
+            this.floatText(p.pos, line, '#f2e9d8', 18);
+          }
           break;
         }
         case 'shieldSoak': {
@@ -2192,6 +2217,17 @@ export class GameScene extends Phaser.Scene {
   }
 
   // ---------------------------------------------------------------- the run
+
+  /** B7: the open door a tap (room tiles) picks, or null (doors shut, or the tap is not near one). */
+  private openDoorForTap(t: { x: number; y: number }): Vec2 | null {
+    if (!this.run || !this.world.progress.doorsOpen) return null;
+    const doors = this.doorViews.map((d) => {
+      const b = d.label.text ? d.label.getBounds() : null;
+      return { ...d.at, label: b ? { left: b.left / TILE, top: b.top / TILE, right: b.right / TILE, bottom: b.bottom / TILE } : undefined };
+    });
+    const door = doorForTap(t, doors);
+    return door ? { x: door.x, y: door.y } : null;
+  }
 
   /** B2: a point on (or close to) the door arrow. */
   private onDoorArrow(x: number, y: number): boolean {
@@ -2952,7 +2988,7 @@ export class GameScene extends Phaser.Scene {
     this.twistBadge = this.add.container(0, 0, [twistIcon(this, twist.icon, 34)]).setDepth(20);
     this.cameras.main.ignore(this.twistBadge);
     // Top right, under the room count and timer, so it never covers them on a small phone.
-    this.twistBadge.setPosition(width - 70, 84);
+    this.twistBadge.setPosition(width - 70, 94);
     this.drawTwistBells();
     return BANNER_Y + banner.height / 2;
   }
@@ -3081,7 +3117,8 @@ export class GameScene extends Phaser.Scene {
     // Q-PREMIUM-2 M7: one counter once no enemy is left ("Wave" goes with the last enemy).
     const waves = this.world.waveCount > 1 && !prog.cleared && enemiesAlive ? `  ·  Wave ${this.world.wave} of ${this.world.waveCount}` : '';
     // Q-PREMIUM-2 L5: the tutorial floor shows no Room / Wave counter (Sensei's steps lead, not numbers).
-    this.roomLabel.setText(this.run.tutorial ? '' : `Room ${this.run.depth + 1} of ${this.run.totalRooms}${waves}`);
+    // Grok playtest Nov 25 (idea 2): the floor number and its name sit on the line above ("Floor 2 · Sunrise Garden").
+    this.roomLabel.setText(this.run.tutorial ? '' : `${floorLine(this.run.tier, floorSetFor(this.run.tier, this.room.floorSet, CONTENT))}\nRoom ${this.run.depth + 1} of ${this.run.totalRooms}${waves}`);
 
     // Challenge timer.
     const ch = this.room.challenge;

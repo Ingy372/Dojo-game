@@ -77,7 +77,8 @@ describe('Q-PREMIUM-2 L4 / L5 / L7 / L9 / L10 / L11', () => {
   it('L5: the tutorial dialog docks at the bottom first, with a big Got it and no room counter', () => {
     const s = read('scenes/GameScene.ts');
     expect(s).toMatch(/const spots = \[H - 8 - h, top,/);
-    expect(s).toMatch(/this\.run\.tutorial \? '' : `Room /);
+    // Grok playtest Nov 25 (idea 2): the counter line now starts with the floor line ("Floor 2 · Sunrise Garden").
+    expect(s).toMatch(/this\.run\.tutorial \? '' : `\$\{floorLine\(.*\)\}\\nRoom /);
     expect(s).toMatch(/width < 720 \? '24px' : '28px'/);
   });
   it('L7: the testing screen has Close at the top, a solid backdrop and a scrolling list', () => {

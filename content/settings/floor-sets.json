@@ -1,5 +1,5 @@
 {
-  "notes": "L11-B2a: which own-room floor sets are live. A tier whose rooms have a floorSet uses only those rooms when the set is true here; when it is false the tier keeps the shared rooms. A set that is missing here, or not true, is off, and so is every set if this file is missing. Turn a tier 4-10 set on only after its 8 rooms are in content/rooms/ and its Guardian art is OK'd (L11-B2).",
+  "notes": "L11-B2a: which own-room floor sets are live. A tier whose rooms have a floorSet uses only those rooms when the set is true here; when it is false the tier keeps the shared rooms. \"names\" is what the Tower HUD shows next to the floor number (Grok playtest Nov 25, idea 2); a set with no name shows the number only. A set that is missing here, or not true, is off, and so is every set if this file is missing. Turn a tier 4-10 set on only after its 8 rooms are in content/rooms/ and its Guardian art is OK'd (L11-B2).",
   "sets": {
     "white-dojo": true,
     "sunrise-garden": true,
@@ -11,5 +11,16 @@
     "root-library": false,
     "storm-stair": false,
     "summit": false
+  },
+  "names": {
+    "white-dojo": "White Dojo",
+    "sunrise-garden": "Sunrise Garden",
+    "ember-kitchens": "Ember Kitchens",
+    "giants-steps": "Giant's Steps",
+    "quiet-river": "Quiet River",
+    "forge-of-courage": "Forge of Courage",
+    "hall-of-echoes": "Hall of Echoes",
+    "root-library": "Root Library",
+    "storm-stair": "The Storm Stair"
   }
 }

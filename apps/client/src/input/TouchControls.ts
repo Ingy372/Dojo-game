@@ -24,6 +24,8 @@ export class TouchControls {
   private stickDown = { x: 0, y: 0, at: 0, moved: 0 };
   private tapPointer: number | null = null;
   private pendingTap: { x: number; y: number } | null = null;
+  /** B7: where the tap finger went down (screen px), and whether that press picked a door. */
+  private tapDown = { x: 0, y: 0, door: false };
   private off = false;
   /** Taps are ignored until this time (scene ms): see ignoreTapsFor. */
   private quietUntil = 0;
@@ -46,6 +48,11 @@ export class TouchControls {
      * stick): a press there is a tap, not a stick.
      */
     private readonly isTapTarget: (x: number, y: number) => boolean = () => false,
+    /**
+     * Grok playtest Nov 25 (B7): a tap (room tiles) that should walk somewhere else instead, such as a tap on
+     * or near an open door walking all the way to that door; null to walk to the tapped spot.
+     */
+    private readonly snapTap: (tile: { x: number; y: number }) => { x: number; y: number } | null = () => null,
   ) {
     // Allow several fingers at once (stick, a button, and a tap).
     scene.input.addPointer(2);
@@ -180,7 +187,8 @@ export class TouchControls {
     }
     if (this.tapPointer === null) {
       this.tapPointer = pointer.id;
-      this.queueTap(pointer);
+      this.tapDown = { x: pointer.x / DPR, y: pointer.y / DPR, door: false };
+      this.tapDown.door = this.queueTap(pointer);
     }
   }
 
@@ -189,7 +197,11 @@ export class TouchControls {
       this.stickDown.moved = Math.max(this.stickDown.moved, Math.hypot(pointer.x / DPR - this.stickDown.x, pointer.y / DPR - this.stickDown.y));
       this.updateStick(pointer);
     }
-    else if (pointer.id === this.tapPointer && pointer.isDown) this.queueTap(pointer);
+    else if (pointer.id === this.tapPointer && pointer.isDown) {
+      // B7: a finger resting on a door keeps that door while the camera slides (a wobble isn't a new tap).
+      const wobble = Math.hypot(pointer.x / DPR - this.tapDown.x, pointer.y / DPR - this.tapDown.y) <= QUICK_TAP_SLOP;
+      if (!(this.tapDown.door && wobble)) this.queueTap(pointer);
+    }
   }
 
   private onUp(pointer: Phaser.Input.Pointer): void {
@@ -213,9 +225,13 @@ export class TouchControls {
     this.knob.setPosition(this.stickCenter.x + dx * scale, this.stickCenter.y + dy * scale);
   }
 
-  private queueTap(pointer: Phaser.Input.Pointer): void {
+  /** Asks to walk to the tapped spot (or the door it picks, B7). True when it picked a door. */
+  private queueTap(pointer: Phaser.Input.Pointer): boolean {
     const world = this.worldCamera.getWorldPoint(pointer.x, pointer.y);
-    this.pendingTap = this.toTiles(world.x, world.y);
+    const tile = this.toTiles(world.x, world.y);
+    const snapped = this.snapTap(tile);
+    this.pendingTap = snapped ?? tile;
+    return snapped !== null;
   }
 
   private showStick(active: boolean): void {

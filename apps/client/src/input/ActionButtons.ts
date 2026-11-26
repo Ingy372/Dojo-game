@@ -4,6 +4,7 @@ import { COMBAT, strikeCost, type PlayerAction, type PlayerState } from '@dojo/s
 import { crisp, view, DPR } from '../ui/theme';
 import { hasTouch } from './TouchControls';
 import { ACTION_COLORS as AC, ACTION_LABEL, GREEN } from '../ui/tokens';
+import { virtueFill, virtueLook } from './virtueState';
 
 /** Q-PREM-COLOR: button faces are solid so white labels keep their contrast over any floor (were 0.9, letting the floor tint through). */
 const FACE_ALPHA = 1;
@@ -25,7 +26,8 @@ interface Button {
 
 /**
  * The Strike, Counter and Dash buttons in the bottom-right corner, plus Virtue (once a
- * stripe is earned), which shows only while Focus is full (L7). The Stance is picked before
+ * stripe is earned). Virtue always shows in its spot (Grok playtest Nov 25, B6): dim with a
+ * Focus ring while filling, gold once Focus is full. The Stance is picked before
  * the run, so there is no Stance button. A button acts the moment a finger touches it (not on
  * release), so Counter timing is exact.
  */
@@ -44,18 +46,20 @@ export class ActionButtons {
   /** Ring around Strike showing Focus filling toward the Strike cost. */
   private readonly strikeRing: Phaser.GameObjects.Graphics;
   private readonly virtue: Button | null = null;
+  /** Ring around Virtue showing Focus filling toward full. */
+  private readonly virtueRing: Phaser.GameObjects.Graphics | null = null;
   /** Tool Belt: the KATA button (once a kata is signed off), and its recharge ring. */
   private readonly kata: Button | null = null;
   private readonly kataRing: Phaser.GameObjects.Graphics | null = null;
-  /** L7: Virtue is on screen (Focus full and not already active). */
-  private virtueShown = false;
+  /** Virtue is ready (Focus full and not already active), so it grows in once when it turns ready. */
+  private virtueReady = false;
 
   constructor(
     private readonly scene: Phaser.Scene,
     /** Called on every button touch (used to switch on sound). */
     private readonly onTouch: () => void,
     has: { virtue: boolean; kata?: boolean } = { virtue: false },
-    /** Called each time Virtue appears (Focus just became full). */
+    /** Called each time Virtue turns ready (Focus just became full). */
     private readonly onVirtueReady: () => void = () => {},
   ) {
     this.counter = this.makeButton('counter', 'COUNTER', COUNTER_RADIUS, AC.counter.ready);
@@ -71,7 +75,8 @@ export class ActionButtons {
       this.virtue = this.makeButton('virtue', 'VIRTUE', VIRTUE_RADIUS, AC.virtue.ready);
       this.virtue.face.setStrokeStyle(4, 0xffffff, 0.8);
       labelColor(this.virtue, ACTION_LABEL.dark);
-      this.virtue.container.setVisible(false);
+      this.virtueRing = scene.add.graphics();
+      this.virtue.container.add(this.virtueRing);
     }
     if (has.kata) {
       this.kata = this.makeButton('kata', 'KATA', KATA_RADIUS, AC.kata.ready);
@@ -158,8 +163,8 @@ export class ActionButtons {
   enable(): void {
     this.off = false;
     this.pending = null;
-    this.virtueShown = false;
-    for (const b of this.all()) b.container.setVisible(b !== this.virtue);
+    this.virtueReady = false;
+    for (const b of this.all()) b.container.setVisible(true);
   }
 
   /** Makes Counter pulse for Sensei's guide (0 none, 1 small, 2 big, 3 nudge, 4 L-PREMIUM-b Counter tip: a pulse, or a still outline with Reduced motion). */
@@ -261,7 +266,7 @@ export class ActionButtons {
     else if (strikeGold) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
     else this.strike.container.setScale(1);
 
-    if (this.virtue) this.showVirtue(alive && p.focus >= COMBAT.focus.max && p.virtueTicks === 0);
+    if (this.virtue) this.styleVirtue(p, alive);
 
     if (this.kata && this.kataRing && p.kataMove) {
       const kataReady = alive && p.kataCooldown === 0;
@@ -279,17 +284,34 @@ export class ActionButtons {
     }
   }
 
-  /** L7: Virtue appears in its one spot when Focus is full, with a short calm grow (none with Reduced motion). */
-  private showVirtue(full: boolean): void {
-    const v = this.virtue!.container;
-    if (this.off || full === this.virtueShown) return;
-    this.virtueShown = full;
+  /**
+   * B6 (Grok playtest Nov 25): Virtue always sits in its one spot. Not ready: the solid dim face and a blue ring
+   * filling with Focus (a press says what to do). Ready: gold, with a short calm grow (none with Reduced motion).
+   */
+  private styleVirtue(p: PlayerState, alive: boolean): void {
+    const b = this.virtue!;
+    const look = virtueLook(p);
+    const ready = alive && look === 'ready';
+    b.face.setFillStyle(ready ? AC.virtue.ready : AC.virtue.dim, FACE_ALPHA);
+    b.face.setStrokeStyle(4, 0xffffff, ready ? 0.8 : 0.35);
+    labelColor(b, ready ? ACTION_LABEL.dark : ACTION_LABEL.dim);
+    const ring = this.virtueRing!;
+    ring.clear();
+    if (alive && look === 'filling') {
+      ring.lineStyle(4, 0x9ad1ff, 0.8);
+      ring.beginPath();
+      ring.arc(0, 0, VIRTUE_RADIUS + 4, -Math.PI / 2, -Math.PI / 2 + virtueFill(p) * Math.PI * 2);
+      ring.strokePath();
+    }
+    if (this.off || ready === this.virtueReady) return;
+    this.virtueReady = ready;
+    const v = b.container;
     this.scene.tweens.killTweensOf(v);
-    v.setVisible(full).setAlpha(1).setScale(1);
-    if (!full) return;
+    v.setScale(1);
+    if (!ready) return;
     if (!reducedMotion()) {
-      v.setAlpha(0).setScale(0.8);
-      this.scene.tweens.add({ targets: v, alpha: 1, scale: 1, duration: 200, ease: 'Quad.easeOut' });
+      v.setScale(0.8);
+      this.scene.tweens.add({ targets: v, scale: 1, duration: 200, ease: 'Quad.easeOut' });
     }
     this.onVirtueReady();
   }
