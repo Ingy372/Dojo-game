@@ -74,6 +74,7 @@ import { GREEN, MIN_TAP, RADIUS } from '../ui/tokens';
 import { addDevDays, devDayOffset, localDay, noteLessonSeen, takeLesson } from '../game/lessons';
 import { TouchControls } from '../input/TouchControls';
 import { addStatic, addTinted, loadArt } from '../art/art';
+import { prefetchBoardArt } from '../art/boardArt';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
@@ -303,6 +304,8 @@ export class DojoScene extends Phaser.Scene {
       this.game.events.off(Phaser.Core.Events.HIDDEN, release);
     });
     this.cameras.main.fadeIn(400, 10, 8, 16);
+    // Grok playtest Nov 25 (B3): fetch the Training Board's art quietly once the dojo is up, so the Board opens at once.
+    this.time.delayedCall(1200, () => prefetchBoardArt(this));
     // Time in the dojo is play time too (M7-P9's clock).
     touchPlayClock();
     this.time.addEvent({ delay: 5000, loop: true, callback: () => touchPlayClock() });

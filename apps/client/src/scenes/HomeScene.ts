@@ -60,13 +60,14 @@ import { hex } from '../ui/belt';
 import { startTowerRun } from '../game/tower';
 import { isPlayTimeUp } from '../game/playTime';
 import { KO, homePointer } from '../game/knockout';
-import { addIcon, ICON_PACK } from '../art/icons';
-import { addGearIcon, loadGearIcons } from '../art/gearIcons';
-import { addSealMedallion, addSlotIcon, loadSlotIcons } from '../art/slotIcons';
+import { addIcon } from '../art/icons';
+import { addGearIcon } from '../art/gearIcons';
+import { loadBoardArt } from '../art/boardArt';
+import { addSealMedallion, addSlotIcon } from '../art/slotIcons';
 import { drawStageRings } from '../art/stageRings';
 import { addStatic, loadArt, staticArt, staticBounds } from '../art/art';
 import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skinButton, woodSkin } from '../art/menu2';
-import { MENU2_PACK, artRarity } from '../art/menu2Frames';
+import { artRarity } from '../art/menu2Frames';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations, realPayCard } from '../ui/Celebrations';
@@ -229,9 +230,19 @@ export class HomeScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, [...playerPacks(), ICON_PACK, MENU2_PACK, NAMED_PACK, ...new Set(CONTENT.dojo.decorations.flatMap((d) => (d.art ? [d.art] : [])))]);
-    loadGearIcons(this);
-    loadSlotIcons(this);
+    loadArt(this, [...playerPacks(), NAMED_PACK, ...new Set(CONTENT.dojo.decorations.flatMap((d) => (d.art ? [d.art] : [])))]);
+    loadBoardArt(this);
+    // Grok playtest Nov 25 (B3): anything still loading shows a small line instead of a silent black screen.
+    if (this.load.list.size > 0) {
+      const { width, height } = view(this);
+      const line = this.add
+        .text(width / 2, height / 2, 'Loading...', { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#f2e9d8' })
+        .setOrigin(0.5)
+        .setResolution(crisp())
+        .setAlpha(0);
+      this.tweens.add({ targets: line, alpha: 1, delay: 400, duration: 200 });
+      this.load.once(Phaser.Loader.Events.COMPLETE, () => line.destroy());
+    }
   }
 
   init(data: HomeSceneData): void {
