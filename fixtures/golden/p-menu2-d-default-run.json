@@ -2540,7 +2540,7 @@
     "runs": [
       {
         "won": true,
-        "ticks": 9474,
+        "ticks": 9518,
         "rooms": [
           {
             "roomId": "y-dye-beds",
@@ -2689,28 +2689,28 @@
           {
             "roomId": "y-weaving-loft",
             "kind": "boss",
-            "ticks": 382,
-            "damage": 11,
-            "perfects": 3,
-            "blocks": 1,
+            "ticks": 421,
+            "damage": 0,
+            "perfects": 1,
+            "blocks": 0,
             "hits": 0,
             "strikes": 15,
-            "dealt": 1458,
-            "kos": 5,
+            "dealt": 1411,
+            "kos": 4,
             "died": false,
-            "crowd": 0.8851674641148325,
-            "peakCrowd": 2,
+            "crowd": 0.7636761487964989,
+            "peakCrowd": 1,
             "winded": 0,
-            "grade": "S",
+            "grade": "A",
             "holdTicks": 36,
             "elite": null
           }
         ],
-        "items": 9
+        "items": 8
       },
       {
         "won": true,
-        "ticks": 2038,
+        "ticks": 2260,
         "rooms": [
           {
             "roomId": "y-dye-beds",
@@ -2841,17 +2841,17 @@
           {
             "roomId": "y-weaving-loft",
             "kind": "boss",
-            "ticks": 166,
-            "damage": 29,
-            "perfects": 4,
+            "ticks": 383,
+            "damage": 0,
+            "perfects": 1,
             "blocks": 0,
-            "hits": 1,
-            "strikes": 14,
-            "dealt": 1386,
-            "kos": 5,
+            "hits": 0,
+            "strikes": 13,
+            "dealt": 1436,
+            "kos": 4,
             "died": false,
-            "crowd": 1.0742574257425743,
-            "peakCrowd": 2,
+            "crowd": 0.7446300715990454,
+            "peakCrowd": 1,
             "winded": 0,
             "grade": "A",
             "holdTicks": 36,
@@ -2862,7 +2862,7 @@
       },
       {
         "won": true,
-        "ticks": 1974,
+        "ticks": 2048,
         "rooms": [
           {
             "roomId": "y-dye-beds",
@@ -2993,17 +2993,17 @@
           {
             "roomId": "y-weaving-loft",
             "kind": "boss",
-            "ticks": 370,
-            "damage": 29,
-            "perfects": 3,
+            "ticks": 436,
+            "damage": 0,
+            "perfects": 1,
             "blocks": 0,
-            "hits": 1,
-            "strikes": 14,
-            "dealt": 1513,
-            "kos": 5,
+            "hits": 0,
+            "strikes": 13,
+            "dealt": 1377,
+            "kos": 4,
             "died": false,
-            "crowd": 0.8916256157635468,
-            "peakCrowd": 2,
+            "crowd": 0.777542372881356,
+            "peakCrowd": 1,
             "winded": 0,
             "grade": "A",
             "holdTicks": 36,
@@ -3331,7 +3331,7 @@
     "runs": [
       {
         "won": true,
-        "ticks": 9474,
+        "ticks": 9518,
         "rooms": [
           {
             "roomId": "y-dye-beds",
@@ -3480,28 +3480,28 @@
           {
             "roomId": "y-weaving-loft",
             "kind": "boss",
-            "ticks": 382,
-            "damage": 11,
-            "perfects": 3,
-            "blocks": 1,
+            "ticks": 421,
+            "damage": 0,
+            "perfects": 1,
+            "blocks": 0,
             "hits": 0,
             "strikes": 15,
-            "dealt": 1458,
-            "kos": 5,
+            "dealt": 1411,
+            "kos": 4,
             "died": false,
-            "crowd": 0.8851674641148325,
-            "peakCrowd": 2,
+            "crowd": 0.7636761487964989,
+            "peakCrowd": 1,
             "winded": 0,
-            "grade": "S",
+            "grade": "A",
             "holdTicks": 36,
             "elite": null
           }
         ],
-        "items": 9
+        "items": 8
       },
       {
         "won": true,
-        "ticks": 2038,
+        "ticks": 2260,
         "rooms": [
           {
             "roomId": "y-dye-beds",
@@ -3632,17 +3632,17 @@
           {
             "roomId": "y-weaving-loft",
             "kind": "boss",
-            "ticks": 166,
-            "damage": 29,
-            "perfects": 4,
+            "ticks": 383,
+            "damage": 0,
+            "perfects": 1,
             "blocks": 0,
-            "hits": 1,
-            "strikes": 14,
-            "dealt": 1386,
-            "kos": 5,
+            "hits": 0,
+            "strikes": 13,
+            "dealt": 1436,
+            "kos": 4,
             "died": false,
-            "crowd": 1.0742574257425743,
-            "peakCrowd": 2,
+            "crowd": 0.7446300715990454,
+            "peakCrowd": 1,
             "winded": 0,
             "grade": "A",
             "holdTicks": 36,
@@ -3653,7 +3653,7 @@
       },
       {
         "won": true,
-        "ticks": 1974,
+        "ticks": 2048,
         "rooms": [
           {
             "roomId": "y-dye-beds",
@@ -3784,17 +3784,17 @@
           {
             "roomId": "y-weaving-loft",
             "kind": "boss",
-            "ticks": 370,
-            "damage": 29,
-            "perfects": 3,
+            "ticks": 436,
+            "damage": 0,
+            "perfects": 1,
             "blocks": 0,
-            "hits": 1,
-            "strikes": 14,
-            "dealt": 1513,
-            "kos": 5,
+            "hits": 0,
+            "strikes": 13,
+            "dealt": 1377,
+            "kos": 4,
             "died": false,
-            "crowd": 0.8916256157635468,
-            "peakCrowd": 2,
+            "crowd": 0.777542372881356,
+            "peakCrowd": 1,
             "winded": 0,
             "grade": "A",
             "holdTicks": 36,

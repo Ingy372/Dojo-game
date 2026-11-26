@@ -1,6 +1,8 @@
-// The Loom Keeper (Yellow Guardian, Nov 25): its thread and cloth attacks always warn, and stepping out always works.
+// The Loom Keeper (Yellow Guardian, Nov 25; redesigned the same day so it never feels like the tutorial boss): it fights from a
+// distance, throws its spool like a yo-yo, leaves sticky threads, and climbs onto its loom behind three spool pegs.
 import { describe, expect, it } from 'vitest';
-import { COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, attackCovers, createWorld, currentAttack, floorRooms, loadEnemy, loadRoom, stepWorld, telegraphTicks, type Difficulty, type PlayerInput, type WorldState } from '../src';
+import { COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, attackCovers, createWorld, currentAttack, distance, floorRooms, lidUp, loadEnemy, loadRoom, stickySlow, stepWorld, telegraphTicks, type Difficulty, type PlayerInput, type WorldState } from '../src';
+import pegData from '../../../content/enemies/spool-peg.json';
 import loomData from '../../../content/enemies/loom-keeper.json';
 import { testContent } from './load-content';
 import { playRun, SKILLS } from './balance/bot';
@@ -12,7 +14,7 @@ const attack = (name: string) => loom.attacks.find((a) => a.name === name)!;
 
 /** The Loom Keeper with only one of its attacks (no phases), so a test sees that attack every time. */
 function only(name: string) {
-  return loadEnemy({ ...loomData, phases: undefined, attacks: [loomData.attacks.find((a) => a.name === name)] });
+  return loadEnemy({ ...loomData, phases: undefined, summon: undefined, attacks: [loomData.attacks.find((a) => a.name === name)] });
 }
 
 /** The weaving loft's size (18 x 12 inside), the boss above the player. */
@@ -46,11 +48,21 @@ function untilSwing(world: WorldState, room: ReturnType<typeof loft>['room'], in
 describe('the Loom Keeper file', () => {
   it('loads with its three parts, and the thread and cloth can never be Countered', () => {
     expect(testContent().enemies['loom-keeper'].name).toBe('The Loom Keeper');
-    expect(loom.phases!.map((p) => p.atHealthFraction)).toEqual([1, 0.66, 0.33]);
+    expect(loom.phases!.map((p) => p.atHealthFraction)).toEqual([1, 0.5, 0.33]);
     for (const n of ['thread line', 'crossing threads', 'big cloth']) expect(attack(n).counterable).toBe(false);
-    expect(attack('spool drop').counterable).not.toBe(false);
+    expect(attack('spool toss').counterable).not.toBe(false);
     expect(loom.senseiAtDoor).toBe('Someone used to sew warm things here.');
     expect(loom.senseiAfterWin).toBe('Warm things are made to be shared.');
+  });
+
+  it('is nothing like the tutorial boss: no slam or sweep, no Swarmers, it keeps its distance and has a loom phase', () => {
+    const keeper = testContent().enemies['floor-keeper'];
+    const names = loom.attacks.map((a) => a.name);
+    for (const a of keeper.attacks) expect(names).not.toContain(a.name);
+    expect(loom.attacks.every((a) => a.area !== undefined)).toBe(true); // every move is thrown at the player, none in front of its body
+    expect(loom.keepAway).toBeDefined();
+    expect(loom.summon).toMatchObject({ enemy: 'spool-peg', count: 3, around: 'room' });
+    expect(loom.lidWhileHelpers && loom.stillWhileHelpers && loom.dizzyAfterHelpers! > 0).toBe(true);
   });
 
   it('every kid line is 8 words or fewer', () => {
@@ -61,6 +73,113 @@ describe('the Loom Keeper file', () => {
   it('refuses a thread or cloth it does not know', () => {
     expect(() => loadEnemy({ ...loomData, attacks: [{ ...loomData.attacks[1], area: 'wave' }] })).toThrow(/area/);
     expect(() => loadEnemy({ ...loomData, attacks: [{ ...loomData.attacks[0], lineAxis: 'down' }] })).toThrow(/lineAxis/);
+  });
+});
+
+describe('Spool Toss', () => {
+  it('lands a red circle where the player stands, then the spool comes back for a second circle', () => {
+    const { room, world, p, e } = loft(only('spool toss'));
+    untilWindup(world, room);
+    expect(e.attackCenter).toEqual(p.pos);
+    expect(currentAttack(e).counterable).not.toBe(false);
+    expect(untilSwing(world, room, IDLE)).toBe(true);
+    untilWindup(world, room);
+    expect(e.followUpStage).toBe(2);
+    expect(e.attackCenter).toEqual(p.pos);
+  });
+
+  it('a Great Counter on the return knocks it dizzy for longer than a normal Great Counter', () => {
+    const { room, world, e } = loft(only('spool toss'));
+    untilWindup(world, room);
+    untilSwing(world, room, { kind: 'stick', x: -1, y: 0 });
+    untilWindup(world, room);
+    // Press Counter in the middle of the Perfect window.
+    const w = DIFFICULTY.standard.counterWindowTicks;
+    while (e.modeTicks > Math.floor(w / 2)) stepWorld(world, room, { p1: IDLE });
+    stepWorld(world, room, { p1: { kind: 'none', action: 'counter' } });
+    for (let i = 0; i < 20 && e.mode === 'windup'; i++) stepWorld(world, room, { p1: IDLE });
+    expect(e.mode).toBe('stagger');
+    expect(e.modeTicks).toBeGreaterThan(COMBAT.counter.perfectStaggerTicks);
+  });
+});
+
+describe('Keeps its distance', () => {
+  it('after an attack it glides away from a player standing close', () => {
+    const { room, world, p, e } = loft(only('thread line'));
+    p.pos = { x: e.pos.x - 1.8, y: e.pos.y };
+    untilWindup(world, room);
+    untilSwing(world, room, IDLE);
+    for (let i = 0; i < 25 && e.mode !== 'chase'; i++) stepWorld(world, room, { p1: IDLE });
+    const before = distance(e.pos, p.pos);
+    for (let i = 0; i < 10; i++) stepWorld(world, room, { p1: IDLE });
+    expect(distance(e.pos, p.pos)).toBeGreaterThan(before);
+  });
+});
+
+describe('Sticky threads', () => {
+  it('a snapped thread lies on the floor for a while: walking over it is slow, a Dash is not, and it never hurts', () => {
+    const { room, world, p, e } = loft();
+    untilWindup(world, room);
+    untilSwing(world, room, { kind: 'stick', x: 0, y: -1 });
+    expect(world.sticky.length).toBe(1);
+    const t = world.sticky[0];
+    expect(stickySlow(world, { x: 5, y: t.at })).toBe(attack('thread line').sticky!.slow);
+    expect(stickySlow(world, { x: 5, y: t.at + 2 })).toBe(1);
+    const hp = p.health;
+    p.pos = { x: 5, y: t.at };
+    const x0 = p.pos.x;
+    stepWorld(world, room, { p1: { kind: 'stick', x: 1, y: 0 } });
+    expect(p.pos.x - x0).toBeCloseTo((MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND) * t.slow, 3);
+    expect(p.health).toBe(hp);
+    void e;
+    for (let i = 0; i < attack('thread line').sticky!.ticks + 2; i++) stepWorld(world, room, { p1: IDLE });
+    expect(world.sticky.length).toBe(0);
+  });
+});
+
+describe('The loom', () => {
+  function loomFight() {
+    const peg = loadEnemy(pegData);
+    const tiles = ['####################', ...Array.from({ length: 12 }, (_, r) => (r === 9 ? '#.........P........#' : '#..................#')), '####################'];
+    const room = loadRoom({ id: 'loft', name: 'Loft', tiles, enemies: [{ enemy: 'loom-keeper', column: 10, row: 3 }] });
+    const world = createWorld(room, ['p1'], { enemyTypes: { 'loom-keeper': loom, 'spool-peg': peg }, difficulty: 'standard' });
+    return { room, world, p: world.players.p1, e: world.enemies[0] };
+  }
+
+  it('at half health three spool pegs appear around the room; up on its loom it stays still and can not be hurt', () => {
+    const { room, world, e } = loomFight();
+    e.health = Math.floor(loom.maxHealth * 0.5);
+    stepWorld(world, room, { p1: IDLE });
+    const pegs = world.enemies.filter((x) => x.summoned);
+    expect(pegs.length).toBe(3);
+    expect(pegs.every((x) => x.def.id === 'spool-peg')).toBe(true);
+    // spread around the room, far from each other
+    for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) expect(distance(pegs[i].pos, pegs[j].pos)).toBeGreaterThan(4);
+    expect(lidUp(world)).toBe(true);
+    const at = { ...e.pos };
+    for (let i = 0; i < 120; i++) stepWorld(world, room, { p1: IDLE });
+    expect(e.pos).toEqual(at);
+  });
+
+  it('breaking the last peg tumbles it down dizzy', () => {
+    const { room, world, p, e } = loomFight();
+    e.health = Math.floor(loom.maxHealth * 0.5);
+    stepWorld(world, room, { p1: IDLE });
+    const pegs = world.enemies.filter((x) => x.summoned);
+    for (const peg of pegs.slice(0, 2)) peg.mode = 'defeated';
+    const last = pegs[2];
+    last.health = 1;
+    p.pos = { x: last.pos.x, y: last.pos.y + 0.9 };
+    let dizzy = false;
+    for (let i = 0; i < 60 && !dizzy; i++) {
+      stepWorld(world, room, { p1: { kind: 'none', action: 'strike' } });
+      dizzy = world.events.some((ev) => ev.kind === 'dizzy');
+      p.focus = 100;
+    }
+    expect(dizzy).toBe(true);
+    expect(e.mode).toBe('stagger');
+    expect(e.modeTicks).toBeGreaterThan(loom.dizzyAfterHelpers! - 5);
+    expect(lidUp(world)).toBe(false);
   });
 });
 
@@ -131,12 +250,11 @@ describe('Sunrise Garden (Yellow, tier 2)', () => {
   const t = ARTISTS.typical[1];
   const YELLOW_TYPICAL = { maxHealth: t.health, power: t.power, guard: t.guard };
 
-  it('has its own 8 rooms; the Weaving Loft is the boss room, with the Loom Keeper and two small waves of swarmers', () => {
+  it('has its own 8 rooms; the Weaving Loft is the boss room, where the Loom Keeper fights alone', () => {
     expect(YELLOW.length).toBe(8);
     const loft = content.rooms.find((r) => r.id === 'y-weaving-loft')!;
     expect(loft.kind).toBe('boss');
-    expect([...new Set(loft.enemySpawns.map((s) => s.enemy))].sort()).toEqual(['loom-keeper', 'swarmer']);
-    expect(loom.summon).toBeNull(); // it calls no helpers itself
+    expect(loft.enemySpawns.map((s) => s.enemy)).toEqual(['loom-keeper']);
     expect(content.rooms.filter((r) => r.enemySpawns.some((s) => s.enemy === 'loom-keeper')).map((r) => r.id)).toEqual(['y-weaving-loft']);
   });
 

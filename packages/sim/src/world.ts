@@ -1382,8 +1382,9 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
           e.followUpStage = 2;
           const target = nearestPlayer(world, e);
           if (target) e.facing = directionTo(e.pos, target.pos);
-          // R-CHALLENGE P3: a second hit that would start off screen is dropped (the pattern moves on).
-          if (!patternAttackOnScreen(world, room, e, currentAttack(e))) {
+          // R-CHALLENGE P3: a second hit that would start off screen is dropped (the pattern moves on). Loom Keeper: a
+          // thrown spool lands on the player, so it is always on screen wherever the boss stands.
+          if (currentAttack(e).area !== 'spot' && !patternAttackOnScreen(world, room, e, currentAttack(e))) {
             e.followUpStage = undefined;
             e.attackIndex = nextAttackIndex(e);
             return;

@@ -2,7 +2,7 @@
   "id": "loom-keeper",
   "name": "The Loom Keeper",
   "shortName": "Loom Keeper",
-  "notes": "Yellow Guardian (Jay picked it and OK'd docs/yellow-guardian-loom-keeper.md, Nov 25). Darkness over the tailor's loom (Story of the Light v2: a Guardian is never a person). Three parts: Spool Drop (COUNTER), Thread Line (a dash-only thread wall to wall through the player, 'area': 'line'), Big Cloth (a dash-only cloth over the player's side of the room, 'area': 'cloth', reaching areaRadius past the player, so one Dash always clears it, the GUARD-SCALE-01 rule). Only one move at a time and no helpers, a step below the Hearth Cook. Starting numbers between the Floor Keeper (495) and the Hearth Cook (549); the balance test tunes them. Drawn as a code stand-in until the Blender model is OK'd; the coat tears at a third of its health.",
+  "notes": "Yellow Guardian, redesigned Nov 25 (Jay: it must not feel like the tutorial boss). Darkness over the tailor's loom (Story of the Light v2: a Guardian is never a person). It fights from a distance: after each attack it glides away (keepAway). Spool Toss: a red circle thrown onto the player, then the spool comes back for a second hit; a Great Counter on the return knocks it dizzy. Threads (dash-only lines wall to wall) snap and lie on the floor for a while, slowing walking but never hurting. At half health it rises to its loom: three Spool Pegs appear around the room and it can't be hurt until they are broken, then it tumbles down dizzy. From a third: the Big Cloth and crossing threads. No Swarmers. Numbers are tuned by the balance tests.",
   "color": "#8f8aa8",
   "boss": true,
   "guardian": true,
@@ -16,45 +16,59 @@
   "sightRange": 20,
   "attacks": [
     {
-      "name": "spool drop",
-      "strength": 1.0,
-      "startRange": 1.9,
-      "reach": 1.1,
-      "areaRadius": 1.3,
-      "telegraphTicks": 20,
-      "recoverTicks": 22,
-      "tell": "It lifts the spool high; a red circle under the hero."
+      "name": "spool toss",
+      "strength": 0.9,
+      "startRange": 6.5,
+      "reach": 0,
+      "areaRadius": 1.1,
+      "telegraphTicks": 22,
+      "recoverTicks": 18,
+      "area": "spot",
+      "followUp": {
+        "strength": 0.7,
+        "gapTicks": 18,
+        "dizzyTicks": 50
+      },
+      "tell": "It throws the spool; a red circle under the hero. The spool comes back: a second red circle. Counter either; Countering the return knocks it dizzy."
     },
     {
       "name": "thread line",
       "strength": 1.0,
-      "startRange": 7.0,
+      "startRange": 9.0,
       "reach": 0,
       "areaRadius": 0.6,
       "telegraphTicks": 26,
-      "recoverTicks": 28,
+      "recoverTicks": 24,
       "area": "line",
       "lineAxis": "across",
+      "sticky": {
+        "ticks": 80,
+        "slow": 0.5
+      },
       "noOverlapWithRedCircle": true,
-      "tell": "A striped thread wall to wall through the hero, '!!' and a twang."
+      "tell": "A striped thread wall to wall through the hero, '!!' and a twang. It snaps and lies on the floor for 4 s: walking over it is slow."
     },
     {
       "name": "crossing threads",
       "strength": 1.0,
-      "startRange": 7.0,
+      "startRange": 20.0,
       "reach": 0,
       "areaRadius": 0.6,
       "telegraphTicks": 26,
-      "recoverTicks": 26,
+      "recoverTicks": 22,
       "area": "line",
       "lineAxis": "both",
+      "sticky": {
+        "ticks": 80,
+        "slow": 0.5
+      },
       "noOverlapWithRedCircle": true,
-      "tell": "Threads across, then up and down, one at a time."
+      "tell": "Threads across, then up and down, one at a time; each lies on the floor for 4 s."
     },
     {
       "name": "big cloth",
       "strength": 1.2,
-      "startRange": 9.0,
+      "startRange": 12.0,
       "reach": 0,
       "areaRadius": 1.8,
       "telegraphTicks": 30,
@@ -64,28 +78,38 @@
       "tell": "A dark cloth over the hero's side of the room; its edge glows for 1.5 seconds."
     }
   ],
-  "signature": "Big Cloth",
+  "signature": "The Loom",
   "phases": [
     {
-      "id": "spool",
+      "id": "toss",
       "atHealthFraction": 1.0,
-      "attacks": ["spool drop"],
-      "tell": "It lifts the spool; red circle.",
-      "counterplay": "COUNTER the spool.",
+      "attacks": [
+        "spool toss",
+        "thread line"
+      ],
+      "tell": "It throws its spool and pulls threads across the room.",
+      "counterplay": "COUNTER the spool; DASH off threads.",
       "senseiLine": "The spool goes up first. Ready."
     },
     {
-      "id": "threads",
-      "atHealthFraction": 0.66,
-      "attacks": ["spool drop", "thread line"],
-      "tell": "A striped thread across the room.",
-      "counterplay": "DASH off the thread.",
-      "senseiLine": "Threads pull tight. DASH across!"
+      "id": "loom",
+      "atHealthFraction": 0.5,
+      "attacks": [
+        "crossing threads"
+      ],
+      "tell": "Up on its loom; three glowing spools appear.",
+      "counterplay": "Break the spools while dodging threads.",
+      "senseiLine": "Break the three spools. Then it falls!",
+      "senseiLineDraft": "Claude's draft, waiting on Jay's OK"
     },
     {
-      "id": "cloth",
+      "id": "torn",
       "atHealthFraction": 0.33,
-      "attacks": ["crossing threads", "big cloth", "spool drop"],
+      "attacks": [
+        "big cloth",
+        "crossing threads",
+        "spool toss"
+      ],
       "tell": "The coat tears; the cloth's edge glows.",
       "counterplay": "Stay in the bright half.",
       "senseiLine": "Watch the glowing edge. Stay bright."
@@ -100,12 +124,25 @@
     "freedBy": "Miss Ada, the tailor, in town (draft name)",
     "senseiAfter": "Warm things are made to be shared."
   },
-  "description": "The Loom Keeper drops its spool, pulls threads across the room, then slides a big dark cloth over your side.",
+  "description": "The Loom Keeper throws its spool like a yo-yo, pulls sticky threads across the room, climbs onto its loom behind three glowing spools, then slides a big dark cloth over your side.",
   "bestiary": {
-    "tip": "Spool, then threads, then the big cloth.",
+    "tip": "Counter the spool when it comes back!",
     "lore": {
       "yellow": "Darkness settled on the tailor's loom and took her shape. It weaves grey cloth that warms no one."
     }
   },
-  "faithOverlayKey": "loom-keeper"
+  "faithOverlayKey": "loom-keeper",
+  "keepAway": {
+    "tiles": 4.0,
+    "glideTicks": 24
+  },
+  "summon": {
+    "enemy": "spool-peg",
+    "count": 3,
+    "atHealthFraction": 0.5,
+    "around": "room"
+  },
+  "lidWhileHelpers": true,
+  "stillWhileHelpers": true,
+  "dizzyAfterHelpers": 70
 }
