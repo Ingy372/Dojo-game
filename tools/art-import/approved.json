@@ -1555,7 +1555,7 @@
       "scale": 0.45
     },
     "enemy-spool-peg": {
-      "note": "The Loom Keeper's Spool Pegs (Claude, Nov 25; Jay asked for the real art, waiting on his OK). House standard 80 px per tile, packed at the default 0.6.",
+      "note": "The Loom Keeper's Spool Pegs (Claude, Nov 25; Jay OK'd it). House standard 80 px per tile, packed at the default 0.6.",
       "sources": [
         {
           "id": "spool-peg",

@@ -2279,3 +2279,4 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
 - **Draft for Jay's OK:** the loom-phase Sensei line "Break the three spools. Then it falls!" The Spool Pegs are the gold practice dummy until they get Blender art.
 - **Jay OK'd the loom-phase line (Nov 25):** Sensei: "Break the three spools. Then it falls!"
 - **Spool Peg Blender art (Claude, Nov 25, Jay asked for it; waiting on his OK):** a short wooden stake on a round foot with a big spool wound in glowing gold thread, a loose gold thread curling to the floor, a soft gold glow and a few sparkles. Idle: a slow bob while the spool turns; hit: a wobble; defeat: bursts into light and sparkles. `incoming-art/claude-guardians/source/build_spool_peg.py`, house standard (80 px per tile), 0.3 MB. It replaces the gold practice dummy. Review sheet: `incoming-art/claude-guardians/spool-peg/review-sheet.png`.
+- **Jay OK'd the Spool Peg art (Nov 25):** "Looks good to me."

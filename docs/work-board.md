@@ -125,5 +125,5 @@ From `drafts/planning/R-OVERHAUL-LAUNCH.md`: L11 belts 4–10 in the Tower (floo
 | YG-1 | Thread and cloth attacks, the Loom Keeper, the 8 Sunrise Garden rooms, balance | Built Nov 25, then redesigned the same day (Jay: not like the tutorial boss): distance fighter, Spool Toss, sticky threads, loom phase with Spool Pegs; waits on Jay's phone test (loom-phase line OK'd) |
 | YG-2 | Blender model and animations (replaces the grey-lilac stand-in) | Built Nov 25 and in the game on the branch; waits on Jay's OK (`incoming-art/claude-guardians/loom-keeper/review-sheet.png`) |
 | YG-3 | Monster Journal trophy for the Loom Keeper | With YG-2 (needs a picture) |
-| YG-5 | Blender art for the Spool Pegs | Built Nov 25 and in the game on the branch; waits on Jay's OK (`incoming-art/claude-guardians/spool-peg/review-sheet.png`) |
+| YG-5 | Blender art for the Spool Pegs | Done: Jay OK'd it Nov 25 |
 | YG-4 | Miss Ada (draft name) and her shop reopening in town; the blanket at the Yellow Gate | With the story chapters (SC-3 and later) |
