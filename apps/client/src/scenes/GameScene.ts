@@ -147,6 +147,7 @@ import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
+import { floorLine } from '../game/floorName';
 import { wornShop } from '../game/shop';
 import { Companions, companionPacks } from '../game/companion';
 import { FX_DEPTH } from '../fx/plan';
@@ -174,8 +175,12 @@ const CUE_SCALE_GUIDED = 0.75;
 const BOW_AT_DOOR_LINE = 'Bow at the door to show respect.';
 /** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
 const HUD_TOP_PX = 56;
-/** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 36, 20 px bold, bottom ~64) and an 8 px gap. */
-const DOOR_LABEL_TOP_PX = 72;
+/** Grok playtest Nov 25 (idea 2): the room label's top on a run (two lines: "Floor 2 · Sunrise Garden", then "Room 1 of 8"; bottom ~43). */
+const ROOM_LABEL_TOP = 6;
+/** The Challenge timer's top, just under the two-line room label (was 36 with one line). */
+const TIMER_TOP = 44;
+/** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 44, 20 px bold, bottom ~70) and an 8 px gap. */
+const DOOR_LABEL_TOP_PX = 78;
 /** B-T3-NUDGE: gap between Sensei's banner and the ROAR! word. */
 const ROAR_GAP_PX = 8;
 /** Screen y of the boss health bar; its name sits just under it. */
@@ -1500,7 +1505,9 @@ export class GameScene extends Phaser.Scene {
     this.doorArrow = this.add.graphics();
     this.screenFlash = this.add.rectangle(0, 0, 10, 10, 0xffffff).setOrigin(0).setAlpha(0);
     const small = { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 };
-    this.roomLabel = this.add.text(0, 14, '', small).setOrigin(1, 0).setResolution(crisp());
+    this.roomLabel = this.add.text(0, 14, '', { ...small, align: 'right' }).setOrigin(1, 0).setResolution(crisp());
+    // Grok playtest Nov 25 (idea 2): on a run it is two lines (floor, then room), so it starts higher and packs a little tighter.
+    if (this.run) this.roomLabel.setY(ROOM_LABEL_TOP).setLineSpacing(-3);
     if (!this.run) {
       // The practice room has a way back home.
       this.roomLabel
@@ -1526,7 +1533,7 @@ export class GameScene extends Phaser.Scene {
       this.cameras.main.ignore(this.practiceLabel);
     }
     this.timerText = this.add
-      .text(0, 36, '', { ...small, fontStyle: 'bold', fontSize: '20px' })
+      .text(0, TIMER_TOP, '', { ...small, fontStyle: 'bold', fontSize: '20px' })
       .setOrigin(1, 0)
       .setResolution(crisp())
       .setVisible(false);
@@ -2952,7 +2959,7 @@ export class GameScene extends Phaser.Scene {
     this.twistBadge = this.add.container(0, 0, [twistIcon(this, twist.icon, 34)]).setDepth(20);
     this.cameras.main.ignore(this.twistBadge);
     // Top right, under the room count and timer, so it never covers them on a small phone.
-    this.twistBadge.setPosition(width - 70, 84);
+    this.twistBadge.setPosition(width - 70, 90);
     this.drawTwistBells();
     return BANNER_Y + banner.height / 2;
   }
@@ -3081,7 +3088,9 @@ export class GameScene extends Phaser.Scene {
     // Q-PREMIUM-2 M7: one counter once no enemy is left ("Wave" goes with the last enemy).
     const waves = this.world.waveCount > 1 && !prog.cleared && enemiesAlive ? `  ·  Wave ${this.world.wave} of ${this.world.waveCount}` : '';
     // Q-PREMIUM-2 L5: the tutorial floor shows no Room / Wave counter (Sensei's steps lead, not numbers).
-    this.roomLabel.setText(this.run.tutorial ? '' : `Room ${this.run.depth + 1} of ${this.run.totalRooms}${waves}`);
+    // Grok playtest Nov 25 (idea 2): the floor number and its name sit on the line above ("Floor 2 · Sunrise Garden").
+    this.roomLabel.setText(this.run.tutorial ? '' : `${floorLine(this.run.tier, this.room.floorSet)}
+Room ${this.run.depth + 1} of ${this.run.totalRooms}${waves}`);
 
     // Challenge timer.
     const ch = this.room.challenge;
