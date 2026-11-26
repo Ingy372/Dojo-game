@@ -1565,3 +1565,9 @@ Street Smarts lessons 2-5 were built on this branch, then moved to `main` and fi
 - Merged into `main`: `claude/coin-table` (Guided automatic block, coin table), `claude/download-size` (rooms load only their own monster art), `claude/tutorial-overhaul` (Story Chapters stage 1, Story v2 words, kata polish), `claude/yellow-guardian` (the Loom Keeper, Sunrise Garden floors, Spool Pegs).
 - One overlap fixed: the Loom Keeper and Spool Peg art entries moved into `art/enemyPacks.ts`. The Yellow coin cells were re-measured on the new floors. 1,808 tests, the full coin table, type checks and both builds pass on the merged code.
 - **Next:** a Grok bot plays the whole game through to Orange on the live link and sends its report; then tweaks from it and from Jay's phone play.
+
+## Nov 25 (evening): round 3 playtest, first fix (branch `claude/loss-reward`)
+
+- Read Grok's round 3 report (Mia, Jordan, Sarah). Same top quit risk as round 2: dying in the first real Tower room for "+0 XP." Found the causes of two new bugs: the tidy-up counter also counts scuffed mats and crooked racks (not only dust), and nothing marks them, so Chapter 2 stalls at "3 left." The town Tower gate is scenery, not a door; you enter the Tower from the Training Board.
+- **Built (Jay: "Small reward on loss"):** a lost run pays +6 XP (+12 for new players), and the Last climb scroll shows a gold Coins tile (+60 for a loss). Details in decisions.md. All tests, type checks and the build pass. Seen in the preview: a Room 1 loss shows +60 Coins and +12 XP.
+- **Next:** Grok's Orange belt report, then one batch: tidy-up fix, a Tower gate that works, ghost text on reward cards, ask for a name, Next button that stays put, the faith heads-up line on the grown-up screen (and Jay's call on play-time defaulting On).

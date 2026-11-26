@@ -301,6 +301,8 @@ export const PROGRESSION = {
   /** Experience for each room cleared, by kind, plus a bonus for clearing the whole floor. */
   xpPerRoom: { battle: 12, challenge: 16, treasure: 4, rest: 4, boss: 40, practice: 0 },
   xpFloorClear: 20,
+  /** R3-1 (Jay, Nov 25): a lost run always pays this little bit (half a battle room; doubled by catch-up). Not for test links. */
+  xpLoss: 6,
   /** Below the rank's expected level (the level cap of the belt before), experience is doubled. */
   catchUpMultiplier: 2,
 } as const;

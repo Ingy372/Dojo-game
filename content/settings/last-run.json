@@ -4,7 +4,7 @@
   "cleared": "Floor cleared!",
   "reached": "You reached room {room} of {total}!",
   "none": "No runs yet. Tap Enter the Tower to climb!",
-  "stats": { "rooms": "Rooms", "perfects": "Great", "combo": "Combo", "time": "Time", "xp": "XP" },
+  "stats": { "rooms": "Rooms", "perfects": "Great", "combo": "Combo", "time": "Time", "xp": "XP", "coins": "Coins" },
   "levelUp": "Level up!",
   "found": "Found",
   "foundNone": "Beat foes and open chests to find things.",

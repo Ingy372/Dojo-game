@@ -2316,3 +2316,8 @@ Jay: explain every system through the tutorial so nothing is hidden, with a stor
 ## Nov 25: all of today's work is live (Jay)
 
 - Jay: "Go ahead and push everything through to live ... anything we don't like we will tweak." The Story Chapters (SC-1) words, the Loom Keeper's redesigned look and fight, and the Guided automatic block went live without a separate phone check first, by Jay's choice. Tweaks come from the Grok bot's playthrough report and Jay's play.
+
+## Round 3 playtest: a lost run pays a little (Jay, Nov 25)
+- **Jay: "Small reward on loss."** This replaces the Nov 24 "Defeat screen: no change." The kind words stay exactly as they are.
+- **XP:** every lost run pays a flat `PROGRESSION.xpLoss` = 6 XP (half a battle room), on top of any rooms it cleared. New players' catch-up doubles it, so a new white belt sees +12. A rest before the first room, a win, and a test-link run get none of it.
+- **Coins:** lost runs already paid 60 coins (`COINS.run`), but the Last climb scroll never showed coins, so kids saw "+0 XP" and a wall of zeros. The scroll now has a gold **Coins** tile (any run that paid coins). Tile order: Rooms, Great, Combo, Coins, XP, Time. Narrow scrolls show the first 4 (XP is the fill bar), up to 600 wide show 5, and wider ones show all 6.
