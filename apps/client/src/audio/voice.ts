@@ -9,6 +9,28 @@ export interface VoiceOptions {
   onEnd?: () => void;
 }
 
+// Some browsers list their voices only after being asked once: ask early, so the first line can pick well.
+try {
+  window.speechSynthesis?.getVoices();
+} catch {
+  // No voices on this device.
+}
+
+/**
+ * Nov 26 (Kids Category check): only a voice that runs on the device itself. Some browsers (Chrome on a computer)
+ * offer online voices as the default, which send the words to another company's server: those are never used.
+ * Undefined while the browser hasn't listed its voices yet (then the phone's default, which is on the device on
+ * phones); null when every voice it has is an online one (then nothing is said and the words stay on screen).
+ */
+function deviceVoice(synth: SpeechSynthesis): SpeechSynthesisVoice | null | undefined {
+  const all = synth.getVoices();
+  if (all.length === 0) return undefined;
+  const local = all.filter((v) => v.localService);
+  const lang = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  const mine = local.filter((v) => v.lang.toLowerCase().startsWith(lang));
+  return mine.find((v) => v.default) ?? mine[0] ?? local.find((v) => v.default) ?? local[0] ?? null;
+}
+
 /** Says `text` aloud, cutting off anything still being said. */
 export function speak(text: string, rate: number | VoiceOptions = 0.95): void {
   const o: VoiceOptions = typeof rate === 'number' ? { rate } : rate;
@@ -22,7 +44,10 @@ export function speak(text: string, rate: number | VoiceOptions = 0.95): void {
     const synth = window.speechSynthesis;
     if (!synth || !text) return end();
     synth.cancel();
+    const voice = deviceVoice(synth);
+    if (voice === null) return end();
     const u = new SpeechSynthesisUtterance(text);
+    if (voice) u.voice = voice;
     u.rate = o.rate ?? 0.95;
     if (o.pitch !== undefined) u.pitch = o.pitch;
     u.onend = end;
