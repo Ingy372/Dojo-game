@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-11-25 by Claude Code.
+Last updated: 2026-11-26 by Claude Code.
 
 **What this file is:** the one list of open work. Each item has an ID, an owner and what it waits on. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
 
@@ -88,6 +88,23 @@ Jay has a few more visuals to list here.
 | GP-4 | Town mini map and door signs with pictures (no Home button, Jay) | Built Nov 24; icons wait on Jay's OK |
 | GP-5 | Kata Watch first (voice) and Hint (pays 3 coins) | Built Nov 24; words wait on Jay's OK |
 | GP-6 | Re-measure the coin table with BALANCE=1 (fights changed) | Live Nov 25, with the automatic block back on Guided only (Jay) |
+
+## 2g. Grok Orange belt report (Nov 26; Jay approved 1-10 except 5)
+
+| ID | What | Status |
+|---|---|---|
+| GO-1 | E bows at the Tower door | Built, `claude/playtest-r3` |
+| GO-2 | Fresh Last climb after a new belt | Built, `claude/playtest-r3` |
+| GO-3 | Promotion coins inside the ceremony | Built, `claude/playtest-r3` |
+| GO-4 | No black pause opening the Board | Built, `claude/playtest-r3` |
+| GO-5 | KATA's visible effect | Waits on Jay (talk first; what each kata's signature move gives) |
+| GO-6 | VIRTUE clear, E works in fights | Session `tower-hud-fixes` |
+| GO-7 | One tap to a door after a room | Session `tower-hud-fixes` |
+| GO-8 | Floor name on the fight screen | Session `tower-hud-fixes` |
+| GO-9 | Training Board signposted from town | Session `town-wave3` |
+| GO-10 | Wave 3 spike check (balance bots) | Session `town-wave3` |
+| GO-J1 | Orange card heading over Romans 3:10 | Jay's call |
+| GO-J2 | A Settings belt switch brings typical levels | Jay's call |
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 

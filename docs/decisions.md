@@ -2321,3 +2321,11 @@ Jay: explain every system through the tutorial so nothing is hidden, with a stor
 - **Jay: "Small reward on loss."** This replaces the Nov 24 "Defeat screen: no change." The kind words stay exactly as they are.
 - **XP:** every lost run pays a flat `PROGRESSION.xpLoss` = 6 XP (half a battle room), on top of any rooms it cleared. New players' catch-up doubles it, so a new white belt sees +12. A rest before the first room, a win, and a test-link run get none of it.
 - **Coins:** lost runs already paid 60 coins (`COINS.run`), but the Last climb scroll never showed coins, so kids saw "+0 XP" and a wall of zeros. The scroll now has a gold **Coins** tile (any run that paid coins). Tile order: Rooms, Great, Combo, Coins, XP, Time. Narrow scrolls show the first 4 (XP is the fill bar), up to 600 wide show 5, and wider ones show all 6.
+
+## Grok Orange belt report fixes (Jay, Nov 26)
+- **Jay approved fixes 1-10 from the report, except 5 (KATA).** KATA waits for a talk with Jay about what each kata's signature move gives.
+- **The losing screen stays as Jay already changed it** (a little XP and coins on every run); the report's "say you lost" idea is not taken.
+- **Bow keys:** E, Space or Enter bow at the door, besides tapping Bow.
+- **Last climb after a new belt:** a climb from a lower belt isn't shown; the scroll says "New belt! Your {belt} climb starts here." (draft words, Jay can change them).
+- **Promotion coins** are part of the ceremony wherever it plays (the Board or the dojo), saved at once so nothing pays twice.
+- **Work split (Jay, Nov 26: two more sessions):** each session has its own files and branch; only this session writes the logs.
