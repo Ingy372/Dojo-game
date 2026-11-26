@@ -43,6 +43,14 @@ export function bowPrompt(scene: Phaser.Scene, line: string, onBow: () => void):
   // Only the button bows; taps anywhere else are ignored, so the bow can't be missed.
   button.setInteractive(new Phaser.Geom.Circle(r, r, r * 1.25), Phaser.Geom.Circle.Contains);
   button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, tap);
+  // Grok playtest Nov 25 (B1): on a keyboard, E (the action key), Space or Enter bow too.
+  const keys = scene.input.keyboard;
+  const onKey = (ev: KeyboardEvent) => {
+    if (ev.repeat) return;
+    if (ev.code === 'KeyE' || ev.code === 'Space' || ev.code === 'Enter' || ev.code === 'NumpadEnter') tap();
+  };
+  keys?.on('keydown', onKey);
+  box.once(Phaser.GameObjects.Events.DESTROY, () => keys?.off('keydown', onKey));
   // Grok playtest Nov 23 (B12): a tap on Settings or elsewhere seemed dead, so the line bounces too: bow first.
   shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
     scene.tweens.add({ targets: [button, label, text], scale: 1.12, duration: 110, yoyo: true });
