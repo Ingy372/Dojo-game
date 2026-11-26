@@ -93,18 +93,20 @@ Jay has a few more visuals to list here.
 
 | ID | What | Status |
 |---|---|---|
-| GO-1 | E bows at the Tower door | Built, `claude/playtest-r3` |
-| GO-2 | Fresh Last climb after a new belt | Built, `claude/playtest-r3` |
-| GO-3 | Promotion coins inside the ceremony | Built, `claude/playtest-r3` |
-| GO-4 | No black pause opening the Board | Built, `claude/playtest-r3` |
+| GO-1 | E bows at the Tower door | Live Nov 26 |
+| GO-2 | Fresh Last climb after a new belt | Live Nov 26 |
+| GO-3 | Promotion coins inside the ceremony | Live Nov 26 |
+| GO-4 | No black pause opening the Board | Live Nov 26 |
 | GO-5 | KATA's visible effect | Waits on Jay (talk first; what each kata's signature move gives) |
-| GO-6 | VIRTUE clear, E works in fights | Session `tower-hud-fixes` |
-| GO-7 | One tap to a door after a room | Session `tower-hud-fixes` |
-| GO-8 | Floor name on the fight screen | Session `tower-hud-fixes` |
-| GO-9 | Training Board signposted from town | Session `town-wave3` |
-| GO-10 | Wave 3 spike check (balance bots) | Session `town-wave3` |
+| GO-6 | VIRTUE clear, E works in fights | Live Nov 26 |
+| GO-7 | One tap to a door after a room | Live Nov 26 |
+| GO-8 | Floor name on the fight screen | Live Nov 26 |
+| GO-9 | Training Board signposted from town | Live Nov 26 |
+| GO-10 | Wave 3 spike check (balance bots) | Done: no spike, rooms unchanged (`docs/reviews/wave3-check-2026-11-26.md`) |
 | GO-J1 | Orange card heading over Romans 3:10 | Jay's call |
 | GO-J2 | A Settings belt switch brings typical levels | Jay's call |
+| PR-1 | Phone-app readiness: beta web link (unpublished), phone check, download options, Kids/Families rules | Session `town-wave3` |
+| GF-1 | Green belt Tower floors (switched off), three Green Guardian ideas | Session `tower-hud-fixes` |
 
 ## 3. Claude Code: beta (freeze Dec 4, families Dec 15)
 
