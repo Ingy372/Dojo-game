@@ -18,10 +18,15 @@ import twists from '../../../../content/twists/twists.json';
 import elites from '../../../../content/elites/elites.json';
 import named from '../../../../content/named/named.json';
 import guardianScale from '../../../../content/settings/guardian-scale.json';
-import floorSets from '../../../../content/settings/floor-sets.json';
+import floorSetsRaw from '../../../../content/settings/floor-sets.json';
+import { testFlags } from './beta';
+import { withTestFloorSets } from './floorTest';
 
 const rooms = import.meta.glob('../../../../content/rooms/*.json', { eager: true, import: 'default' });
 const enemies = import.meta.glob('../../../../content/enemies/*.json', { eager: true, import: 'default' });
+
+/** The floor-set switches, plus any a ?floors= test link turns on (Green floors, Nov 26). */
+const floorSets = withTestFloorSets(floorSetsRaw, testFlags().get('floors'));
 
 const sorted = (files: Record<string, unknown>) => Object.keys(files).sort().map((k) => files[k]);
 
