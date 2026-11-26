@@ -540,9 +540,18 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || testFlags().has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), ...companionPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK, ...(this.run?.tutorial ? [TUTORIAL_PACK] : [])]);
+    loadArt(this, [...playerPacks(), ...companionPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK, ...(this.run?.tutorial || this.helpersUseDummyArt() ? [TUTORIAL_PACK] : [])]);
 
     loadGearIcons(this);
+  }
+
+  /** Loom Keeper: its spool pegs borrow the tutorial's practice dummy art (stand-in), so that pack loads in its room. */
+  private helpersUseDummyArt(): boolean {
+    if (!this.run) return false;
+    return currentRoom(CONTENT, this.run).enemySpawns.some((sp) => {
+      const helper = CONTENT.enemies[sp.enemy]?.summon?.enemy;
+      return !!helper && !!DUMMY_ART[helper];
+    });
   }
 
   /** K25: character art plays at the game tempo (read by LayeredSprite). */
@@ -806,6 +815,7 @@ export class GameScene extends Phaser.Scene {
     this.danger.clear();
     this.cues.clear();
     this.counterWindowOpen = false;
+    this.drawStickyThreads();
     this.drawTethers(now);
     this.watchBossAppear();
     this.frameBoss();
@@ -988,6 +998,8 @@ export class GameScene extends Phaser.Scene {
       // R-CHALLENGE P4: a pattern's lane or landing hop, from the first frame of the wind-up.
       const shape = patternShape(currentAttack(e));
       if (e.attackArea) this.drawAreaTell(e.attackArea, area, progress, inWindow, glow, elapsed / e.windupTotal);
+      // Loom Keeper: the spool flies out to the circle (and back to it on the return), landing as the circle fills.
+      if (currentAttack(e).area === 'spot') this.drawFlyingSpool({ x: e.pos.x * TILE, y: (e.pos.y - e.def.radius) * TILE }, { x: cx, y: cy }, elapsed / e.windupTotal);
       else {
         if (shape) drawPatternTell(this.danger, shape, { x: e.pos.x * TILE, y: e.pos.y * TILE }, { x: cx, y: cy }, area, COLORS.danger, elapsed / e.windupTotal, !reducedMotion());
         if (glow > 1) this.danger.lineStyle(10, 0xffd166, 0.35).strokeCircle(cx, cy, area + 4);
@@ -1016,6 +1028,9 @@ export class GameScene extends Phaser.Scene {
       // Out of breath: pale, slumped, and breathing hard.
       s.play(this.enemyAnim(s, 'winded', this.enemyAnim(s, 'stagger', 'idle')));
       tint = 0xd8d0c4;
+    } else if (e.def.stillWhileHelpers && lidUp(this.world)) {
+      // Loom Keeper: up on its loom, weaving, while its spool pegs are up.
+      s.play(this.enemyAnim(s, 'loom', 'idle'));
     } else if (now < v.callUntil) {
       s.play(this.enemyAnim(s, 'call', 'idle'));
     } else if (now < v.hitUntil) {
@@ -1151,6 +1166,45 @@ export class GameScene extends Phaser.Scene {
     g.fillStyle(0x2a2440, 0.15 + 0.3 * progress).fillRect(left, y0, right - left, y1 - y0);
     g.fillStyle(COLORS.danger, 0.12 * glow).fillRect(left, y0, right - left, y1 - y0);
     g.lineStyle(inWindow ? 9 : 5 * glow, inWindow ? 0xffd166 : COLORS.danger, 0.95).lineBetween(edge, y0, edge, y1);
+  }
+
+  /** Loom Keeper: snapped threads lying on the floor: pale and dashed (they slow walking, never hurt), fading as they go. */
+  private drawStickyThreads(): void {
+    const g = this.danger;
+    const x0 = TILE;
+    const x1 = (this.room.width - 1) * TILE;
+    const y0 = TILE;
+    const y1 = (this.room.height - 1) * TILE;
+    for (const t of this.world.sticky) {
+      const left = (t.until - this.world.tick) / TICKS_PER_SECOND;
+      const a = Phaser.Math.Clamp(left / 1.2, 0.15, 1);
+      const at = t.at * TILE;
+      const half = t.half * TILE;
+      if (t.axis === 'x') g.fillStyle(0xcfc9ec, 0.18 * a).fillRect(x0, at - half, x1 - x0, half * 2);
+      else g.fillStyle(0xcfc9ec, 0.18 * a).fillRect(at - half, y0, half * 2, y1 - y0);
+      g.lineStyle(3, 0xe9e4ff, 0.75 * a);
+      const len = (t.axis === 'x' ? x1 - x0 : y1 - y0);
+      for (let d = 0; d < len; d += 22) {
+        const e = Math.min(d + 13, len);
+        if (t.axis === 'x') g.lineBetween(x0 + d, at + Math.sin(d * 0.05) * 3, x0 + e, at + Math.sin(e * 0.05) * 3);
+        else g.lineBetween(at + Math.sin(d * 0.05) * 3, y0 + d, at + Math.sin(e * 0.05) * 3, y0 + e);
+      }
+    }
+  }
+
+  /** Loom Keeper: the wooden spool in the air on its way to the red circle (`t` 0 to 1 over the wind-up). */
+  private drawFlyingSpool(from: { x: number; y: number }, to: { x: number; y: number }, t: number): void {
+    const g = this.danger;
+    const k = Phaser.Math.Clamp(t, 0, 1);
+    const x = from.x + (to.x - from.x) * k;
+    const y = from.y + (to.y - from.y) * k - Math.sin(k * Math.PI) * TILE * 1.2;
+    const r = TILE * 0.22;
+    const spin = k * Math.PI * 6;
+    g.fillStyle(0x000000, 0.2).fillEllipse(to.x + (x - to.x) * 0.15, to.y, r * 2.4 * (0.5 + k * 0.5), r * 0.9);
+    g.fillStyle(0x7e5533).fillRect(x - r * 0.45, y - r, r * 0.9, r * 2);
+    g.fillStyle(0xcfc9ec).fillRect(x - r * 0.4, y - r * 0.7, r * 0.8, r * 1.4);
+    g.fillStyle(0xc08a52).fillEllipse(x - r * 0.5 * Math.cos(spin), y, r * 0.5, r * 2.2).fillEllipse(x + r * 0.5 * Math.cos(spin), y, r * 0.5, r * 2.2);
+    g.lineStyle(2, 0x2e2a3a, 0.9).strokeEllipse(x - r * 0.5 * Math.cos(spin), y, r * 0.5, r * 2.2).strokeEllipse(x + r * 0.5 * Math.cos(spin), y, r * 0.5, r * 2.2);
   }
 
   private enemyAnim(s: LayeredSprite, wanted: string, fallback: string): string {
@@ -3038,13 +3092,17 @@ export class GameScene extends Phaser.Scene {
         g.fillStyle(0x8c96a0, 0.6).fillRoundedRect(x, y, w, 10, 3);
         const lx = x + w + 18;
         g.fillStyle(0x000000, 0.55).fillRoundedRect(lx - 16, y - 7, 32, 24, 6);
-        if (this.lidIcon) this.lidIcon.setPosition(lx, y + 5);
+        if (boss.def.id === 'loom-keeper') {
+          // Loom Keeper: a little gold spool (its spool pegs keep it safe up on the loom).
+          g.fillStyle(0xffd36b).fillRoundedRect(lx - 10, y - 3, 20, 4, 2).fillRoundedRect(lx - 10, y + 10, 20, 4, 2);
+          g.fillStyle(0xcfc9ec).fillRect(lx - 6, y + 1, 12, 9);
+        } else if (this.lidIcon) this.lidIcon.setPosition(lx, y + 5);
         else {
           g.fillStyle(0xc9d1d9).fillRoundedRect(lx - 12, y + 2, 24, 10, { tl: 10, tr: 10, bl: 2, br: 2 });
           g.fillStyle(0xc9d1d9).fillRoundedRect(lx - 4, y - 3, 8, 5, 2);
         }
       }
-      this.lidIcon?.setVisible(lid);
+      this.lidIcon?.setVisible(lid && boss.def.id !== 'loom-keeper');
       this.bossName.setText(boss.def.name).setVisible(true);
       this.placeBossTag(boss);
     } else {

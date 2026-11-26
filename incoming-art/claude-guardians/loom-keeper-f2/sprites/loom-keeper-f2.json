@@ -112,75 +112,10 @@
         "telegraph": "loom-keeper-f2_telegraph_move.png",
         "light": "loom-keeper-f2_light_move.png"
       },
-      "designSpeedTilesPerSecond": 1.6,
+      "designSpeedTilesPerSecond": 1.5,
       "note": "smooth glide; play at any move speed"
     },
-    "windup_slam": {
-      "frames": 9,
-      "fps": 10,
-      "durationSec": 0.9,
-      "loop": false,
-      "tags": {
-        "telegraph": "0-8"
-      },
-      "sheets": {
-        "body": "loom-keeper-f2_body_windup_slam.png",
-        "glow": "loom-keeper-f2_glow_windup_slam.png",
-        "telegraph": "loom-keeper-f2_telegraph_windup_slam.png",
-        "light": "loom-keeper-f2_light_windup_slam.png"
-      },
-      "telegraphSeconds": 0.9,
-      "telegraphTicks": 18,
-      "telegraphIntensity": [
-        0.25,
-        0.279,
-        0.36,
-        0.481,
-        0.625,
-        0.769,
-        0.89,
-        0.971,
-        1.0
-      ],
-      "note": "lasts exactly the telegraph (18 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
-    },
-    "slam": {
-      "frames": 13,
-      "fps": 10,
-      "durationSec": 1.3,
-      "loop": false,
-      "tags": {
-        "impact": "0",
-        "recover": "2-12"
-      },
-      "sheets": {
-        "body": "loom-keeper-f2_body_slam.png",
-        "glow": "loom-keeper-f2_glow_slam.png",
-        "telegraph": "loom-keeper-f2_telegraph_slam.png",
-        "light": "loom-keeper-f2_light_slam.png"
-      },
-      "keyFrames": {
-        "impact": 0
-      },
-      "recoverSeconds": 1.1,
-      "telegraphIntensity": [
-        1.0,
-        0.95,
-        0.812,
-        0.611,
-        0.389,
-        0.188,
-        0.05,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "note": "ground slam with both fists"
-    },
-    "windup_sweep": {
+    "windup_toss": {
       "frames": 11,
       "fps": 10,
       "durationSec": 1.1,
@@ -189,10 +124,10 @@
         "telegraph": "0-10"
       },
       "sheets": {
-        "body": "loom-keeper-f2_body_windup_sweep.png",
-        "glow": "loom-keeper-f2_glow_windup_sweep.png",
-        "telegraph": "loom-keeper-f2_telegraph_windup_sweep.png",
-        "light": "loom-keeper-f2_light_windup_sweep.png"
+        "body": "loom-keeper-f2_body_windup_toss.png",
+        "glow": "loom-keeper-f2_glow_windup_toss.png",
+        "telegraph": "loom-keeper-f2_telegraph_windup_toss.png",
+        "light": "loom-keeper-f2_light_windup_toss.png"
       },
       "telegraphSeconds": 1.1,
       "telegraphTicks": 22,
@@ -211,25 +146,164 @@
       ],
       "note": "lasts exactly the telegraph (22 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
     },
-    "sweep": {
+    "toss": {
+      "frames": 11,
+      "fps": 10,
+      "durationSec": 1.1,
+      "loop": false,
+      "tags": {
+        "impact": "0",
+        "recover": "2-10"
+      },
+      "sheets": {
+        "body": "loom-keeper-f2_body_toss.png",
+        "glow": "loom-keeper-f2_glow_toss.png",
+        "telegraph": "loom-keeper-f2_telegraph_toss.png",
+        "light": "loom-keeper-f2_light_toss.png"
+      },
+      "keyFrames": {
+        "impact": 0
+      },
+      "recoverSeconds": 0.9,
+      "telegraphIntensity": [
+        1.0,
+        0.933,
+        0.75,
+        0.5,
+        0.25,
+        0.067,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "note": "throws the spool like a yo-yo (the spool flies in code); the arm stays out to catch it"
+    },
+    "windup_weave": {
+      "frames": 13,
+      "fps": 10,
+      "durationSec": 1.3,
+      "loop": false,
+      "tags": {
+        "telegraph": "0-12"
+      },
+      "sheets": {
+        "body": "loom-keeper-f2_body_windup_weave.png",
+        "glow": "loom-keeper-f2_glow_windup_weave.png",
+        "telegraph": "loom-keeper-f2_telegraph_windup_weave.png",
+        "light": "loom-keeper-f2_light_windup_weave.png"
+      },
+      "telegraphSeconds": 1.3,
+      "telegraphTicks": 26,
+      "telegraphIntensity": [
+        0.25,
+        0.263,
+        0.3,
+        0.36,
+        0.437,
+        0.528,
+        0.625,
+        0.722,
+        0.812,
+        0.89,
+        0.95,
+        0.987,
+        1.0
+      ],
+      "note": "lasts exactly the telegraph (26 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
+    },
+    "weave": {
+      "frames": 14,
+      "fps": 10,
+      "durationSec": 1.4,
+      "loop": false,
+      "tags": {
+        "impact": "0",
+        "recover": "2-13"
+      },
+      "sheets": {
+        "body": "loom-keeper-f2_body_weave.png",
+        "glow": "loom-keeper-f2_glow_weave.png",
+        "telegraph": "loom-keeper-f2_telegraph_weave.png",
+        "light": "loom-keeper-f2_light_weave.png"
+      },
+      "keyFrames": {
+        "impact": 0
+      },
+      "recoverSeconds": 1.2,
+      "telegraphIntensity": [
+        1.0,
+        0.95,
+        0.812,
+        0.611,
+        0.389,
+        0.188,
+        0.05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "note": "snaps the thread: arms flung down and apart"
+    },
+    "windup_cloth": {
+      "frames": 15,
+      "fps": 10,
+      "durationSec": 1.5,
+      "loop": false,
+      "tags": {
+        "telegraph": "0-14"
+      },
+      "sheets": {
+        "body": "loom-keeper-f2_body_windup_cloth.png",
+        "glow": "loom-keeper-f2_glow_windup_cloth.png",
+        "telegraph": "loom-keeper-f2_telegraph_windup_cloth.png",
+        "light": "loom-keeper-f2_light_windup_cloth.png"
+      },
+      "telegraphSeconds": 1.5,
+      "telegraphTicks": 30,
+      "telegraphIntensity": [
+        0.25,
+        0.259,
+        0.287,
+        0.332,
+        0.391,
+        0.462,
+        0.542,
+        0.625,
+        0.708,
+        0.788,
+        0.859,
+        0.918,
+        0.963,
+        0.991,
+        1.0
+      ],
+      "note": "lasts exactly the telegraph (30 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
+    },
+    "cloth": {
       "frames": 19,
       "fps": 10,
       "durationSec": 1.9,
       "loop": false,
       "tags": {
-        "spin": "0-5",
-        "recover": "6-18"
+        "impact": "0",
+        "recover": "2-18"
       },
       "sheets": {
-        "body": "loom-keeper-f2_body_sweep.png",
-        "glow": "loom-keeper-f2_glow_sweep.png",
-        "telegraph": "loom-keeper-f2_telegraph_sweep.png",
-        "light": "loom-keeper-f2_light_sweep.png"
+        "body": "loom-keeper-f2_body_cloth.png",
+        "glow": "loom-keeper-f2_glow_cloth.png",
+        "telegraph": "loom-keeper-f2_telegraph_cloth.png",
+        "light": "loom-keeper-f2_light_cloth.png"
       },
       "keyFrames": {
-        "spin": "0-5"
+        "impact": 0
       },
-      "recoverSeconds": 1.3,
+      "recoverSeconds": 1.7,
       "telegraphIntensity": [
         1.0,
         0.976,
@@ -251,21 +325,21 @@
         0.0,
         0.0
       ],
-      "note": "wide sweep: one full turn with both arms out (the hit ring is all around him)"
+      "note": "flings the big cloth across the room"
     },
-    "call": {
+    "loom": {
       "frames": 8,
       "fps": 8,
       "durationSec": 1.0,
       "loop": true,
       "tags": {},
       "sheets": {
-        "body": "loom-keeper-f2_body_call.png",
-        "glow": "loom-keeper-f2_glow_call.png",
-        "telegraph": "loom-keeper-f2_telegraph_call.png",
-        "light": "loom-keeper-f2_light_call.png"
+        "body": "loom-keeper-f2_body_loom.png",
+        "glow": "loom-keeper-f2_glow_loom.png",
+        "telegraph": "loom-keeper-f2_telegraph_loom.png",
+        "light": "loom-keeper-f2_light_loom.png"
       },
-      "note": "calling for help (at half health the Keeper calls in 2 swarmers): loop while the swarmers arrive"
+      "note": "weaving on its loom, floating higher (loop while its spool pegs are up; it can't be hurt)"
     },
     "hit": {
       "frames": 3,

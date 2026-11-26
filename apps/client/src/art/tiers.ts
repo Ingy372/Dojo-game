@@ -76,8 +76,8 @@ const SHARP_PACK = 0.5;
 const BIGGER = 1.25;
 export const ART_BOOST: Record<string, number> = { swarmer: SHARP_PACK * BIGGER, shield: SHARP_PACK * BIGGER, brute: SHARP_PACK * BIGGER, 'floor-keeper': SHARP_PACK * BIGGER, 'loom-keeper': SHARP_PACK * BIGGER };
 
-/** A monster drawn as a recoloured stand-in until its own art is OK'd (none now: the Loom Keeper has its Blender art). */
-export const STAND_IN_TINT: Record<string, number> = {};
+/** A monster drawn as a recoloured stand-in until its own art is OK'd (the Loom Keeper's spool pegs: the practice dummy in gold, for now). */
+export const STAND_IN_TINT: Record<string, number> = { 'spool-peg': 0xffd36b };
 
 /** Rigs packed at a different pixel size than their enemy's usual art: drawn this much bigger to match (Nov 22). */
 const RIG_BOOST: Record<string, number> = { 'floor-keeper-f2': 0.6 / 0.45, 'loom-keeper': 0.6 / 0.45, 'loom-keeper-f2': 0.6 / 0.45 };
@@ -99,7 +99,7 @@ export function enemyArt(enemyId: string, healthShare: number): { pack: PackName
 }
 
 /** Attack names whose animation has a shorter name in the art (B-T3 Hearth Cook). */
-const ATTACK_ANIMS: Record<string, string> = { 'ladle bonk': 'bonk', 'hot pot rush': 'rush', 'rolling pin lane': 'pin', 'spool drop': 'slam', 'thread line': 'sweep', 'crossing threads': 'sweep', 'big cloth': 'sweep' };
+const ATTACK_ANIMS: Record<string, string> = { 'ladle bonk': 'bonk', 'hot pot rush': 'rush', 'rolling pin lane': 'pin', 'spool toss': 'toss', 'thread line': 'weave', 'crossing threads': 'weave', 'big cloth': 'cloth' };
 
 /** The animation name for an attack (the Floor Keeper's "slam" is already "slam"). */
 export function attackAnim(attackName: string): string {
@@ -110,4 +110,4 @@ export function attackAnim(attackName: string): string {
 export const TUTORIAL_PACK: PackName = 'tutorial-path';
 
 /** TUT-B3: the practice dummies are drawn from still sprites in the tutorial pack (sprite id prefix). */
-export const DUMMY_ART: Record<string, string> = { 'practice-dummy': 'dummy-small', 'big-practice-dummy': 'dummy-big' };
+export const DUMMY_ART: Record<string, string> = { 'practice-dummy': 'dummy-small', 'big-practice-dummy': 'dummy-big', 'spool-peg': 'dummy-small' };

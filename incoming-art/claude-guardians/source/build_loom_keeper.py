@@ -461,7 +461,7 @@ def action(name, poses, fps, loop, tags="", info=None):
 
 ease = lambda x: 0.5 - 0.5 * math.cos(math.pi * max(0, min(1, x)))
 DATA = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "content", "enemies",
-                                   {"swarmer": "swarmer", "shield": "shield", "brute": "brute", "keeper": "floor-keeper"}[E] + ".json")))
+                                   ("loom-keeper" if LOOM else {"swarmer": "swarmer", "shield": "shield", "brute": "brute", "keeper": "floor-keeper"}[E]) + ".json")))
 TICK = 1 / 20
 FPS = 10
 REST = P()
@@ -521,6 +521,9 @@ for i in range(6):
         move.append(g(body=gb(dz=0.03 * H * up, pitch=16, roll=8 * sn, sw=1 + 0.07 * (1 - up), sh=1 - 0.07 * (1 - up)),
                       arm_l=(10 - 30 * sn, 18), arm_r=(10 + 30 * sn, 18),
                       foot_l=(0, -0.1 * W * sn, 0.05 * max(0, sn)), foot_r=(0, 0.1 * W * sn, 0.05 * max(0, -sn))))
+    elif LOOM:          # drifting on its threads: a wide sway, leaning into it, the spool arm trailing (no steps)
+        move.append(g(body=gb(dz=0.05 * H * (1 + math.sin(ph)) / 2, pitch=12, roll=9 * sn, yaw=6 * sn), arm_l=(-25, 30 + 8 * sn), arm_r=(-35, 25 - 8 * sn),
+                      foot_l=(0, 0, 0.025 * H * (1 + math.sin(ph))), foot_r=(0, 0, 0.025 * H * (1 + math.sin(ph)))))
     else:               # a smooth glide, the cape trailing (no steps)
         move.append(g(body=gb(dz=0.025 * H * (1 + math.sin(ph)) / 2, pitch=6, roll=2 * sn), arm_l=(-10, 18), arm_r=(-10, 18),
                       foot_l=(0, 0, 0.012 * H * (1 + math.sin(ph))), foot_r=(0, 0, 0.012 * H * (1 + math.sin(ph)))))
@@ -574,26 +577,29 @@ if E == "shield":       # lifts the big shield high and leans back, ready to bas
     telegraph_action("windup", SW_, at["telegraphTicks"])
     SB = P(body=B(dy=-0.22 * W, pitch=24, yaw=16, sw=1.1, sh=0.9), eyes=(1.1, 0.8), arm_l=(85, 0), arm_r=(20, 20))
     attack_action("attack", SB, at["recoverTicks"], {"note": "shield bash: the shield shoves forward"})
-if E == "keeper":
-    sl, sw = DATA["attacks"][0], DATA["attacks"][1]
-    KS = P(body=B(dy=0.06 * W, pitch=-16, sw=0.92, sh=1.2), eyes=(1.15, 1.3), arm_l=(-30, 150, 1.25), arm_r=(-30, 150, 1.25))
-    telegraph_action("windup_slam", KS, sl["telegraphTicks"])
-    KH = P(body=B(dz=-0.02, pitch=32, sw=1.2, sh=0.82), eyes=(1.1, 0.6), arm_l=(85, 20), arm_r=(85, 20))
-    attack_action("slam", KH, sl["recoverTicks"], {"note": "ground slam with both fists"})
-    KW = P(body=B(pitch=-6, yaw=-70, sw=1.08, sh=0.96), eyes=(1.15, 1.3), arm_l=(-10, 85), arm_r=(-10, 85))
-    telegraph_action("windup_sweep", KW, sw["telegraphTicks"])
-    n_rec = max(3, round(sw["recoverTicks"] * TICK * FPS))
-    spin = [P(body=B(pitch=4, yaw=-70 + 360 * k / 5, sw=1.08, sh=0.95), eyes=(1.1, 0.8), arm_l=(0, 88), arm_r=(0, 88)) for k in range(6)]
-    spin += [mix(spin[-1], GUARD, ease((k + 1) / n_rec)) for k in range(n_rec)]
-    action("sweep", spin, FPS, False, "spin:0-5,recover:6-%d" % (len(spin) - 1),
-           {"keyFrames": {"spin": "0-5"}, "recoverSeconds": round(sw["recoverTicks"] * TICK, 2), "telegraphIntensity": fade(len(spin)),
-            "note": "wide sweep: one full turn with both arms out (the hit ring is all around him)"})
-    call = []
-    for i in range(8):   # calling for help: arms up waving, bouncing, eyes bright
+if E == "keeper":    # THE LOOM KEEPER: nothing like the Floor Keeper's slam and sweep
+    at = {a["name"]: a for a in DATA["attacks"]}
+    # SPOOL TOSS: twists away, the spool arm cocked far back and high, the other arm out for balance
+    TW = P(body=B(dy=0.06 * W, pitch=-12, yaw=40, sw=0.95, sh=1.1), eyes=(1.15, 1.3), arm_l=(10, 60), arm_r=(-60, 150, 1.25))
+    telegraph_action("windup_toss", TW, at["spool toss"]["telegraphTicks"])
+    TH = P(body=B(dy=-0.1 * W, pitch=16, yaw=-30, sw=1.05, sh=0.94), eyes=(1.1, 1.0), arm_l=(-10, 40), arm_r=(120, 15, 1.4))
+    attack_action("toss", TH, at["spool toss"]["recoverTicks"], {"note": "throws the spool like a yo-yo (the spool flies in code); the arm stays out to catch it"})
+    # WEAVE (threads): both arms up and wide, pulling a thread taut between them
+    WV = P(body=B(pitch=-8, sw=1.0, sh=1.12), eyes=(1.15, 1.3), arm_l=(-20, 165, 1.3), arm_r=(-20, 165, 1.3))
+    telegraph_action("windup_weave", WV, at["thread line"]["telegraphTicks"])
+    WH = P(body=B(dz=-0.01, pitch=12, sw=1.12, sh=0.9), eyes=(1.1, 0.8), arm_l=(30, 80, 1.25), arm_r=(30, 80, 1.25))
+    attack_action("weave", WH, at["thread line"]["recoverTicks"], {"note": "snaps the thread: arms flung down and apart"})
+    # BIG CLOTH: both arms swing high to one side, then fling the cloth across
+    CL = P(body=B(pitch=-14, yaw=45, roll=12, sh=1.15), eyes=(1.15, 1.3), arm_l=(-60, 140, 1.3), arm_r=(-60, 140, 1.3))
+    telegraph_action("windup_cloth", CL, at["big cloth"]["telegraphTicks"])
+    CH = P(body=B(pitch=20, yaw=-45, roll=-10, sw=1.1, sh=0.9), eyes=(1.1, 0.8), arm_l=(80, 40, 1.35), arm_r=(80, 40, 1.35))
+    attack_action("cloth", CH, at["big cloth"]["recoverTicks"], {"note": "flings the big cloth across the room"})
+    # LOOM: up on its loom, floating higher and weaving in place (loops while its spool pegs are up)
+    lm = []
+    for i in range(8):
         b = math.sin(2 * math.pi * i / 8)
-        call.append(P(body=B(dz=0.02 * abs(b), pitch=-8, roll=6 * b, sh=1.06), eyes=(1.15, 1.2),
-                      arm_l=(-15, 145 + 15 * b, 1.3), arm_r=(-15, 145 - 15 * b, 1.3)))
-    action("call", call, 8, True, info={"note": "calling for help (at half health the Keeper calls in 2 swarmers): loop while the swarmers arrive"})
+        lm.append(P(body=B(dz=0.1 * H + 0.03 * H * b, pitch=-6, roll=3 * b, sh=1.04), eyes=(1.1, 1.15), arm_l=(-30 + 30 * b, 70), arm_r=(-30 - 30 * b, 70)))
+    action("loom", lm, 8, True, info={"note": "weaving on its loom, floating higher (loop while its spool pegs are up; it can't be hurt)"})
 
 # HIT FLINCH: a quick squash back, eyes shut tight for a moment. 3 frames at 12 fps = 0.25 s.
 HF = P(body=B(dy=0.06 * W, pitch=-12, sw=1.12, sh=0.86), eyes=(1.05, 0.25), arm_l=(-30, 35), arm_r=(-30, 35))
@@ -602,6 +608,10 @@ action("hit", [HF, mix(HF, GUARD, 0.5), GUARD], 12, False, "recoil:0")
 stag = []
 for i in range(8):
     a = 2 * math.pi * i / 8
+    if LOOM:   # tumbled down from the loom: slumped low, swaying in big dizzy circles, spool arm dragging
+        stag.append(P(body=B(dx=0.05 * W * math.sin(a), dy=0.05 * W * math.cos(a), dz=-0.04 * H, pitch=14 + 8 * math.cos(a), roll=18 * math.sin(a), sw=1.1, sh=0.86),
+                      eyes=(1.0, 0.3), arm_l=(20, 30 + 20 * math.sin(a)), arm_r=(30, 20 - 15 * math.sin(a))))
+        continue
     stag.append(P(body=B(dx=0.03 * W * math.sin(a), pitch=-4 + 6 * math.cos(a), roll=12 * math.sin(a), sw=1.05, sh=0.93),
                   eyes=(1.0, 0.35), arm_l=(-10, 40 + 15 * math.sin(a)), arm_r=(-10, 40 - 15 * math.sin(a))))
 action("stagger", stag, FPS, True, info={"note": "dizzy wobble; loop for as long as the stagger lasts"})

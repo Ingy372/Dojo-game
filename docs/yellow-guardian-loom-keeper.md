@@ -66,3 +66,21 @@ A step above the Floor Keeper (three moves instead of two) and a step below the 
 6. A preview link with exactly what to try.
 
 Steps 1–4 need nothing more from you after this OK. Step 5 needs your eye.
+
+---
+
+## Redesign (Jay, Nov 25: "this definitely should not feel like the same fight")
+
+Jay noticed the first build fought like the tutorial boss (the same body movements, a slam-like opener, walking straight at you, Swarmer waves). Jay OK'd this redesign and it replaces the fight above:
+
+1. **It fights from a distance.** It never walks up to you. After each attack it glides away, so you chase it down.
+2. **Spool Toss** (replaces Spool Drop): it throws the spool onto where you stand (a red circle), then the spool comes back (a second red circle). Counter either one. **Countering the return knocks it dizzy** for longer than a normal Great Counter.
+3. **Sticky threads:** a snapped thread lies on the floor for 4 seconds. Walking over it is slow (half speed); a Dash is never slowed and it never hurts.
+4. **The loom (from half health):** it rises onto its loom and can't be hurt. Three glowing **Spool Pegs** appear around the room; it keeps throwing threads while you break them. When the last one breaks it tumbles down **dizzy for 3.5 seconds**.
+5. **Torn form (last third):** the Big Cloth, crossing threads and the Spool Toss.
+6. **No Swarmers.** Just you and the Loom Keeper.
+7. **Its own Blender animations:** drifting on its threads (no steps), the throw, weaving with both arms up, the cloth fling, floating on the loom, and a slumped dizzy tumble.
+
+**New line (Claude's draft, for Jay's OK):** Sensei when the loom phase starts: "Break the three spools. Then it falls!"
+
+**Stand-in:** the Spool Pegs are the practice dummy drawn in gold until they get Blender art.
