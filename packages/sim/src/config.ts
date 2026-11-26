@@ -30,10 +30,13 @@ export const MOVEMENT = {
  */
 export const DIFFICULTY = {
   // Guided: same fill speed as Standard, then a 0.7 s window (was 0.5 s, Jay 2026-10-06; widened Nov 24 with the stronger Great Counter).
-  // B-TUNE-GUIDED: enemyPowerScale multiplies every enemy's Power (Health never changes).
-  guided: { counterWindowTicks: 14, fillScale: 1, enemyPowerScale: 0.7 },
-  standard: { counterWindowTicks: 6, fillScale: 1, enemyPowerScale: 1 },
-  challenge: { counterWindowTicks: 4, fillScale: 0.8, enemyPowerScale: 1 },
+  // B-TUNE-GUIDED: enemyPowerScale multiplies every enemy's Power (Health never changes). Guided 0.75 (0.7 from Nov 24 to 25, without the block).
+  // mashGuardPerfects (B-MASHER-2 Mash guard): a hit during the player's own basic-attack swing counts as a Block until
+  // this many Perfect Counters land in the room (0 = never). Jay, Nov 24: no automatic blocking; Nov 25: back on Guided
+  // only, so a little kid who only taps attack can still win sometimes. Standard and Challenge stay at 0.
+  guided: { counterWindowTicks: 14, fillScale: 1, enemyPowerScale: 0.75, mashGuardPerfects: 3 },
+  standard: { counterWindowTicks: 6, fillScale: 1, enemyPowerScale: 1, mashGuardPerfects: 0 },
+  challenge: { counterWindowTicks: 4, fillScale: 0.8, enemyPowerScale: 1, mashGuardPerfects: 0 },
 } as const;
 
 /** R-CHALLENGE P1: no enemy wind-up is ever shorter than this, on any difficulty (half a second). */
@@ -123,11 +126,6 @@ export const COMBAT = {
   },
 
   counter: {
-    /**
-     * B-MASHER-2 (E3): Mash guard stops for the rest of a room once this many Perfect Counters land in it.
-     * Jay, Nov 24: no automatic blocking ("shouldn't be a feature"), so 0: a Block only ever comes from pressing Counter.
-     */
-    mashGuardPerfects: 0,
     /** After pressing Counter, the player holds a guard pose this many ticks (no walking). */
     guardTicks: 10,
     /** The guard pose always lasts at least this long past the Perfect window, so a slightly early press is still a Block. */

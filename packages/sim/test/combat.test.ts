@@ -292,11 +292,25 @@ describe('the counter', () => {
     }
   });
 
-  describe('no automatic blocking (Jay, Nov 24; was the Mash guard, B-MASHER-b/2)', () => {
-    it('is off from the start: a hit that lands mid-swing is a full Hit, never a Block', () => {
+  describe('no automatic blocking on Standard (Jay, Nov 24; the Mash guard, B-MASHER-b/2, stays on Guided only, Nov 25)', () => {
+    it("Guided: a hit that lands mid-swing is a Block until the room's 3rd Perfect Counter", () => {
+      const { room, world, p } = setup('guided');
+      expect(DIFFICULTY.guided.mashGuardPerfects).toBe(3);
+      expect(mashGuardOn(p, 'guided')).toBe(true);
+      const events = counterAt(world, room, null);
+      expect(p.attackCooldown).toBeGreaterThan(0);
+      expect(events.some((ev) => ev.kind === 'block')).toBe(true);
+      expect(events.some((ev) => ev.kind === 'hit')).toBe(false);
+      p.perfects = 3;
+      expect(mashGuardOn(p, 'guided')).toBe(false);
+    });
+
+    it('Standard and Challenge: off from the start: a hit that lands mid-swing is a full Hit, never a Block', () => {
       const { room, world, p } = setup();
-      expect(COMBAT.counter.mashGuardPerfects).toBe(0);
-      expect(mashGuardOn(p)).toBe(false);
+      expect(DIFFICULTY.standard.mashGuardPerfects).toBe(0);
+      expect(DIFFICULTY.challenge.mashGuardPerfects).toBe(0);
+      expect(mashGuardOn(p, 'standard')).toBe(false);
+      expect(mashGuardOn(p, 'challenge')).toBe(false);
       const events = counterAt(world, room, null);
       expect(p.attackCooldown).toBeGreaterThan(0);
       expect(events.some((ev) => ev.kind === 'hit')).toBe(true);

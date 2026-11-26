@@ -1,4 +1,4 @@
-// B-TUNE-GUIDED: Guided enemies hit softer (Power x0.7 since Nov 24, was x0.75, rounded, at least 1). Health never changes.
+// B-TUNE-GUIDED: Guided enemies hit softer (Power x0.75; x0.7 from Nov 24 to Nov 25 while Guided had no automatic block; rounded, at least 1). Health never changes.
 import { describe, expect, it } from 'vitest';
 import { DIFFICULTY, buildTraining, characterSetup, createWorld, loadEnemy, loadFeed, loadRoom, newProfile, type Difficulty } from '../src';
 import bruteData from '../../../content/enemies/brute.json';
@@ -22,7 +22,7 @@ const enemyOn = (difficulty: Difficulty, types: Record<string, ReturnType<typeof
 
 describe('B-TUNE-GUIDED enemyPowerScale', () => {
   it('Guided is 0.75 and the other settings are 1.0', () => {
-    expect(DIFFICULTY.guided.enemyPowerScale).toBe(0.7); // Jay, Nov 24: 0.75 -> 0.7 when automatic blocking went away
+    expect(DIFFICULTY.guided.enemyPowerScale).toBe(0.75); // Nov 25: back to 0.75 with Guided's automatic block (it was 0.7 only to make up for losing it)
     expect(DIFFICULTY.standard.enemyPowerScale).toBe(1);
     expect(DIFFICULTY.challenge.enemyPowerScale).toBe(1);
   });
