@@ -157,6 +157,8 @@ export interface EnemyState {
   attackArea?: AttackArea | null;
   /** Loom Keeper: how many 'both' threads it has thrown, so across and down take turns. */
   linesThrown?: number;
+  /** Loom Keeper (keepAway): ticks left gliding away from the player before it attacks again. */
+  glideTicks?: number;
   path: Vec2[] | null;
   /** Ticks until the route to the player is planned again. */
   repathIn: number;
@@ -252,6 +254,8 @@ export type CombatEvent =
   | { kind: 'shieldBreak'; playerId: PlayerId; enemyId: EnemyId }
   | { kind: 'shieldRegrow'; enemyId: EnemyId }
   | { kind: 'summon'; enemyId: EnemyId; summoned: EnemyId[] }
+  /** Loom Keeper: knocked dizzy (the spool Countered on its way back, or its last spool peg broken). */
+  | { kind: 'dizzy'; enemyId: EnemyId; ticks: number }
   /** B-T3-TUNE-2a: a hit bounced off the boss's pot lid (its helpers are still up); no damage. */
   | { kind: 'clang'; playerId: PlayerId; enemyId: EnemyId }
   /** B-T3-TUNE-2c: a boss reached a new phase; the game holds still for `ticks` (roar, glow, Sensei's line). */
@@ -328,6 +332,8 @@ export interface WorldState {
   doorHold: boolean;
   /** B-T3-TUNE-2c: ticks left in a boss phase pause (0 = none). Like the guide hold, nothing moves. */
   phaseHoldTicks: number;
+  /** Loom Keeper: snapped threads lying on the floor (they slow walking, never hurt), until their tick. */
+  sticky: StickyThread[];
   /** Tutorial floor (K24a): later waves come only through releaseWave, never on their own. */
   waveHold: boolean;
   /** Tutorial floor: enemies always see the player, so none waits out of sight (K24a). */
@@ -617,6 +623,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     enemyHold: false,
     doorHold: false,
     phaseHoldTicks: 0,
+    sticky: [],
     waveHold: false,
     seeAll: false,
     counterHint: options.counterHint ? { ...options.counterHint } : null,
@@ -725,6 +732,7 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
   for (const id of ids) separateFromEnemies(world, world.players[id], room);
   updateProgress(world, room, ids);
   if (guide) stepGuide(world, guide, ids);
+  if (world.sticky.length) world.sticky = world.sticky.filter((t) => t.until > world.tick);
   world.tick++;
 }
 
@@ -935,7 +943,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
     // Holding the guard pose: no walking.
     p.moving = false;
   } else {
-    movePlayer(p, room, input);
+    movePlayer(p, room, input, world.sticky.length ? stickySlow(world, p.pos) : 1);
   }
   // Horse Stance: count ticks standing still; any walk or dash starts over.
   p.stillTicks = p.moving || p.dashTicks > 0 ? 0 : p.stillTicks + 1;
@@ -1179,6 +1187,19 @@ function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: Attac
     e.path = null;
   }
   world.events.push({ kind: 'playerAttack', playerId: p.id, enemyId: e.id, move, damage: dmg, defeated });
+  // Loom Keeper: the last spool peg breaks, and the boss tumbles down from its loom, dizzy.
+  if (defeated && e.summoned && !lidUp(world)) {
+    for (const b of world.enemies) {
+      if (!b.def.dizzyAfterHelpers || b.mode === 'defeated') continue;
+      b.mode = 'stagger';
+      b.modeTicks = b.def.dizzyAfterHelpers;
+      b.attackCenter = null;
+      b.attackArea = null;
+      b.followUpStage = undefined;
+      b.glideTicks = 0;
+      world.events.push({ kind: 'dizzy', enemyId: b.id, ticks: b.modeTicks });
+    }
+  }
   // Elite reward: a burst of Focus for whoever defeated it.
   if (defeated && e.elite && world.elites) {
     const before = p.focus;
@@ -1233,9 +1254,10 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
   }
 }
 
-function movePlayer(p: PlayerState, room: Room, input: MoveInput): void {
+function movePlayer(p: PlayerState, room: Room, input: MoveInput, slow = 1): void {
   const before = { x: p.pos.x, y: p.pos.y };
-  const STEP = BASE_STEP * (p.speedBoostTicks > 0 ? 1 + p.mods.comboSpeedBonus : 1) * (1 + activeStance(p).moveSpeed);
+  // Loom Keeper: `slow` < 1 while standing on a snapped sticky thread (walking only; a Dash is never slowed).
+  const STEP = BASE_STEP * (p.speedBoostTicks > 0 ? 1 + p.mods.comboSpeedBonus : 1) * (1 + activeStance(p).moveSpeed) * slow;
 
   if (input.kind === 'stick') {
     p.path = null;
@@ -1394,6 +1416,8 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
         if (e.followUpStage === 2) e.followUpLandedTick = world.tick;
         e.followUpStage = undefined;
         e.attackIndex = nextAttackIndex(e);
+        // Loom Keeper: after each attack it glides away before the next one.
+        if (e.def.keepAway) e.glideTicks = e.def.keepAway.glideTicks;
       }
       return;
     case 'chase': {
@@ -1415,11 +1439,13 @@ function startWindup(world: WorldState, e: EnemyState, room: Room): void {
   e.attackCenter = { x: e.pos.x + e.facing.x * a.reach, y: e.pos.y + e.facing.y * a.reach };
   e.attackArea = null;
   if (a.area) {
-    // Loom Keeper: the thread or cloth is placed on the player now and stays put while it warns.
+    // Loom Keeper: the thread, cloth or thrown spool is placed on the player now and stays put while it warns.
     const target = nearestPlayer(world, e);
     const at = target ? { ...target.pos } : { ...e.pos };
     e.attackCenter = at;
-    if (a.area === 'line') {
+    if (a.area === 'spot') {
+      // a plain red circle where the player stood (attackCovers treats it as a circle)
+    } else if (a.area === 'line') {
       const n = e.linesThrown ?? 0;
       if (a.lineAxis === 'both') e.linesThrown = n + 1;
       const axis = a.lineAxis === 'down' || (a.lineAxis === 'both' && n % 2 === 1) ? 'y' : 'x';
@@ -1445,6 +1471,21 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
   if (e.followUpStage) e.followUpStage = undefined;
   let a = currentAttack(e);
   const dist = distance(e.pos, target.pos);
+  // Loom Keeper: up on its loom while its spool pegs are up: it never moves from there.
+  const still = !!e.def.stillWhileHelpers && lidUp(world);
+  if (still) e.glideTicks = 0;
+  // Loom Keeper: after an attack it glides away from the player (no attack until the glide ends).
+  if (e.glideTicks && e.glideTicks > 0) {
+    e.glideTicks--;
+    if (e.def.keepAway && dist < e.def.keepAway.tiles) {
+      const glide = e.def.moveSpeedTilesPerSecond / TICKS_PER_SECOND;
+      e.pos.x += ((e.pos.x - target.pos.x) / (dist || 1)) * glide;
+      e.pos.y += ((e.pos.y - target.pos.y) / (dist || 1)) * glide;
+      pushOutOfWalls(room, e.pos, e.def.radius);
+    }
+    e.path = null;
+    return;
+  }
   let canAttack = attackersNow(world) < COMBAT.maxAttackersAtOnce && !otherFollowUpPending(world, e);
   let closer = false;
   if (dist <= a.startRange && canAttack && world.difficulty === 'challenge') {
@@ -1471,6 +1512,7 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
     startWindup(world, e, room);
     return;
   }
+  if (still) return;
   // C430: a stationary enemy (true speed 0) never walks, circles or paths; it only winds up when you are in range.
   if (e.def.stationary) return;
   const speed = e.def.moveSpeedTilesPerSecond / TICKS_PER_SECOND;
@@ -1513,6 +1555,10 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
   const center = e.attackCenter;
   if (!center) return;
   const a = currentAttack(e);
+  // Loom Keeper: a snapped sticky thread stays on the floor for a while.
+  if (a.sticky && e.attackArea?.kind === 'line') {
+    world.sticky.push({ axis: e.attackArea.axis, at: e.attackArea.at, half: a.areaRadius, until: world.tick + a.sticky.ticks, slow: a.sticky.slow });
+  }
   // A disarmed enemy's swing is weaker (this swing only). An enemy with a weapon (Bouncy Bopper)
   // drops it and pushes instead, at the push's own power (A5, #118).
   const pushing = e.disarmed > 0 && e.def.weapon !== null;
@@ -1562,6 +1608,13 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
           e.mode = 'stagger';
           // G2B-04 Lock cap: the hold (stagger + Counter #6 + any Lock rank) never passes holdCapTicks.
           e.modeTicks = Math.min(COMBAT.counter.holdCapTicks, COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks);
+          // Loom Keeper: Countering the spool on its way back knocks the boss dizzy for longer.
+          const dizzy = e.followUpStage === 2 ? e.def.attacks[e.attackIndex % e.def.attacks.length].followUp?.dizzyTicks : undefined;
+          if (dizzy) {
+            e.modeTicks = Math.max(e.modeTicks, dizzy);
+            e.followUpStage = undefined;
+            world.events.push({ kind: 'dizzy', enemyId: e.id, ticks: e.modeTicks });
+          }
           // T5: the Opening: STRIKE glows gold for a free finisher on this enemy. Not after a ground slam
           // (a landing circle), whose best answer stays "move out of the red".
           if (!a.landing) {
@@ -1711,10 +1764,13 @@ function summonHelpers(world: WorldState, boss: EnemyState, room: Room): void {
   if (!def) return;
   const ids: EnemyId[] = [];
   for (let i = 0; i < s.count; i++) {
-    // Spread around the boss, then nudged onto open floor.
+    // Spread around the boss (Loom Keeper's pegs: around the room), then nudged onto open floor.
     const angle = (i / s.count) * Math.PI * 2 + 0.6;
     const away = boss.def.radius + def.radius + 0.6;
-    const pos = { x: boss.pos.x + Math.cos(angle) * away, y: boss.pos.y + Math.sin(angle) * away };
+    const pos =
+      s.around === 'room'
+        ? { x: room.width / 2 + Math.sin((i / s.count) * Math.PI * 2) * room.width * 0.32, y: room.height / 2 + Math.cos((i / s.count) * Math.PI * 2) * room.height * 0.28 }
+        : { x: boss.pos.x + Math.cos(angle) * away, y: boss.pos.y + Math.sin(angle) * away };
     pushOutOfWalls(room, pos, def.radius);
     const id = `e${world.nextEnemyNumber++}`;
     const e = newEnemy(id, def, pos, world.enemies.length);
@@ -1943,6 +1999,22 @@ export function flaggedLaneOn(world: WorldState, e: EnemyState, at: Vec2): boole
     if (o.attackArea) return attackCovers(o, at, R * 0.5);
     return segmentDistance(at, o.pos, o.attackCenter) <= a.areaRadius + R * 0.5;
   });
+}
+
+/** Loom Keeper: a snapped thread on the floor, along x at row `at` (or along y at column `at`), `half` thick each side. */
+export interface StickyThread {
+  axis: 'x' | 'y';
+  at: number;
+  half: number;
+  until: number;
+  slow: number;
+}
+
+/** The walking speed share for a player standing on snapped threads (1 = not slowed). */
+export function stickySlow(world: WorldState, pos: Vec2): number {
+  let slow = 1;
+  for (const t of world.sticky) if (t.until > world.tick && Math.abs((t.axis === 'x' ? pos.y : pos.x) - t.at) <= t.half) slow = Math.min(slow, t.slow);
+  return slow;
 }
 
 /** Loom Keeper: a thread wall to wall (along x at row `at`, or along y at column `at`), or a cloth from `edge` to the wall on `side`. */
