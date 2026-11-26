@@ -128,6 +128,7 @@ import { RATING, overlaps, ratingWordTop } from '../ui/ratingWord';
 import { THROWN_LOOK, getUpAngle, thrownPose } from '../ui/thrownPose';
 import { drawPatternTell } from '../game/patternTells';
 import { loadSave, writeSave } from '../game/save';
+import { playChapterOneEnd } from '../ui/chapterOneEnd';
 import { currentTraining, seedLoadout } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
@@ -1967,7 +1968,11 @@ export class GameScene extends Phaser.Scene {
           sfx.doors();
           for (const d of this.doorViews) this.ring(d.at, DOOR_LOOK[d.kind].color, 1.2);
           const one = this.doorViews.length === 1;
-          if (this.run?.tutorial && this.room.kind === 'boss') this.tutorialTip('tutorial-door');
+          if (this.run?.tutorial && this.room.kind === 'boss') {
+            // Story Chapters (Nov 24): the first time, Chapter 1's ending plays before the door tip.
+            if (!loadSave().homeTourDone) this.playChapterOneEnd(() => this.tutorialTip('tutorial-door'));
+            else this.tutorialTip('tutorial-door');
+          }
           this.doorHint.setText(one ? 'The door is open!' : 'The doors are open!\nPick one.');
           this.doorHintOn = true;
           this.placeDoorHint();
@@ -2183,6 +2188,26 @@ export class GameScene extends Phaser.Scene {
       this.popWord(name, RATING.color, RATING.name);
     });
     this.cameras.main.ignore(this.picker.container);
+  }
+
+  /** Story Chapters (Nov 24): the Masked Shade takes the light piece (Chapter 1's ending), then `then`. */
+  private playChapterOneEnd(then: () => void): void {
+    this.menuOpen = true;
+    this.controls.reset();
+    this.buttons.reset();
+    playChapterOneEnd({
+      scene: this,
+      tile: TILE,
+      hero: { x: this.player.x, y: this.player.y },
+      addWorld: (o) => this.uiCamera.ignore(o),
+      addScreen: (o) => this.cameras.main.ignore(o),
+      done: () => {
+        this.menuOpen = false;
+        this.controls.reset();
+        this.buttons.reset();
+        then();
+      },
+    });
   }
 
   /** Brings the run's loot home, saves, and goes to the Home Dojo. */

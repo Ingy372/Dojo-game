@@ -2221,6 +2221,17 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
   - **Words Claude wrote that Jay hasn't seen yet:** the three Fighting Style help lines ("Tap a slot, then pick a tool." / "Every move you learn in class is a new tool." / "Pockets full? Pick a tool to swap."), "Learn a kata!", and the two sign-off list labels above.
   - The practice bots now press KATA (a kid or masher when one enemy is close; a smart player for two or more).
 
+## Story Chapters: the tutorial overhaul (2026-11-24, branch `claude/tutorial-overhaul`)
+Jay: explain every system through the tutorial so nothing is hidden, with a story, a strong hook and cut scenes, in digestible pieces. Design: `docs/superpowers/specs/2026-11-24-tutorial-overhaul-design.md`; plan: `docs/superpowers/plans/2026-11-24-story-chapters-stage-1.md`.
+- **Six chapters (Jay approved):** 1 The Broken Light, 2 Home, Sweet Dojo, 3 Tools of the Trade, 4 The Real Dojo, 5 The Path Up, 6 Friends in Town. About 5 minutes each, each ending on a hook.
+- **Play-paced (Jay picked A):** a chapter opens after one Tower climb of the player's own since the last chapter (tutorial floors and test links don't count). This **overrides the "one new system per session/day" rule for story chapters**; Welcome Week and the first-time lessons keep their own rules.
+- **The story hook:** one piece of the broken light falls to the hero ("The light chose you."); the **Masked Shade** (draft name) leads the Shades and wants it. Long mystery for later: he wears a faded white belt (a student who quit). He is a **code stand-in** until a Blender model is made for Jay's OK.
+- **Saved on the profile** as `story` (chapters done, climbs since the last one, the open chapter's step), so a chapter resumes after the app closes. Saves that already played start with Chapter 1 done.
+- **The Home Tour is replaced:** after the tutorial floor, Sensei welcomes the student home and sends them to the Training Station ("Climb once on your own."); the town walk moves to Chapter 4.
+- **Chapter card:** when a chapter is ready, the Home Dojo shows "Chapter n: Title" with Start and Later; Later keeps it waiting.
+- **Chapter 2's mess is scripted and looks-only:** dust up to 60% of the normal cap, cleaned like any dust (and earns Calm Mind like any clean). Nothing is removed or blocked.
+- Sensei lines with no button now keep only their own height (all walk-there stops), so they cover less of the room.
+- All chapter words are Claude's drafts in `content/tutorial/chapters.json` (`placeholder: true`), 8 words or fewer each, waiting on Jay's OK.
 ## Street Smarts lessons 2-5 (2026-11-24, branch `claude/street-lessons`)
 - **Jay picked the four topics and approved the scripts** (Nov 24: "Yes, these four"; "Yes, build them"). Design: `docs/superpowers/specs/2026-11-24-street-smarts-lessons-2-5-design.md`.
   - 2, park (6-9): candy from a grown-up you don't know.
@@ -2261,3 +2272,18 @@ Jay: the first lesson ("Lost in the store") was too long (about 35 lines, about 
 - The Mash guard is now a difficulty setting (`DIFFICULTY.*.mashGuardPerfects`): **Guided 3** (a hit during the hero's own attack swing counts as a Block until the room's 3rd Great Counter, then it switches off for that room, as before Nov 24), **Standard and Challenge 0** (no automatic blocking, Jay's Nov 24 rule stands there).
 - Guided monsters hit at **0.75** of their Power again (Claude's call). The 0.7 from Nov 24 was only there to make up for losing the block. With both back, Guided plays as it did before Nov 24.
 - Measured on Guided (coins per climb, 101 = a full win): kid bot 96–100, button-masher 82–89 (was about 61 without the block). Standard and Challenge are unchanged.
+## The Story of the Light, version 2 (2026-11-25, Jay)
+
+- **Draft:** `docs/story-of-the-light-v2.md` patches holes in Jay's Nov 25 story (how the light broke into pieces, the timeline, why Sensei can't bring Eli home, the confessions, Guardians never being people) and adds Mara, three mysteries and Eli's notebook pages.
+- **Jay's answers:** add Mara (Eli's old training partner); Eli was one step from black belt; Mara forgives Eli in the town square (Claude's reading: still at Red/Black, after walking away at Red); the Part 7 safety line on secrets is OK; write the notebook pages (30 drafted); the hero's scripted pride at Yellow is OK.
+- **Sensei's three new lines approved (Jay, Nov 25).**
+- **Whole story approved (Jay, Nov 25):** the 30 notebook pages as written, and the version 1 questions: keep "Eli"; only the ten wall verses; name Jesus only in a few big moments; keep Sensei taking the hit at Blue; Sensei is a made-up character; Claude suggests Yellow Guardian ideas when that belt is built; nothing missing.
+
+- **Nov 25 (Jay): Basic Form 1 has 20 steps,** one per move. Moves 5 and 13 pass through a Cat Stance before the Low Block steps out into the front stance.
+
+## Nov 25: Story v2 words in the game (Claude, from Jay's approved story)
+
+- The opening, the Chapter 1 ending and the start of Chapter 2 now use the approved lines word for word: "God gave this town a light." / "Last winter, it broke." / Sensei: "The light found you. It wasn't luck." / Eli: "I have to fix this myself." / Sensei: "That was Eli. He was my student." / "We're going to bring him home." / Sensei: "When the light is missing, a room gets dark fast."
+- Kid lines stay 8 words or fewer, so Sensei's 10-word Chapter 2 line shows as two bubbles ("When the light is missing," / "a room gets dark fast.").
+- Lines the story doesn't give were left as they were: "Shadows slipped into the Tower.", "One small piece fell to a student.", "But one student wasn't afraid." (Jay may want this one changed: in v2 the hero did nothing special to deserve the light), "The Keeper dropped a piece of light!", "Who's that?". The replay story cards use the same three opening lines.
+- Pictures are unchanged: Eli is still drawn as the Masked Shade code stand-in (SC-4), and in Chapter 2 the little Shadows still bounce and leave by the door.

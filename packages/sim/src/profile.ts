@@ -1,6 +1,7 @@
 // The player's saved progress from play: gear, personal bests, and bad-luck
 // protection. Plain data (the game stores it on the phone for now; on the server later).
 
+import { noteClimb, readStory, type StorySave } from './story';
 import { readKataBests, type KataBest } from './kataPractice';
 import { readBeltEntry, type BeltEntry } from './beltEntry';
 import { newBlessing, readBlessing, type Blessing } from './blessing';
@@ -119,6 +120,8 @@ export interface Profile {
   homeTour: HomeTourStop | null;
   /** The Home Tour was started once (a tutorial replay from the Book never starts it again). */
   homeTourDone: boolean;
+  /** Story Chapters (Nov 24): chapters finished, climbs since the last one, the open chapter's step. */
+  story: StorySave;
   /** Nov 20 (Jay): the best Star Wall score (the throwing star game in the Action Zone). Just for fun: no power, no items. */
   starWallBest: number;
   /** Nov 20 (Jay): kata practice bests per kata id (fastest time trial, fewest wrong moves). */
@@ -305,6 +308,7 @@ export function newProfile(): Profile {
     creedSeen: false,
     homeTour: null,
     homeTourDone: false,
+    story: readStory(undefined, false),
     starWallBest: 0,
     kataBests: {},
     bestStreakWeeks: 0,
@@ -376,7 +380,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, pathIntroSeen: typeof p.pathIntroSeen === 'boolean' ? p.pathIntroSeen : !((p.runsPlayed ?? 0) > 0), creedSeen: p.creedSeen === true, homeTour: isHomeTourStop(p.homeTour) ? p.homeTour : null, homeTourDone: typeof p.homeTourDone === 'boolean' ? p.homeTourDone : (p.runsPlayed ?? 0) > 0, starWallBest: typeof p.starWallBest === 'number' && p.starWallBest > 0 ? Math.floor(p.starWallBest) : 0, kataBests: readKataBests(p.kataBests), bestStreakWeeks: typeof p.bestStreakWeeks === 'number' && p.bestStreakWeeks > 0 ? Math.floor(p.bestStreakWeeks) : 0, coins: readCoins(p.coins), coinDay: readCoinDay(p.coinDay), coinOnce: Array.isArray(p.coinOnce) ? p.coinOnce.filter((v) => typeof v === 'string') : [], realPaid: Array.isArray(p.realPaid) ? p.realPaid.filter((v) => typeof v === 'string') : null, shop: readShopSave(p.shop), sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], styleSeen: Array.isArray(p.styleSeen) ? p.styleSeen.filter((v) => typeof v === 'string') : null, styleHelpSeen: Array.isArray(p.styleHelpSeen) ? p.styleHelpSeen.filter((v) => typeof v === 'string') : [], senseiPick: p.senseiPick !== false, picksKnown: Array.isArray(p.picksKnown) ? p.picksKnown.filter((v) => typeof v === 'string') : null, toolBeltSeeded: p.toolBeltSeeded === true, blessing: readBlessing(p.blessing), ...migrateReadyStance(p, readLoadout(p.loadout)), ...readLoadoutV2Flags(p) };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, pathIntroSeen: typeof p.pathIntroSeen === 'boolean' ? p.pathIntroSeen : !((p.runsPlayed ?? 0) > 0), creedSeen: p.creedSeen === true, homeTour: isHomeTourStop(p.homeTour) ? p.homeTour : null, homeTourDone: typeof p.homeTourDone === 'boolean' ? p.homeTourDone : (p.runsPlayed ?? 0) > 0, story: readStory(p.story, (p.runsPlayed ?? 0) > 0 || p.homeTourDone === true), starWallBest: typeof p.starWallBest === 'number' && p.starWallBest > 0 ? Math.floor(p.starWallBest) : 0, kataBests: readKataBests(p.kataBests), bestStreakWeeks: typeof p.bestStreakWeeks === 'number' && p.bestStreakWeeks > 0 ? Math.floor(p.bestStreakWeeks) : 0, coins: readCoins(p.coins), coinDay: readCoinDay(p.coinDay), coinOnce: Array.isArray(p.coinOnce) ? p.coinOnce.filter((v) => typeof v === 'string') : [], realPaid: Array.isArray(p.realPaid) ? p.realPaid.filter((v) => typeof v === 'string') : null, shop: readShopSave(p.shop), sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], styleSeen: Array.isArray(p.styleSeen) ? p.styleSeen.filter((v) => typeof v === 'string') : null, styleHelpSeen: Array.isArray(p.styleHelpSeen) ? p.styleHelpSeen.filter((v) => typeof v === 'string') : [], senseiPick: p.senseiPick !== false, picksKnown: Array.isArray(p.picksKnown) ? p.picksKnown.filter((v) => typeof v === 'string') : null, toolBeltSeeded: p.toolBeltSeeded === true, blessing: readBlessing(p.blessing), ...migrateReadyStance(p, readLoadout(p.loadout)), ...readLoadoutV2Flags(p) };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -497,6 +501,7 @@ export function finishRun(profile: Profile, summary: RunSummary, day?: string): 
   const foundRare = items.some((i) => rarityRank(i.rarity) >= rarityRank(best));
   profile.dryRuns = foundRare ? 0 : Math.min(profile.dryRuns + 1, LOOT.guaranteedRareOnRun - 1);
   profile.runsPlayed++;
+  noteClimb(profile.story, summary);
   // Nov 23: with the day given, the daily rule applies (full pay for the first few runs of the day, then half).
   const coins = day === undefined ? runCoins(summary) : runCoinsToday(profile, runCoins(summary), day);
   profile.coins += coins;

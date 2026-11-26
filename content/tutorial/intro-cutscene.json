@@ -1,8 +1,8 @@
 {
-  "_note": "The opening cutscene before the tutorial (Jay approved the storyboard, Nov 23). Change any line here. Shades stay small and cute; nothing frightening. Times are in milliseconds from the start.",
+  "_note": "The opening cutscene before the tutorial (Jay approved the storyboard, Nov 23). Change any line here. Shadows stay small and cute; nothing frightening. Times are in milliseconds from the start.",
   "lines": {
-    "safe": "Long ago, a great light kept our town safe.",
-    "broke": "One day, the light broke.",
+    "safe": "God gave this town a light.",
+    "broke": "Last winter, it broke.",
     "shadows": "Shadows slipped into the Tower.",
     "brave": "But one student wasn't afraid.",
     "title": "Dojo Ascent",

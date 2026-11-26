@@ -1,11 +1,10 @@
 {
-  "notes": "TUT-P1 beats 0 and 11: the story opening and close. PLACEHOLDER wording from TUT-C1 (C3 lore, chapter-1 draft) until Jay checks the tone (TUT-P1 DECIDE 1). Swap the lines here; nothing else needs to change. The kid can tap through the cards; play beats are never skipped. Every line is 8 words or fewer.",
+  "notes": "TUT-P1 beats 0 and 11: the story opening and close. PLACEHOLDER wording from TUT-C1 (C3 lore, chapter-1 draft) until Jay checks the tone (TUT-P1 DECIDE 1). Nov 25: the cards follow the approved Story of the Light v2 and the intro cut scene. Swap the lines here; nothing else needs to change. The kid can tap through the cards; play beats are never skipped. Every line is 8 words or fewer.",
   "opening": {
     "cards": [
-      "Long ago, a great light shone.",
-      "It kept the whole town warm and safe.",
-      "One night, the light broke into pieces.",
-      "Shadow slipped into the Tower, floor by floor."
+      "God gave this town a light.",
+      "Last winter, it broke.",
+      "Shadows slipped into the Tower."
     ],
     "sensei": "The Tower is waking up. Come with me."
   },

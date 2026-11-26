@@ -57,6 +57,10 @@ import { Companions, companionPacks } from '../game/companion';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
 import { TOUR, senseiBubble, tourGlow, tourLine } from '../ui/homeTour';
+import STORY from '../../../../content/tutorial/chapters.json';
+import { showChapterCard } from '../ui/chapterCard';
+import { cutsceneFrame } from '../ui/cutscene';
+import { addLittleShade } from '../ui/maskedShade';
 import { DIFFICULTY_TEXT, ensureDifficulty } from '../game/difficulty';
 import { PLAY_TIME_TEXT, touchPlayClock } from '../game/playTime';
 import { bankRun, savedRun } from '../game/runSave';
@@ -65,7 +69,7 @@ import MOTION_TEXT from '../../../../content/settings/motion.json';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { baseFeed, currentTraining } from '../game/student';
 import BELT_TEXT from '../../../../content/settings/belt-entry.json';
-import { applyBeltEntry, entryRank, feedEntry, fixBeltEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
+import { ageDojo, chapterReady, hoursForMess, applyBeltEntry, finishChapter, entryRank, feedEntry, fixBeltEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
 import { button as roundButton } from '../ui/button';
 import { GREEN, MIN_TAP, RADIUS } from '../ui/tokens';
 import { addDevDays, devDayOffset, localDay, noteLessonSeen, takeLesson } from '../game/lessons';
@@ -205,6 +209,10 @@ export class DojoScene extends Phaser.Scene {
   /** Home Tour (Jay, Nov 18): the glowing spot and Sensei's bubble of the current stop. */
   private tourBits: Phaser.GameObjects.GameObject[] = [];
   private tourStarted = false;
+  /** Story Chapters (Nov 24): the chapter card was offered on this visit; Sensei's bits for the open step; a top button to ring. */
+  private storyOffered = false;
+  private storyBits: Phaser.GameObjects.GameObject[] = [];
+  private storyRing: 'Decorate' | 'Look' | null = null;
   /** While set, the camera looks here (tiles) instead of at the hero: a tour stop showing something. */
   private tourLook: Vec2 | null = null;
   private tourDoorWait = false;
@@ -308,10 +316,14 @@ export class DojoScene extends Phaser.Scene {
     this.arrived = false;
     this.tourBits = [];
     this.tourStarted = false;
+    this.storyOffered = false;
+    this.storyBits = [];
+    this.storyRing = null;
     this.tourLook = null;
     this.tourDoorWait = false;
     if (this.restingOnArrival) this.time.delayedCall(500, () => this.showResting());
     if (!bowIsDue() && this.profile.homeTour) this.time.delayedCall(450, () => this.runTour());
+    else if (!bowIsDue()) this.time.delayedCall(700, () => this.runStory());
     if (!bowIsDue()) this.offerResume();
     // H3: with no bow (back from town, say), new pieces still arrive, with their card once the room is free.
     if (!bowIsDue()) {
@@ -520,6 +532,7 @@ export class DojoScene extends Phaser.Scene {
         this.renderUi();
         this.tryBow();
         this.runTour();
+        this.runStory();
       }
     };
     next();
@@ -588,6 +601,7 @@ export class DojoScene extends Phaser.Scene {
       writeSave(this.profile);
       this.renderUi();
       if (calmMind) this.celebrateCalm();
+      this.storyCleaned();
     }
 
     const door = CONTENT.dojo.room.doors[0];
@@ -625,6 +639,7 @@ export class DojoScene extends Phaser.Scene {
     writeSave(this.profile);
     this.renderUi();
     if (result.calmMind) this.celebrateCalm();
+    this.storyCleaned();
   }
 
   /** "Your dojo is resting for today", when the Tower was asked for after today's play time ran out. */
@@ -681,10 +696,12 @@ export class DojoScene extends Phaser.Scene {
   /** Nov 17 (Jay): the board on the wall is the training station: last climb, gear, fighting style and the Tower. */
   private goBoard(): void {
     const tour = this.profile.homeTour;
+    if (this.profile.story.step === 'ch2-board') return this.leaveTo('Home', { view: 'board', story: 2 });
     // Mid-tour (dojo and town stops), the station waits for the tour's last stop.
     if (tour === 'dojo' || tour === 'town') return;
     if (tour === 'board') {
       this.profile.homeTour = null;
+      finishChapter(this.profile.story, 1);
       return this.leaveTo('Home', { view: 'board', tourEnd: true });
     }
     this.leaveTo('Home', { view: 'board' });
@@ -708,23 +725,23 @@ export class DojoScene extends Phaser.Scene {
       return;
     }
     if (stop !== 'dojo') return;
+    // Story Chapters (Nov 24): Chapter 1 ends at home with the welcome and the station; the town walk moved to
+    // Chapter 4 (The Real Dojo). The board stop opens the Training Board and finishes Chapter 1.
     const name = this.training.displayName.split(' ')[0];
-    const lines = TOUR.dojo.map((l) => tourLine(l, { player: name }));
+    const lines = [tourLine(STORY.ch1Home.welcome, { player: name })];
     const say = (i: number): void => {
       this.mode = 'arriving';
       if (i < lines.length) {
         senseiBubble(this, lines[i], () => say(i + 1));
         return;
       }
-      const glow = station();
+      station();
       this.tourLook = { x: STATION.x, y: STATION.footY };
-      senseiBubble(this, TOUR.station, () => {
-        glow.destroy();
+      senseiBubble(this, STORY.ch1Home.station, () => {
         this.tourLook = null;
-        const door = CONTENT.dojo.room.doors[0];
-        this.tourGlowAt(door.x, door.y - 0.45);
-        this.tourDoorWait = true;
-        this.tourBits.push(senseiBubble(this, TOUR.toTown));
+        this.profile.homeTour = 'board';
+        writeSave(this.profile);
+        this.tourBits.push(senseiBubble(this, TOUR.toStation, undefined, TOUR.next, 'bottom'));
         this.controls.reset();
         this.quietUntil = this.time.now + ARRIVAL_QUIET_MS;
         this.mode = 'play';
@@ -732,6 +749,164 @@ export class DojoScene extends Phaser.Scene {
       }, TOUR.next, 'bottom');
     };
     say(0);
+  }
+
+  // ---------------------------------------------------------------- Story Chapters
+
+  /**
+   * Story Chapters (Nov 24): when chapter 2 is ready, Sensei's chapter card (once a visit); a chapter in
+   * progress resumes at its saved step. Chapters 3-6 come in the next stages.
+   */
+  private runStory(): void {
+    if (this.mode !== 'play' || this.leaving || this.profile.homeTour || this.cardsOpen > 0) return;
+    const story = this.profile.story;
+    if (story.step?.startsWith('ch2-')) {
+      if (this.storyBits.length === 0) this.chapterTwo();
+      return;
+    }
+    if (this.storyOffered || chapterReady(story) !== 2) return;
+    this.storyOffered = true;
+    this.mode = 'menu';
+    showChapterCard(
+      this,
+      2,
+      () => {
+        story.step = 'ch2-mess';
+        writeSave(this.profile);
+        this.mode = 'play';
+        this.chapterTwo();
+      },
+      () => {
+        this.controls.reset();
+        this.mode = 'play';
+        this.renderUi();
+      },
+    );
+  }
+
+  private clearStoryBits(): void {
+    for (const b of this.storyBits) b.destroy();
+    this.storyBits = [];
+    this.storyRing = null;
+  }
+
+  /** Sensei's line with Next, then the chapter moves to `step`. */
+  private storyNext(step: string, line: string): void {
+    this.clearStoryBits();
+    this.mode = 'arriving';
+    this.renderUi();
+    this.storyBits.push(
+      senseiBubble(this, line, () => {
+        this.profile.story.step = step;
+        writeSave(this.profile);
+        this.storyBits = [];
+        this.mode = 'play';
+        this.chapterTwo();
+      }, TOUR.next, 'bottom'),
+    );
+  }
+
+  /** A line that stays until the player does the thing (no button). */
+  private storyWait(line: string): void {
+    this.storyBits.push(senseiBubble(this, line, undefined, TOUR.next, 'bottom'));
+    this.controls.reset();
+    this.quietUntil = this.time.now + ARRIVAL_QUIET_MS;
+    this.mode = 'play';
+    this.renderUi();
+  }
+
+  /** Chapter 2, Home, Sweet Dojo: the Shades' mess, sweeping, decorating, Look, then the Training Board. */
+  private chapterTwo(): void {
+    this.clearStoryBits();
+    const step = this.profile.story.step;
+    if (step === 'ch2-mess') return this.shadesVisited();
+    if (step === 'ch2-sweep') {
+      if (choresLeft(this.dojo) === 0) return this.storyNext('ch2-decorate', STORY.ch2.swept);
+      return this.storyWait(STORY.ch2.sweep);
+    }
+    if (step === 'ch2-decorate') {
+      this.storyRing = 'Decorate';
+      return this.storyWait(STORY.ch2.decorate);
+    }
+    if (step === 'ch2-look') {
+      // The Look button stays on screen (play mode) so its gold ring shows; Next or Look both move on.
+      this.storyRing = 'Look';
+      this.mode = 'play';
+      this.renderUi();
+      this.storyBits.push(
+        senseiBubble(this, STORY.ch2.look, () => {
+          this.profile.story.step = 'ch2-board';
+          writeSave(this.profile);
+          this.storyBits = [];
+          this.mode = 'play';
+          this.chapterTwo();
+        }, TOUR.next, 'bottom'),
+      );
+      return;
+    }
+    if (step === 'ch2-board') {
+      this.storyBits.push(this.tourGlowAt(STATION.left - 0.35, STATION.footY + 0.45));
+      this.boardArmed = true;
+      return this.storyWait(STORY.ch2.board);
+    }
+  }
+
+  /** Sweeping or a chore finished: in chapter 2's sweep step, a clean dojo moves the chapter on. */
+  private storyCleaned(): void {
+    if (this.profile.story.step === 'ch2-sweep' && choresLeft(this.dojo) === 0 && this.mode === 'play') this.storyNext('ch2-decorate', STORY.ch2.swept);
+  }
+
+  /** Chapter 2's opening cut scene: the Shades made a mess while the hero climbed, and scurry out the door. */
+  private shadesVisited(): void {
+    this.mode = 'arriving';
+    this.controls.reset();
+    // The mess is scripted, looks only and capped like all dust (it never blocks play or removes anything).
+    const want = hoursForMess(0.6);
+    if (this.dojo.messHours < want) ageDojo(this.dojo, CONTENT.dojo, want - this.dojo.messHours);
+    this.redrawSpots();
+    this.redrawDecorations();
+    writeSave(this.profile);
+    this.renderUi();
+    const door = CONTENT.dojo.room.doors[0];
+    const hero = this.world.players.p1.pos;
+    const shades = [0, 1, 2].map((i) => {
+      const sh = addLittleShade(this, TILE);
+      sh.setPosition((hero.x + (i - 1) * 1.6) * TILE, (hero.y - 2 - (i % 2)) * TILE).setAlpha(0);
+      this.worldLayer.add(sh);
+      return sh;
+    });
+    const f = cutsceneFrame(
+      this,
+      () => {
+        for (const sh of shades) sh.destroy();
+        this.profile.story.step = 'ch2-sweep';
+        writeSave(this.profile);
+        this.mode = 'play';
+        this.chapterTwo();
+      },
+      { fadeOut: false },
+    );
+    f.at(200, () => f.say(STORY.ch2.mess1));
+    f.at(1600, () => shades.forEach((sh, i) => this.tweens.add({ targets: sh, alpha: 1, duration: 300, delay: i * 150 })));
+    f.at(2600, () => {
+      f.say(STORY.ch2.mess2);
+      shades.forEach((sh, i) => this.tweens.add({ targets: sh, y: sh.y - 8, duration: 120, yoyo: true, repeat: 5, delay: i * 90 }));
+    });
+    f.at(4600, () => {
+      sfx.doors();
+      shades.forEach((sh, i) =>
+        this.tweens.add({
+          targets: sh,
+          x: (door.x + (i - 1) * 0.4) * TILE,
+          y: door.y * TILE,
+          duration: reducedMotion() ? 10 : 1100,
+          delay: i * 160,
+          ease: 'Sine.In',
+          onComplete: () => this.tweens.add({ targets: sh, alpha: 0, duration: 200 }),
+        }),
+      );
+    });
+    f.at(6600, () => f.finish());
   }
 
   /** A glowing "walk here" spot on the dojo floor (tiles). */
@@ -762,6 +937,11 @@ export class DojoScene extends Phaser.Scene {
   private changeLook(): void {
     if (this.leaving || this.mode !== 'play') return;
     this.leaving = true;
+    // Chapter 2's Look step: trying Look counts, so coming back goes on to the Training Station.
+    if (this.profile.story.step === 'ch2-look') {
+      this.profile.story.step = 'ch2-board';
+      writeSave(this.profile);
+    }
     this.cameras.main.fadeOut(250, 10, 8, 16);
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Create', { first: false }));
   }
@@ -781,6 +961,7 @@ export class DojoScene extends Phaser.Scene {
     this.pan = null;
     this.panned = false;
     if (on) {
+      this.clearStoryBits();
       this.mode = 'decorate';
       // The movement stick isn't used while decorating.
       for (const o of this.controls.objects) (o as Phaser.GameObjects.Arc).setVisible(false);
@@ -798,6 +979,7 @@ export class DojoScene extends Phaser.Scene {
       const p = this.world.players.p1;
       if (!this.room.walls[Math.floor(pos.y)][Math.floor(pos.x)]) p.pos = pos;
       this.prevPos = { ...p.pos };
+      if (this.profile.story.step === 'ch2-decorate') this.time.delayedCall(250, () => this.storyNext('ch2-look', STORY.ch2.decorated));
     }
     this.layout();
     this.redrawDecorations();
@@ -1156,6 +1338,14 @@ export class DojoScene extends Phaser.Scene {
       this.button(width - pad - 80, 8, 80, 32, PW.dojoButton, 0x4a3f63, 14, () => this.goPath());
       this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
       this.button(width - pad - 80 - 8 - 100 - 8 - 70, 8, 70, 32, 'Look', 0x3a6ea5, 14, () => this.changeLook());
+      if (this.storyRing) {
+        const rx = this.storyRing === 'Look' ? width - pad - 80 - 8 - 100 - 8 - 70 : width - pad - 80 - 8 - 100;
+        const rw = this.storyRing === 'Look' ? 70 : 100;
+        const ring = this.add.graphics();
+        ring.lineStyle(4, 0xffd166, 1).strokeRoundedRect(rx - 5, 3, rw + 10, 42, 12);
+        this.ui.add(ring);
+        if (!reducedMotion()) this.tweens.add({ targets: ring, alpha: 0.3, duration: 450, yoyo: true, repeat: -1 });
+      }
       this.button(width - pad - 80 - 8 - 100 - 8 - 70 - 8 - 90, 8, 90, 32, DIFFICULTY_TEXT.button, 0x3a3a4a, 14, () => this.openDifficulty());
       // One line says which difficulty they're on, shown once ever (M7-P1).
       if (!this.profile.difficultyLineShown && this.profile.difficulty) {

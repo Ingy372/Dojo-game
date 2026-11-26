@@ -1476,6 +1476,12 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - Cleanup later: remove `kata-powers.json` and the Seal evolution words once old saves no longer need them.
 - **Copied to `main` with Jay's OK (Nov 24):** the live link now has the Tool Belt, the KATA button and the damage shift.
 
+## Story Chapters, stage 1 (2026-11-24, branch `claude/tutorial-overhaul`)
+- Jay asked for a full tutorial overhaul: every system explained, a story with a hook, cut scenes, digestible pacing. He approved six play-paced chapters (details in decisions.md).
+- **Built:** the chapter rules and saving (tested); the opening cut scene now has the hook (a light piece falls to the hero); Chapter 1's new ending (the Masked Shade takes the light piece in the Keep, Skip works); the home stop goes straight to the Training Station; the chapter card; **Chapter 2** (the Shades' mess cut scene, sweeping, decorating, Look, then Gear, Wear best and the Book on the Training Board).
+- 1,774 tests pass; type checks and both builds pass. Checked in the browser at 844 x 390: the chapter card, the whole of Chapter 2 including resuming after a reload, Chapter 1's ending cut scene and Skip. Not played end to end in the browser: a brand-new player's full tutorial floor into the new ending (the pane was hidden, which slows the game's clock).
+- Note: another session shared this folder for a while; commit 4eadffec (Street Smarts lessons 2-5) is that session's work and it will bring it to `main` itself.
+- **Next:** Jay plays the preview: OK (or changes) for the story, the Masked Shade stand-in and the chapter words. Then stage 2: Chapters 3 (Tool Belt) and 4 (the town and the Action Zone).
 ## Street Smarts lessons 2-5 (2026-11-24, branch `claude/street-lessons`)
 - Four new lessons, each a cut scene in its own Blender place, with Jay's approved scripts:
   - Candy at the park;
@@ -1517,3 +1523,27 @@ Jay's list: hero overhaul, skins for coins, shop cosmetics and effects, total-ch
 - **Fixed:** every Tower climb loaded every belt's monster art (about 30 MB). Each room now loads only its own monsters, what they call in or split into, and a boss's later forms (`apps/client/src/art/enemyPacks.ts`). A white belt now skips about 21 MB of Orange art. A new test checks that every room has the art for every monster it can show, at every health.
 - All tests, type checks and the build pass. **Not checked in the browser:** the app window was minimized, so the preview couldn't draw. Jay climbs once on his phone to make sure every monster still shows.
 - **Next (Jay decides):** the phone app would be about 235 MB. The report suggests packing the art a little smaller first (Jay compares on his phone), then downloading extra looks on first use once the server exists.
+## Nov 25: tutorial branch caught up with main
+
+Street Smarts lessons 2-5 were built on this branch, then moved to `main` and fixed there, so the two copies clashed. Merged `main` into `claude/tutorial-overhaul`, keeping `main`'s newer copy of every clashing lesson file (10 files). The tutorial chapters are untouched. All tests, type checks and both builds pass, and the branch now merges into `main` with no clashes. **For the tutorial session:** the main project folder still has unsaved edits to 7 Street Smarts files; they are an older copy of what is now on the branch, and git will refuse to update that folder until they are thrown away (`git checkout -- <files>`, then `git pull`).
+
+## Nov 25: The Story of the Light, version 2 (draft)
+
+- Reviewed Jay's story for holes and thin spots; wrote `docs/story-of-the-light-v2.md` with every change marked and a table of 16 patches.
+- Jay answered six questions (see decisions.md). Added Mara's forgiveness in the town square, Eli's folding-chair joke, and the 30 notebook pages.
+- **Story approved in full (Nov 25).** **Next:** the game's story words are updated to match (Shade becomes Shadow, the masked figure becomes Eli).
+
+## Nov 25: Basic Form 1 polish (kata practice)
+
+- Basic Form 1 now counts its 20 moves as 20 steps ("Step 5 of 20"), one move per step (Jay).
+- Moves 5 (right to up) and 13 (left to down): tapping the arrow turns the hero into a Cat Stance facing the new way; the Low Block then steps out into the front stance (new `pivot` field on a kata beat, using the existing `stance_cat` art).
+- Tests, type checks pass. Not seen in the browser (the preview pane stayed black); Jay checks on his phone.
+- Fixed: after the special turn (moves 9 and 17), tapping the next arrow showed the hero facing down for a moment. The held end of the turn was drawn from the old direction; it now holds the Low Block's own end pose and turns from there.
+
+## Nov 25 (afternoon, Jay away): Story v2 words and Yellow Guardian ideas (branch `claude/tutorial-overhaul`)
+
+- **Story v2 words in the game:** the opening cut scene, the Chapter 1 ending (Eli instead of the Masked Shade) and Chapter 2's opening now use Jay's approved lines (details in decisions.md). All 1,775 tests, the type checks and the build pass. Not seen in the browser (the app window was minimized, so the preview couldn't draw).
+- **Yellow Guardian:** Yellow has no floors or boss of its own (Yellow belts meet the Floor Keeper again). Three ideas for Jay in `docs/yellow-guardian-ideas.md`: the Sun Gardener (the old draft, cheapest), the Loom Keeper (Claude's pick: it leads into the blanket scene), the Lamplighter (fight beside Sensei's light; the most work). Nothing built.
+- **Other branches today:** `claude/download-size` (CW-4) and `claude/coin-table` (GP-6). Each has its own progress note.
+- **Not done:** the beta-readiness playthrough. It needs the preview to draw, which needs the app window open. Placeholders still in launch content: the stance sign-off ids (wait on Nic's real ids), Jumping Spins and Butterfly Flow numbers, the Class Chest card, the shop's look names, the Seal evolution card, the home tour words and the Guardian room zoom.
+- **Next:** Jay plays the preview (SC-1 plus today's words), picks a Yellow Guardian, and decides about the button-masher on Guided (see the coin-table note).

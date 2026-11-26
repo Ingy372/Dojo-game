@@ -53,3 +53,4 @@ export * from './shop';
 export * from './stones';
 export * from './town';
 export * from './starWall';
+export * from './story';

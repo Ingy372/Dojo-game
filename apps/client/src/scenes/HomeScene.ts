@@ -41,6 +41,7 @@ import {
   earnedPicks,
   senseiPick,
   toolPockets,
+  finishChapter,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
@@ -51,6 +52,7 @@ import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith,
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { TOUR, senseiBubble } from '../ui/homeTour';
+import STORY from '../../../../content/tutorial/chapters.json';
 import { GLASS, boardBackdrop, glassPanel, heroPedestal, levelBadge } from '../ui/boardTheme';
 import { currentTraining, seedLoadout, selectProfile, shortDate } from '../game/student';
 import { hex } from '../ui/belt';
@@ -92,6 +94,8 @@ export interface HomeSceneData {
   fromRun?: boolean;
   /** Home Tour (Jay, Nov 18): opened from the tour's last stop; Sensei says one last line. */
   tourEnd?: boolean;
+  /** Story Chapters (Nov 24): opened from a chapter's board step (2 = Home, Sweet Dojo). */
+  story?: number;
   /** B-MASHER-d1: home after a knock-out ('run') or when play time ended ('rested'): Screen 3's welcome shows. */
   knockout?: 'run' | 'rested';
 }
@@ -210,6 +214,7 @@ export class HomeScene extends Phaser.Scene {
   /** Came here straight from a run (the XP bar fills from what it last showed). */
   private fromRun = false;
   private tourEnd = false;
+  private storyChapter = 0;
   private equipment: EquipmentScreen | null = null;
   private openOn: 'path' | 'board' | null = null;
   private knockout: HomeSceneData['knockout'] | null = null;
@@ -231,6 +236,7 @@ export class HomeScene extends Phaser.Scene {
   init(data: HomeSceneData): void {
     this.fromRun = data?.fromRun === true;
     this.tourEnd = data?.tourEnd === true;
+    this.storyChapter = data?.story ?? 0;
     this.openOn = data?.view ?? null;
     this.knockout = data?.knockout ?? null;
     this.firstFloorDone = false;
@@ -267,12 +273,25 @@ export class HomeScene extends Phaser.Scene {
     this.winBurst();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.render, this);
     this.listenPanelScroll();
+    if (this.storyChapter === 2) {
+      // Chapter 2's board step: gear, Wear best and the Book, then the chapter is done.
+      const lines = [STORY.ch2.gear, STORY.ch2.wearBest, STORY.ch2.book, STORY.ch2.done];
+      const say = (i: number): void => {
+        if (i === lines.length - 1) {
+          finishChapter(this.profile.story, 2);
+          writeSave(this.profile);
+        }
+        if (i < lines.length) senseiBubble(this, lines[i], () => say(i + 1), i === lines.length - 1 ? TOUR.ok : TOUR.next);
+      };
+      this.time.delayedCall(350, () => say(0));
+    }
     if (this.tourEnd) {
       // Sensei's last tour line, once any celebrations are done.
       const wait = this.time.addEvent({ delay: 300, loop: true, callback: () => {
         if (this.celebrating) return;
         wait.remove();
-        senseiBubble(this, TOUR.boardOpen, () => {}, TOUR.ok);
+        // Story Chapters (Nov 24): Chapter 1's last lines; the next chapter waits for one climb of their own.
+        senseiBubble(this, STORY.ch1Home.climb, () => senseiBubble(this, STORY.ch1Home.after, () => {}, TOUR.ok), TOUR.next);
       } });
     }
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.render, this));
