@@ -148,6 +148,7 @@ import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
 import { floorLine } from '../game/floorName';
+import { virtueRefusedLine } from '../input/virtueState';
 import { wornShop } from '../game/shop';
 import { Companions, companionPacks } from '../game/companion';
 import { FX_DEPTH } from '../fx/plan';
@@ -349,6 +350,8 @@ export class GameScene extends Phaser.Scene {
   private trail: TrailEmitter | null = null;
   /** Aura around the character while a Virtue lasts. */
   private virtueAura!: Phaser.GameObjects.Arc;
+  /** B6: when the "Fill Focus" line last showed (scene ms), so a mashed E doesn't stack it. */
+  private virtueLineAt = -Infinity;
   /** True while a menu (like the Insight choice) is open: the fight is paused. */
   private menuOpen = false;
   /** The hero is down (the run is over): no boss tag or bar, no fight buttons or stick (Q-PREM-F4). */
@@ -1891,8 +1894,13 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.denied();
           this.buttons.refuse('virtue');
-          // L7: VIRTUE only shows at full Focus, so "Fill your Focus first" is gone.
-          if (p.virtueTicks > 0) this.floatText(p.pos, 'Already active', '#f2e9d8', 18);
+          // B6 (Grok playtest Nov 25): VIRTUE always shows now, so a press (or E) before Focus is full says what to do.
+          // A held or mashed E shows the line at most once a second.
+          const line = virtueRefusedLine(p);
+          if (line && this.time.now - this.virtueLineAt > 1000) {
+            this.virtueLineAt = this.time.now;
+            this.floatText(p.pos, line, '#f2e9d8', 18);
+          }
           break;
         }
         case 'shieldSoak': {
