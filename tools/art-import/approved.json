@@ -7,7 +7,7 @@
   },
   "packs": {
     "player-a": {
-      "note": "Body A: the base layers (body, skin, gi, belt, props). Stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
+      "note": "Body A: the base layers (body, skin, gi, belt, props). Stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations. Hero v2 (Claude, Nov 22, waiting on Jay's OK). The intro's catch-and-tuck (facing the camera only, with the shard prop) merged in too (Jay approved Nov 27).",
       "sources": [
         {
           "id": "player",
@@ -26,10 +26,12 @@
             "belt-tape2-edge",
             "belt-tape2",
             "prop-broom",
-            "prop-rag"
+            "prop-rag",
+            "prop-shard"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -75,7 +77,8 @@
             "face-06"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -109,7 +112,8 @@
             "hair-01"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -138,7 +142,8 @@
             "hair-02"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -167,7 +172,8 @@
             "hair-03"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -196,7 +202,8 @@
             "hair-04"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -225,7 +232,8 @@
             "hair-05"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -254,7 +262,8 @@
             "hair-06"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -283,7 +292,8 @@
             "hair-07"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -312,7 +322,8 @@
             "hair-08"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -341,7 +352,8 @@
             "hair-09"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -370,7 +382,8 @@
             "hair-10"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -399,7 +412,8 @@
             "hair-11"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -428,7 +442,8 @@
             "hair-12"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
       ]
@@ -471,7 +486,7 @@
       ]
     },
     "player-b": {
-      "note": "Body B: the base layers (body, skin, gi, belt, props). Stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
+      "note": "Body B: the base layers (body, skin, gi, belt, props). Stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations. Hero v2 (Claude, Nov 22, waiting on Jay's OK). The intro's catch-and-tuck (facing the camera only, with the shard prop) merged in too (Jay approved Nov 27).",
       "sources": [
         {
           "id": "player",
@@ -490,10 +505,12 @@
             "belt-tape2-edge",
             "belt-tape2",
             "prop-broom",
-            "prop-rag"
+            "prop-rag",
+            "prop-shard"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -539,7 +556,8 @@
             "face-06"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -573,7 +591,8 @@
             "hair-01"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -602,7 +621,8 @@
             "hair-02"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -631,7 +651,8 @@
             "hair-03"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -660,7 +681,8 @@
             "hair-04"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -689,7 +711,8 @@
             "hair-05"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -718,7 +741,8 @@
             "hair-06"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -747,7 +771,8 @@
             "hair-07"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -776,7 +801,8 @@
             "hair-08"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -805,7 +831,8 @@
             "hair-09"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -834,7 +861,8 @@
             "hair-10"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -863,7 +891,8 @@
             "hair-11"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]
@@ -892,7 +921,8 @@
             "hair-12"
           ],
           "mergeAnimations": [
-            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
+            "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json",
+            "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
       ]

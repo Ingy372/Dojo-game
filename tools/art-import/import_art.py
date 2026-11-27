@@ -128,7 +128,10 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
                     raise SystemExit(f'{extra_path}: animation "{name}" is already in {json_path}')
                 main['sheets'] = {**main['sheets'], **sheets}
                 continue
-            d['animations'][name] = {**a, 'sheets': sheets}
+            # An animation rendered facing one way only (the intro's tuck faces the camera) keeps one row;
+            # the game then uses that row for every direction.
+            rows = len(e['directions'])
+            d['animations'][name] = {**a, 'sheets': sheets, **({'_rows': rows} if rows != len(d['directions']) else {})}
     fw, fh = d['frameWidth'], d['frameHeight']
     ndir = len(d['directions'])
     sw, sh = round(fw * scale), round(fh * scale)
@@ -139,7 +142,8 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
     for name, a in d['animations'].items():
         if only_anims and name not in only_anims:
             continue
-        info = {k: v for k, v in a.items() if k not in ('sheets', 'form')}
+        info = {k: v for k, v in a.items() if k not in ('sheets', 'form', '_rows')}
+        rows = a.get('_rows', ndir)
         if a.get('form'):
             info['stance'] = STANCE_IDS.get(a['form'], a['form'])
         info['layers'] = {}
@@ -151,9 +155,9 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
                 continue  # the warning glow only shows during wind-ups and attacks
             im = Image.open(os.path.join(base, sheet)).convert('RGBA')
             ids = []
-            for r in range(ndir):
+            for r in range(rows):
                 row = []
-                if only_dirs and d['directions'][r] not in only_dirs:
+                if only_dirs and rows == ndir and d['directions'][r] not in only_dirs:
                     ids.append([-1] * a['frames'])  # direction not included in this pack
                     continue
                 for c in range(a['frames']):
