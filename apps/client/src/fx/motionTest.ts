@@ -11,64 +11,137 @@ export function motionTestOn(): boolean {
   return testFlags().get('motion') === 'new';
 }
 
-/** How the body is pushed and squashed this frame: offset in tiles (along the ground), scale multipliers. */
+/** How the body is pushed and squashed this frame: offset in tiles (along the ground), scale multipliers, tilt in radians. */
 export interface Pose {
   dx: number;
   dy: number;
   sx: number;
   sy: number;
+  rot: number;
 }
 
-export const REST: Pose = { dx: 0, dy: 0, sx: 1, sy: 1 };
+export const REST: Pose = { dx: 0, dy: 0, sx: 1, sy: 1, rot: 0 };
 
 const clamp01 = (t: number) => Math.max(0, Math.min(1, t));
 const easeOut = (t: number) => 1 - (1 - t) * (1 - t);
+const easeIn = (t: number) => t * t;
 /** A spring that settles: 1 at t=0, wobbles past 0 and dies away. */
 const spring = (t: number, wobbles = 2) => Math.cos(t * Math.PI * wobbles) * (1 - t) * (1 - t);
 
 /**
- * Wind-up (anticipation): the creature leans BACK from where it will strike and crouches wide, building up
- * through the wind-up. In the Counter window it holds the coiled pose and shivers, ready to spring.
- * `fx, fy` = the direction it will strike (unit vector).
+ * Jay, Nov 27: every attack is a "reach for the sky and slam down", but each kind of shadow winds up its own way.
+ * crouch = how low it dips first; rise = how high it lifts (tiles); stretch = how tall it reaches; tilt = how far it
+ * leans back (radians); pumps = bounces on the way up; spin = a wobbling twirl; squash = how flat the slam lands;
+ * dust = size of the dust ring.
  */
-export function windupPose(progress: number, inWindow: boolean, fx: number, fy: number, now: number): Pose {
-  const p = easeOut(clamp01(progress));
-  const back = 0.24 * p;
-  const shiver = inWindow ? Math.sin(now / 28) * 0.025 : 0;
+export interface WindupStyle {
+  crouch: number;
+  rise: number;
+  stretch: number;
+  tilt: number;
+  pumps: number;
+  spin: number;
+  squash: number;
+  dust: number;
+}
+
+/** Heavy: big slow lift, leans back, lands like a boulder. */
+const HEAVY: WindupStyle = { crouch: 0.12, rise: 0.42, stretch: 0.22, tilt: 0.18, pumps: 0, spin: 0, squash: 0.32, dust: 1.4 };
+/** Hopper: bounces up in little hops, then drops flat. */
+const HOPPER: WindupStyle = { crouch: 0.22, rise: 0.55, stretch: 0.3, tilt: 0, pumps: 2, spin: 0, squash: 0.38, dust: 1 };
+/** Spinner: floats up with a twirl, then dives. */
+const SPINNER: WindupStyle = { crouch: 0.08, rise: 0.4, stretch: 0.15, tilt: 0, pumps: 0, spin: 0.35, squash: 0.25, dust: 0.8 };
+/** Reacher: stretches tall and leans far back, then chops down. */
+const REACHER: WindupStyle = { crouch: 0.1, rise: 0.3, stretch: 0.35, tilt: 0.28, pumps: 0, spin: 0, squash: 0.28, dust: 1.1 };
+
+const STYLE_BY_ENEMY: Record<string, WindupStyle> = {
+  brute: HEAVY,
+  'stone-giant': HEAVY,
+  'floor-keeper': HEAVY,
+  'root-keeper': HEAVY,
+  'big-practice-dummy': HEAVY,
+  shield: HEAVY,
+  bopper: HOPPER,
+  doughling: HOPPER,
+  'dough-blob': HOPPER,
+  swarmer: HOPPER,
+  'spool-peg': HOPPER,
+  'ladle-lobber': HOPPER,
+  'rolling-pin': HOPPER,
+  'spark-sprite': SPINNER,
+  'storm-herald': SPINNER,
+  'river-watcher': SPINNER,
+  'lost-lightbearer': SPINNER,
+  'echo-mask': SPINNER,
+};
+
+export function windupStyle(enemyId: string): WindupStyle {
+  return STYLE_BY_ENEMY[enemyId] ?? REACHER;
+}
+
+/** The pose at the very top of the reach (where the slam starts). */
+function topPose(st: WindupStyle, fx: number, fy: number): Pose {
+  return { dx: -fx * 0.1, dy: -st.rise - fy * 0.06, sx: 1 - st.stretch * 0.6, sy: 1 + st.stretch, rot: -fx * st.tilt };
+}
+
+/**
+ * Wind-up: a quick crouch, then it reaches for the sky (lifts, stretches tall, leans back). In the Counter window it
+ * hangs at the top and trembles, ready to slam. `fx, fy` = the direction it will strike (unit vector).
+ */
+export function windupPose(progress: number, inWindow: boolean, fx: number, fy: number, now: number, st: WindupStyle): Pose {
+  const p = clamp01(progress);
+  if (p < 0.18) {
+    const c = Math.sin((p / 0.18) * Math.PI * 0.5) * st.crouch;
+    return { dx: 0, dy: 0, sx: 1 + c, sy: 1 - c, rot: 0 };
+  }
+  const t = (p - 0.18) / 0.82;
+  const top = topPose(st, fx, fy);
+  const c = st.crouch * (1 - easeOut(Math.min(1, t * 4)));
+  let lift = easeOut(t);
+  if (st.pumps > 0) lift = t * (0.55 + 0.45 * Math.abs(Math.cos(t * Math.PI * st.pumps)));
+  const tremble = inWindow ? Math.sin(now / 28) : 0;
+  const twirl = st.spin * Math.sin(now / 70) * t;
   return {
-    dx: -fx * back + shiver,
-    dy: -fy * back * 0.6,
-    sx: 1 + 0.18 * p,
-    sy: 1 - 0.15 * p,
+    dx: top.dx * t + tremble * 0.02,
+    dy: top.dy * lift,
+    sx: (1 + c) * (1 + (top.sx - 1) * t),
+    sy: (1 - c) * (1 + (top.sy - 1) * t),
+    rot: top.rot * t + twirl + tremble * 0.03,
   };
 }
 
-/** How long the lunge and its settle last, in milliseconds. */
-export const LUNGE_MS = 420;
+/** How long the slam and its settle last, and when it hits the floor, in milliseconds. */
+export const LUNGE_MS = 460;
+export const SLAM_MS = 70;
 
 /**
- * The attack (follow-through): a fast snap forward with a tall stretch, a squash as it lands, then it springs
- * back to where it really stands. `ms` = time since the attack landed.
+ * The slam: from the top of the reach it drops hard onto the floor a little forward, squashes flat, then springs back
+ * to where it really stands. `ms` = time since the attack landed.
  */
-export function attackPose(ms: number, fx: number, fy: number): Pose {
+export function attackPose(ms: number, fx: number, fy: number, st: WindupStyle): Pose {
   if (ms >= LUNGE_MS) return REST;
-  const snap = 70;
-  let reach: number;
-  let sx: number;
-  let sy: number;
-  if (ms < snap) {
-    const t = ms / snap;
-    reach = 0.5 * easeOut(t);
-    sx = 1 - 0.14 * t;
-    sy = 1 + 0.2 * t;
-  } else {
-    const t = (ms - snap) / (LUNGE_MS - snap);
-    reach = 0.5 * (1 - easeOut(t));
-    const w = spring(t, 2.5);
-    sx = 1 + 0.18 * w;
-    sy = 1 - 0.16 * w;
+  const top = topPose(st, fx, fy);
+  const reach = 0.28;
+  if (ms < SLAM_MS) {
+    const t = easeIn(ms / SLAM_MS);
+    return {
+      dx: top.dx + (fx * reach - top.dx) * t,
+      dy: top.dy * (1 - t) + fy * reach * 0.6 * t,
+      sx: top.sx + (1 - top.sx) * t,
+      sy: top.sy + (1 - top.sy) * t,
+      rot: top.rot + (fx * st.tilt * 0.4 - top.rot) * t,
+    };
   }
-  return { dx: fx * reach, dy: fy * reach * 0.6, sx, sy };
+  const t = (ms - SLAM_MS) / (LUNGE_MS - SLAM_MS);
+  const back = 1 - easeOut(t);
+  const w = spring(t, 2.5);
+  return {
+    dx: fx * reach * back,
+    dy: fy * reach * 0.6 * back,
+    sx: 1 + st.squash * w,
+    sy: 1 - st.squash * w,
+    rot: fx * st.tilt * 0.4 * back * w,
+  };
 }
 
 export const HIT_MS = 300;
@@ -83,25 +156,25 @@ export function hitPose(ms: number, ax: number, ay: number, heavy: boolean): Pos
   const push = (heavy ? 0.3 : 0.14) * (t < 0.15 ? easeOut(t / 0.15) : 1 - easeOut((t - 0.15) / 0.85));
   const w = spring(t, 3);
   const amt = heavy ? 0.24 : 0.14;
-  return { dx: ax * push, dy: ay * push * 0.6, sx: 1 + amt * w, sy: 1 - amt * w };
+  return { dx: ax * push, dy: ay * push * 0.6, sx: 1 + amt * w, sy: 1 - amt * w, rot: 0 };
 }
 
 /** Idle breathing so a standing creature never looks frozen. `seed` keeps neighbours out of step. */
 export function breathePose(now: number, seed: number): Pose {
   const b = Math.sin(now / 420 + seed) * 0.03;
-  return { dx: 0, dy: 0, sx: 1 - b * 0.5, sy: 1 + b };
+  return { dx: 0, dy: 0, sx: 1 - b * 0.5, sy: 1 + b, rot: 0 };
 }
 
 /** Walking bounce: a little hop and squash each step. `speed` in tiles per second. */
 export function walkPose(now: number, seed: number, speed: number): Pose {
   const phase = Math.abs(Math.sin(now / 110 + seed));
   const k = Math.min(1, speed / 2);
-  return { dx: 0, dy: -0.12 * phase * k, sx: 1 + 0.08 * (1 - phase) * k, sy: 1 - 0.08 * (1 - phase) * k };
+  return { dx: 0, dy: -0.12 * phase * k, sx: 1 + 0.08 * (1 - phase) * k, sy: 1 - 0.08 * (1 - phase) * k, rot: 0 };
 }
 
 /** Two poses together (offsets add, scales multiply). */
 export function combine(a: Pose, b: Pose): Pose {
-  return { dx: a.dx + b.dx, dy: a.dy + b.dy, sx: a.sx * b.sx, sy: a.sy * b.sy };
+  return { dx: a.dx + b.dx, dy: a.dy + b.dy, sx: a.sx * b.sx, sy: a.sy * b.sy, rot: a.rot + b.rot };
 }
 
 /** A unit vector, or (0, 1) when there's no direction. */

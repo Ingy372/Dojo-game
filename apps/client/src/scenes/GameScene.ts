@@ -155,7 +155,7 @@ import { Companions, companionPacks } from '../game/companion';
 import { FX_DEPTH } from '../fx/plan';
 import { TrailEmitter, playFx, type FxPlace } from '../fx/shopFx';
 import { VISIBLE_ROWS, bossHeadroom, bossRoomZoom, bossZoomPlan, cameraBounds } from '../game/cameraView';
-import { REST, attackPose, breathePose, combine, hitPose, motionTestOn, unit, walkPose, windupPose } from '../fx/motionTest';
+import { REST, SLAM_MS, attackPose, breathePose, combine, hitPose, motionTestOn, unit, walkPose, windupPose, windupStyle } from '../fx/motionTest';
 import { addRoomLife } from '../fx/roomLife';
 
 /** MOTION TEST (Jay, Nov 26): livelier enemies and a living room, only with ?motion=new in the address. */
@@ -1112,7 +1112,7 @@ export class GameScene extends Phaser.Scene {
     const s = v.sprite;
     const base = (s.container.getData('baseScale') as number | undefined) ?? artScale(e.def);
     if (e.mode === 'defeated' || e.mode === 'waiting' || e.mode === 'thrown' || reducedMotion()) {
-      s.container.setPosition(0, 0);
+      s.container.setPosition(0, 0).setRotation(0);
       return;
     }
     const mt = (v.mt ??= { attackAt: -1e9, hitAt: -1e9, hitDir: { x: 0, y: 1 }, heavy: false, seed: Math.random() * 10 });
@@ -1120,18 +1120,22 @@ export class GameScene extends Phaser.Scene {
     // Strike direction: towards the attack's centre, else towards the hero.
     const target = e.attackCenter ?? p?.pos ?? e.pos;
     const f = unit(target.x - e.pos.x, target.y - e.pos.y);
+    const st = windupStyle(e.def.id);
     let pose = REST;
     if (e.mode === 'windup' && e.attackCenter) {
       const window = counterWindowTicks(this.world, p);
       const elapsed = e.windupTotal - e.modeTicks;
-      pose = windupPose(elapsed / Math.max(1, e.windupTotal - window), elapsed >= e.windupTotal - window, f.x, f.y, now);
+      pose = windupPose(elapsed / Math.max(1, e.windupTotal - window), elapsed >= e.windupTotal - window, f.x, f.y, now, st);
     } else if (e.mode === 'recover') {
       if (started) {
         mt.attackAt = now;
-        this.dustPuff(e.pos.x + f.x * e.def.radius, e.pos.y + f.y * e.def.radius, 7);
         this.swoosh(e, f);
+        // Jay, Nov 27: a small dust ring where the slam meets the floor.
+        const ix = e.pos.x + f.x * (e.def.radius * 0.6 + 0.28);
+        const iy = e.pos.y + f.y * (e.def.radius * 0.6 + 0.28) * 0.6;
+        this.time.delayedCall(SLAM_MS, () => this.slamDust(ix, iy, st.dust * (0.6 + e.def.radius * 0.6)));
       }
-      pose = attackPose(now - mt.attackAt, f.x, f.y);
+      pose = attackPose(now - mt.attackAt, f.x, f.y, st);
     } else if (e.mode === 'stagger' || e.mode === 'winded') {
       pose = breathePose(now * 2.2, mt.seed);
     } else {
@@ -1139,7 +1143,34 @@ export class GameScene extends Phaser.Scene {
       pose = speed > 0.2 ? walkPose(now, mt.seed, speed) : breathePose(now, mt.seed);
     }
     pose = combine(pose, hitPose(now - mt.hitAt, mt.hitDir.x, mt.hitDir.y, mt.heavy));
-    s.container.setPosition(pose.dx * TILE, pose.dy * TILE).setScale(base * pose.sx, base * pose.sy);
+    // Keep the mirror flip (a negative width) when squashing.
+    const mirror = s.container.scaleX < 0 ? -1 : 1;
+    s.container.setPosition(pose.dx * TILE, pose.dy * TILE).setScale(mirror * base * pose.sx, base * pose.sy).setRotation(pose.rot);
+  }
+
+  /** MOTION TEST: a slam's dust: a flat ring spreading along the floor and a few low puffs. `size` ~1 for a Brute. */
+  private slamDust(x: number, y: number, size: number): void {
+    const px = x * TILE;
+    const py = y * TILE;
+    const depth = depthAt(py) - 0.01;
+    const ring = this.addWorld(this.add.ellipse(px, py, TILE * 0.5 * size, TILE * 0.22 * size).setStrokeStyle(4, 0xe8dcc8, 0.7).setDepth(depth));
+    this.tweens.add({ targets: ring, scaleX: 2.2, scaleY: 2.2, alpha: 0, duration: 340, ease: 'Cubic.Out', onComplete: () => ring.destroy() });
+    const n = Math.round(5 + 3 * size);
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + Math.random() * 0.4;
+      const d = TILE * size * (0.35 + Math.random() * 0.25);
+      const c = this.addWorld(this.add.circle(px, py, (3 + Math.random() * 3) * size, 0xe8dcc8, 0.6).setDepth(depth));
+      this.tweens.add({
+        targets: c,
+        x: px + Math.cos(a) * d,
+        y: py + Math.sin(a) * d * 0.4 - 4,
+        scale: 1.7,
+        alpha: 0,
+        duration: 320 + Math.random() * 160,
+        ease: 'Cubic.Out',
+        onComplete: () => c.destroy(),
+      });
+    }
   }
 
   /** MOTION TEST: a puff of floor dust. */
