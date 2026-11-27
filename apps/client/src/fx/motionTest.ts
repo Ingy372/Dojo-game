@@ -182,3 +182,88 @@ export function unit(x: number, y: number): { x: number; y: number } {
   const l = Math.hypot(x, y);
   return l > 1e-6 ? { x: x / l, y: y / l } : { x: 0, y: 1 };
 }
+
+/**
+ * HERO (Jay, Nov 27: "add more life to just about all of the hero's animations"). Drawn on top of the hero's own
+ * animations, the same way as the enemies: a lean into the run, a soft landing squash each step, a skid when he stops,
+ * breathing, a stretch on the dash, a pull-back-and-snap on strikes, a flinch when hit and a pop on a Perfect Counter.
+ */
+export const HERO_STEP_MS = 167; // one footfall (the run loop is 12 frames at 36 fps: two steps in 333 ms)
+
+/** Running: a soft landing squash on each footfall and a lean forward along the run. `lean` = -1..1 sideways. */
+export function heroRunPose(now: number, lean: number): Pose {
+  const t = (now % HERO_STEP_MS) / HERO_STEP_MS;
+  const land = Math.max(0, 1 - t * 4); // the first quarter of each step
+  return { dx: 0, dy: 0, sx: 1 + 0.05 * land, sy: 1 - 0.06 * land, rot: lean * 0.13 };
+}
+
+export const SKID_MS = 260;
+/** Stopping: leans back against the run, then settles. `dir` = -1..1, the way he was running sideways. */
+export function heroSkidPose(ms: number, dir: number): Pose {
+  if (ms >= SKID_MS) return REST;
+  const t = ms / SKID_MS;
+  const w = spring(t, 1.5);
+  return { dx: dir * 0.05 * (1 - t), dy: 0, sx: 1 + 0.06 * w, sy: 1 - 0.07 * w, rot: -dir * 0.16 * w };
+}
+
+export const START_MS = 120;
+/** Setting off: a quick crouch before the first step. */
+export function heroStartPose(ms: number): Pose {
+  if (ms >= START_MS) return REST;
+  const c = Math.sin((ms / START_MS) * Math.PI) * 0.07;
+  return { dx: 0, dy: 0, sx: 1 + c, sy: 1 - c, rot: 0 };
+}
+
+/** Standing: slow breathing. */
+export function heroBreathePose(now: number): Pose {
+  const b = Math.sin(now / 520) * 0.022;
+  return { dx: 0, dy: 0, sx: 1 - b * 0.4, sy: 1 + b, rot: 0 };
+}
+
+export const DASH_MS = 240;
+/** Dash: stretched long along the dash, then a squash as he stops. `fx` = how sideways the dash is (-1..1). */
+export function heroDashPose(ms: number, fx: number): Pose {
+  if (ms >= DASH_MS) return REST;
+  const t = ms / DASH_MS;
+  const side = Math.abs(fx);
+  if (t < 0.55) {
+    const k = Math.sin((t / 0.55) * Math.PI * 0.5);
+    return { dx: 0, dy: 0, sx: 1 + 0.22 * side * k - 0.08 * (1 - side) * k, sy: 1 - 0.12 * side * k + 0.18 * (1 - side) * k, rot: fx * 0.2 * k };
+  }
+  const w = spring((t - 0.55) / 0.45, 1.5);
+  return { dx: 0, dy: 0, sx: 1 + 0.1 * w, sy: 1 - 0.1 * w, rot: fx * 0.2 * Math.max(0, w) };
+}
+
+export const STRIKE_MS = 300;
+/** A strike: a quick pull back, a snap forward with a stretch, then settle. `fx, fy` = facing. */
+export function heroStrikePose(ms: number, fx: number, fy: number): Pose {
+  if (ms >= STRIKE_MS) return REST;
+  const pull = 50;
+  if (ms < pull) {
+    const k = ms / pull;
+    return { dx: -fx * 0.06 * k, dy: -fy * 0.04 * k, sx: 1 + 0.06 * k, sy: 1 - 0.06 * k, rot: -fx * 0.1 * k };
+  }
+  const t = (ms - pull) / (STRIKE_MS - pull);
+  const reach = t < 0.2 ? easeOut(t / 0.2) : 1 - easeOut((t - 0.2) / 0.8);
+  const w = spring(t, 2);
+  return { dx: fx * 0.12 * reach, dy: fy * 0.08 * reach, sx: 1 - 0.06 * w, sy: 1 + 0.08 * w, rot: fx * 0.12 * reach };
+}
+
+export const FLINCH_MS = 320;
+/** Hit: knocked back away from the blow, squashed, then wobbles back. `ax, ay` = away from the blow. */
+export function heroFlinchPose(ms: number, ax: number, ay: number): Pose {
+  if (ms >= FLINCH_MS) return REST;
+  const t = ms / FLINCH_MS;
+  const push = t < 0.15 ? easeOut(t / 0.15) : 1 - easeOut((t - 0.15) / 0.85);
+  const w = spring(t, 2.5);
+  return { dx: ax * 0.14 * push, dy: ay * 0.09 * push, sx: 1 + 0.12 * w, sy: 1 - 0.12 * w, rot: ax * 0.18 * push };
+}
+
+export const POP_MS = 260;
+/** Perfect Counter: a sharp pop bigger, then back. */
+export function heroPopPose(ms: number): Pose {
+  if (ms >= POP_MS) return REST;
+  const t = ms / POP_MS;
+  const k = t < 0.2 ? t / 0.2 : spring((t - 0.2) / 0.8, 1.5);
+  return { dx: 0, dy: 0, sx: 1 + 0.14 * k, sy: 1 + 0.14 * k, rot: 0 };
+}

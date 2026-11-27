@@ -1,0 +1,5 @@
+# Rebuilt by source/run_sample.sh (hero3_base_a.blend is a plain copy of claude-hero-v2/source/player_hero2_a.blend).
+source/*.blend
+source/*.blend1
+sample/old-2x/
+sample/new-2x/

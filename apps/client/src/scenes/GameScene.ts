@@ -155,7 +155,28 @@ import { Companions, companionPacks } from '../game/companion';
 import { FX_DEPTH } from '../fx/plan';
 import { TrailEmitter, playFx, type FxPlace } from '../fx/shopFx';
 import { VISIBLE_ROWS, bossHeadroom, bossRoomZoom, bossZoomPlan, cameraBounds } from '../game/cameraView';
-import { REST, SLAM_MS, attackPose, breathePose, combine, hitPose, motionTestOn, unit, walkPose, windupPose, windupStyle } from '../fx/motionTest';
+import {
+  HERO_STEP_MS,
+  REST,
+  SLAM_MS,
+  attackPose,
+  breathePose,
+  combine,
+  heroBreathePose,
+  heroDashPose,
+  heroFlinchPose,
+  heroPopPose,
+  heroRunPose,
+  heroSkidPose,
+  heroStartPose,
+  heroStrikePose,
+  hitPose,
+  motionTestOn,
+  unit,
+  walkPose,
+  windupPose,
+  windupStyle,
+} from '../fx/motionTest';
 import { addRoomLife } from '../fx/roomLife';
 
 /** MOTION TEST (Jay, Nov 26): livelier enemies and a living room, only with ?motion=new in the address. */
@@ -487,6 +508,8 @@ export class GameScene extends Phaser.Scene {
   private heroAction: string | null = null;
   private shield!: Phaser.GameObjects.Graphics;
   private playerFlashUntil = 0;
+  /** MOTION TEST: when the hero's extra movements started (ms), and which way. */
+  private heroMt = { moving: false, movedAt: -1e9, stopAt: -1e9, stopDir: 0, lean: 0, lastStep: 0, dashAt: -1e9, dash: { x: 0, y: 1 }, strikeAt: -1e9, face: { x: 0, y: 1 }, hitAt: -1e9, hitDir: { x: 0, y: -1 }, popAt: -1e9, last: 0 };
   private marker!: Phaser.GameObjects.Arc;
   private danger!: Phaser.GameObjects.Graphics;
   /** K24b: the wind-up cues (a big "!" and a filling ring) above each enemy about to attack. */
@@ -892,6 +915,69 @@ export class GameScene extends Phaser.Scene {
     }
     s.flash(now < this.playerFlashUntil ? 0xff8a80 : null);
     s.update();
+    if (MOTION_TEST) this.heroMotion(p, now);
+  }
+
+  /**
+   * MOTION TEST (?motion=new, Jay Nov 27): life on top of the hero's animations: a lean into the run, a landing squash
+   * and a little dust each step, a crouch on setting off, a skid on stopping, breathing, and the dash, strike, flinch
+   * and Perfect Counter poses started from the fight events. Visual only.
+   */
+  private heroMotion(p: WorldState['players'][string], now: number): void {
+    const c = this.hero.container;
+    const mirror = c.scaleX < 0 ? -1 : 1;
+    const m = this.heroMt;
+    if (p.downTicks > 0 || reducedMotion()) {
+      c.setPosition(0, 0).setRotation(0).setScale(mirror, 1);
+      return;
+    }
+    const dt = Math.min(0.1, (now - m.last) / 1000);
+    m.last = now;
+    const vx = p.pos.x - this.prevPos.x;
+    const vy = p.pos.y - this.prevPos.y;
+    const sp = Math.hypot(vx, vy);
+    const moving = p.moving && sp > 1e-4;
+    if (moving && !m.moving) m.movedAt = now;
+    if (!moving && m.moving && now - m.movedAt > 200) {
+      m.stopAt = now;
+      m.stopDir = m.lean;
+      // Skid dust thrown forward from the feet.
+      this.dustPuff(p.pos.x + p.facing.x * 0.2, p.pos.y + 0.1 + p.facing.y * 0.1, 3, 0.6);
+    }
+    m.moving = moving;
+    const target = moving ? vx / sp : 0;
+    m.lean += (target - m.lean) * Math.min(1, dt * 10);
+    if (moving && now - m.lastStep >= HERO_STEP_MS) {
+      m.lastStep = now;
+      // A small kick of dust behind each footfall.
+      this.dustPuff(p.pos.x - (vx / sp) * 0.15, p.pos.y + 0.12 - (vy / sp) * 0.1, 2, 0.45);
+    }
+    let pose = moving ? heroRunPose(now, m.lean) : heroBreathePose(now);
+    pose = combine(pose, heroStartPose(now - m.movedAt));
+    pose = combine(pose, heroSkidPose(now - m.stopAt, m.stopDir));
+    pose = combine(pose, heroDashPose(now - m.dashAt, m.dash.x));
+    pose = combine(pose, heroStrikePose(now - m.strikeAt, m.face.x, m.face.y));
+    pose = combine(pose, heroFlinchPose(now - m.hitAt, m.hitDir.x, m.hitDir.y));
+    pose = combine(pose, heroPopPose(now - m.popAt));
+    c.setPosition(pose.dx * TILE, pose.dy * TILE).setRotation(pose.rot).setScale(mirror * pose.sx, pose.sy);
+  }
+
+  /** MOTION TEST: starts one of the hero's event poses. */
+  private heroMtStart(kind: 'dash' | 'strike' | 'hit' | 'pop', p: WorldState['players'][string] | undefined): void {
+    if (!MOTION_TEST || !p) return;
+    const m = this.heroMt;
+    const now = this.time.now;
+    const f = unit(p.facing.x, p.facing.y);
+    if (kind === 'dash') {
+      m.dashAt = now;
+      m.dash = f;
+    } else if (kind === 'strike') {
+      m.strikeAt = now;
+      m.face = f;
+    } else if (kind === 'hit') {
+      m.hitAt = now;
+      m.hitDir = { x: -f.x, y: -f.y };
+    } else m.popAt = now;
   }
 
   /** Starts a one-off move on the character (frames `from`..`to` of the animation). */
@@ -1174,11 +1260,11 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** MOTION TEST: a puff of floor dust. */
-  private dustPuff(x: number, y: number, count: number): void {
+  private dustPuff(x: number, y: number, count: number, size = 1): void {
     for (let i = 0; i < count; i++) {
       const a = Math.random() * Math.PI * 2;
-      const d = TILE * (0.25 + Math.random() * 0.35);
-      const c = this.addWorld(this.add.circle(x * TILE, y * TILE, 5 + Math.random() * 5, 0xe8dcc8, 0.55).setDepth(depthAt(y * TILE) - 0.01));
+      const d = TILE * (0.25 + Math.random() * 0.35) * size;
+      const c = this.addWorld(this.add.circle(x * TILE, y * TILE, (5 + Math.random() * 5) * size, 0xe8dcc8, 0.55).setDepth(depthAt(y * TILE) - 0.01));
       this.tweens.add({
         targets: c,
         x: c.x + Math.cos(a) * d,
@@ -1806,6 +1892,7 @@ export class GameScene extends Phaser.Scene {
           if (ev.move === 'basic' && !this.world.players[ev.playerId].moving && !this.heroAction) this.heroDo('jab');
           else if (ev.move === 'strike') {
             this.heroDo('strike');
+            this.heroMtStart('strike', this.world.players[ev.playerId]);
             if (ev.playerId === this.me) this.tutorialDid('strike');
           }
           if (ev.move === 'basic') {
@@ -1835,6 +1922,10 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.greatCounter();
           this.heroDo('counter', 8); // the counter punch
+          if (ev.playerId === this.me) {
+            this.heroMtStart('pop', p);
+            this.heroMtStart('strike', p);
+          }
           this.impact(FEEL.perfect);
           this.flashScreen(0xffffff, 0.55, 220);
           this.ring(p.pos, COLORS.gold, 2.2);
@@ -1884,6 +1975,7 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.hurt();
           this.heroDo('hit');
+          if (ev.playerId === this.me) this.heroMtStart('hit', p);
           this.impact(FEEL.hurt, this.shakeScale('hurt'));
           this.playerFlashUntil = this.time.now + 160;
           this.flashScreen(0xff2a1a, 0.3, 200);
@@ -1978,6 +2070,10 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.dash();
           this.heroDo('dash');
+          if (ev.playerId === this.me) {
+            this.heroMtStart('dash', p);
+            if (MOTION_TEST && !reducedMotion()) this.dustPuff(p.pos.x, p.pos.y + 0.12, 5, 0.7);
+          }
           if (ev.playerId === this.me && this.shopFx.puff) playFx(this, this.shopFx.puff, p.pos.x * TILE, (p.pos.y + 0.15) * TILE, this.fxPlace());
           this.dashTrail(p.pos);
           break;
