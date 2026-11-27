@@ -272,8 +272,46 @@ export function playIntro(h: IntroHost): void {
       s.events.on(Phaser.Scenes.Events.POST_UPDATE, follow);
     });
   });
-  // the soft chime as the shard lands in the hero's hands (the animation's catch frame, 11 of 36 at 12 a second)
-  at(16200 + 920, () => sfx.tap());
+  // The catch (the animation's frame 11 of 36, at 12 a second): the light blooms around the hero and the colour
+  // comes back to the town (Jay, Nov 27: "light up everything around the hero and restore color"). The bloom stays
+  // bright while the hero looks at it, then draws in to the chest as it's tucked away (frame 26) and leaves a warm
+  // glow on the hero.
+  const CATCH = 16200 + 920;
+  const frameMs = (n: number) => 16200 + (n * 1000) / 12;
+  let bloom: Phaser.GameObjects.Image | null = null;
+  let warm: Phaser.GameObjects.Image | null = null;
+  const chest = () => {
+    const b = h.heroBody();
+    return { x: b.x, y: b.y - 0.5 * T };
+  };
+  at(CATCH, () => {
+    sfx.tap();
+    const c = chest();
+    bloom = s.add.image(c.x, c.y, glowKey).setScale(0.2).setAlpha(0.95).setDepth(1e6).setBlendMode(Phaser.BlendModes.ADD);
+    const ring = s.add.circle(c.x, c.y, T * 0.4).setStrokeStyle(5, 0xfff1b8, 0.9).setDepth(1e6).setBlendMode(Phaser.BlendModes.ADD);
+    h.world.add([bloom, ring]);
+    s.tweens.add({ targets: bloom, scale: (9 * T) / 64, alpha: 0.6, duration: still ? 10 : 900, ease: 'Cubic.Out' });
+    s.tweens.add({ targets: ring, scale: 22, alpha: 0, duration: still ? 10 : 1300, ease: 'Sine.Out', onComplete: () => ring.destroy() });
+    // the colour washes back as the light spreads, and the petals fall again
+    const o = { k: 1 };
+    s.tweens.add({ targets: o, k: 0, duration: still ? 10 : 1500, ease: 'Sine.InOut', onUpdate: () => bleak(o.k) });
+    petalsOn = true;
+  });
+  // tucked away: the bloom draws in to the chest
+  at(frameMs(24), () => {
+    if (!bloom) return;
+    const c = chest();
+    s.tweens.add({ targets: bloom, x: c.x, y: c.y + 0.12 * T, scale: (0.8 * T) / 64, alpha: 0, duration: still ? 10 : 330, ease: 'Quad.In' });
+  });
+  // a little flash as it goes in, and a soft warm glow stays on the hero (it moves with the hero)
+  at(frameMs(27), () => {
+    bloom?.destroy();
+    warm = s.add.image(0, -0.42 * T, glowKey).setScale((1.4 * T) / 64).setAlpha(0).setBlendMode(Phaser.BlendModes.ADD);
+    h.heroBody().add(warm);
+    s.tweens.add({ targets: warm, alpha: 0.9, duration: 90, yoyo: true, hold: 60, onComplete: () => warm && s.tweens.add({ targets: warm, alpha: 0.35, duration: 300 }) });
+    if (!still) s.tweens.add({ targets: warm, scale: (1.7 * T) / 64, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.InOut', delay: 500 });
+  });
+  s.events.once(Phaser.Scenes.Events.SHUTDOWN, () => warm?.destroy());
   at(22600, () => {
     s.tweens.add({ targets: title, alpha: 1, duration: 700 });
     s.tweens.add({ targets: subtitle, alpha: 1, duration: 700, delay: 500 });
