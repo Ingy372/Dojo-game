@@ -2329,3 +2329,8 @@ Jay: explain every system through the tutorial so nothing is hidden, with a stor
 - **Last climb after a new belt:** a climb from a lower belt isn't shown; the scroll says "New belt! Your {belt} climb starts here." (draft words, Jay can change them).
 - **Promotion coins** are part of the ceremony wherever it plays (the Board or the dojo), saved at once so nothing pays twice.
 - **Work split (Jay, Nov 26: two more sessions):** each session has its own files and branch; only this session writes the logs.
+
+## Opening cutscene polish (Jay, Nov 27)
+- The Shades enter at the bottom of the Tower's door (tile y 0.15). The old point (y -1.6) sat on the Tower wall.
+- The light piece is carried at the hero's hands, attached to the hero's drawn body so it never lags or jumps. Facing away, it goes behind the body and its glow shows around him. No new art: his arms keep their normal walk swing.
+- When a tip or menu pauses the Tower (not a door fade), everyone's last movement is cleared, so the hero and monsters play idle instead of running on the spot.
