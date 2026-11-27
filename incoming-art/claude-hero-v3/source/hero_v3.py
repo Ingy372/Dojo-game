@@ -7,7 +7,8 @@ the uniform and a run with more life). Runs on a copy of the v2 hero and keeps t
   * uniform detail: darker cuffs at the sleeve ends and the trouser hems (in the gi layer, so the gi tint still works);
   * smoother shapes: a subdivision pass on the gi and skin parts (and their outlines).
 
-Rendered at twice the pixels (--size 256 --height 320) so it matches the Brute's sharpness.
+Approved Nov 27 (Jay: "Yes, use it", after round 2: upright jog, calmer arms). The defaults are the approved values.
+The game renders it at 1.5x (--size 192 --height 240), which matches the Brute's sharpness on screen.
 
     blender -b hero3_base_a.blend -P hero_v3.py -- --save hero3_sample_a.blend
 """
@@ -17,17 +18,20 @@ from mathutils import Vector, Matrix
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 ap = argparse.ArgumentParser()
 ap.add_argument("--save", required=True)
-ap.add_argument("--bob", type=float, default=2.2)
-ap.add_argument("--lean", type=float, default=0.12)
-ap.add_argument("--arms", type=float, default=1.35)
+ap.add_argument("--bob", type=float, default=2.0)
+ap.add_argument("--lean", type=float, default=-0.2)
+ap.add_argument("--arms", type=float, default=0.85)
 ap.add_argument("--twist", type=float, default=1.2)
 ap.add_argument("--subsurf", type=int, default=0)
-ap.add_argument("--hand-out", type=float, default=0.08)
-ap.add_argument("--head-bob", type=float, default=0.06)
-ap.add_argument("--head-keep", type=float, default=1.2)
+ap.add_argument("--hand-out", type=float, default=0.05)
+ap.add_argument("--head-bob", type=float, default=0.05)
+ap.add_argument("--head-keep", type=float, default=1.0)
 a = ap.parse_args(argv)
 
 rig = bpy.data.objects["MartialArtistRig"]
+if bpy.context.scene.get("hero_v3"):
+    raise SystemExit("hero_v3 already applied to this file")
+bpy.context.scene["hero_v3"] = 1
 
 
 # ---------------------------------------------------------------- the run
@@ -66,20 +70,21 @@ def amplify(c, s):
     remap(c, lambda fr, v: m + (v - m) * s)
 
 
-walk = bpy.data.actions["walk"]
-cv = curves_of(walk)
-n = int(walk.frame_range[1] - walk.frame_range[0] + 1)
-B = 'pose.bones["%s"].%s'
-amplify(fc(cv, B % ("hips", "location"), 1), a.bob)                      # bounce
-remap(fc(cv, B % ("hips", "rotation_euler"), 0), lambda fr, v: v + a.lean)  # lean into the run
-amplify(fc(cv, B % ("chest", "rotation_euler"), 1), a.twist)            # shoulder twist
-remap(fc(cv, B % ("head", "rotation_euler"), 0),                        # keep the face up, bob a beat late
-      lambda fr, v: v - a.lean * a.head_keep + a.head_bob * math.sin(2 * math.pi * 2 * (fr - 2) / n))
-for side in ("L", "R"):
-    for i in (1, 2):
-        amplify(fc(cv, B % ("hand_ik." + side, "location"), i), a.arms)  # arms pump further
-    # hands out to the sides (not crossed over the chest), so the pumping arms read
-    remap(fc(cv, B % ("hand_ik." + side, "location"), 0), lambda fr, v: v + (a.hand_out if v > 0 else -a.hand_out))
+walk = bpy.data.actions.get("walk")
+if walk:
+  cv = curves_of(walk)
+  n = int(walk.frame_range[1] - walk.frame_range[0] + 1)
+  B = 'pose.bones["%s"].%s'
+  amplify(fc(cv, B % ("hips", "location"), 1), a.bob)                      # bounce
+  remap(fc(cv, B % ("hips", "rotation_euler"), 0), lambda fr, v: v + a.lean)  # lean into the run
+  amplify(fc(cv, B % ("chest", "rotation_euler"), 1), a.twist)            # shoulder twist
+  remap(fc(cv, B % ("head", "rotation_euler"), 0),                        # keep the face up, bob a beat late
+        lambda fr, v: v - a.lean * a.head_keep + a.head_bob * math.sin(2 * math.pi * 2 * (fr - 2) / n))
+  for side in ("L", "R"):
+      for i in (1, 2):
+          amplify(fc(cv, B % ("hand_ik." + side, "location"), i), a.arms)  # arms pump further
+      # hands out to the sides (not crossed over the chest), so the pumping arms read
+      remap(fc(cv, B % ("hand_ik." + side, "location"), 0), lambda fr, v: v + (a.hand_out if v > 0 else -a.hand_out))
 
 # ---------------------------------------------------------------- belt tails
 def set_pivot(o, p):
@@ -117,9 +122,9 @@ for key, objs in groups.items():
     for o in objs:
         set_pivot(o, p)
         # flap: out and up as the body drops, back as it rises (hips Y bob ~ -0.02..-0.12 in the new run)
-        drive(o, 0, "-%.2f*(v+0.045)*6" % k, "hips", "LOC_Y")
+        drive(o, 0, "-%.2f*min(max((v+0.045)*6,-0.18),0.18)" % k, "hips", "LOC_Y")  # clamped: crouched moves (wipe, kata stances) stay calm
         # sway against the hip turn
-        drive(o, 1, "-%.2f*v*0.8" % k, "hips", "ROT_Y")
+        drive(o, 1, "-%.2f*min(max(v*0.8,-0.2),0.2)" % k, "hips", "ROT_Y")
 
 # ---------------------------------------------------------------- cuffs and hems
 def darken(mat, k):

@@ -42,7 +42,7 @@ export class LayeredSprite {
   ) {
     for (const layer of art.layers) {
       const img = scene.add.image(0, 0, '__DEFAULT').setVisible(false);
-      img.setOrigin(art.anchor.x / art.frameWidth, art.anchor.y / art.frameHeight);
+      img.setOrigin(art.anchor.x / art.frameWidth, art.anchor.y / art.frameHeight).setScale(1 / (art.res ?? 1));
       this.images.set(layer.name, img);
     }
     this.container = scene.add.container(x, y, [...this.images.values()]);

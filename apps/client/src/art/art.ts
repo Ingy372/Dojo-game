@@ -51,6 +51,11 @@ export interface CharacterArt {
   layerPack?: Record<string, PackName>;
   /** Recommended colours (hex) for tinted layers, e.g. skin, hair and gi swatches. */
   palettes?: Record<string, string[]>;
+  /**
+   * Picture pixels per game pixel (hero v3, Nov 27: the hero is rendered 1.5x sharper). frameWidth, frameHeight and
+   * anchor are already in game pixels; LayeredSprite draws each picture at 1/res. Missing = 1.
+   */
+  res?: number;
 }
 
 /**
@@ -126,6 +131,8 @@ export interface StaticSprite {
 }
 
 interface PackFile {
+  /** Picture pixels per game pixel (see CharacterArt.res). */
+  res?: number;
   pages: string[];
   frames: number[][];
   entries: Record<string, { kind: 'character' | 'static'; sprites?: Record<string, StaticSprite> } & Partial<CharacterArt>>;
@@ -181,21 +188,27 @@ export function frameOf(scene: Phaser.Scene, pack: PackName, id: number): [strin
  */
 export function characterTop(scene: Phaser.Scene, art: CharacterArt, layers?: string[]): number {
   const anim = art.animations.idle ?? Object.values(art.animations)[0];
-  let top = art.anchor.y;
+  const res = art.res ?? 1;
+  let top = art.anchor.y * res; // picture pixels
   for (const [name, ids] of Object.entries(anim.layers)) {
     if (layers && !layers.includes(name)) continue;
     const data = register(scene, art.layerPack?.[name] ?? art.pack);
     const id = ids[ids.length === 1 ? 0 : 4]?.[0] ?? -1;
     if (id >= 0 && data) top = Math.min(top, data.frames[id][6]);
   }
-  return art.anchor.y - top;
+  return art.anchor.y - top / res;
 }
 
 /** A layered character (player or enemy), or null if its pack isn't loaded. */
 export function characterArt(scene: Phaser.Scene, pack: PackName, id: string): CharacterArt | null {
-  const entry = register(scene, pack)?.entries[id];
+  const data = register(scene, pack);
+  const entry = data?.entries[id];
   if (!entry || entry.kind !== 'character') return null;
-  return { ...(entry as unknown as CharacterArt), pack };
+  const art = { ...(entry as unknown as CharacterArt), pack };
+  const res = data?.res ?? 1;
+  if (res === 1) return art;
+  // A sharper pack: sizes in game pixels, pictures drawn at 1/res (LayeredSprite).
+  return { ...art, res, frameWidth: art.frameWidth / res, frameHeight: art.frameHeight / res, anchor: { x: art.anchor.x / res, y: art.anchor.y / res } };
 }
 
 /** A room piece or decoration, or null if its pack isn't loaded. */

@@ -2334,3 +2334,10 @@ Jay: explain every system through the tutorial so nothing is hidden, with a stor
 - The Shades enter at the bottom of the Tower's door (tile y 0.15). The old point (y -1.6) sat on the Tower wall.
 - The light piece is caught and tucked into the hero's gi (Jay chose option A; replaces carrying it at the hands, which looked strange). It's Blender art: the hero's `tuck` animation with a `prop-shard` layer, facing the camera only. It's held and tucked at chest height, never near the mouth (Jay: "it looks like they are eating it").
 - When a tip or menu pauses the Tower (not a door fade), everyone's last movement is cleared, so the hero and monsters play idle instead of running on the spot.
+
+## Hero v3: sharper hero and a natural jog (Jay, Nov 27)
+- **Jay approved hero v3** ("Yes, use it") after round 2. In round 1 he liked the sharpness, the sway and the head bob, but the arms "look crazy" and the head was pushed forward "like a bird running". He wants it to look like a real athletic person jogging.
+- **The jog:** much less forward lean (the old run leaned about 23°, now about 11°), face level, arms a bit calmer than the old run and out at the sides, more shoulder sway and bounce, and a small head bob a beat behind. Settings are the defaults in `incoming-art/claude-hero-v3/source/hero_v3.py`.
+- **Uniform detail:** darker cuffs at the sleeve ends and trouser hems, and a clearer crossed collar. The belt tails sway a little (clamped so crouched moves stay calm).
+- **Sharpness: 1.5x, not 2x.** The hero is rendered at 192 x 240 (was 128 x 160) and drawn at 1/1.5 (`"res": 1.5` on the hero packs in `tools/art-import/approved.json`, read by `characterArt` / `LayeredSprite`). This matches the Brute's sharpness on screen (about 1.6 picture pixels per game pixel). 2x looked almost the same but made the hero's files about 2.75 times bigger, against 1.8 times at 1.5x. The hero's art was already 157 MB of the 252 MB total.
+- Built on the intro session's blends, so the `tuck` animation and the `prop-shard` layer are kept.

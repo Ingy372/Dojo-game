@@ -34,7 +34,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), base layers. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -59,7 +60,8 @@
             "prop-rag"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-faces": {
       "note": "All 6 faces (small). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -81,7 +83,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-faces": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), faces. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -99,7 +102,8 @@
             "face-06"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-01": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -116,7 +120,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-01": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-01. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -129,7 +134,8 @@
             "hair-01"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-02": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -146,7 +152,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-02": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-02. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -159,7 +166,8 @@
             "hair-02"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-03": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -176,7 +184,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-03": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-03. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -189,7 +198,8 @@
             "hair-03"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-04": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -206,7 +216,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-04": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-04. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -219,7 +230,8 @@
             "hair-04"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-05": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -236,7 +248,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-05": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-05. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -249,7 +262,8 @@
             "hair-05"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-06": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -266,7 +280,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-06": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-06. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -279,7 +294,8 @@
             "hair-06"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-07": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -296,7 +312,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-07": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-07. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -309,7 +326,8 @@
             "hair-07"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-08": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -326,7 +344,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-08": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-08. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -339,7 +358,8 @@
             "hair-08"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-09": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -356,7 +376,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-09": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-09. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -369,7 +390,8 @@
             "hair-09"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-10": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -386,7 +408,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-10": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-10. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -399,7 +422,8 @@
             "hair-10"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-11": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -416,7 +440,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-11": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-11. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -429,7 +454,8 @@
             "hair-11"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-12": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -446,7 +472,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-12": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-12. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -459,7 +486,8 @@
             "hair-12"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-big": {
       "scale": 1,
@@ -513,7 +541,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), base layers. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -538,7 +567,8 @@
             "prop-rag"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-faces": {
       "note": "All 6 faces (small). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -560,7 +590,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-faces": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), faces. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -578,7 +609,8 @@
             "face-06"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-01": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -595,7 +627,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-01": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-01. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -608,7 +641,8 @@
             "hair-01"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-02": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -625,7 +659,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-02": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-02. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -638,7 +673,8 @@
             "hair-02"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-03": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -655,7 +691,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-03": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-03. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -668,7 +705,8 @@
             "hair-03"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-04": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -685,7 +723,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-04": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-04. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -698,7 +737,8 @@
             "hair-04"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-05": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -715,7 +755,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-05": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-05. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -728,7 +769,8 @@
             "hair-05"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-06": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -745,7 +787,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-06": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-06. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -758,7 +801,8 @@
             "hair-06"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-07": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -775,7 +819,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-07": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-07. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -788,7 +833,8 @@
             "hair-07"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-08": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -805,7 +851,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-08": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-08. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -818,7 +865,8 @@
             "hair-08"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-09": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -835,7 +883,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-09": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-09. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -848,7 +897,8 @@
             "hair-09"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-10": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -865,7 +915,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-10": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-10. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -878,7 +929,8 @@
             "hair-10"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-11": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -895,7 +947,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-11": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-11. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -908,7 +961,8 @@
             "hair-11"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-12": {
       "note": "One hair style (only the chosen one is loaded). Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -925,7 +979,8 @@
             "incoming-art/claude-hero-v2/sprites-intro/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-12": {
       "note": "Kata practice moves and stances (Claude, approved by Jay Nov 21), hair-12. Loaded only in the Action Zone. Hero v2 (Claude, Nov 22, waiting on Jay's OK).",
@@ -938,7 +993,8 @@
             "hair-12"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-big": {
       "scale": 1,
@@ -1608,7 +1664,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-outfit-shadow-ninja": {
       "note": "Shop skin outfit-shadow-ninja for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1624,7 +1681,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-outfit-frost-guardian": {
       "note": "Shop skin outfit-frost-guardian for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1640,7 +1698,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-outfit-iron-samurai": {
       "note": "Shop skin outfit-iron-samurai for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1656,7 +1715,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-outfit-temple-monk": {
       "note": "Shop skin outfit-temple-monk for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1672,7 +1732,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-outfit-thunder-tiger": {
       "note": "Shop skin outfit-thunder-tiger for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1688,7 +1749,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-outfit-panda-pal": {
       "note": "Shop skin outfit-panda-pal for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1704,7 +1766,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-outfit-phoenix-flame": {
       "note": "Shop skin outfit-phoenix-flame for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1720,7 +1783,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-outfit-starlight": {
       "note": "Shop skin outfit-starlight for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1736,7 +1800,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-outfit-jade-guardian": {
       "note": "Shop skin outfit-jade-guardian for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1752,7 +1817,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hat-red-headband": {
       "note": "Shop skin hat-red-headband for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1768,7 +1834,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hat-tiger-hood": {
       "note": "Shop skin hat-tiger-hood for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1784,7 +1851,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hat-panda-hood": {
       "note": "Shop skin hat-panda-hood for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1800,7 +1868,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hat-ninja-hood": {
       "note": "Shop skin hat-ninja-hood for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1816,7 +1885,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hat-samurai-helmet": {
       "note": "Shop skin hat-samurai-helmet for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1832,7 +1902,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hat-straw-hat": {
       "note": "Shop skin hat-straw-hat for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1848,7 +1919,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hat-dragon-horns": {
       "note": "Shop skin hat-dragon-horns for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1864,7 +1936,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hat-frost-crown": {
       "note": "Shop skin hat-frost-crown for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1880,7 +1953,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hat-fox-mask": {
       "note": "Shop skin hat-fox-mask for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1896,7 +1970,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-back-hero-cape": {
       "note": "Shop skin back-hero-cape for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1912,7 +1987,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-back-phoenix-wings": {
       "note": "Shop skin back-phoenix-wings for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1928,7 +2004,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-back-dragon-tail": {
       "note": "Shop skin back-dragon-tail for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1944,7 +2021,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-back-master-scroll": {
       "note": "Shop skin back-master-scroll for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1960,7 +2038,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-back-bo-staff": {
       "note": "Shop skin back-bo-staff for body A (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1976,7 +2055,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-outfit-crimson-dragon": {
       "note": "Shop skin outfit-crimson-dragon for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -1992,7 +2072,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-outfit-shadow-ninja": {
       "note": "Shop skin outfit-shadow-ninja for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2008,7 +2089,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-outfit-frost-guardian": {
       "note": "Shop skin outfit-frost-guardian for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2024,7 +2106,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-outfit-iron-samurai": {
       "note": "Shop skin outfit-iron-samurai for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2040,7 +2123,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-outfit-temple-monk": {
       "note": "Shop skin outfit-temple-monk for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2056,7 +2140,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-outfit-thunder-tiger": {
       "note": "Shop skin outfit-thunder-tiger for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2072,7 +2157,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-outfit-panda-pal": {
       "note": "Shop skin outfit-panda-pal for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2088,7 +2174,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-outfit-phoenix-flame": {
       "note": "Shop skin outfit-phoenix-flame for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2104,7 +2191,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-outfit-starlight": {
       "note": "Shop skin outfit-starlight for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2120,7 +2208,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-outfit-jade-guardian": {
       "note": "Shop skin outfit-jade-guardian for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2136,7 +2225,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hat-red-headband": {
       "note": "Shop skin hat-red-headband for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2152,7 +2242,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hat-tiger-hood": {
       "note": "Shop skin hat-tiger-hood for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2168,7 +2259,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hat-panda-hood": {
       "note": "Shop skin hat-panda-hood for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2184,7 +2276,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hat-ninja-hood": {
       "note": "Shop skin hat-ninja-hood for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2200,7 +2293,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hat-samurai-helmet": {
       "note": "Shop skin hat-samurai-helmet for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2216,7 +2310,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hat-straw-hat": {
       "note": "Shop skin hat-straw-hat for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2232,7 +2327,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hat-dragon-horns": {
       "note": "Shop skin hat-dragon-horns for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2248,7 +2344,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hat-frost-crown": {
       "note": "Shop skin hat-frost-crown for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2264,7 +2361,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hat-fox-mask": {
       "note": "Shop skin hat-fox-mask for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2280,7 +2378,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-back-hero-cape": {
       "note": "Shop skin back-hero-cape for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2296,7 +2395,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-back-phoenix-wings": {
       "note": "Shop skin back-phoenix-wings for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2312,7 +2412,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-back-dragon-tail": {
       "note": "Shop skin back-dragon-tail for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2328,7 +2429,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-back-master-scroll": {
       "note": "Shop skin back-master-scroll for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2344,7 +2446,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-back-bo-staff": {
       "note": "Shop skin back-bo-staff for body B (Claude, Nov 22, waiting on Jay's OK). Loaded only when worn or previewed.",
@@ -2360,7 +2463,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "shop-icons": {
       "note": "Shop card icons for the skins (Claude, Nov 22): the v2 hero wearing each one.",
@@ -2370,7 +2474,8 @@
           "type": "static",
           "json": "incoming-art/claude-hero-v2/shop-icons/static.json"
         }
-      ]
+      ],
+      "res": 1.5
     },
     "pets-big": {
       "scale": 1,
@@ -2542,7 +2647,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-14": {
       "note": "One hair style (only the chosen one is loaded), hair-14 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2558,7 +2664,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-15": {
       "note": "One hair style (only the chosen one is loaded), hair-15 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2574,7 +2681,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-16": {
       "note": "One hair style (only the chosen one is loaded), hair-16 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2590,7 +2698,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-17": {
       "note": "One hair style (only the chosen one is loaded), hair-17 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2606,7 +2715,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-hair-18": {
       "note": "One hair style (only the chosen one is loaded), hair-18 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2622,7 +2732,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-a/player-a.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-13": {
       "note": "Kata practice moves and stances, hair-13 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2635,7 +2746,8 @@
             "hair-13"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-14": {
       "note": "Kata practice moves and stances, hair-14 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2648,7 +2760,8 @@
             "hair-14"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-15": {
       "note": "Kata practice moves and stances, hair-15 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2661,7 +2774,8 @@
             "hair-15"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-16": {
       "note": "Kata practice moves and stances, hair-16 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2674,7 +2788,8 @@
             "hair-16"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-17": {
       "note": "Kata practice moves and stances, hair-17 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2687,7 +2802,8 @@
             "hair-17"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-a-kata-hair-18": {
       "note": "Kata practice moves and stances, hair-18 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2700,7 +2816,8 @@
             "hair-18"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-13": {
       "note": "One hair style (only the chosen one is loaded), hair-13 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2716,7 +2833,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-14": {
       "note": "One hair style (only the chosen one is loaded), hair-14 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2732,7 +2850,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-15": {
       "note": "One hair style (only the chosen one is loaded), hair-15 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2748,7 +2867,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-16": {
       "note": "One hair style (only the chosen one is loaded), hair-16 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2764,7 +2884,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-17": {
       "note": "One hair style (only the chosen one is loaded), hair-17 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2780,7 +2901,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-hair-18": {
       "note": "One hair style (only the chosen one is loaded), hair-18 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2796,7 +2918,8 @@
             "incoming-art/claude-hero-v2/sprites-stances/body-b/player-b.json"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-13": {
       "note": "Kata practice moves and stances, hair-13 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2809,7 +2932,8 @@
             "hair-13"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-14": {
       "note": "Kata practice moves and stances, hair-14 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2822,7 +2946,8 @@
             "hair-14"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-15": {
       "note": "Kata practice moves and stances, hair-15 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2835,7 +2960,8 @@
             "hair-15"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-16": {
       "note": "Kata practice moves and stances, hair-16 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2848,7 +2974,8 @@
             "hair-16"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-17": {
       "note": "Kata practice moves and stances, hair-17 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2861,7 +2988,8 @@
             "hair-17"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "player-b-kata-hair-18": {
       "note": "Kata practice moves and stances, hair-18 (Claude, Nov 23: new straight and wavy styles for balance, waiting on Jay's OK).",
@@ -2874,7 +3002,8 @@
             "hair-18"
           ]
         }
-      ]
+      ],
+      "res": 1.5
     },
     "street-house": {
       "note": "The Street Smarts House (Claude, Nov 23; Jay picked the purpose): the room layers and its furniture. Waiting on Jay's OK of the art.",

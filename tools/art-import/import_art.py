@@ -302,6 +302,8 @@ def main() -> None:
         meta = {
             'about': 'Made by tools/art-import/import_art.py. Do not edit by hand; re-run the script.',
             'scale': scale,
+            # "res" (hero v3, Nov 27): picture pixels per game pixel; the game draws the pack at 1/res.
+            **({'res': pack['res']} if pack.get('res') else {}),
             'pages': names,
             'frameFormat': '[page, x, y, w, h, trimX, trimY, fullW, fullH]',
             'frames': packer.frames,
