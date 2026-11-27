@@ -24,10 +24,10 @@ export interface IntroHost {
   placeHero(p: Vec2, face: Vec2): void;
   walkHero(path: Vec2[]): void;
   heroPos(): Vec2;
-  /** The hero as drawn (moves smoothly every frame); things added to it move with the hero. */
+  /** The hero as drawn (moves smoothly every frame). */
   heroBody(): Phaser.GameObjects.Container;
-  /** The way the hero faces. */
-  heroFacing(): Vec2;
+  /** Plays one of the hero's own animations once (walking can't replace it), then calls done. */
+  heroAct(name: string, done: () => void): void;
   /** The pretend kids training in the yard at the start. */
   kids: LayeredSprite[];
   /** The cutscene is over (or skipped): go on to the tutorial. */
@@ -252,69 +252,28 @@ export function playIntro(h: IntroHost): void {
     look({ x: DOJO_DOOR.x + 1.5, y: DOJO_DOOR.y - 1.2 }, 7);
   });
   at(14800, () => say(WORDS.lines.brave));
-  // The piece floats down into the hero's hands and the hero carries it (Jay, Nov 27: held, not over the head).
-  // It rides on the hero's own drawn body, so it glides with every step instead of jumping.
-  let shard: Phaser.GameObjects.Container | null = null;
-  let landing = true;
-  const holdShard = () => {
-    if (!shard || over || landing || !shard.active) return;
-    const body = h.heroBody();
-    const f = h.heroFacing();
-    const len = Math.hypot(f.x, f.y) || 1;
-    const fx = f.x / len;
-    const fy = f.y / len;
-    // Cupped at the hands in front of the chest; facing away, the hero's body hides it and its glow peeks round.
-    const away = fy < -0.75;
-    const side = fy < -0.3 ? 0.3 : 0.2;
-    const hx = fx * side * T;
-    const hy = (-0.42 + fy * 0.06) * T;
-    shard.setPosition(Phaser.Math.Linear(shard.x, hx, 0.25), Phaser.Math.Linear(shard.y, hy, 0.25));
-    const inFront = body.getIndex(shard) === body.length - 1;
-    if (away === inFront) {
-      if (away) body.sendToBack(shard);
-      else body.bringToTop(shard);
-    }
-  };
-  // The camera follows the hero as drawn, every frame, so the walk to the Tower glides too.
+  // The piece floats down into the hero's hands, and the hero tucks it into the gi (Jay, Nov 27: option A, drawn in
+  // Blender as the hero's own 'tuck' animation, with the shard as a prop layer), then sets off for the Tower.
+  // The camera follows the hero as drawn, every frame, so the walk to the Tower glides.
   let following = false;
   const follow = () => {
     if (!following || over) return;
     const b = h.heroBody();
     look({ x: b.x / T, y: b.y / T - 2.2 }, 10);
   };
-  at(16400, () => {
-    shard = lightShard(s, T, false);
-    const body = h.heroBody();
-    body.add(shard);
-    shard.setPosition(0, -1.7 * T).setAlpha(0);
-    s.tweens.add({ targets: shard, alpha: 1, duration: 400 });
-    s.tweens.add({
-      targets: shard,
-      y: -0.36 * T,
-      duration: still ? 10 : 1100,
-      ease: 'Sine.Out',
-      onComplete: () => {
-        landing = false;
-        holdShard();
-      },
-    });
-    sfx.tap();
+  s.events.once(Phaser.Scenes.Events.SHUTDOWN, () => s.events.off(Phaser.Scenes.Events.POST_UPDATE, follow));
+  at(16200, () => {
     say(STORY.intro.chosen);
+    h.heroAct('tuck', () => {
+      if (over) return;
+      hush();
+      h.walkHero([{ x: 26, y: 10.7 }, { x: 30.2, y: 10.5 }, { x: 30.3, y: 7.6 }]);
+      following = true;
+      s.events.on(Phaser.Scenes.Events.POST_UPDATE, follow);
+    });
   });
-  s.events.on(Phaser.Scenes.Events.UPDATE, holdShard);
-  s.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-    s.events.off(Phaser.Scenes.Events.UPDATE, holdShard);
-    s.events.off(Phaser.Scenes.Events.POST_UPDATE, follow);
-  });
-  at(18000, () => h.placeHero(h.heroPos(), { x: 1, y: -1 }));
-  at(19000, () => {
-    hush();
-    h.walkHero([{ x: 26, y: 10.7 }, { x: 30.2, y: 10.5 }, { x: 30.3, y: 7.6 }]);
-  });
-  at(19200, () => {
-    following = true;
-    s.events.on(Phaser.Scenes.Events.POST_UPDATE, follow);
-  });
+  // the soft chime as the shard lands in the hero's hands (the animation's catch frame, 11 of 36 at 12 a second)
+  at(16200 + 920, () => sfx.tap());
   at(22600, () => {
     s.tweens.add({ targets: title, alpha: 1, duration: 700 });
     s.tweens.add({ targets: subtitle, alpha: 1, duration: 700, delay: 500 });

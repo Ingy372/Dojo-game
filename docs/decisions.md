@@ -2332,5 +2332,5 @@ Jay: explain every system through the tutorial so nothing is hidden, with a stor
 
 ## Opening cutscene polish (Jay, Nov 27)
 - The Shades enter at the bottom of the Tower's door (tile y 0.15). The old point (y -1.6) sat on the Tower wall.
-- The light piece is carried at the hero's hands, attached to the hero's drawn body so it never lags or jumps. Facing away, it goes behind the body and its glow shows around him. No new art: his arms keep their normal walk swing.
+- The light piece is caught and tucked into the hero's gi (Jay chose option A; replaces carrying it at the hands, which looked strange). It's Blender art: the hero's `tuck` animation with a `prop-shard` layer, facing the camera only. It's held and tucked at chest height, never near the mouth (Jay: "it looks like they are eating it").
 - When a tip or menu pauses the Tower (not a door fade), everyone's last movement is cleared, so the hero and monsters play idle instead of running on the spot.

@@ -138,6 +138,19 @@ export class TownScene extends WalkScene {
   /** Nov 23: the opening cutscene is playing (the camera and the hero belong to it). */
   private intro: { run: RunState } | null = null;
   private introRows = 7;
+  /** An animation the intro has the hero play once (the catch-and-tuck), and what comes after it. */
+  private acting: { name: string; done: () => void } | null = null;
+
+  protected heroBusy(): boolean {
+    const a = this.acting;
+    if (!a) return false;
+    if (this.hero.current !== a.name || this.hero.finished) {
+      this.acting = null;
+      a.done();
+      return false;
+    }
+    return true;
+  }
 
   constructor() {
     super('ActionZoneTown');
@@ -259,7 +272,11 @@ export class TownScene extends WalkScene {
       walkHero: (path) => (me.path = path.map((p) => ({ ...p }))),
       heroPos: () => me.pos,
       heroBody: () => this.player,
-      heroFacing: () => me.facing,
+      heroAct: (name, done) => {
+        if (!this.hero.has(name)) return done();
+        this.hero.play(name, { restart: true });
+        this.acting = { name, done };
+      },
       kids: this.walkers.map((w) => w.sprite),
       done: () => this.scene.start('Game', { run, skipStory: true }),
     });
