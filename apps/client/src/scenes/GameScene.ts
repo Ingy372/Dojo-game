@@ -155,6 +155,11 @@ import { Companions, companionPacks } from '../game/companion';
 import { FX_DEPTH } from '../fx/plan';
 import { TrailEmitter, playFx, type FxPlace } from '../fx/shopFx';
 import { VISIBLE_ROWS, bossHeadroom, bossRoomZoom, bossZoomPlan, cameraBounds } from '../game/cameraView';
+import { REST, attackPose, breathePose, combine, hitPose, motionTestOn, unit, walkPose, windupPose } from '../fx/motionTest';
+import { addRoomLife } from '../fx/roomLife';
+
+/** MOTION TEST (Jay, Nov 26): livelier enemies and a living room, only with ?motion=new in the address. */
+const MOTION_TEST = motionTestOn();
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -327,6 +332,8 @@ interface EnemyView {
   aura: { id: string; back: Phaser.GameObjects.Image[]; front: Phaser.GameObjects.Image[] } | null;
   /** A named monster's extras (M7-N1): sparkles, name plate and tag, its tell. */
   named: NamedView | null;
+  /** MOTION TEST (?motion=new): when its attack landed and when it was last hit (ms), the push direction, a seed. */
+  mt?: { attackAt: number; hitAt: number; hitDir: Vec2; heavy: boolean; seed: number };
 }
 
 /** The warning glow's colour while a creature winds up (matches the danger circle). */
@@ -665,6 +672,7 @@ export class GameScene extends Phaser.Scene {
     this.warnings.clear();
     this.patternLineSaid.clear();
     const roomGfx = this.drawRoom();
+    if (MOTION_TEST && this.room.id !== 'tutorial-path') roomGfx.push(...addRoomLife(this, this.room.width * TILE, this.room.height * TILE, TILE, reducedMotion()));
     const objects = this.makeRoomObjects();
     // Lantern Dark twist: the room is dim, but the warning circles are drawn on top, extra bright.
     const dim = this.world.twist?.dim ?? false;
@@ -1075,6 +1083,7 @@ export class GameScene extends Phaser.Scene {
     // B-T3-TUNE-2a: a clang on the pot lid tints it grey for a moment (none with reduced motion).
     const clang = now < v.clangUntil && !reducedMotion();
     s.flash(hitFlash ? 0xffffff : clang ? 0x8c8c8c : tint, hitFlash);
+    if (MOTION_TEST) this.motionPose(e, v, now, started);
     s.update();
     if (v.named) this.drawNamed(e, v.named, now, blend, s.frame);
     v.container.setAlpha(alpha * Math.min(1, (now - this.enemiesAt) / 450));
@@ -1093,6 +1102,82 @@ export class GameScene extends Phaser.Scene {
         st.setFillStyle(0x9ad1ff).setScale(1.5).setPosition((i - 1) * r * 0.7, -v.top * 0.8 + fall);
       }
     });
+  }
+
+  /**
+   * MOTION TEST (?motion=new): lean back and crouch through the wind-up, snap forward when the attack lands,
+   * get knocked back and squashed when hit, bounce while walking, breathe while standing. Visual only.
+   */
+  private motionPose(e: EnemyState, v: EnemyView, now: number, started: boolean): void {
+    const s = v.sprite;
+    const base = (s.container.getData('baseScale') as number | undefined) ?? artScale(e.def);
+    if (e.mode === 'defeated' || e.mode === 'waiting' || e.mode === 'thrown' || reducedMotion()) {
+      s.container.setPosition(0, 0);
+      return;
+    }
+    const mt = (v.mt ??= { attackAt: -1e9, hitAt: -1e9, hitDir: { x: 0, y: 1 }, heavy: false, seed: Math.random() * 10 });
+    const p = this.world.players[this.me];
+    // Strike direction: towards the attack's centre, else towards the hero.
+    const target = e.attackCenter ?? p?.pos ?? e.pos;
+    const f = unit(target.x - e.pos.x, target.y - e.pos.y);
+    let pose = REST;
+    if (e.mode === 'windup' && e.attackCenter) {
+      const window = counterWindowTicks(this.world, p);
+      const elapsed = e.windupTotal - e.modeTicks;
+      pose = windupPose(elapsed / Math.max(1, e.windupTotal - window), elapsed >= e.windupTotal - window, f.x, f.y, now);
+    } else if (e.mode === 'recover') {
+      if (started) {
+        mt.attackAt = now;
+        this.dustPuff(e.pos.x + f.x * e.def.radius, e.pos.y + f.y * e.def.radius, 7);
+        this.swoosh(e, f);
+      }
+      pose = attackPose(now - mt.attackAt, f.x, f.y);
+    } else if (e.mode === 'stagger' || e.mode === 'winded') {
+      pose = breathePose(now * 2.2, mt.seed);
+    } else {
+      const speed = Math.hypot(e.pos.x - v.prev.x, e.pos.y - v.prev.y) * TICKS_PER_SECOND;
+      pose = speed > 0.2 ? walkPose(now, mt.seed, speed) : breathePose(now, mt.seed);
+    }
+    pose = combine(pose, hitPose(now - mt.hitAt, mt.hitDir.x, mt.hitDir.y, mt.heavy));
+    s.container.setPosition(pose.dx * TILE, pose.dy * TILE).setScale(base * pose.sx, base * pose.sy);
+  }
+
+  /** MOTION TEST: a puff of floor dust. */
+  private dustPuff(x: number, y: number, count: number): void {
+    for (let i = 0; i < count; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const d = TILE * (0.25 + Math.random() * 0.35);
+      const c = this.addWorld(this.add.circle(x * TILE, y * TILE, 5 + Math.random() * 5, 0xe8dcc8, 0.55).setDepth(depthAt(y * TILE) - 0.01));
+      this.tweens.add({
+        targets: c,
+        x: c.x + Math.cos(a) * d,
+        y: c.y + Math.sin(a) * d * 0.5 - 6,
+        scale: 1.8,
+        alpha: 0,
+        duration: 380 + Math.random() * 200,
+        ease: 'Cubic.Out',
+        onComplete: () => c.destroy(),
+      });
+    }
+  }
+
+  /** MOTION TEST: a quick white arc in front of a swinging creature (a motion streak). */
+  private swoosh(e: EnemyState, f: { x: number; y: number }): void {
+    const r = (e.def.radius + 0.35) * TILE;
+    const g = this.addWorld(this.add.graphics().setDepth(depthAt(e.pos.y * TILE) + 0.02));
+    g.setPosition(e.pos.x * TILE, (e.pos.y - e.def.radius * 0.6) * TILE);
+    const ang = Math.atan2(f.y, f.x);
+    const draw = (t: number) => {
+      g.clear();
+      for (let k = 0; k < 3; k++) {
+        g.lineStyle(10 - k * 3, 0xffffff, (0.75 - k * 0.2) * (1 - t));
+        g.beginPath();
+        g.arc(0, 0, r - k * 6, ang - 1.1 + t * 0.4, ang + 1.1 * (0.3 + t * 0.7), false);
+        g.strokePath();
+      }
+    };
+    draw(0);
+    this.tweens.addCounter({ from: 0, to: 1, duration: 200, ease: 'Quad.Out', onUpdate: (tw) => draw(tw.getValue() ?? 1), onComplete: () => g.destroy() });
   }
 
   /**
@@ -1675,6 +1760,14 @@ export class GameScene extends Phaser.Scene {
             v.sprite.play('hit', { restart: true });
           } else v.hitUntil = this.time.now + 250;
           const heavy = ev.move !== 'basic';
+          if (MOTION_TEST && !ev.defeated) {
+            const from = this.world.players[ev.playerId]?.pos ?? e.pos;
+            const mt = (v.mt ??= { attackAt: -1e9, hitAt: -1e9, hitDir: { x: 0, y: 1 }, heavy: false, seed: Math.random() * 10 });
+            mt.hitAt = this.time.now;
+            mt.hitDir = unit(e.pos.x - from.x, e.pos.y - from.y);
+            mt.heavy = heavy;
+            if (heavy && !reducedMotion()) this.dustPuff(e.pos.x, e.pos.y, 6);
+          }
           this.sparks(e.pos, heavy ? 12 : 5, heavy ? COLORS.gold : 0xffffff);
           if (ev.playerId === this.me && this.shopFx.hit) playFx(this, this.shopFx.hit, e.pos.x * TILE, e.pos.y * TILE, this.fxPlace());
           this.floatText(e.pos, `${ev.damage}`, heavy ? RATING.color : '#ffffff', heavy ? 30 : 22);
