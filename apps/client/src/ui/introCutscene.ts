@@ -24,6 +24,10 @@ export interface IntroHost {
   placeHero(p: Vec2, face: Vec2): void;
   walkHero(path: Vec2[]): void;
   heroPos(): Vec2;
+  /** The hero as drawn (moves smoothly every frame); things added to it move with the hero. */
+  heroBody(): Phaser.GameObjects.Container;
+  /** The way the hero faces. */
+  heroFacing(): Vec2;
   /** The pretend kids training in the yard at the start. */
   kids: LayeredSprite[];
   /** The cutscene is over (or skipped): go on to the tutorial. */
@@ -32,7 +36,8 @@ export interface IntroHost {
 
 /** The Tower's light, at the top of the Tower in the town picture (tiles). */
 const LIGHT: Vec2 = { x: 30.3, y: -7.6 };
-const TOWER_DOOR: Vec2 = { x: 30.3, y: -1.6 };
+/** The bottom of the Tower's door in the town picture (Nov 27: was -1.6, which sat up on the wall). */
+const TOWER_DOOR: Vec2 = { x: 30.3, y: 0.15 };
 const YARD: Vec2 = { x: 37.5, y: 6.4 };
 const DOJO_DOOR: Vec2 = { x: 23, y: 10.35 };
 
@@ -170,24 +175,60 @@ export function playIntro(h: IntroHost): void {
       { x: 36, y: -0.6 },
       { x: 27, y: 1.0 },
     ];
+    // Jay, Nov 27 (the slide looked awkward): each Shade hops down off the wall, then scurries along the ground at a
+    // steady pace, facing where it goes, joins a loose line at the door and squeezes in with a puff of shadow.
+    const SPEED = 4.5; // tiles per second
+    const HOP_MS = 420;
+    const SPREAD = [-0.45, 0.45, -0.15, 0.3, 0];
+    const queue = (i: number): Vec2 => ({ x: TOWER_DOOR.x + SPREAD[i % SPREAD.length], y: TOWER_DOOR.y + 1.2 + i * 0.12 });
     starts.forEach((p0, i) => {
+      const delay = i * 330;
       const sh = new LayeredSprite(s, art);
-      sh.container.setPosition(p0.x * T, p0.y * T).setScale(1.1).setAlpha(0).setDepth(1e5);
-      sh.face(TOWER_DOOR.x - p0.x, TOWER_DOOR.y - p0.y).play('move');
+      const c = sh.container;
+      const land: Vec2 = { x: p0.x, y: p0.y + 0.9 };
+      c.setPosition(p0.x * T, (p0.y - 0.3) * T).setScale(1).setAlpha(0).setDepth(1e5);
+      sh.face(land.x < TOWER_DOOR.x ? 1 : -1, 1).play('idle');
       sh.autoUpdate();
-      h.world.add(sh.container);
-      s.tweens.add({ targets: sh.container, alpha: 0.95, duration: 400, delay: i * 260 });
+      h.world.add(c);
+      // pop up over the wall, then a small arc down onto the ground
+      s.tweens.add({ targets: c, alpha: 0.95, duration: 200, delay });
+      s.tweens.add({ targets: c, x: land.x * T, duration: HOP_MS, delay, ease: 'Linear' });
+      s.tweens.add({ targets: c, y: (p0.y - 0.9) * T, duration: HOP_MS * 0.4, delay, ease: 'Quad.Out' });
       s.tweens.add({
-        targets: sh.container,
-        x: TOWER_DOOR.x * T,
-        y: TOWER_DOOR.y * T,
-        scale: 0.6,
-        delay: i * 260,
-        duration: 2400,
-        ease: 'Sine.In',
-        onComplete: () => s.tweens.add({ targets: sh.container, alpha: 0, duration: 250, onComplete: () => sh.destroy() }),
+        targets: c,
+        y: land.y * T,
+        duration: HOP_MS * 0.6,
+        delay: delay + HOP_MS * 0.4,
+        ease: 'Quad.In',
+        onComplete: () => {
+          // a little squash on landing
+          s.tweens.add({ targets: c, scaleY: 0.85, scaleX: 1.1, duration: 90, yoyo: true });
+          walk([queue(i), { x: TOWER_DOOR.x, y: TOWER_DOOR.y - 0.25 }], () => {
+            puff(c.x, c.y);
+            s.tweens.add({ targets: c, alpha: 0, scaleX: 0.55, scaleY: 0.75, duration: 220, ease: 'Quad.In', onComplete: () => sh.destroy() });
+          });
+        },
       });
+      // walks a path at an even speed, turning to face each leg
+      const walk = (path: Vec2[], done: () => void) => {
+        const next = path.shift();
+        if (!next) return done();
+        const dx = next.x - c.x / T;
+        const dy = next.y - c.y / T;
+        const dist = Math.hypot(dx, dy);
+        sh.face(dx, dy).play('move');
+        s.tweens.add({ targets: c, x: next.x * T, y: next.y * T, duration: (dist / SPEED) * 1000, ease: 'Linear', onComplete: () => walk(path, done) });
+      };
     });
+    // a soft dark puff where a Shade slips through the door
+    const puff = (x: number, y: number) => {
+      if (still) return;
+      for (let k = 0; k < 5; k++) {
+        const d = s.add.circle(x + Phaser.Math.Between(-8, 8), y - T * 0.3, Phaser.Math.Between(5, 9), 0x2a2340, 0.7).setDepth(1e5 + 1);
+        h.world.add(d);
+        s.tweens.add({ targets: d, y: d.y - T * Phaser.Math.FloatBetween(0.3, 0.7), scale: 1.8, alpha: 0, duration: 500, ease: 'Sine.Out', onComplete: () => d.destroy() });
+      }
+    };
   });
   // the colours fade and the petals stop
   at(11400, () => {
@@ -211,16 +252,59 @@ export function playIntro(h: IntroHost): void {
     look({ x: DOJO_DOOR.x + 1.5, y: DOJO_DOOR.y - 1.2 }, 7);
   });
   at(14800, () => say(WORDS.lines.brave));
-  // the piece glows above the hero's hands and stays with them
+  // The piece floats down into the hero's hands and the hero carries it (Jay, Nov 27: held, not over the head).
+  // It rides on the hero's own drawn body, so it glides with every step instead of jumping.
   let shard: Phaser.GameObjects.Container | null = null;
+  let landing = true;
+  const holdShard = () => {
+    if (!shard || over || landing || !shard.active) return;
+    const body = h.heroBody();
+    const f = h.heroFacing();
+    const len = Math.hypot(f.x, f.y) || 1;
+    const fx = f.x / len;
+    const fy = f.y / len;
+    // Cupped at the hands in front of the chest; facing away, the hero's body hides it and its glow peeks round.
+    const away = fy < -0.75;
+    const side = fy < -0.3 ? 0.3 : 0.2;
+    const hx = fx * side * T;
+    const hy = (-0.42 + fy * 0.06) * T;
+    shard.setPosition(Phaser.Math.Linear(shard.x, hx, 0.25), Phaser.Math.Linear(shard.y, hy, 0.25));
+    const inFront = body.getIndex(shard) === body.length - 1;
+    if (away === inFront) {
+      if (away) body.sendToBack(shard);
+      else body.bringToTop(shard);
+    }
+  };
+  // The camera follows the hero as drawn, every frame, so the walk to the Tower glides too.
+  let following = false;
+  const follow = () => {
+    if (!following || over) return;
+    const b = h.heroBody();
+    look({ x: b.x / T, y: b.y / T - 2.2 }, 10);
+  };
   at(16400, () => {
-    shard = lightShard(s, T);
-    const p = h.heroPos();
-    shard.setPosition(p.x * T, (p.y - 1.15) * T).setAlpha(0);
-    h.world.add(shard);
-    s.tweens.add({ targets: shard, alpha: 1, duration: 500 });
+    shard = lightShard(s, T, false);
+    const body = h.heroBody();
+    body.add(shard);
+    shard.setPosition(0, -1.7 * T).setAlpha(0);
+    s.tweens.add({ targets: shard, alpha: 1, duration: 400 });
+    s.tweens.add({
+      targets: shard,
+      y: -0.36 * T,
+      duration: still ? 10 : 1100,
+      ease: 'Sine.Out',
+      onComplete: () => {
+        landing = false;
+        holdShard();
+      },
+    });
     sfx.tap();
     say(STORY.intro.chosen);
+  });
+  s.events.on(Phaser.Scenes.Events.UPDATE, holdShard);
+  s.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+    s.events.off(Phaser.Scenes.Events.UPDATE, holdShard);
+    s.events.off(Phaser.Scenes.Events.POST_UPDATE, follow);
   });
   at(18000, () => h.placeHero(h.heroPos(), { x: 1, y: -1 }));
   at(19000, () => {
@@ -228,18 +312,8 @@ export function playIntro(h: IntroHost): void {
     h.walkHero([{ x: 26, y: 10.7 }, { x: 30.2, y: 10.5 }, { x: 30.3, y: 7.6 }]);
   });
   at(19200, () => {
-    timers.push(
-      s.time.addEvent({
-        delay: 60,
-        loop: true,
-        callback: () => {
-          if (over) return;
-          const p = h.heroPos();
-          shard?.setPosition(p.x * T, (p.y - 1.15) * T);
-          look({ x: p.x, y: p.y - 2.2 }, 10);
-        },
-      }),
-    );
+    following = true;
+    s.events.on(Phaser.Scenes.Events.POST_UPDATE, follow);
   });
   at(22600, () => {
     s.tweens.add({ targets: title, alpha: 1, duration: 700 });
@@ -256,7 +330,7 @@ export function playIntro(h: IntroHost): void {
 }
 
 /** The light piece (Story Chapters): a small glowing gold shard with a soft halo that bobs. */
-export function lightShard(s: Phaser.Scene, T: number): Phaser.GameObjects.Container {
+export function lightShard(s: Phaser.Scene, T: number, bob = true): Phaser.GameObjects.Container {
   const c = s.add.container(0, 0).setDepth(1e6);
   const halo = s.add.circle(0, 0, T * 0.32, 0xfff1b8, 0.35).setBlendMode(Phaser.BlendModes.ADD);
   const g = s.add.graphics();
@@ -266,7 +340,7 @@ export function lightShard(s: Phaser.Scene, T: number): Phaser.GameObjects.Conta
   c.add([halo, g]);
   if (!reducedMotion()) {
     s.tweens.add({ targets: halo, scale: 1.3, alpha: 0.18, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
-    s.tweens.add({ targets: g, y: -4, duration: 650, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+    s.tweens.add({ targets: g, y: bob ? -4 : -1.5, duration: 650, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
   }
   return c;
 }

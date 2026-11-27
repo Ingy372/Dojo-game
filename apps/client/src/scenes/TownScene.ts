@@ -258,6 +258,8 @@ export class TownScene extends WalkScene {
       },
       walkHero: (path) => (me.path = path.map((p) => ({ ...p }))),
       heroPos: () => me.pos,
+      heroBody: () => this.player,
+      heroFacing: () => me.facing,
       kids: this.walkers.map((w) => w.sprite),
       done: () => this.scene.start('Game', { run, skipStory: true }),
     });

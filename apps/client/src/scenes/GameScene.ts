@@ -752,6 +752,8 @@ export class GameScene extends Phaser.Scene {
       this.controls.takeInput();
       this.buttons.takeAction();
       this.elapsed = 0;
+      // Jay, Nov 27: while a tip or menu holds the game, everyone stands idle instead of running on the spot.
+      if (!this.leaving) this.savePrevious();
     } else if (this.hitStopMs > 0) {
       // Freeze the action briefly on impact; effects and the camera keep moving.
       this.hitStopMs -= delta;
