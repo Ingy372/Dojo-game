@@ -23,6 +23,8 @@ ap.add_argument("--arms", type=float, default=1.35)
 ap.add_argument("--twist", type=float, default=1.2)
 ap.add_argument("--subsurf", type=int, default=0)
 ap.add_argument("--hand-out", type=float, default=0.08)
+ap.add_argument("--head-bob", type=float, default=0.06)
+ap.add_argument("--head-keep", type=float, default=1.2)
 a = ap.parse_args(argv)
 
 rig = bpy.data.objects["MartialArtistRig"]
@@ -72,7 +74,7 @@ amplify(fc(cv, B % ("hips", "location"), 1), a.bob)                      # bounc
 remap(fc(cv, B % ("hips", "rotation_euler"), 0), lambda fr, v: v + a.lean)  # lean into the run
 amplify(fc(cv, B % ("chest", "rotation_euler"), 1), a.twist)            # shoulder twist
 remap(fc(cv, B % ("head", "rotation_euler"), 0),                        # keep the face up, bob a beat late
-      lambda fr, v: v - a.lean * 1.2 + 0.06 * math.sin(2 * math.pi * 2 * (fr - 2) / n))
+      lambda fr, v: v - a.lean * a.head_keep + a.head_bob * math.sin(2 * math.pi * 2 * (fr - 2) / n))
 for side in ("L", "R"):
     for i in (1, 2):
         amplify(fc(cv, B % ("hand_ik." + side, "location"), i), a.arms)  # arms pump further
