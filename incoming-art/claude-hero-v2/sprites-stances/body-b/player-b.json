@@ -1,13 +1,13 @@
 {
   "character": "player-b",
-  "frameWidth": 128,
-  "frameHeight": 160,
+  "frameWidth": 192,
+  "frameHeight": 240,
   "anchor": {
-    "x": 64.0,
-    "y": 136.96,
+    "x": 96.0,
+    "y": 205.44,
     "note": "feet / ground point of the character, in pixels from the frame's top-left"
   },
-  "pixelsPerTile": 80.0,
+  "pixelsPerTile": 120.0,
   "camera": {
     "projection": "orthographic",
     "elevationDeg": 35.0,
@@ -313,6 +313,12 @@
       "group": "hair"
     },
     {
+      "name": "prop-shard",
+      "order": 38,
+      "tint": false,
+      "optional": false
+    },
+    {
       "name": "outfit-crimson-dragon",
       "order": 40,
       "tint": false,
@@ -527,6 +533,7 @@
         "hair-16": "player-b_hair-16_stance_rooted.png",
         "hair-17": "player-b_hair-17_stance_rooted.png",
         "hair-18": "player-b_hair-18_stance_rooted.png",
+        "prop-shard": "player-b_prop-shard_stance_rooted.png",
         "outfit-crimson-dragon": "player-b_outfit-crimson-dragon_stance_rooted.png",
         "outfit-shadow-ninja": "player-b_outfit-shadow-ninja_stance_rooted.png",
         "outfit-frost-guardian": "player-b_outfit-frost-guardian_stance_rooted.png",
@@ -600,6 +607,7 @@
         "hair-16": "player-b_hair-16_stance_flowing.png",
         "hair-17": "player-b_hair-17_stance_flowing.png",
         "hair-18": "player-b_hair-18_stance_flowing.png",
+        "prop-shard": "player-b_prop-shard_stance_flowing.png",
         "outfit-crimson-dragon": "player-b_outfit-crimson-dragon_stance_flowing.png",
         "outfit-shadow-ninja": "player-b_outfit-shadow-ninja_stance_flowing.png",
         "outfit-frost-guardian": "player-b_outfit-frost-guardian_stance_flowing.png",

@@ -276,6 +276,12 @@
       "tint": true,
       "optional": false,
       "group": "hair"
+    },
+    {
+      "name": "prop-shard",
+      "order": 38,
+      "tint": false,
+      "optional": false
     }
   ],
   "animations": {
@@ -323,7 +329,8 @@
         "hair-15": "player-a_hair-15_idle.png",
         "hair-16": "player-a_hair-16_idle.png",
         "hair-17": "player-a_hair-17_idle.png",
-        "hair-18": "player-a_hair-18_idle.png"
+        "hair-18": "player-a_hair-18_idle.png",
+        "prop-shard": "player-a_prop-shard_idle.png"
       }
     }
   },

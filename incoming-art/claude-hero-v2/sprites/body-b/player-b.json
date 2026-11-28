@@ -1,13 +1,13 @@
 {
   "character": "player-b",
-  "frameWidth": 128,
-  "frameHeight": 160,
+  "frameWidth": 192,
+  "frameHeight": 240,
   "anchor": {
-    "x": 64.0,
-    "y": 136.96,
+    "x": 96.0,
+    "y": 205.44,
     "note": "feet / ground point of the character, in pixels from the frame's top-left"
   },
-  "pixelsPerTile": 80.0,
+  "pixelsPerTile": 120.0,
   "camera": {
     "projection": "orthographic",
     "elevationDeg": 35.0,
@@ -311,6 +311,12 @@
       "tint": true,
       "optional": false,
       "group": "hair"
+    },
+    {
+      "name": "prop-shard",
+      "order": 38,
+      "tint": false,
+      "optional": false
     }
   ],
   "animations": {
@@ -364,7 +370,8 @@
         "hair-15": "player-b_hair-15_bow.png",
         "hair-16": "player-b_hair-16_bow.png",
         "hair-17": "player-b_hair-17_bow.png",
-        "hair-18": "player-b_hair-18_bow.png"
+        "hair-18": "player-b_hair-18_bow.png",
+        "prop-shard": "player-b_prop-shard_bow.png"
       },
       "keyFrames": {
         "feet_together": 3,
@@ -423,7 +430,8 @@
         "hair-15": "player-b_hair-15_celebrate.png",
         "hair-16": "player-b_hair-16_celebrate.png",
         "hair-17": "player-b_hair-17_celebrate.png",
-        "hair-18": "player-b_hair-18_celebrate.png"
+        "hair-18": "player-b_hair-18_celebrate.png",
+        "prop-shard": "player-b_prop-shard_celebrate.png"
       },
       "keyFrames": {
         "arms_up": "4-12",
@@ -481,7 +489,8 @@
         "hair-15": "player-b_hair-15_counter.png",
         "hair-16": "player-b_hair-16_counter.png",
         "hair-17": "player-b_hair-17_counter.png",
-        "hair-18": "player-b_hair-18_counter.png"
+        "hair-18": "player-b_hair-18_counter.png",
+        "prop-shard": "player-b_prop-shard_counter.png"
       }
     },
     "dash": {
@@ -533,7 +542,8 @@
         "hair-15": "player-b_hair-15_dash.png",
         "hair-16": "player-b_hair-16_dash.png",
         "hair-17": "player-b_hair-17_dash.png",
-        "hair-18": "player-b_hair-18_dash.png"
+        "hair-18": "player-b_hair-18_dash.png",
+        "prop-shard": "player-b_prop-shard_dash.png"
       },
       "keyFrames": {
         "push": 1,
@@ -591,7 +601,8 @@
         "hair-15": "player-b_hair-15_defeat.png",
         "hair-16": "player-b_hair-16_defeat.png",
         "hair-17": "player-b_hair-17_defeat.png",
-        "hair-18": "player-b_hair-18_defeat.png"
+        "hair-18": "player-b_hair-18_defeat.png",
+        "prop-shard": "player-b_prop-shard_defeat.png"
       },
       "keyFrames": {
         "ouch": 1,
@@ -649,7 +660,8 @@
         "hair-15": "player-b_hair-15_hit.png",
         "hair-16": "player-b_hair-16_hit.png",
         "hair-17": "player-b_hair-17_hit.png",
-        "hair-18": "player-b_hair-18_hit.png"
+        "hair-18": "player-b_hair-18_hit.png",
+        "prop-shard": "player-b_prop-shard_hit.png"
       },
       "keyFrames": {
         "recoil": 1,
@@ -701,7 +713,8 @@
         "hair-15": "player-b_hair-15_idle.png",
         "hair-16": "player-b_hair-16_idle.png",
         "hair-17": "player-b_hair-17_idle.png",
-        "hair-18": "player-b_hair-18_idle.png"
+        "hair-18": "player-b_hair-18_idle.png",
+        "prop-shard": "player-b_prop-shard_idle.png"
       }
     },
     "jab": {
@@ -750,7 +763,8 @@
         "hair-15": "player-b_hair-15_jab.png",
         "hair-16": "player-b_hair-16_jab.png",
         "hair-17": "player-b_hair-17_jab.png",
-        "hair-18": "player-b_hair-18_jab.png"
+        "hair-18": "player-b_hair-18_jab.png",
+        "prop-shard": "player-b_prop-shard_jab.png"
       },
       "keyFrames": {
         "impact": 2
@@ -807,7 +821,8 @@
         "hair-15": "player-b_hair-15_straighten.png",
         "hair-16": "player-b_hair-16_straighten.png",
         "hair-17": "player-b_hair-17_straighten.png",
-        "hair-18": "player-b_hair-18_straighten.png"
+        "hair-18": "player-b_hair-18_straighten.png",
+        "prop-shard": "player-b_prop-shard_straighten.png"
       },
       "keyFrames": {
         "reach": "3-4",
@@ -862,7 +877,8 @@
         "hair-15": "player-b_hair-15_strike.png",
         "hair-16": "player-b_hair-16_strike.png",
         "hair-17": "player-b_hair-17_strike.png",
-        "hair-18": "player-b_hair-18_strike.png"
+        "hair-18": "player-b_hair-18_strike.png",
+        "prop-shard": "player-b_prop-shard_strike.png"
       },
       "keyFrames": {
         "impact": 4
@@ -913,7 +929,8 @@
         "hair-15": "player-b_hair-15_sweep.png",
         "hair-16": "player-b_hair-16_sweep.png",
         "hair-17": "player-b_hair-17_sweep.png",
-        "hair-18": "player-b_hair-18_sweep.png"
+        "hair-18": "player-b_hair-18_sweep.png",
+        "prop-shard": "player-b_prop-shard_sweep.png"
       },
       "props": [
         "prop-broom"
@@ -964,11 +981,12 @@
         "hair-15": "player-b_hair-15_walk.png",
         "hair-16": "player-b_hair-16_walk.png",
         "hair-17": "player-b_hair-17_walk.png",
-        "hair-18": "player-b_hair-18_walk.png"
+        "hair-18": "player-b_hair-18_walk.png",
+        "prop-shard": "player-b_prop-shard_walk.png"
       },
       "groundMotion": {
         "strideTilesPerLoop": 1.5,
-        "stridePxPerLoop": 120.0,
+        "stridePxPerLoop": 180.0,
         "designSpeedTilesPerSec": 4.5,
         "fpsPerTilePerSec": 8.0,
         "note": "planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above"
@@ -1018,7 +1036,8 @@
         "hair-15": "player-b_hair-15_wipe.png",
         "hair-16": "player-b_hair-16_wipe.png",
         "hair-17": "player-b_hair-17_wipe.png",
-        "hair-18": "player-b_hair-18_wipe.png"
+        "hair-18": "player-b_hair-18_wipe.png",
+        "prop-shard": "player-b_prop-shard_wipe.png"
       },
       "props": [
         "prop-rag"

@@ -1,13 +1,13 @@
 {
   "character": "player-a",
-  "frameWidth": 128,
-  "frameHeight": 160,
+  "frameWidth": 192,
+  "frameHeight": 240,
   "anchor": {
-    "x": 64.0,
-    "y": 136.96,
+    "x": 96.0,
+    "y": 205.44,
     "note": "feet / ground point of the character, in pixels from the frame's top-left"
   },
-  "pixelsPerTile": 80.0,
+  "pixelsPerTile": 120.0,
   "camera": {
     "projection": "orthographic",
     "elevationDeg": 35.0,
@@ -716,7 +716,7 @@
       },
       "groundMotion": {
         "strideTilesPerLoop": 1.5,
-        "stridePxPerLoop": 120.0,
+        "stridePxPerLoop": 180.0,
         "designSpeedTilesPerSec": 4.5,
         "fpsPerTilePerSec": 8.0,
         "note": "planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above"
@@ -917,7 +917,13 @@
       "hair-09",
       "hair-10",
       "hair-11",
-      "hair-12"
+      "hair-12",
+      "hair-13",
+      "hair-14",
+      "hair-15",
+      "hair-16",
+      "hair-17",
+      "hair-18"
     ],
     "note": "draw exactly one layer of each group, after the base layers (face, then hair)"
   },
@@ -939,6 +945,12 @@
     "hair-09": "two puffs: hair parted down the middle and gathered into two round coil puffs high on the head",
     "hair-10": "short twists: a soft cap covered in short, rounded twists that point up and out (they never reach the eyes)",
     "hair-11": "cornrows into braids: neat raised rows from the hairline to the back, ending in braids that hang behind the shoulders",
-    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils"
+    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils",
+    "hair-13": "spiky: short hair pulled up into soft spikes, the classic action-hero look",
+    "hair-14": "side-swept: short back and sides with a long fringe swept over to one side (above the brows)",
+    "hair-15": "long straight: hair to the shoulders with straight bangs, framing the face",
+    "hair-16": "high ponytail: hair pulled up into a long swinging ponytail, with side bangs",
+    "hair-17": "pigtails: hair parted in the middle and tied into two straight tails by the ears, with bangs",
+    "hair-18": "bob: a rounded chin-length bob with straight bangs"
   }
 }
